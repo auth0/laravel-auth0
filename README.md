@@ -5,7 +5,7 @@ This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.c
 
 To install this plugin add the following dependency to your composer.json
 
-    "auth0/laravel-auth0" : "1.0.0"
+    "auth0/laravel-auth0" : "1.0.1"
 
 and run `composer update`
 
