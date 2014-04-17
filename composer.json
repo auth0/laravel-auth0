@@ -12,7 +12,8 @@
         "php": ">=5.3.0",
         "illuminate/support": "4.1.*",
         "auth0/auth0-php": "dev-master",
-        "adoy/oauth2": "dev-master"
+        "adoy/oauth2": "dev-master",
+        "firebase/php-jwt" : "dev-master"
     },
     "autoload": {
         "classmap": [

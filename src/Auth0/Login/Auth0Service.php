@@ -54,5 +54,25 @@ class Auth0Service {
         return call_user_func($this->_onLoginCb, $auth0User);
     }
 
+    private $apiuser;
+    public function decodeJWT($encUser) {
+        $secret = Config::get('auth0::api.secret');
+        $canDecode = false;
 
+        try {
+            // Decode the user
+            $this->apiuser = \JWT::decode($encUser, base64_decode(strtr($secret, '-_', '+/')) );
+            // validate that this JWT was made for us
+            if ($this->apiuser->aud == Config::get('auth0::api.audience')) {
+                $canDecode = true;
+            }
+        } catch(UnexpectedValueException $e) {
+        }
+
+        return $canDecode;
+    }
+
+    public function apiuser() {
+        return $this->apiuser;
+    }
 }

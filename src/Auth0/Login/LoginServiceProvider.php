@@ -43,6 +43,20 @@ class LoginServiceProvider extends ServiceProvider {
         \Event::listen('auth.logout', function() {
             \App::make("auth0")->logout();
         });
+
+        // Create a filter (maybe find a better place)
+        \Route::filter('auth0api', function($route, $request) {
+            // Get the encrypted user
+            $authorizationHeader = $request->header("Authorization");
+            $encUser = str_replace('Bearer ', '', $authorizationHeader);
+
+            $canDecode = \App::make('auth0')->decodeJWT($encUser);
+
+            if (!$canDecode) {
+                return Response::make("Unauthorized user", 401);
+            }
+        });
+
     }
 
     /**
