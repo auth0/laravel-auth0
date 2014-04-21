@@ -45,7 +45,7 @@ class LoginServiceProvider extends ServiceProvider {
         });
 
         // Create a filter (maybe find a better place)
-        \Route::filter('auth0api', function($route, $request) {
+        \Route::filter('auth-jwt', function($route, $request) {
             // Get the encrypted user
             $authorizationHeader = $request->header("Authorization");
             $encUser = str_replace('Bearer ', '', $authorizationHeader);

@@ -19,6 +19,6 @@ return array(
     |
     */
 
-    'secret'     => 'XXXX',
+    'secret'     => 'XXXX'
 
 );
