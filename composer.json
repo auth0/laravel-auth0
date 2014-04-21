@@ -17,7 +17,6 @@
     },
     "autoload": {
         "classmap": [
-            "src/migrations",
             "src/controllers",
             "src/facade"
         ],
