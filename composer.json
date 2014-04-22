@@ -1,0 +1,27 @@
+{
+    "name": "auth0/laravel-auth0",
+    "description": "Laravel plugin that helps authenticate with the auth0 service",
+    "authors": [
+        {
+            "name": "Hernan Rajchert",
+            "email": "hrajchert@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*",
+        "auth0/auth0-php": "dev-master",
+        "adoy/oauth2": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations",
+            "src/controllers",
+            "src/facade"
+        ],
+        "psr-0": {
+            "Auth0\\Login\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
