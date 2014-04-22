@@ -29,6 +29,9 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
         return $this->userInfo["access_token"];
     }
 
+    /**
+     * Add a generic getter to get all the properties of the userInfo
+     */
     public function __get($name) {
         return $this->userInfo[$name];
     }
