@@ -7,31 +7,36 @@ use Auth0SDK\Auth0;
  * Service that provides access to the Auth0 SDK.
  */
 class Auth0Service {
+    private $auth0;
+
     /**
-     * Constructor, creates an instance of the Auth0 SDK using
+     * Creates an instance of the Auth0 SDK using
      * the config set in the laravel way and using a LaravelSession
      * as a store mechanism
      */
-    function __construct() {
-        $auth0Config = Config::get('auth0::config');
-        $auth0Config['store'] = new LaravelSessionStore();
-        $this->auth0 = new Auth0($auth0Config);
-    }
+    private function getSDK() {
+        if (is_null($this->auth0)) {
+            $auth0Config = Config::get('auth0::config');
+            $auth0Config['store'] = new LaravelSessionStore();
+            $this->auth0 = new Auth0($auth0Config);
+        }
+        return $this->auth0;
 
+    }
     /**
      * Logouts the user from the SDK
      */
     public function logout() {
-        $this->auth0->logout();
+        $this->getSDK()->logout();
     }
 
     /**
      * If the user is logged in, returns the user information
-     * @return \Auth0\Login\Auth0User User info as described in https://docs.auth0.com/user-profile
+     * @return \Auth0\LaravelAuth0\Auth0User User info as described in https://docs.auth0.com/user-profile
      */
     public function getUserInfo() {
         // Get the user info from auth0
-        $userInfo = $this->auth0->getUserInfo();
+        $userInfo = $this->getSDK()->getUserInfo();
 
         $auth0User = new Auth0User($userInfo);
         return $auth0User;
