@@ -1,5 +1,5 @@
 {
-    "name": "auth0/laravel-auth0",
+    "name": "auth0/login",
     "description": "Laravel plugin that helps authenticate with the auth0 service",
     "authors": [
         {
@@ -24,5 +24,5 @@
             "Auth0\\Login\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }

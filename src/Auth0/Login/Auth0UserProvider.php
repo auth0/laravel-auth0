@@ -2,7 +2,7 @@
 
 use Illuminate\Auth\UserProviderInterface;
 /**
- * Service that provides an Auth0\Login\Auth0User stored in the session. This User provider
+ * Service that provides an Auth0\LaravelAuth0\Auth0User stored in the session. This User provider
  * should be used when you don't want to persist the entity.
  */
 class Auth0UserProvider
@@ -23,6 +23,19 @@ class Auth0UserProvider
      */
     public function retrieveByCredentials(array $credentials) {
         return false;
+    }
+
+    /**
+     * Required method by the UserProviderInterface, we don't implement it
+     */
+    public function retrieveByToken($identifier, $token) {
+        return false;
+    }
+
+    /**
+     * Required method by the UserProviderInterface, we don't implement it
+     */
+    public function updateRememberToken(\Illuminate\Auth\UserInterface $user, $token) {
     }
 
     /**

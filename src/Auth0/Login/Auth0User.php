@@ -29,6 +29,18 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
         return $this->userInfo["access_token"];
     }
 
+    public function getRememberToken() {
+        return null;
+    }
+
+    public function setRememberToken($value) {
+
+    }
+
+    public function getRememberTokenName() {
+        return null;
+    }
+
     /**
      * Add a generic getter to get all the properties of the userInfo
      */
