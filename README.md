@@ -38,7 +38,7 @@ To configure the plugin, you need to publish the plugin configuration and comple
 
 To publish the example configuration file use this command
 
-    php artisan config:publish Auth0/Login
+    php artisan config:publish auth0/login
 
 ### 4. Setup the callback action
 
