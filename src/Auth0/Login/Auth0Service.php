@@ -61,6 +61,7 @@ class Auth0Service {
 
     private $apiuser;
     public function decodeJWT($encUser) {
+
         $secret = Config::get('auth0::api.secret');
         $canDecode = false;
 
@@ -71,13 +72,13 @@ class Auth0Service {
             if ($this->apiuser->aud == Config::get('auth0::api.audience')) {
                 $canDecode = true;
             }
-        } catch(UnexpectedValueException $e) {
+        } catch(\UnexpectedValueException $e) {
         }
 
         return $canDecode;
     }
 
-    public function apiuser() {
+    public function jwtuser() {
         return $this->apiuser;
     }
 }
