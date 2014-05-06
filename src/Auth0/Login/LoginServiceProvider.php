@@ -49,11 +49,14 @@ class LoginServiceProvider extends ServiceProvider {
             // Get the encrypted user
             $authorizationHeader = $request->header("Authorization");
             $encUser = str_replace('Bearer ', '', $authorizationHeader);
-
-            $canDecode = \App::make('auth0')->decodeJWT($encUser);
+            if (trim($encUser) != '') {
+                $canDecode = \App::make('auth0')->decodeJWT($encUser);
+            } else {
+                $canDecode = false;
+            }
 
             if (!$canDecode) {
-                return Response::make("Unauthorized user", 401);
+                return \Response::make("Unauthorized user", 401);
             }
         });
 
