@@ -78,13 +78,13 @@ You can trigger the login in different ways, like redirecting to a login link or
 
 ### 6. Defining a user and a user provider
 
-The [Laravel Security System](http://laravel.com/docs/security) needs a *User Object* given by a *User Provider*. With this two abstractions, the user entity can have any structure you like and can be stored anywhere. You configure the *User Provider* indirectly, by selecting an auth driver in `app/config/auth.php`. The default driver is Eloquent, which persists the User model in a database using the ORM.
+The [Laravel Security System](http://laravel.com/docs/security) needs a *User Object* given by a *User Provider*. With these two abstractions, the user entity can have any structure you like and can be stored anywhere. You configure the *User Provider* indirectly, by selecting an auth driver in `app/config/auth.php`. The default driver is Eloquent, which persists the User model in a database using the ORM.
 
 #### 6.1. Using the auth0 driver
 
 The plugin comes with an authentication driver called auth0. This driver defines a user structure that wraps the [Normalized User Profile](https://docs.auth0.com/user-profile) defined by Auth0, and it doesn't actually persist the object, it just stores it in the session for future calls.
 
-This works fine for basic testing or if you don't really need to persist the user. In any point you can call `Auth::check()` to see if there is a user logged in and `Auth::user()` to get the wrapper with the user information.
+This works fine for basic testing or if you don't really need to persist the user. At any point you can call `Auth::check()` to see if there is a user logged in and `Auth::user()` to get the wrapper with the user information.
 
 #### 6.2. Using other driver
 
