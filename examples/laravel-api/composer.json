@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-    "auth0/login" : "1.0.3"
+    "auth0/login" : "1.0.6"
 	},
 	"autoload": {
 		"classmap": [
