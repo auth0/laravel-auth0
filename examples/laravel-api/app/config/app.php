@@ -94,6 +94,7 @@ return array(
 	*/
 
 	'providers' => array(
+    'Barryvdh\Cors\CorsServiceProvider',
     'Auth0\Login\LoginServiceProvider',
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',

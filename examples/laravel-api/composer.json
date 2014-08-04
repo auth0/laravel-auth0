@@ -5,7 +5,9 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-    "auth0/login" : "1.0.6"
+    "auth0/login" : "1.0.6",
+    "vlucas/phpdotenv": "dev-master",
+		"barryvdh/laravel-cors": "0.2.x"
 	},
 	"autoload": {
 		"classmap": [
