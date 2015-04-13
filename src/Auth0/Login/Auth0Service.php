@@ -36,9 +36,11 @@ class Auth0Service {
      */
     public function getUserInfo() {
         // Get the user info from auth0
-        $userInfo = $this->getSDK()->getUserInfo();
+        $auth0 = $this->getSDK();
+        $userInfo = $auth0->getUserInfo();
+        $accessToken = $auth0->getAccessToken();
 
-        $auth0User = new Auth0User($userInfo);
+        $auth0User = new Auth0User($userInfo, $accessToken);
         return $auth0User;
     }
 
