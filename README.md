@@ -6,7 +6,7 @@ This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.c
 To install this plugin add the following dependency to your composer.json
 
 ```js
-"auth0/login" : "1.0.4"
+"auth0/login" : "1.0.7"
 ```
 
 and run `composer update`
@@ -104,7 +104,7 @@ Auth0::onLogin(function($auth0User) {
         $user->save();
     }
     return $user;
-});    
+});
 ```
 
 Note that this hook must return the new user, which must implement the `Illuminate\Auth\UserInterface`. The onLogin function is going to be called just once, when the callback uri is called, then its up to the selected auth driver to get the user from the database.
