@@ -8,8 +8,10 @@
 class Auth0User implements \Illuminate\Auth\UserInterface {
 
     private $userInfo;
-    function __construct ($userInfo) {
+    private $accessToken;
+    function __construct ($userInfo, $accessToken) {
         $this->userInfo = $userInfo;
+        $this->accessToken = $accessToken;
     }
     /**
      * Get the unique identifier for the user.
@@ -26,7 +28,7 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
      * @return string
      */
     public function getAuthPassword() {
-        return $this->userInfo["access_token"];
+        return $this->accessToken;
     }
 
     public function getRememberToken() {
