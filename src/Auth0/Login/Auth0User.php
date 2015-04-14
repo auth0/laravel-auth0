@@ -45,8 +45,15 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
 
     /**
      * Add a generic getter to get all the properties of the userInfo
+     *
+     * @return the related value or null if it is not set
      */
     public function __get($name) {
+
+        if (!array_key_exists($name, $this->userInfo)) {
+            return null;
+        }
+
         return $this->userInfo[$name];
     }
 
