@@ -5,7 +5,7 @@
  * given by Auth0.
  *
  */
-class Auth0User implements \Illuminate\Auth\UserInterface {
+class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
 
     private $userInfo;
     private $accessToken;
@@ -55,6 +55,10 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
         }
 
         return $this->userInfo[$name];
+    }
+
+    public function getUserInfo() {
+        return $this->userInfo;
     }
 
 }

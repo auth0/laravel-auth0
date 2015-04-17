@@ -16,7 +16,8 @@ class Auth0Service {
      */
     private function getSDK() {
         if (is_null($this->auth0)) {
-            $auth0Config = Config::get('auth0::config');
+            $auth0Config = config('laravel-auth0');
+
             $auth0Config['store'] = new LaravelSessionStore();
             $this->auth0 = new Auth0($auth0Config);
         }
@@ -38,9 +39,10 @@ class Auth0Service {
         // Get the user info from auth0
         $auth0 = $this->getSDK();
         $userInfo = $auth0->getUserInfo();
-        $accessToken = $auth0->getAccessToken();
 
-        $auth0User = new Auth0User($userInfo, $accessToken);
+        if ($userInfo === null) return null;
+
+        $auth0User = new Auth0User($userInfo, $auth0->getAccessToken());
         return $auth0User;
     }
 
@@ -64,18 +66,18 @@ class Auth0Service {
     private $apiuser;
     public function decodeJWT($encUser) {
 
-        $secret = Config::get('auth0::api.secret');
+        $secret = config('laravel-auth0.client_secret');
         $canDecode = false;
 
         try {
             // Decode the user
-            $this->apiuser = \JWT::decode($encUser, base64_decode(strtr($secret, '-_', '+/')) );
+            $this->apiuser = \JWT::decode($encUser, base64_decode(strtr($secret, '-_', '+/')), ['HS256']);
             // validate that this JWT was made for us
-            if ($this->apiuser->aud == Config::get('auth0::api.audience')) {
+            if ($this->apiuser->aud == config('laravel-auth0.client_id')) {
                 $canDecode = true;
             }
-        } catch(\UnexpectedValueException $e) {
-        }
+
+        } catch(\UnexpectedValueException $e) {}
 
         return $canDecode;
     }

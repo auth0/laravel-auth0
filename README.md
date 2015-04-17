@@ -15,7 +15,8 @@ NOTE: The plugin dependencies are not tagged, so you have to either change the `
 
 ```js
 "adoy/oauth2": "dev-master",
-"firebase/php-jwt" : "dev-master"
+"firebase/php-jwt" : "dev-master",
+"illuminate/contracts": "5.*"
 ```
 
 ### 2. Enable it in Laravel
@@ -107,7 +108,7 @@ Auth0::onLogin(function($auth0User) {
 });
 ```
 
-Note that this hook must return the new user, which must implement the `Illuminate\Auth\UserInterface`. The onLogin function is going to be called just once, when the callback uri is called, then its up to the selected auth driver to get the user from the database.
+Note that this hook must return the new user, which must implement the `Illuminate\Contracts\Auth\UserInterface`. The onLogin function is going to be called just once, when the callback uri is called, then its up to the selected auth driver to get the user from the database.
 
 ### 7. Use it!
 
