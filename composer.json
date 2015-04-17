@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.*",
+        "illuminate/support": "5.*",
         "auth0/auth0-php": "0.6.*",
         "adoy/oauth2": "dev-master",
         "firebase/php-jwt" : "dev-master"
