@@ -6,7 +6,7 @@ This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.c
 To install this plugin add the following dependency to your composer.json
 
 ```js
-"auth0/login" : "1.0.8"
+"auth0/login" : "2.0.0"
 ```
 
 and run `composer update`
@@ -46,7 +46,7 @@ To configure the plugin, you need to publish the plugin configuration and comple
 
 To publish the example configuration file use this command
 
-    php artisan config:publish auth0/login
+    php artisan vendor:publish
 
 ### 4. Setup the callback action
 
