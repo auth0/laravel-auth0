@@ -1,12 +1,6 @@
 {
     "name": "auth0/login",
     "description": "Laravel plugin that helps authenticate with the auth0 service",
-    "authors": [
-        {
-            "name": "Hernan Rajchert",
-            "email": "hrajchert@gmail.com"
-        }
-    ],
     "license": "MIT",
     "require": {
         "php": ">=5.3.0",
