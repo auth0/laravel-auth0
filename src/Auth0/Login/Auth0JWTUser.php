@@ -2,16 +2,15 @@
 
 /**
  * This class represents a generic user initialized with the user information
- * given by Auth0 and provides a way to access to the user profile.
+ * given by Auth0 and provides a way to access to the decoded JWT data.
  *
  */
-class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
+class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable {
 
     private $userInfo;
-    private $accessToken;
-    function __construct ($userInfo, $accessToken) {
+
+    function __construct ($userInfo) {
         $this->userInfo = $userInfo;
-        $this->accessToken = $accessToken;
     }
     /**
      * Get the unique identifier for the user.
@@ -19,7 +18,7 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
      * @return mixed
      */
     public function getAuthIdentifier() {
-        return $this->userInfo["user_id"];
+        return $this->userInfo->sub;
     }
 
     /**
@@ -28,7 +27,7 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
      * @return string
      */
     public function getAuthPassword() {
-        return $this->accessToken;
+        return null;
     }
 
     public function getRememberToken() {
