@@ -168,7 +168,7 @@ Note that this hook must return the new user, which must implement the `Illumina
 Now you can use Laravel middleware as you would normally do to restrict access, for example
 
 ```php
-Route::get('admin', array('before' => 'middleware' => 'auth0.jwt', function() {
+Route::get('admin', array('middleware' => 'auth0.jwt', function() {
     // ...
 }));
 ```
