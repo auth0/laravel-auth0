@@ -1,5 +1,5 @@
 # Laravel Auth0 Plugin
-This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps. You can see an example application [here](https://github.com/auth0/laravel-5-auth0-sample).
+This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps. You can see an example application [on the example directory](https://github.com/auth0/laravel-auth0/tree/master/examples/laravel-api).
 
 ##Laravel Compatibility
 
