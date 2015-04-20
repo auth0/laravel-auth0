@@ -51,10 +51,6 @@ class LoginServiceProvider extends ServiceProvider {
             \App::make("auth0")->logout();
         });
 
-        $this->app->bind(
-            '\Auth0\Login\Contract\Auth0UserRepository',
-            '\Auth0\Login\Repository\Auth0UserRepository');
-
     }
 
     /**

@@ -1,5 +1,11 @@
 # Laravel Auth0 Plugin
-This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps. You can see an example application [here](https://github.com/auth0/laravel-auth0-sample).
+This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps. You can see an example application [here](https://github.com/auth0/laravel-5-auth0-sample).
+
+##Laravel Compatibility
+
+The last version (2.x) targets Laravel 5 compatibility.
+
+If you are working with an older version (Laravel 4.x) you need to point to composer.json to the version 1.0.*
 
 ### 1. Install the plugin and its dependencies
 
@@ -11,7 +17,7 @@ To install this plugin add the following dependency to your composer.json
 
 and run `composer update`
 
-NOTE: The plugin dependencies are not tagged, so you have to either change the `minimum-stability` to `dev` or you have to add the dependencies manually.
+NOTE: Some plugin dependencies are not tagged, so you have to either change the `minimum-stability` to `dev` or you have to add the dependencies manually.
 
 ```js
 "adoy/oauth2": "dev-master",
@@ -38,11 +44,42 @@ Optionally, if you want to use the [facade](http://laravel.com/docs/facades) cal
 );
 ```
 
-That lets you call the service method like `Auth0::getUserInfo()` or `Auth0::onLogin(function(...))`.
+Now, you will be able to access to the logged user info with `Auth0::getUserInfo()` and hook to the onLogin event  `Auth0::onLogin(function(...))`.
+
+If you want to restrict access with the Auth0 Middleware, you will need to add it in `app/Http/Kernel.php`
+
+```php
+...
+
+protected $routeMiddleware = [
+		...
+		'auth0.jwt' => 'Auth0\Login\Middleware\Auth0JWTMiddleware',
+	];
+	
+...
+```
+
+Finally, you will need to bind a class that provides the users (your app model user) each time a user is logged in or a JWT is decoded. You can use the `Auth0UserRepository` provided by this package or build your own (which should implement the `\Auth0\Login\Contract\Auth0UserRepository` interface).
+For this you need to add to your AppServiceProvider the following line:
+
+```php
+...
+
+public function register()
+{
+
+    $this->app->bind(
+        '\Auth0\Login\Contract\Auth0UserRepository',
+        '\Auth0\Login\Repository\Auth0UserRepository');
+
+}
+	
+...
+```
 
 ### 3. Configure it
 
-To configure the plugin, you need to publish the plugin configuration and complete the file `app/config/packages/auth0/login/config.php` using the information of your Auth0 account.
+To configure the plugin, you need to publish the plugin configuration and complete the file `app/config/laravel-auth0.php` using the information of your Auth0 account.
 
 To publish the example configuration file use this command
 
@@ -60,22 +97,28 @@ Route::get('/auth0/callback', 'Auth0\Login\Auth0Controller@callback');
 
 ### 5. Triggering login manually or integrating the Auth0 widget
 
-You can trigger the login in different ways, like redirecting to a login link or you can use the [Login Widget](https://docs.auth0.com/login-widget2), by adding the following javascript into a Laravel view or layout
+You can trigger the login in different ways, like redirecting to a login link or you can use [Lock](https://auth0.com/docs/lock), by adding the following javascript into a Laravel view or layout
 
 ```html
-<script src="https://cdn.auth0.com/w2/auth0-widget-3.0.min.js"></script>
+
+<script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
 <script type="text/javascript">
 
-    var widget = new Auth0Widget({
-        domain:         'XXXX',
-        clientID:       'XXXX',
-        callbackURL:    'http://<name>/auth0/callback'
-    });
+    var lock = new Auth0Lock('{{ $auth0Config['client_id'] }}', '{{ $auth0Config['domain'] }}');
 
+    function signin() {
+        lock.show({
+            callbackURL: '{{ $auth0Config['redirect_uri'] }}'
+            , responseType: 'code'
+            , authParams: {
+                scope: 'openid profile'
+            });
+    }
 </script>
-<button onclick="widget.signin()">Login</button>
-```
 
+<button onclick="signin()">Login</button>
+
+```
 
 ### 6. Defining a user and a user provider
 
@@ -86,6 +129,16 @@ The [Laravel Security System](http://laravel.com/docs/security) needs a *User Ob
 The plugin comes with an authentication driver called auth0. This driver defines a user structure that wraps the [Normalized User Profile](https://docs.auth0.com/user-profile) defined by Auth0, and it doesn't actually persist the object, it just stores it in the session for future calls.
 
 This works fine for basic testing or if you don't really need to persist the user. At any point you can call `Auth::check()` to see if there is a user logged in and `Auth::user()` to get the wrapper with the user information.
+
+To enable this driver, you need to change the following line in `/config/auth.php`:
+
+```php
+...
+	'driver' => 'auth0',
+...
+```
+
+If you need to implement a more advanced custom solution, you can always extend the Auth0UserRepository (or implement your own) in order to get and update the user data on your database and event more advaced validations.
 
 #### 6.2. Using other driver
 
@@ -108,14 +161,14 @@ Auth0::onLogin(function($auth0User) {
 });
 ```
 
-Note that this hook must return the new user, which must implement the `Illuminate\Contracts\Auth\UserInterface`. The onLogin function is going to be called just once, when the callback uri is called, then its up to the selected auth driver to get the user from the database.
+Note that this hook must return the new user, which must implement the `Illuminate\Contracts\Auth\Authenticatable`. The onLogin function is going to be called just once, when the callback uri is called, then its up to the selected auth driver to get the user from the database.
 
 ### 7. Use it!
 
-Now you can use Laravel filters as you would normally do to restrict access, for example
+Now you can use Laravel middleware as you would normally do to restrict access, for example
 
 ```php
-Route::get('admin', array('before' => 'auth', function() {
+Route::get('admin', array('before' => 'middleware' => 'auth0.jwt', function() {
     // ...
 }));
 ```
