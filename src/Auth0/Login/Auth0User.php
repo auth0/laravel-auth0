@@ -2,10 +2,10 @@
 
 /**
  * This class represents a generic user initialized with the user information
- * given by Auth0.
+ * given by Auth0 and provides a way to access to the user profile.
  *
  */
-class Auth0User implements \Illuminate\Auth\UserInterface {
+class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
 
     private $userInfo;
     private $accessToken;
@@ -55,6 +55,10 @@ class Auth0User implements \Illuminate\Auth\UserInterface {
         }
 
         return $this->userInfo[$name];
+    }
+
+    public function getUserInfo() {
+        return $this->userInfo;
     }
 
 }

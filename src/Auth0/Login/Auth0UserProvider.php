@@ -1,21 +1,29 @@
 <?php namespace Auth0\Login;
 
-use Illuminate\Auth\UserProviderInterface;
+use Auth0\Login\Contract\Auth0UserRepository;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\UserProvider;
+
 /**
  * Service that provides an Auth0\LaravelAuth0\Auth0User stored in the session. This User provider
  * should be used when you don't want to persist the entity.
  */
-class Auth0UserProvider
-    implements UserProviderInterface
+class Auth0UserProvider implements UserProvider
 {
+    protected $userRepository;
 
+    public function __construct(Auth0UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
 
+    /**
+     * Lets make the repository take care of returning the user related to the
+     * identifier
+     * @param mixed $identifier
+     * @return Authenticatable
+     */
     public function retrieveByID($identifier) {
-        $auth0User = \App::make('auth0')->getUserInfo();
-        if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
-            return $auth0User;
-        }
-
+        return $this->userRepository->getUserByIdentifier($identifier);
     }
 
     /**
@@ -35,13 +43,13 @@ class Auth0UserProvider
     /**
      * Required method by the UserProviderInterface, we don't implement it
      */
-    public function updateRememberToken(\Illuminate\Auth\UserInterface $user, $token) {
+    public function updateRememberToken(Authenticatable $user, $token) {
     }
 
     /**
      * Required method by the UserProviderInterface, we don't implement it
      */
-    public function validateCredentials(\Illuminate\Auth\UserInterface $user, array $credentials) {
+    public function validateCredentials(Authenticatable $user, array $credentials) {
         return false;
      }
 }
