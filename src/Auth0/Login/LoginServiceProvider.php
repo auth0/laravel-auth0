@@ -18,16 +18,16 @@ class LoginServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-//        $this->package('auth0/login','auth0');
-
         \Auth::extend('auth0', function($app) {
 
-            $provider =  new Auth0UserProvider();
+
+            $userRepository = \App::make('\Auth0\Login\Contract\Auth0UserRepository');
+
+            $provider =  new Auth0UserProvider($userRepository);
+
             return new \Illuminate\Auth\Guard($provider, $app['session.store']);
 
         });
-
-
 
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('laravel-auth0.php'),
@@ -50,6 +50,10 @@ class LoginServiceProvider extends ServiceProvider {
         \Event::listen('auth.logout', function() {
             \App::make("auth0")->logout();
         });
+
+        $this->app->bind(
+            '\Auth0\Login\Contract\Auth0UserRepository',
+            '\Auth0\Login\Repository\Auth0UserRepository');
 
     }
 

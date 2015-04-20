@@ -1,4 +1,6 @@
 <?php namespace Auth0\Login;
+
+use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 
@@ -8,14 +10,15 @@ use Illuminate\Contracts\Auth\UserProvider;
  */
 class Auth0UserProvider implements UserProvider
 {
+    protected $userRepository;
 
+    public function __construct(Auth0UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
 
     public function retrieveByID($identifier) {
 
-        $auth0User = \App::make('auth0')->getUserInfo();
-        if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
-            return $auth0User;
-        }
+        return $this->userRepository->getUserByIdentifier($identifier);
 
     }
 
