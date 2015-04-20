@@ -33,7 +33,7 @@ class Auth0Service {
 
     /**
      * If the user is logged in, returns the user information
-     * @return User info as described in https://docs.auth0.com/user-profile
+     * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
      */
     public function getUserInfo() {
         // Get the user info from auth0
@@ -46,10 +46,6 @@ class Auth0Service {
             'profile' => $userInfo,
             'accessToken' => $auth0->getAccessToken()
         ];
-        /*
-        $auth0User = new Auth0UserInfo($userInfo, $auth0->getAccessToken());
-        return $auth0User;
-        */
     }
 
     private $_onLoginCb = null;

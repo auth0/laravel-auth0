@@ -16,10 +16,14 @@ class Auth0UserProvider implements UserProvider
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Lets make the repository take care of returning the user related to the
+     * identifier
+     * @param mixed $identifier
+     * @return Authenticatable
+     */
     public function retrieveByID($identifier) {
-
         return $this->userRepository->getUserByIdentifier($identifier);
-
     }
 
     /**

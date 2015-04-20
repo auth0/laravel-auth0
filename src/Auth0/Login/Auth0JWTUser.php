@@ -2,12 +2,13 @@
 
 /**
  * This class represents a generic user initialized with the user information
- * given by Auth0.
+ * given by Auth0 and provides a way to access to the decoded JWT data.
  *
  */
 class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable {
 
     private $userInfo;
+
     function __construct ($userInfo) {
         $this->userInfo = $userInfo;
     }

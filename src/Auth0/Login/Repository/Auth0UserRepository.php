@@ -20,10 +20,13 @@ class Auth0UserRepository implements \Auth0\Login\Contract\Auth0UserRepository {
     }
 
     public function getUserByIdentifier($identifier) {
+        //Get the user info of the user logged in (probably in session)
         $userInfo = \App::make('auth0')->getUserInfo();
 
+        // build the user
         $auth0User = $this->getUserByUserInfo($userInfo);
 
+        // it is not the same user as logged in, it is not valid
         if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
             return $auth0User;
         }

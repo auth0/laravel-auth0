@@ -20,7 +20,7 @@ class LoginServiceProvider extends ServiceProvider {
     {
         \Auth::extend('auth0', function($app) {
 
-
+            // Let the container build the repository for us
             $userRepository = \App::make('\Auth0\Login\Contract\Auth0UserRepository');
 
             $provider =  new Auth0UserProvider($userRepository);
