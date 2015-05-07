@@ -10,7 +10,7 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable {
     private $userInfo;
 
     function __construct ($userInfo) {
-        $this->userInfo = $userInfo;
+        $this->userInfo = get_object_vars($userInfo);
     }
     /**
      * Get the unique identifier for the user.
@@ -18,7 +18,7 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable {
      * @return mixed
      */
     public function getAuthIdentifier() {
-        return $this->userInfo->sub;
+        return $this->userInfo['sub'];
     }
 
     /**

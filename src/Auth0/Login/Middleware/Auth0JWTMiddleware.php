@@ -3,6 +3,7 @@
 
 use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Contracts\Routing\Middleware;
+use Auth0\SDK\Exception\CoreException;
 
 class Auth0JWTMiddleware implements Middleware {
 
@@ -16,23 +17,28 @@ class Auth0JWTMiddleware implements Middleware {
     {
         $auth0 = \App::make('auth0');
 
+
+
         // Get the encrypted user JWT
         $authorizationHeader = $request->header("Authorization");
         $encUser = str_replace('Bearer ', '', $authorizationHeader);
 
-        if (trim($encUser) != '') {
-            $canDecode = $auth0->decodeJWT($encUser);
-        } else {
-            $canDecode = false;
-        }
-
-        // if it is not valid, return a HTTP 401
-        if (!$canDecode) {
+        if (trim($encUser) == '') {
             return \Response::make("Unauthorized user", 401);
         }
 
+        try {
+            $jwtUser = $auth0->decodeJWT($encUser);
+        }
+        catch(CoreException $e) {
+            return \Response::make("Unauthorized user", 401);
+        }
+        catch(Exception $e) {
+            echo $e;exit;
+        }
+
         // if it does not represent a valid user, return a HTTP 401
-        $user = $this->userRepository->getUserByDecodedJWT($auth0->jwtuser());
+        $user = $this->userRepository->getUserByDecodedJWT($jwtUser);
 
         if (!$user) {
             return \Response::make("Unauthorized user", 401);
