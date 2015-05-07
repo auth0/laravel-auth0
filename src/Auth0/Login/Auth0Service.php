@@ -1,7 +1,8 @@
 <?php namespace Auth0\Login;
 
 use Config;
-use Auth0SDK\Auth0;
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Auth0JWT;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -35,15 +36,15 @@ class Auth0Service {
      * If the user is logged in, returns the user information
      * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
      */
-    public function getUserInfo() {
+    public function getUser() {
         // Get the user info from auth0
         $auth0 = $this->getSDK();
-        $userInfo = $auth0->getUserInfo();
+        $user = $auth0->getUser();
 
-        if ($userInfo === null) return null;
+        if ($user === null) return null;
 
         return [
-            'profile' => $userInfo,
+            'profile' => $user,
             'accessToken' => $auth0->getAccessToken()
         ];
     }
@@ -68,20 +69,12 @@ class Auth0Service {
     private $apiuser;
     public function decodeJWT($encUser) {
 
-        $secret = config('laravel-auth0.client_secret');
-        $canDecode = false;
+        $client_id = config('laravel-auth0.client_id');
+        $client_secret = config('laravel-auth0.client_secret');
 
-        try {
-            // Decode the user
-            $this->apiuser = \JWT::decode($encUser, base64_decode(strtr($secret, '-_', '+/')), ['HS256']);
-            // validate that this JWT was made for us
-            if ($this->apiuser->aud == config('laravel-auth0.client_id')) {
-                $canDecode = true;
-            }
+        $this->apiuser = Auth0JWT::decode($encUser, $client_id, $client_secret);
 
-        } catch(\UnexpectedValueException $e) {}
-
-        return $canDecode;
+        return $this->apiuser;
     }
 
     public function jwtuser() {

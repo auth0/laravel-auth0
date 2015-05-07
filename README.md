@@ -12,7 +12,7 @@ If you are working with an older version (Laravel 4.x) you need to point to comp
 To install this plugin add the following dependency to your composer.json
 
 ```js
-"auth0/login" : "2.0.0"
+"auth0/login" : "2.1.0"
 ```
 
 and run `composer update`
@@ -55,7 +55,7 @@ protected $routeMiddleware = [
 		...
 		'auth0.jwt' => 'Auth0\Login\Middleware\Auth0JWTMiddleware',
 	];
-	
+
 ...
 ```
 
@@ -73,7 +73,7 @@ public function register()
         '\Auth0\Login\Repository\Auth0UserRepository');
 
 }
-	
+
 ...
 ```
 

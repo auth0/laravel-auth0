@@ -8,7 +8,7 @@
 		"laravel/framework": "5.0.*",
 		"adoy/oauth2": "dev-master",
 		"firebase/php-jwt" : "dev-master",
-	  	"auth0/login": "2.x.x-dev"
+	  	"auth0/login": "~1.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

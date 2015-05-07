@@ -8,7 +8,7 @@ angular.module( 'sample.home', [
   $scope.callApi = function() {
     // Just call the API as you'd do using $http
     $http({
-      url: 'http://laravel-5-auth0-sample.app/api/ping',
+      url: '/api/ping',
       method: 'GET'
     }).then(function(response) {
       alert(response.data.status);
