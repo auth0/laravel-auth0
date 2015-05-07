@@ -7,6 +7,12 @@ The last version (2.x) targets Laravel 5 compatibility.
 
 If you are working with an older version (Laravel 4.x) you need to point to composer.json to the version 1.0.*
 
+##BC breaks on auth0-php 1.0.0
+
+The latest version of auth0-php has BC breaks. 
+
+Besides, laravel-auth0 has full BC, we recommend to check the changes in case you were using it directly. Read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
+
 ### 1. Install the plugin and its dependencies
 
 To install this plugin add the following dependency to your composer.json
