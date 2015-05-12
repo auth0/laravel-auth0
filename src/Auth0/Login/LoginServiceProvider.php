@@ -1,8 +1,11 @@
 <?php namespace Auth0\Login;
 
 use Illuminate\Support\ServiceProvider;
+use Auth0\SDK\API\ApiClient;
 
 class LoginServiceProvider extends ServiceProvider {
+
+    const SDK_VERSION = "2.1.1";
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -32,6 +35,10 @@ class LoginServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('laravel-auth0.php'),
         ]);
+
+        $laravel = app();
+        ApiClient::addHeaderInfoMeta('Laravel:'.$laravel::VERSION);
+        ApiClient::addHeaderInfoMeta('SDK:'.self::SDK_VERSION);
     }
 
     /**
