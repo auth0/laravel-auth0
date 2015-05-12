@@ -1,5 +1,19 @@
 # Change Log
 
+## [2.1.1](https://github.com/auth0/laravel-auth0/tree/2.1.1) (2015-05-12)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.1.0...2.1.1)
+
+**Closed issues:**
+
+- SDK Client headers spec compliant [\#11](https://github.com/auth0/laravel-auth0/issues/11)
+
+- Support for Laravel 5? [\#6](https://github.com/auth0/laravel-auth0/issues/6)
+
+**Merged pull requests:**
+
+- SDK Client headers spec compliant \#11 [\#12](https://github.com/auth0/laravel-auth0/pull/12) ([glena](https://github.com/glena))
+
 ## [2.1.0](https://github.com/auth0/laravel-auth0/tree/2.1.0) (2015-05-07)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.0.0...2.1.0)
