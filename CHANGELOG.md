@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.1.2](https://github.com/auth0/laravel-auth0/tree/2.1.2) (2015-05-15)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.1.1...2.1.2)
+
+**Merged pull requests:**
+
+- Added override of info headers [\#13](https://github.com/auth0/laravel-auth0/pull/13) ([glena](https://github.com/glena))
+
 ## [2.1.1](https://github.com/auth0/laravel-auth0/tree/2.1.1) (2015-05-12)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.1.0...2.1.1)
