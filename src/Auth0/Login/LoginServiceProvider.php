@@ -2,10 +2,11 @@
 
 use Illuminate\Support\ServiceProvider;
 use Auth0\SDK\API\ApiClient;
+use Auth0\SDK\API\InformationHeaders;
 
 class LoginServiceProvider extends ServiceProvider {
 
-    const SDK_VERSION = "2.1.1";
+    const SDK_VERSION = "2.1.2";
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -37,8 +38,18 @@ class LoginServiceProvider extends ServiceProvider {
         ]);
 
         $laravel = app();
-        ApiClient::addHeaderInfoMeta('Laravel:'.$laravel::VERSION);
-        ApiClient::addHeaderInfoMeta('SDK:'.self::SDK_VERSION);
+
+        $oldInfoHeaders = ApiClient::getInfoHeadersData();
+
+        if ($oldInfoHeaders) {
+            $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
+            
+            $infoHeaders->setEnvironment('Laravel', $laravel::VERSION);
+            $infoHeaders->setPackage('laravel-auth0', self::SDK_VERSION);
+
+            ApiClient::setInfoHeadersData($infoHeaders);
+        }
+
     }
 
     /**
