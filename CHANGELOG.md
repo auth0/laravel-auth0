@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.1.3](https://github.com/auth0/laravel-auth0/tree/2.1.3) (2015-07-17)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.1.2...2.1.3)
+
+**Merged pull requests:**
+
+- updated jwt dependency [\#14](https://github.com/auth0/laravel-auth0/pull/14) ([glena](https://github.com/glena))
+
 ## [2.1.2](https://github.com/auth0/laravel-auth0/tree/2.1.2) (2015-05-15)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.1.1...2.1.2)
