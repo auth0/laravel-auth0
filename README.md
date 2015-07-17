@@ -9,7 +9,7 @@ If you are working with an older version (Laravel 4.x) you need to point to comp
 
 ##BC breaks on auth0-php 1.0.0
 
-The latest version of auth0-php has BC breaks. 
+The latest version of auth0-php has BC breaks.
 
 Besides, laravel-auth0 has full BC, we recommend to check the changes in case you were using it directly. Read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
 
@@ -27,7 +27,6 @@ NOTE: Some plugin dependencies are not tagged, so you have to either change the 
 
 ```js
 "adoy/oauth2": "dev-master",
-"firebase/php-jwt" : "dev-master",
 "illuminate/contracts": "5.*"
 ```
 
