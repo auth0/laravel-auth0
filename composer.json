@@ -7,8 +7,7 @@
         "illuminate/support": "5.*",
         "auth0/auth0-php": "~1.0",
         "adoy/oauth2": "dev-master",
-        "illuminate/contracts": "5.*",
-        "firebase/php-jwt" : "dev-master"
+        "illuminate/contracts": "5.*"
     },
     "autoload": {
         "classmap": [
