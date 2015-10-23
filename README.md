@@ -23,13 +23,6 @@ To install this plugin add the following dependency to your composer.json
 
 and run `composer update`
 
-NOTE: Some plugin dependencies are not tagged, so you have to either change the `minimum-stability` to `dev` or you have to add the dependencies manually.
-
-```js
-"adoy/oauth2": "dev-master",
-"illuminate/contracts": "5.*"
-```
-
 ### 2. Enable it in Laravel
 Add the following in the list of the services providers, located in `app/config/app.php`
 
