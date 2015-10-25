@@ -26,7 +26,7 @@ class Auth0Service {
 
     }
     /**
-     * Logouts the user from the SDK
+     * Logs the user out from the SDK.
      */
     public function logout() {
         $this->getSDK()->logout();
@@ -34,6 +34,7 @@ class Auth0Service {
 
     /**
      * If the user is logged in, returns the user information
+     * 
      * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
      */
     public function getUser() {
