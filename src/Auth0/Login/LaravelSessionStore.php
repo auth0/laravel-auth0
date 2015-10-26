@@ -6,7 +6,7 @@ class LaravelSessionStore {
 
 
     /**
-     * Persists $value on $_SESSION, idetified by $key.
+     * Persists $value on $_SESSION, identified by $key.
      *
      * @see Auth0SDK\BaseAuth0
      *
@@ -40,7 +40,7 @@ class LaravelSessionStore {
     /**
      * Constructs a session var name.
      *
-     * @param  strign $key
+     * @param string $key
      *
      * @return string
      */

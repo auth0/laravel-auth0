@@ -44,10 +44,10 @@ class Auth0JWTMiddleware implements Middleware {
             return \Response::make("Unauthorized user", 401);
         }
 
-        // lets log the user in so it is accesible
+        // lets log the user in so it is accessible
         \Auth::login($user);
 
-        // continue the excecution
+        // continue the execution
         return $next($request);
     }
 
