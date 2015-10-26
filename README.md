@@ -15,13 +15,7 @@ Besides, laravel-auth0 has full BC, we recommend to check the changes in case yo
 
 ### 1. Install the plugin and its dependencies
 
-To install this plugin add the following dependency to your composer.json
-
-```js
-"auth0/login" : "~2.1"
-```
-
-and run `composer update`
+To install this plugin run `composer require auth0/login:"~2.1"`
 
 NOTE: Some plugin dependencies are not tagged, so you have to either change the `minimum-stability` to `dev` or you have to add the dependencies manually.
 
