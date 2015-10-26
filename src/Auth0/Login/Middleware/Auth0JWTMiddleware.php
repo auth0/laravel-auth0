@@ -2,10 +2,9 @@
 
 
 use Auth0\Login\Contract\Auth0UserRepository;
-use Illuminate\Contracts\Routing\Middleware;
 use Auth0\SDK\Exception\CoreException;
 
-class Auth0JWTMiddleware implements Middleware {
+class Auth0JWTMiddleware {
 
     protected $userRepository;
 
