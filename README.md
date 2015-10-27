@@ -18,7 +18,7 @@ Besides, laravel-auth0 has full BC, we recommend to check the changes in case yo
 To install this plugin run `composer require auth0/login:"~2.1"`
 
 ### 2. Enable it in Laravel
-Add the following in the list of the services providers, located in `app/config/app.php`
+Add the following in the list of the services providers, located in `config/app.php`
 
 ```php
 'providers' => array(
@@ -84,7 +84,7 @@ The plugin works with the [Laravel security system](http://laravel.com/docs/secu
 In other words, you need to select a uri (for example `/auth0/callback`) and configure it in your [Auth0 admin page](https://app.auth0.com/#/applications/) and also, add it as a route in Laravel
 
 ```php
-Route::get('/auth0/callback', 'Auth0\Login\Auth0Controller@callback');
+Route::get('/auth0/callback', '\Auth0\Login\Auth0Controller@callback');
 ```
 
 ### 5. Triggering login manually or integrating the Auth0 widget
@@ -110,6 +110,15 @@ You can trigger the login in different ways, like redirecting to a login link or
 
 <button onclick="signin()">Login</button>
 
+```
+
+and this controller action 
+
+```php
+public function login() {
+    $auth0Config = config('laravel-auth0');
+    return view('login')->with('auth0Config',$auth0Config);
+}
 ```
 
 ### 6. Defining a user and a user provider
