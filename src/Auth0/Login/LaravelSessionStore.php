@@ -18,7 +18,7 @@ class LaravelSessionStore {
         Session::put($key_name, $value);
     }
 
-    public function get($key, $default=false) {
+    public function get($key, $default=null) {
         $key_name = $this->getSessionKeyName($key);
 
         return Session::get($key_name, $default);

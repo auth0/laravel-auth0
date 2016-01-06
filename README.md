@@ -10,10 +10,44 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
+###Laravel 5.2
+
+####Routes
+Your routes need to be in the `web` routes group, otherwise it will not be able to use the session storage:
+
+```
+Route::group(['middleware' => ['web']], function () {
+
+  Route::get('/auth0/callback', '\Auth0\Login\Auth0Controller@callback');
+
+  Route::get('/', function () {
+
+    if (Auth::check()) dd('LOGGED IN',Auth::user());
+
+    return view('welcome');
+
+  });
+});
+```
+
+####Auth setup
+
+In your `config/auth.php` file update the providers to use the `auth0` driver:
+
+```
+...
+    'providers' => [
+        'users' => [
+            'driver' => 'auth0',
+        ],
+    ],
+...
+```
 
 ##Laravel Compatibility
 
-The last version (2.x) targets Laravel 5 compatibility.
+The 2.x branch targets Laravel 5.0 and 5.1 compatibility.
+The 3.x branch targets Laravel 5.2 compatibility.
 
 If you are working with an older version (Laravel 4.x) you need to point to composer.json to the version 1.0.*
 
