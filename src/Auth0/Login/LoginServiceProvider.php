@@ -22,15 +22,10 @@ class LoginServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        \Auth::extend('auth0', function($app) {
 
-            // Let the container build the repository for us
-            $userRepository = \App::make('\Auth0\Login\Contract\Auth0UserRepository');
-
-            $provider =  new Auth0UserProvider($userRepository);
-
-            return new \Illuminate\Auth\Guard($provider, $app['session.store']);
-
+        \Auth::provider('auth0', function($app, array $config) {
+            $userRepository = \App::make(\Auth0\Login\Contract\Auth0UserRepository::class);
+            return new Auth0UserProvider($userRepository);
         });
 
         $this->publishes([

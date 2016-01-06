@@ -23,6 +23,15 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
     }
 
     /**
+     * Get id field name.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName() {
+        return 'id';
+    }
+
+    /**
      * Get the password for the user.
      *
      * @return string
