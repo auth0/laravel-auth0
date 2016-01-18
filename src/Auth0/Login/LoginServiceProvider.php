@@ -6,7 +6,7 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 
 class LoginServiceProvider extends ServiceProvider {
 
-    const SDK_VERSION = "2.1.2";
+    const SDK_VERSION = "3.0.1";
 
     /**
      * Indicates if loading of the provider is deferred.
