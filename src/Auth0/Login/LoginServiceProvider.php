@@ -1,8 +1,8 @@
 <?php namespace Auth0\Login;
 
 use Illuminate\Support\ServiceProvider;
-use Auth0\SDK\API\ApiClient;
-use Auth0\SDK\API\InformationHeaders;
+use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\API\Helpers\InformationHeaders;
 
 class LoginServiceProvider extends ServiceProvider {
 
