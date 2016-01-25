@@ -42,6 +42,18 @@ return array(
 
     // 'redirect_uri'  => 'http://<host>/auth0/callback'
 
+    /*
+    |--------------------------------------------------------------------------
+    |   Persistence Configuration
+    |--------------------------------------------------------------------------
+    |   persist_user            (Boolean) Optional. Indicates if you want to persist the user info, default true
+    |   persist_access_token    (Boolean) Optional. Indicates if you want to persist the access token, default false
+    |   persist_id_token        (Boolean) Optional. Indicates if you want to persist the id token, default false
+    |
+    */
 
+    // 'persist_user' => true,
+    // 'persist_access_token' => false,
+    // 'persist_id_token' => false,
 
 );
