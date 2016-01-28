@@ -1,5 +1,34 @@
 # Change Log
 
+## [3.0.3](https://github.com/auth0/laravel-auth0/tree/3.0.3) (2016-01-28)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/3.0.2...3.0.3)
+
+**Closed issues:**
+
+- Tag 2.2.2 breaks on Laravel 5.1 [\#30](https://github.com/auth0/laravel-auth0/issues/30)
+
+**Merged pull requests:**
+
+- Conform to 5.2's Authenticatable contract [\#31](https://github.com/auth0/laravel-auth0/pull/31) ([ryannjohnson](https://github.com/ryannjohnson))
+
+## [3.0.2](https://github.com/auth0/laravel-auth0/tree/3.0.2) (2016-01-25)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/2.2.1...3.0.2)
+
+**Merged pull requests:**
+
+- Added optional persistence configuration values [\#29](https://github.com/auth0/laravel-auth0/pull/29) ([carnevalle](https://github.com/carnevalle))
+
+## [2.2.1](https://github.com/auth0/laravel-auth0/tree/2.2.1) (2016-01-22)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/3.0.1...2.2.1)
+
+**Closed issues:**
+
+- Create a logout route [\#25](https://github.com/auth0/laravel-auth0/issues/25)
+
+**Merged pull requests:**
+
+- Auth0 SDK checks for null values instead of false [\#27](https://github.com/auth0/laravel-auth0/pull/27) ([thijsvdanker](https://github.com/thijsvdanker))
+
 ## [3.0.1](https://github.com/auth0/laravel-auth0/tree/3.0.1) (2016-01-18)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/3.0.0...3.0.1)
 
