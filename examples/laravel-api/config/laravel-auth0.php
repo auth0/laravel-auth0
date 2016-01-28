@@ -10,7 +10,7 @@ return array(
     |
     */
 
-    // 'domain'        => 'XXXX.auth0.com',
+    'domain'        => getenv('AUTH0_DOMAIN'),
     /*
     |--------------------------------------------------------------------------
     |   Your APP id
@@ -19,7 +19,7 @@ return array(
     |
     */
 
-    // 'client_id'     => 'XXXX',
+    'client_id'     => getenv('AUTH0_CLIENT_ID'),
 
     /*
     |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ return array(
     |   As set in the auth0 administration page
     |
     */
-    // 'client_secret' => 'XXXXX',
+    'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
 
 
    /*
@@ -40,7 +40,7 @@ return array(
     |
     */
 
-    // 'redirect_uri'  => 'http://<host>/auth0/callback'
+    'redirect_uri'  => getenv('AUTH0_CALLBACK_URL')
 
 
 
