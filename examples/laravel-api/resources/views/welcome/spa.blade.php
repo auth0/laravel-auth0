@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="/app/login/login.css">
 
     <script type="text/javascript" src="/js/auth0-variables.js"></script>
-    <script type="text/javascript" src="https://cdn.auth0.com/js/lock-7.min.js"></script>
+    <script type="text/javascript" src="https://cdn.auth0.com/js/lock-9.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular-cookies.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular-route.js"></script>
