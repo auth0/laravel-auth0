@@ -5,7 +5,7 @@
 
     <div id="a0-container"></div>
 
-    <script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
+    <script src="https://cdn.auth0.com/js/lock-9.min.js"></script>
     <script type="text/javascript">
 
         var lock = new Auth0Lock('{{ $auth0Config['client_id'] }}', '{{ $auth0Config['domain'] }}');
