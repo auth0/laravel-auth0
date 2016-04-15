@@ -1,3 +1,4 @@
 vendor/
 .env
 .DS_Store
+examples/laravel-api/config/laravel-auth0.php

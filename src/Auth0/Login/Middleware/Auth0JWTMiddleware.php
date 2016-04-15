@@ -16,8 +16,6 @@ class Auth0JWTMiddleware {
     {
         $auth0 = \App::make('auth0');
 
-
-
         // Get the encrypted user JWT
         $authorizationHeader = $request->header("Authorization");
         $encUser = str_replace('Bearer ', '', $authorizationHeader);

@@ -40,7 +40,17 @@ return array(
     |
     */
 
-    // 'redirect_uri'  => 'http://<host>/auth0/callback'
+    // 'redirect_uri'  => 'http://<host>/auth0/callback',
+
+    /*
+    |--------------------------------------------------------------------------
+    |   The authorized token issuers
+    |--------------------------------------------------------------------------
+    |   This is used to verify the decoded tokens when using RS256
+    |
+    */
+
+    // 'authorized_issuers'  => [ 'https://XXXX.auth0.com/' ],
 
 
 

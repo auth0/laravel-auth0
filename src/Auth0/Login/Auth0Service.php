@@ -72,8 +72,9 @@ class Auth0Service {
 
         $client_id = config('laravel-auth0.client_id');
         $client_secret = config('laravel-auth0.client_secret');
+        $authorized_issuers = config('laravel-auth0.authorized_issuers');
 
-        $this->apiuser = Auth0JWT::decode($encUser, $client_id, $client_secret);
+        $this->apiuser = Auth0JWT::decode($encUser, $client_id, $client_secret, $authorized_issuers);
 
         return $this->apiuser;
     }
