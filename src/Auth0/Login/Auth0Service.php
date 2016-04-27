@@ -73,8 +73,22 @@ class Auth0Service {
         $client_id = config('laravel-auth0.client_id');
         $client_secret = config('laravel-auth0.client_secret');
         $authorized_issuers = config('laravel-auth0.authorized_issuers');
+        $api_identifier = config('laravel-auth0.api_identifier');
 
-        $this->apiuser = Auth0JWT::decode($encUser, $client_id, $client_secret, $authorized_issuers);
+        $audiences = [];
+
+        if (!empty($api_identifier)) {
+            if (is_array($api_identifier)) {
+                $audiences = $api_identifier;
+            }
+            else {
+                $audiences[] = $api_identifier;
+            }
+        }
+
+        $audiences[] = $client_id;
+
+        $this->apiuser = Auth0JWT::decode($encUser, $audiences, $client_secret, $authorized_issuers);
 
         return $this->apiuser;
     }
