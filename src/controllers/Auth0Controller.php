@@ -37,7 +37,7 @@ class Auth0Controller extends Controller {
                 // If not, the user will be fine
                 $user = $auth0User;
             }
-            \Auth::login($user);
+            \Auth::login($user, $service->rememberUser());
         }
         return  \Redirect::intended('/');
     }
