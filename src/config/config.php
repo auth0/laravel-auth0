@@ -56,4 +56,21 @@ return array(
     // 'persist_access_token' => false,
     // 'persist_id_token' => false,
 
+    /*
+    |--------------------------------------------------------------------------
+    |   The authorized token issuers
+    |--------------------------------------------------------------------------
+    |   This is used to verify the decoded tokens when using RS256
+    |
+    */
+    // 'authorized_issuers'  => [ 'https://XXXX.auth0.com/' ],
+    /*
+    |--------------------------------------------------------------------------
+    |   The authorized token issuers
+    |--------------------------------------------------------------------------
+    |   This is used to verify the decoded tokens when using RS256
+    |
+    */
+    // 'api_identifier'  => [ ],
+
 );

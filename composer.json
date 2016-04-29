@@ -5,7 +5,7 @@
     "require": {
         "php": ">=5.3.0",
         "illuminate/support": "5.*",
-        "auth0/auth0-php": "~3.0",
+        "auth0/auth0-php": "~3.2",
         "illuminate/contracts": "5.*"
     },
     "autoload": {
