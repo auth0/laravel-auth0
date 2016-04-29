@@ -66,6 +66,21 @@ class Auth0Service {
     public function callOnLogin($auth0User) {
         return call_user_func($this->_onLoginCb, $auth0User);
     }
+    
+    private $rememberUser = false;
+    /**
+     * Use this to either enable or disable the "remember" function for users
+     *
+     * @param null $value
+     * @return bool|null
+     */
+    public function rememberUser($value = null) {
+        if($value !== null){
+            $this->rememberUser = $value;
+        }
+
+        return $this->rememberUser;
+    }
 
     private $apiuser;
     public function decodeJWT($encUser) {
