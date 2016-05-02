@@ -54,9 +54,9 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    |   The authorized token issuers
+    |   The valid token audiences
     |--------------------------------------------------------------------------
-    |   This is used to verify the decoded tokens when using RS256
+    |   This is used to verify if the decoded tokens are meant to this server
     |
     */
 
