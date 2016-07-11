@@ -19,7 +19,7 @@ class Auth0JWTMiddleware {
     }
 
     protected function validateToken($token) {
-        return ($encUser !== '');
+        return ($token !== '');
     }
 
     public function handle($request, \Closure $next)
