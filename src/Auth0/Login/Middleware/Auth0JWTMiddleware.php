@@ -39,6 +39,9 @@ class Auth0JWTMiddleware {
             catch(CoreException $e) {
                 return \Response::make("Unauthorized user", 401);
             }
+            catch(InvalidTokenException $e) {
+                return \Response::make("Unauthorized user", 401);
+            }
 
             // if it does not represent a valid user, return a HTTP 401
             $user = $this->userRepository->getUserByDecodedJWT($jwtUser);

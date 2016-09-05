@@ -1,8 +1,8 @@
 <?php namespace Auth0\Login;
 
 use Config;
-use Auth0\SDK\Auth0;
-use Auth0\SDK\Auth0JWT;
+use Auth0\SDK\API\Authentication;
+use Auth0\SDK\JWTVerifier;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -15,12 +15,18 @@ class Auth0Service {
      * the config set in the laravel way and using a LaravelSession
      * as a store mechanism
      */
-    private function getSDK() {
-        if (is_null($this->auth0)) {
+    private function getSDK() 
+    {
+        if (is_null($this->auth0)) 
+        {
             $auth0Config = config('laravel-auth0');
 
             $auth0Config['store'] = new LaravelSessionStore();
-            $this->auth0 = new Auth0($auth0Config);
+
+
+            $auth0 = new Authentication($auth0Config['domain'], $auth0Config['client_id']);
+
+            $this->auth0 = $auth0->get_oauth_client($auth0Config['client_secret'], $auth0Config['redirect_uri']);
         }
         return $this->auth0;
 
@@ -83,22 +89,14 @@ class Auth0Service {
     }
 
     private $apiuser;
-    public function decodeJWT($encUser) {
-        $client_id = config('laravel-auth0.client_id');
-        $client_secret = config('laravel-auth0.client_secret');
-        $authorized_issuers = config('laravel-auth0.authorized_issuers');
-        $api_identifier = config('laravel-auth0.api_identifier');
-        $audiences = [];
-        if (!empty($api_identifier)) {
-            if (is_array($api_identifier)) {
-                $audiences = $api_identifier;
-            }
-            else {
-                $audiences[] = $api_identifier;
-            }
-        }
-        $audiences[] = $client_id;
-        $this->apiuser = Auth0JWT::decode($encUser, $audiences, $client_secret, $authorized_issuers);
+    public function decodeJWT($encUser) 
+    {
+        $verifier = new JWTVerifier([
+            'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
+            'client_secret' => config('laravel-auth0.client_secret'),
+            'authorized_issuers' => config('laravel-auth0.authorized_issuers'),
+        ]);
+        $this->apiuser = $verifier->verifyAndDecode($encUser);
         return $this->apiuser;
     }
 

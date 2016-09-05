@@ -63,6 +63,12 @@ class LoginServiceProvider extends ServiceProvider {
         \Event::listen('auth.logout', function() {
             \App::make("auth0")->logout();
         });
+        \Event::listen('user.logout', function() {
+            \App::make("auth0")->logout();
+        });
+        \Event::listen('Illuminate\Auth\Events\Logout', function() {
+            \App::make("auth0")->logout();
+        });
 
     }
 
