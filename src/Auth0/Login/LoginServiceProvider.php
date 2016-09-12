@@ -60,7 +60,7 @@ class LoginServiceProvider extends ServiceProvider {
         });
 
         // When Laravel logs out, logout the auth0 SDK trough the service
-        \Event::listen('auth.logout', function() {
+        \Event::listen('Illuminate\Auth\Events\Logout', function() {
             \App::make("auth0")->logout();
         });
 
