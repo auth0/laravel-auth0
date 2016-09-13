@@ -10,6 +10,20 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
+### Setting up a JWKs cache
+
+In the `register` method of your `AppServiceProvider` add:
+
+```php
+  $cache = Cache::store('default');
+
+  $this->app->bind(
+      '\Auth0\SDK\Helpers\Cache\CacheHandler',
+      new \Auth0\SDK\Helpers\Cache\LaravelCacheWrapper($cache));
+```
+
+You can implement your own cache strategy by creating a new class that implements the `Auth0\SDK\Helpers\Cache\CacheHandler` contract.
+
 ###Laravel 5.2
 
 ####Routes

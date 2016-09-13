@@ -3,6 +3,7 @@
 use Config;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\JWTVerifier;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -91,11 +92,19 @@ class Auth0Service {
     private $apiuser;
     public function decodeJWT($encUser) 
     {
+        try {
+            $cache = \App::make('\Auth0\SDK\Helpers\Cache\CacheHandler');
+        } catch(BindingResolutionException $e) {
+            $cache = null;
+        }
+
         $verifier = new JWTVerifier([
             'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
             'client_secret' => config('laravel-auth0.client_secret'),
             'authorized_issuers' => config('laravel-auth0.authorized_issuers'),
+            'cache' => $cache,
         ]);
+
         $this->apiuser = $verifier->verifyAndDecode($encUser);
         return $this->apiuser;
     }
