@@ -24,8 +24,6 @@ class LoginServiceProvider extends ServiceProvider {
     {
 
         \Auth::provider('auth0', function($app, array $config) { 
-            // $userRepository = \App::make(\Auth0\Login\Contract\Auth0UserRepository::class);
-            // return new Auth0UserProvider($userRepository);
             return $app->make(Auth0UserProvider::class);
         });
 
