@@ -105,6 +105,7 @@ class Auth0Service {
         ]);
 
         $this->apiuser = $verifier->verifyAndDecode($encUser);
+        
         return $this->apiuser;
     }
 

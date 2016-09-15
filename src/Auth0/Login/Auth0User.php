@@ -70,4 +70,8 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable {
         return $this->userInfo;
     }
 
+    public function __toString() {
+        return json_encode($this->userInfo);
+    }
+
 }
