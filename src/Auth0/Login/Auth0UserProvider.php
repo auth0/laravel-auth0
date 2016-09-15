@@ -28,9 +28,7 @@ class Auth0UserProvider implements UserProvider
      * @return Authenticatable
      */
     public function retrieveByID($identifier) {
-        dd('retrieveByID',$identifier);
         return $this->userRepository->getUserByIdentifier($identifier);
-        
     }
 
     public function retrieveByCredentials(array $credentials) {
@@ -57,7 +55,6 @@ class Auth0UserProvider implements UserProvider
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function retrieveByToken($identifier, $token) {
-        dd('retrieveByToken',$identifier, $token);
         return false;
     }
 
@@ -65,14 +62,13 @@ class Auth0UserProvider implements UserProvider
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function updateRememberToken(Authenticatable $user, $token) {
-        dd('updateRememberToken',$user, $token);
+
     }
 
     /**
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function validateCredentials(Authenticatable $user, array $credentials) {
-        dd('validateCredentials',$user, $credentials);
         return false;
-     }
+    }
 }
