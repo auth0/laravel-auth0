@@ -1,8 +1,8 @@
 <?php namespace Auth0\Login\Middleware;
 
-
 use Auth0\Login\Contract\Auth0UserRepository;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 
 class Auth0JWTMiddleware {
 

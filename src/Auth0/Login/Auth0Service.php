@@ -24,7 +24,6 @@ class Auth0Service {
 
             $auth0Config['store'] = new LaravelSessionStore();
 
-
             $auth0 = new Authentication($auth0Config['domain'], $auth0Config['client_id']);
 
             $this->auth0 = $auth0->get_oauth_client($auth0Config['client_secret'], $auth0Config['redirect_uri']);

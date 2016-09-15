@@ -1,15 +1,15 @@
 <?php 
 
-namespace Auth0\SDK\Helpers\Cache;
+namespace Auth0\Login;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Cache\Repository;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 
 class LaravelCacheWrapper implements CacheHandler 
 {
   protected $cache;
 
-  public function __construct(Cache $laravelCache) 
+  public function __construct(Repository $laravelCache) 
   {
     $this->cache = $laravelCache;
   }

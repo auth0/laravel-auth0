@@ -15,14 +15,29 @@ Check our docs page to get a complete guide on how to install it in an existing 
 In the `register` method of your `AppServiceProvider` add:
 
 ```php
-  $cache = Cache::store('default');
+  use Illuminate\Support\Facades\Cache;
+  
+  ...
+    public function register()
+    {
+      ...
 
-  $this->app->bind(
-      '\Auth0\SDK\Helpers\Cache\CacheHandler',
-      new \Auth0\SDK\Helpers\Cache\LaravelCacheWrapper($cache));
+      $this->app->bind(
+        '\Auth0\SDK\Helpers\Cache\CacheHandler',
+        function() {
+            static $cacheWrapper = null; 
+            if ($cacheWrapper === null) {
+                $cache = Cache::store();
+                $cacheWrapper = new LaravelCacheWrapper($cache);
+            }
+            return $cacheWrapper;
+        });
+
+        ...
+    }
 ```
 
-You can implement your own cache strategy by creating a new class that implements the `Auth0\SDK\Helpers\Cache\CacheHandler` contract.
+You can implement your own cache strategy by creating a new class that implements the `Auth0\SDK\Helpers\Cache\CacheHandler` contract, or just use the cache strategy you want by picking that store with `Cache::store('your_store_name')`;
 
 ###Laravel 5.2
 

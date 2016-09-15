@@ -1,9 +1,12 @@
 <?php namespace Auth0\Login;
 
-use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 
+use Auth0\Login\Auth0Service;
+use Auth0\Login\Contract\Auth0UserRepository;
+use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 /**
  * Service that provides an Auth0\LaravelAuth0\Auth0User stored in the session. This User provider
  * should be used when you don't want to persist the entity.
@@ -11,9 +14,11 @@ use Illuminate\Contracts\Auth\UserProvider;
 class Auth0UserProvider implements UserProvider
 {
     protected $userRepository;
+    protected $auth0;
 
-    public function __construct(Auth0UserRepository $userRepository) {
+    public function __construct(Auth0UserRepository $userRepository, Auth0Service $auth0) {
         $this->userRepository = $userRepository;
+        $this->auth0 = $auth0;
     }
 
     /**
@@ -23,20 +28,36 @@ class Auth0UserProvider implements UserProvider
      * @return Authenticatable
      */
     public function retrieveByID($identifier) {
+        dd('retrieveByID',$identifier);
         return $this->userRepository->getUserByIdentifier($identifier);
+        
     }
 
-    /**
-     * Required method by the UserProviderInterface, we don't implement it
-     */
     public function retrieveByCredentials(array $credentials) {
-        return false;
+        if (!isset($credentials['api_token'])) {
+            return false;
+        }
+
+        $encUser = $credentials['api_token'];
+
+        try {
+            $decodedJWT = $this->auth0->decodeJWT($encUser); 
+        }
+        catch(CoreException $e) {
+            return \Response::make("Unauthorized user", 401);
+        }
+        catch(InvalidTokenException $e) {
+            return \Response::make("Unauthorized user", 401);
+        }
+
+        return $this->userRepository->getUserByDecodedJWT($decodedJWT);
     }
 
     /**
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function retrieveByToken($identifier, $token) {
+        dd('retrieveByToken',$identifier, $token);
         return false;
     }
 
@@ -44,12 +65,14 @@ class Auth0UserProvider implements UserProvider
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function updateRememberToken(Authenticatable $user, $token) {
+        dd('updateRememberToken',$user, $token);
     }
 
     /**
      * Required method by the UserProviderInterface, we don't implement it
      */
     public function validateCredentials(Authenticatable $user, array $credentials) {
+        dd('validateCredentials',$user, $credentials);
         return false;
      }
 }
