@@ -64,6 +64,7 @@ return array(
     |
     */
     // 'authorized_issuers'  => [ 'https://XXXX.auth0.com/' ],
+    
     /*
     |--------------------------------------------------------------------------
     |   The authorized token issuers

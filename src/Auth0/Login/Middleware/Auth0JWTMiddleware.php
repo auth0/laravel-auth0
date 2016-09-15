@@ -1,8 +1,8 @@
 <?php namespace Auth0\Login\Middleware;
 
-
 use Auth0\Login\Contract\Auth0UserRepository;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 
 class Auth0JWTMiddleware {
 
@@ -37,6 +37,9 @@ class Auth0JWTMiddleware {
                 $jwtUser = $auth0->decodeJWT($token);
             }
             catch(CoreException $e) {
+                return \Response::make("Unauthorized user", 401);
+            }
+            catch(InvalidTokenException $e) {
                 return \Response::make("Unauthorized user", 401);
             }
 
