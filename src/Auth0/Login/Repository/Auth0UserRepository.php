@@ -4,9 +4,9 @@ namespace Auth0\Login\Repository;
 
 use Auth0\Login\Auth0User;
 use Auth0\Login\Auth0JWTUser;
-use Auth0\Login\Contract\Auth0UserRepository;
+use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
 
-class Auth0UserRepository implements Auth0UserRepository {
+class Auth0UserRepository implements Auth0UserRepositoryContract {
 
     public function getUserByDecodedJWT($jwt) {
         return new Auth0JWTUser($jwt);
