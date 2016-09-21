@@ -2,7 +2,6 @@
 
 use Auth0\SDK\API\Oauth2Client;
 use Config;
-use Auth0\SDK\API\Authentication;
 use Auth0\SDK\JWTVerifier;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
