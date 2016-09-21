@@ -1,5 +1,6 @@
 <?php namespace Auth0\Login;
 
+use Auth0\SDK\API\Oauth2Client;
 use Config;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\JWTVerifier;
@@ -16,17 +17,16 @@ class Auth0Service {
      * the config set in the laravel way and using a LaravelSession
      * as a store mechanism
      */
-    private function getSDK() 
+    private function getSDK()
     {
         if (is_null($this->auth0)) 
         {
+            /** @var array $auth0Config */
             $auth0Config = config('laravel-auth0');
 
             $auth0Config['store'] = new LaravelSessionStore();
 
-            $auth0 = new Authentication($auth0Config['domain'], $auth0Config['client_id']);
-
-            $this->auth0 = $auth0->get_oauth_client($auth0Config['client_secret'], $auth0Config['redirect_uri']);
+            return new Oauth2Client($auth0Config);
         }
         return $this->auth0;
 
@@ -107,6 +107,11 @@ class Auth0Service {
         $this->apiuser = $verifier->verifyAndDecode($encUser);
         
         return $this->apiuser;
+    }
+
+    public function getJWT()
+    {
+        return $this->getSDK()->getIdToken();
     }
 
 
