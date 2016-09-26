@@ -72,6 +72,6 @@ return array(
     |   This is used to verify the decoded tokens when using RS256
     |
     */
-    // 'api_identifier'  => [ ],
+    // 'api_identifier'  => '',
 
 );
