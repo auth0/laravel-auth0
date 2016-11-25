@@ -6,7 +6,7 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 
 class LoginServiceProvider extends ServiceProvider {
 
-    const SDK_VERSION = "3.0.1";
+    const SDK_VERSION = "4.0.4";
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -23,7 +23,7 @@ class LoginServiceProvider extends ServiceProvider {
     public function boot()
     {
 
-        \Auth::provider('auth0', function($app, array $config) { 
+        \Auth::provider('auth0', function($app, array $config) {
             return $app->make(Auth0UserProvider::class);
         });
 
@@ -37,7 +37,7 @@ class LoginServiceProvider extends ServiceProvider {
 
         if ($oldInfoHeaders) {
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
-            
+
             $infoHeaders->setEnvironment('Laravel', $laravel::VERSION);
             $infoHeaders->setPackage('laravel-auth0', self::SDK_VERSION);
 

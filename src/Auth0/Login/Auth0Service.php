@@ -16,9 +16,9 @@ class Auth0Service {
      * the config set in the laravel way and using a LaravelSession
      * as a store mechanism
      */
-    private function getSDK() 
+    private function getSDK()
     {
-        if (is_null($this->auth0)) 
+        if (is_null($this->auth0))
         {
             $auth0Config = config('laravel-auth0');
 
@@ -40,7 +40,7 @@ class Auth0Service {
 
     /**
      * If the user is logged in, returns the user information
-     * 
+     *
      * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
      */
     public function getUser() {
@@ -72,7 +72,7 @@ class Auth0Service {
     public function callOnLogin($auth0User) {
         return call_user_func($this->_onLoginCb, $auth0User);
     }
-    
+
     private $rememberUser = false;
     /**
      * Use this to either enable or disable the "remember" function for users
@@ -89,7 +89,7 @@ class Auth0Service {
     }
 
     private $apiuser;
-    public function decodeJWT($encUser) 
+    public function decodeJWT($encUser)
     {
         try {
             $cache = \App::make('\Auth0\SDK\Helpers\Cache\CacheHandler');
@@ -97,15 +97,23 @@ class Auth0Service {
             $cache = null;
         }
 
+        $secret_base64_encoded = config('laravel-auth0.secret_base64_encoded');
+
+        if (is_null($secret_base64_encoded)) {
+          $secret_base64_encoded = true;
+        }
+
         $verifier = new JWTVerifier([
             'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
             'client_secret' => config('laravel-auth0.client_secret'),
             'authorized_iss' => config('laravel-auth0.authorized_issuers'),
+            'authorized_issuers' => config('laravel-auth0.authorized_issuers'),
+            'secret_base64_encoded' => $secret_base64_encoded,
             'cache' => $cache,
         ]);
 
         $this->apiuser = $verifier->verifyAndDecode($encUser);
-        
+
         return $this->apiuser;
     }
 

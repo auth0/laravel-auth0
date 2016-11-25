@@ -64,14 +64,22 @@ return array(
     |
     */
     // 'authorized_issuers'  => [ 'https://XXXX.auth0.com/' ],
-    
+
     /*
     |--------------------------------------------------------------------------
-    |   The authorized token issuers
+    |   The authorized token audiences
     |--------------------------------------------------------------------------
-    |   This is used to verify the decoded tokens when using RS256
     |
     */
     // 'api_identifier'  => '',
+
+    /*
+    |--------------------------------------------------------------------------
+    |   The secret format
+    |--------------------------------------------------------------------------
+    |   Used to know if it should decode the secret when using HS256
+    |
+    */
+    // 'secret_base64_encoded'  => true,
 
 );
