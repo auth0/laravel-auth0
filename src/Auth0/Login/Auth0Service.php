@@ -142,9 +142,16 @@ class Auth0Service
         return $this->apiuser;
     }
 
-    /**
-     * @return mixed
-     */
+    public function getIdToken()
+    {
+        return $this->getSDK()->getIdToken();
+    }
+
+    public function getAccessToken()
+    {
+        return $this->getSDK()->getAccessToken();
+    }
+
     public function jwtuser()
     {
         return $this->apiuser;
