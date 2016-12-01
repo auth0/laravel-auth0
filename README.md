@@ -3,7 +3,7 @@ This plugin helps you integrate your Laravel WebApp with [Auth0](https://auth0.c
 
 ## Installation
 
-Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
+Check our docs page to get a complete guide on how to install it in an existing project or download a pre-configured seed project:
 
 * Regular webapp: https://auth0.com/docs/quickstart/webapp/laravel/
 * Web API: https://auth0.com/docs/quickstart/backend/php-laravel/

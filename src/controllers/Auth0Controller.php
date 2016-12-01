@@ -1,23 +1,32 @@
-<?php namespace Auth0\Login;
+<?php
+
+namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository;
-use \Illuminate\Routing\Controller;
+use Illuminate\Routing\Controller;
 
-class Auth0Controller extends Controller {
-
+class Auth0Controller extends Controller
+{
     /**
      * @var Auth0UserRepository
      */
     protected $userRepository;
 
-    public function __construct(Auth0UserRepository $userRepository) {
+    /**
+     * Auth0Controller constructor.
+     *
+     * @param Auth0UserRepository $userRepository
+     */
+    public function __construct(Auth0UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
     /**
-     * Callback action that should be called by auth0, logs the user in
+     * Callback action that should be called by auth0, logs the user in.
      */
-    public function callback() {
+    public function callback()
+    {
         // Get a handle of the Auth0 service (we don't know if it has an alias)
         $service = \App::make('auth0');
 
@@ -39,7 +48,7 @@ class Auth0Controller extends Controller {
             }
             \Auth::login($user, $service->rememberUser());
         }
-        return  \Redirect::intended('/');
-    }
 
+        return \Redirect::intended('/');
+    }
 }
