@@ -24,12 +24,7 @@ class Auth0Service
      */
     private function getSDK()
     {
-<<<<<<< 9190d433da757c9e90d91112d0886c09a9d80991
-        if (is_null($this->auth0))
-        {
-=======
         if (is_null($this->auth0)) {
->>>>>>> Code style & docblocks
             $auth0Config = config('laravel-auth0');
 
             $auth0Config['store'] = new LaravelSessionStore();
@@ -51,11 +46,7 @@ class Auth0Service
     }
 
     /**
-<<<<<<< 9190d433da757c9e90d91112d0886c09a9d80991
-     * If the user is logged in, returns the user information
-=======
      * If the user is logged in, returns the user information.
->>>>>>> Code style & docblocks
      *
      * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
      */
@@ -103,10 +94,6 @@ class Auth0Service
         return call_user_func($this->_onLoginCb, $auth0User);
     }
 
-<<<<<<< 9190d433da757c9e90d91112d0886c09a9d80991
-    private $rememberUser = false;
-=======
->>>>>>> Code style & docblocks
     /**
      * Use this to either enable or disable the "remember" function for users.
      *
@@ -123,15 +110,11 @@ class Auth0Service
         return $this->rememberUser;
     }
 
-<<<<<<< 9190d433da757c9e90d91112d0886c09a9d80991
-    private $apiuser;
-=======
     /**
      * @param $encUser
      *
      * @return mixed
      */
->>>>>>> Code style & docblocks
     public function decodeJWT($encUser)
     {
         try {
