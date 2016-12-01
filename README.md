@@ -10,7 +10,7 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
-### Setting up a JWTs cache
+### Setting up a JWKs cache
 
 In the `register` method of your `AppServiceProvider` add:
 
