@@ -130,6 +130,7 @@ class Auth0Service
         }
 
         $verifier = new JWTVerifier([
+            'suported_algs' => ['HS256', 'RS256'],
             'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
             'client_secret' => config('laravel-auth0.client_secret'),
             'authorized_iss' => config('laravel-auth0.authorized_issuers'),
