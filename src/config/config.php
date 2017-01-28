@@ -88,6 +88,6 @@ return array(
     |   Algs supported by your API
     |
     */
-    // 'suported_algs'        => ['HS256'],
+    // 'supported_algs'        => ['HS256'],
 
 );
