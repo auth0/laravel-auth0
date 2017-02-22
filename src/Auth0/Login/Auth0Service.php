@@ -4,6 +4,7 @@ namespace Auth0\Login;
 
 use Config;
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Auth0;
 use Auth0\SDK\JWTVerifier;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
@@ -12,10 +13,22 @@ use Illuminate\Contracts\Container\BindingResolutionException;
  */
 class Auth0Service
 {
+    private $auth0Config;
     private $auth0;
+    private $authApi;
     private $apiuser;
     private $_onLoginCb = null;
     private $rememberUser = false;
+
+    public function __construct() {
+      $this->auth0Config = config('laravel-auth0');
+
+      $this->auth0Config['store'] = new LaravelSessionStore();
+
+      $this->authApi = new Authentication($this->auth0Config['domain'], $this->auth0Config['client_id']);
+
+      $this->auth0 = new Auth0($this->auth0Config);
+    }
 
     /**
      * Creates an instance of the Auth0 SDK using
@@ -24,16 +37,6 @@ class Auth0Service
      */
     private function getSDK()
     {
-        if (is_null($this->auth0)) {
-            $auth0Config = config('laravel-auth0');
-
-            $auth0Config['store'] = new LaravelSessionStore();
-
-            $auth0 = new Authentication($auth0Config['domain'], $auth0Config['client_id']);
-
-            $this->auth0 = $auth0->get_oauth_client($auth0Config['client_secret'], $auth0Config['redirect_uri'], $auth0Config);
-        }
-
         return $this->auth0;
     }
 
@@ -43,6 +46,15 @@ class Auth0Service
     public function logout()
     {
         $this->getSDK()->logout();
+    }
+
+    /**
+     * Redirects the user to the hosted login page
+     */
+    public function login($connection = null, $state = null, $aditional_params = [], $response_type = 'code')
+    {
+      $url = $this->authApi->get_authorize_link($response_type, $this->auth0Config['redirect_uri'], $connection, $state, $aditional_params);
+      return \Redirect::to($url);
     }
 
     /**

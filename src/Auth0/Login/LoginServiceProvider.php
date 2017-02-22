@@ -51,7 +51,7 @@ class LoginServiceProvider extends ServiceProvider {
     {
         // Bind the auth0 name to a singleton instance of the Auth0 Service
         $this->app->singleton('auth0', function () {
-            return new Auth0Service();
+          return new Auth0Service();
         });
 
         // When Laravel logs out, logout the auth0 SDK trough the service
