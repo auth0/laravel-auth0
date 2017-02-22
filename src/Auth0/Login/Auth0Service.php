@@ -20,6 +20,16 @@ class Auth0Service
     private $_onLoginCb = null;
     private $rememberUser = false;
 
+    public function __construct() {
+      $this->auth0Config = config('laravel-auth0');
+
+      $this->auth0Config['store'] = new LaravelSessionStore();
+
+      $this->authApi = new Authentication($this->auth0Config['domain'], $this->auth0Config['client_id']);
+
+      $this->auth0 = new Auth0($this->auth0Config);
+    }
+
     /**
      * Creates an instance of the Auth0 SDK using
      * the config set in the laravel way and using a LaravelSession
@@ -27,16 +37,6 @@ class Auth0Service
      */
     private function getSDK()
     {
-        if (is_null($this->auth0)) {
-            $this->auth0Config = config('laravel-auth0');
-
-            $this->auth0Config['store'] = new LaravelSessionStore();
-
-            $this->authApi = new Authentication($this->auth0Config['domain'], $this->auth0Config['client_id']);
-
-            $this->auth0 = new Auth0($this->auth0Config);
-        }
-
         return $this->auth0;
     }
 
@@ -54,7 +54,7 @@ class Auth0Service
     public function login($connection = null, $state = null, $aditional_params = [], $response_type = 'code')
     {
       $url = $this->authApi->get_authorize_link($response_type, $this->auth0Config['redirect_uri'], $connection, $state, $aditional_params);
-      return Redirect::to($url);
+      return \Redirect::to($url);
     }
 
     /**

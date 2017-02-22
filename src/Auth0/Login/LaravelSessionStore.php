@@ -3,8 +3,9 @@
 namespace Auth0\Login;
 
 use Session;
+use Auth0\SDK\Store\StoreInterface;
 
-class LaravelSessionStore
+class LaravelSessionStore implements StoreInterface
 {
     const BASE_NAME = 'auth0_';
 
