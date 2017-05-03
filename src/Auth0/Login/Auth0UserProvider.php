@@ -58,9 +58,9 @@ class Auth0UserProvider implements UserProvider
         try {
             $decodedJWT = $this->auth0->decodeJWT($encUser);
         } catch (CoreException $e) {
-            return \Response::make('Unauthorized user', 401);
+            return null;
         } catch (InvalidTokenException $e) {
-            return \Response::make('Unauthorized user', 401);
+            return null;
         }
 
         return $this->userRepository->getUserByDecodedJWT($decodedJWT);
