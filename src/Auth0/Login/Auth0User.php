@@ -30,7 +30,7 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
      */
     public function getAuthIdentifier()
     {
-        return $this->userInfo['user_id'];
+        return $this->userInfo['sub'];
     }
 
     /**
