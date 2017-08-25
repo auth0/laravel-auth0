@@ -105,7 +105,7 @@ class MyCustomUserRepository implements Auth0UserRepository {
 #### Routes
 Your routes need to be in the `web` routes group, otherwise it will not be able to use the session storage:
 
-```
+```php
 Route::group(['middleware' => ['web']], function () {
 
   Route::get('/auth0/callback', '\Auth0\Login\Auth0Controller@callback');
@@ -124,7 +124,7 @@ Route::group(['middleware' => ['web']], function () {
 
 In your `config/auth.php` file update the providers to use the `auth0` driver:
 
-```
+```php
 ...
     'providers' => [
         'users' => [
