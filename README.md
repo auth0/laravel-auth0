@@ -53,12 +53,6 @@ class MyCustomUserRepository implements Auth0UserRepository {
 
     /* This class is used on api authN to fetch the user based on the jwt.*/
     public function getUserByDecodedJWT($jwt) {
-      /* 
-       * The `sub` claim in the token represents the subject of the token
-       * and it is always the `user_id`
-       */
-      $jwt->user_id = $jwt->sub;
-
       return $this->upsertUser($jwt);
     }
 
@@ -68,13 +62,13 @@ class MyCustomUserRepository implements Auth0UserRepository {
 
     protected function upsertUser($profile) {
 
-      $user = User::where("auth0id", $profile->user_id)->first();
+      $user = User::where("auth0id", $profile->sub)->first();
 
       if ($user === null) {
           // If not, create one
           $user = new User();
           $user->email = $profile->email; // you should ask for the email scope
-          $user->auth0id = $profile->user_id;
+          $user->auth0id = $profile->sub;
           $user->name = $profile->name; // you should ask for the name scope
           $user->save();
       }
