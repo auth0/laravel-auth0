@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\Login\facade;
+namespace Auth0\Login\Facade;
 
 class Auth0 extends \Illuminate\Support\Facades\Facade
 {
