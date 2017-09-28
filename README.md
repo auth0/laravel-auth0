@@ -94,9 +94,9 @@ class MyCustomUserRepository implements Auth0UserRepository {
 }
 ```
 
-###Laravel 5.2
+### Laravel 5.2
 
-####Routes
+#### Routes
 Your routes need to be in the `web` routes group, otherwise it will not be able to use the session storage:
 
 ```
@@ -114,7 +114,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 ```
 
-####Auth setup
+#### Auth setup
 
 In your `config/auth.php` file update the providers to use the `auth0` driver:
 
@@ -128,14 +128,14 @@ In your `config/auth.php` file update the providers to use the `auth0` driver:
 ...
 ```
 
-##Laravel Compatibility
+## Laravel Compatibility
 
 The 2.x branch targets Laravel 5.0 and 5.1 compatibility.
 The 3.x branch targets Laravel 5.2 compatibility.
 
 If you are working with an older version (Laravel 4.x) you need to point to composer.json to the version 1.0.*
 
-##BC breaks on auth0-php 1.0.0
+## BC breaks on auth0-php 1.0.0
 
 The latest version of auth0-php has BC breaks.
 
