@@ -51,7 +51,7 @@ class Auth0Service
     /**
      * Redirects the user to the hosted login page
      */
-    public function login($connection = null, $state = null, $aditional_params = [], $response_type = 'code')
+    public function login($connection = null, $state = null, $aditional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
       $url = $this->authApi->get_authorize_link($response_type, $this->auth0Config['redirect_uri'], $connection, $state, $aditional_params);
       return \Redirect::to($url);
