@@ -90,4 +90,13 @@ return array(
     */
     // 'supported_algs'        => ['HS256'],
 
+    /*
+    |--------------------------------------------------------------------------
+    |   Guzzle Options
+    |--------------------------------------------------------------------------
+    |   guzzle_options    (array) optional. Used to specify additional connection options e.g. proxy settings
+    |
+    */
+    //guzzle_options => []
+
 );
