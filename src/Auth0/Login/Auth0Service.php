@@ -148,6 +148,7 @@ class Auth0Service
             'authorized_iss' => config('laravel-auth0.authorized_issuers'),
             'secret_base64_encoded' => $secret_base64_encoded,
             'cache' => $cache,
+            'guzzle_options' => config('laravel-auth0.guzzle_options'),
         ]);
 
         $this->apiuser = $verifier->verifyAndDecode($encUser);
