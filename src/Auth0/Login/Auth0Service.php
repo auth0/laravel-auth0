@@ -53,8 +53,8 @@ class Auth0Service
      */
     public function login($connection = null, $state = null, $aditional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
-      $url = $this->authApi->get_authorize_link($response_type, $this->auth0Config['redirect_uri'], $connection, $state, $aditional_params);
-      return \Redirect::to($url);
+        $this->auth0->response_type = $response_type;
+        $this->auth0->login($state, $connection, $additional_params);
     }
 
     /**
