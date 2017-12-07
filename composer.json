@@ -17,5 +17,14 @@
             "Auth0\\Login\\": "src/"
         }
     },
+    "extra": {
+    "laravel": {
+        "providers": [
+            "Auth0\\Login\\LoginServiceProvider"
+        ],
+        "aliases": {
+            "Auth0": "Auth0\\Login\\Facade\\Auth0"
+        }
+    },
     "minimum-stability": "dev"
 }
