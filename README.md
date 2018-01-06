@@ -61,14 +61,14 @@ class MyCustomUserRepository implements Auth0UserRepository {
 
     protected function upsertUser($profile) {
 
-      $user = User::where("auth0id", $profile->sub)->first();
+      $user = User::where("auth0id", $profile['sub'])->first();
 
       if ($user === null) {
           // If not, create one
           $user = new User();
-          $user->email = $profile->email; // you should ask for the email scope
-          $user->auth0id = $profile->sub;
-          $user->name = $profile->name; // you should ask for the name scope
+          $user->email = $profile['email']; // you should ask for the email scope
+          $user->auth0id = $profile['sub'];
+          $user->name = $profile['name']; // you should ask for the name scope
           $user->save();
       }
 
