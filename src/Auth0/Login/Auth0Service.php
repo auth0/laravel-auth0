@@ -51,9 +51,9 @@ class Auth0Service
     /**
      * Redirects the user to the hosted login page
      */
-    public function login($connection = null, $state = null, $aditional_params = ['scope' => 'openid profile email'], $response_type = 'code')
+    public function login($connection = null, $state = null, $additional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
-        $this->auth0->response_type = $response_type;
+        $additional_params['response_type'] = $response_type;
         $this->auth0->login($state, $connection, $additional_params);
     }
 
