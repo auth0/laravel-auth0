@@ -9,8 +9,8 @@ return array(
     |   As set in the auth0 administration page
     |
     */
+    'domain'        => env( 'AUTH0_DOMAIN' ),
 
-    // 'domain'        => 'XXXX.auth0.com',
     /*
     |--------------------------------------------------------------------------
     |   Your APP id
@@ -18,8 +18,7 @@ return array(
     |   As set in the auth0 administration page
     |
     */
-
-    // 'client_id'     => 'XXXX',
+    'client_id'     => env( 'AUTH0_CLIENT_ID' ),
 
     /*
     |--------------------------------------------------------------------------
@@ -28,18 +27,17 @@ return array(
     |   As set in the auth0 administration page
     |
     */
-    // 'client_secret' => 'XXXXX',
+    'client_secret' => env( 'AUTH0_CLIENT_SECRET' ),
 
-   /*
-    |--------------------------------------------------------------------------
-    |   The redirect URI
-    |--------------------------------------------------------------------------
-    |   Should be the same that the one configure in the route to handle the
-    |   'Auth0\Login\Auth0Controller@callback'
-    |
-    */
-
-    // 'redirect_uri'  => 'http://<host>/auth0/callback'
+    /*
+     |--------------------------------------------------------------------------
+     |   The redirect URI
+     |--------------------------------------------------------------------------
+     |   Should be the same that the one configure in the route to handle the
+     |   'Auth0\Login\Auth0Controller@callback'
+     |
+     */
+    'redirect_uri'  => env( 'APP_URL' ) . '/auth0/callback',
 
     /*
     |--------------------------------------------------------------------------
@@ -50,10 +48,9 @@ return array(
     |   persist_id_token        (Boolean) Optional. Indicates if you want to persist the id token, default false
     |
     */
-
-    // 'persist_user' => true,
-    // 'persist_access_token' => true,
-    // 'persist_id_token' => true,
+    'persist_user' => true,
+    'persist_access_token' => false,
+    'persist_id_token' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +59,7 @@ return array(
     |   This is used to verify the decoded tokens when using RS256
     |
     */
-    // 'authorized_issuers'  => [ 'https://XXXX.auth0.com/' ],
+    'authorized_issuers'  => [ env( 'AUTH0_DOMAIN' ) ],
 
     /*
     |--------------------------------------------------------------------------
@@ -79,16 +76,16 @@ return array(
     |   Used to know if it should decode the secret when using HS256
     |
     */
-    // 'secret_base64_encoded'  => true,
+    'secret_base64_encoded'  => false,
 
     /*
     |--------------------------------------------------------------------------
-    |   Supported algs by your API
+    |   Supported algorithms
     |--------------------------------------------------------------------------
-    |   Algs supported by your API
+    |   Token decoding algorithms supported by your API
     |
     */
-    // 'supported_algs'        => ['HS256'],
+    'supported_algs'        => [ 'RS256' ],
 
     /*
     |--------------------------------------------------------------------------
@@ -97,6 +94,5 @@ return array(
     |   guzzle_options    (array) optional. Used to specify additional connection options e.g. proxy settings
     |
     */
-    //guzzle_options => []
-
+    // 'guzzle_options' => []
 );
