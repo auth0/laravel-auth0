@@ -39,7 +39,7 @@ class Auth0Controller extends Controller
         if ($auth0User) {
             // If we have a user, we are going to log them in, but if
             // there is an onLogin defined we need to allow the Laravel developer
-            // to implement the user as he wants an also let them store it.
+            // to implement the user as they want an also let them store it.
             if ($service->hasOnLogin()) {
                 $user = $service->callOnLogin($auth0User);
             } else {
