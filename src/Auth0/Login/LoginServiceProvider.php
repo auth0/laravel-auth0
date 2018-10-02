@@ -66,6 +66,7 @@ class LoginServiceProvider extends ServiceProvider {
         });
         
         $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'auth0');
+        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'auth0-laravel');
     }
 
     /**
