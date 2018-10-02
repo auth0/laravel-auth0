@@ -27,7 +27,7 @@ class LoginServiceProvider extends ServiceProvider {
         });
 
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('laravel-auth0.php'),
+            __DIR__.'/../../config/config.php' => config_path('auth0.php'),
         ]);
 
         $laravel = app();
@@ -64,6 +64,8 @@ class LoginServiceProvider extends ServiceProvider {
         \Event::listen('Illuminate\Auth\Events\Logout', function () {
             \App::make('auth0')->logout();
         });
+        
+        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'auth0');
     }
 
     /**
