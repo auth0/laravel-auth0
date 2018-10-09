@@ -21,7 +21,7 @@ class Auth0Service
     private $rememberUser = false;
 
     public function __construct() {
-      $this->auth0Config = config('laravel-auth0');
+      $this->auth0Config = config('auth0', config('laravel-auth0'));
 
       $this->auth0Config['store'] = new LaravelSessionStore();
 
