@@ -65,7 +65,11 @@ class LoginServiceProvider extends ServiceProvider {
             \App::make('auth0')->logout();
         });
         
-        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'auth0');
+        $this->mergeConfigFrom(config_path('auth0.php'), 'auth0');
+        
+        if (file_exists(config_path('auth0-laravel.php')) {
+            $this->mergeConfigFrom(config_path('auth0-laravel.php'), 'auth0');
+        }
     }
 
     /**
