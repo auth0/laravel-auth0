@@ -70,6 +70,8 @@ class LoginServiceProvider extends ServiceProvider {
         if (file_exists(config_path('laravel-auth0.php'))) {
             $this->mergeConfigFrom(config_path('laravel-auth0.php'), 'auth0');
         }
+        
+        $this->app['config']->set('laravel-auth0', $this->app['config']->get('auth0'));
     }
 
     /**
