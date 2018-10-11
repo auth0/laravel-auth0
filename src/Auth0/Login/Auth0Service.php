@@ -135,20 +135,20 @@ class Auth0Service
             $cache = null;
         }
 
-        $secret_base64_encoded = config('laravel-auth0.secret_base64_encoded');
+        $secret_base64_encoded = config('auth0.secret_base64_encoded');
 
         if (is_null($secret_base64_encoded)) {
           $secret_base64_encoded = true;
         }
 
         $verifier = new JWTVerifier([
-            'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
-            'supported_algs' => config('laravel-auth0.supported_algs', ['HS256']),
-            'client_secret' => config('laravel-auth0.client_secret'),
-            'authorized_iss' => config('laravel-auth0.authorized_issuers'),
+            'valid_audiences' => [config('auth0.client_id'), config('auth0.api_identifier')],
+            'supported_algs' => config('auth0.supported_algs', ['HS256']),
+            'client_secret' => config('auth0.client_secret'),
+            'authorized_iss' => config('auth0.authorized_issuers'),
             'secret_base64_encoded' => $secret_base64_encoded,
             'cache' => $cache,
-            'guzzle_options' => config('laravel-auth0.guzzle_options'),
+            'guzzle_options' => config('auth0.guzzle_options'),
         ]);
 
         $this->apiuser = $verifier->verifyAndDecode($encUser);
