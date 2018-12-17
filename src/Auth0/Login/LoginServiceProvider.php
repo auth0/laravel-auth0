@@ -27,7 +27,7 @@ class LoginServiceProvider extends ServiceProvider {
         });
 
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('laravel-auth0.php'),
+            __DIR__.'/../../config/config.php' => config_path('auth0.php'),
         ]);
 
         $laravel = app();
