@@ -3,7 +3,7 @@
     "description": "Laravel plugin that helps authenticate with the auth0 service",
     "license": "MIT",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "illuminate/support": "5.*",
         "auth0/auth0-php": "^5.1.0",
         "illuminate/contracts": "5.*"
