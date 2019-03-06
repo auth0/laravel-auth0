@@ -35,7 +35,7 @@ class Auth0Service
      * the config set in the laravel way and using a LaravelSession
      * as a store mechanism.
      */
-    public function getSDK()
+    private function getSDK()
     {
         return $this->auth0;
     }
@@ -164,6 +164,11 @@ class Auth0Service
     public function getAccessToken()
     {
         return $this->getSDK()->getAccessToken();
+    }
+
+    public function getRefreshToken()
+    {
+        return $this->getSDK()->getRefreshToken();
     }
 
     public function jwtuser()
