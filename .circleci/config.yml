@@ -2,13 +2,9 @@ version: 2.1
 
 commands:
   prepare:
-    parameters:
-      symfony_version:
-        type: string
     steps:
       - checkout
       - run: sudo composer self-update
-      - run: composer require symfony/symfony:<< parameters.symfony_version >> --no-update
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.json" }}
@@ -29,8 +25,7 @@ jobs:
     docker: 
       - image: circleci/php:7.1
     steps:
-      - prepare:
-          symfony_version: 3.3.*
+      - prepare
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
