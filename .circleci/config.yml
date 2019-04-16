@@ -10,7 +10,6 @@ commands:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
       - run: composer install -n --prefer-dist
-      - run: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
           root: .
           paths:
