@@ -4,6 +4,7 @@ namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\Request;
 
 class Auth0Controller extends Controller
 {
@@ -25,8 +26,13 @@ class Auth0Controller extends Controller
     /**
      * Callback action that should be called by auth0, logs the user in.
      */
-    public function callback()
+    public function callback(Request $request)
     {
+        // Handle error that can come in query params from auth0, like when user blocked
+        if ($request->query('error')) {
+            \abort(500, $request->query('error_description'));
+        }
+
         // Get a handle of the Auth0 service (we don't know if it has an alias)
         $service = \App::make('auth0');
 
