@@ -50,7 +50,7 @@ class Auth0UserProvider implements UserProvider
     public function retrieveByCredentials(array $credentials)
     {
         if (!isset($credentials['api_token'])) {
-            return false;
+            return null;
         }
 
         $encUser = $credentials['api_token'];
@@ -71,7 +71,7 @@ class Auth0UserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        return false;
+        return null;
     }
 
     /**
@@ -86,6 +86,6 @@ class Auth0UserProvider implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        return false;
+        return null;
     }
 }
