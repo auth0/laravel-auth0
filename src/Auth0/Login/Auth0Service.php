@@ -6,6 +6,7 @@ use Config;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\JWTVerifier;
+use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -130,7 +131,7 @@ class Auth0Service
     public function decodeJWT($encUser)
     {
         try {
-            $cache = \App::make('\Auth0\SDK\Helpers\Cache\CacheHandler');
+            $cache = \App::make(CacheHandler::class);
         } catch (BindingResolutionException $e) {
             $cache = null;
         }
