@@ -8,8 +8,8 @@ namespace Auth0\Login;
  */
 class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
 {
-    private $userInfo;
-    private $accessToken;
+    protected $userInfo;
+    protected $accessToken;
 
     /**
      * Auth0User constructor.
