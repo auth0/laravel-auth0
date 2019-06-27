@@ -5,7 +5,12 @@ This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with
 - Master targets Laravel 5.8 compatibility.
 - The 3.x branch (not maintained) targets Laravel 5.2 compatibility.
 - The 2.x branch (not maintained) targets Laravel 5.0 and 5.1 compatibility.
-- If you are working with an older version (Laravel 4.x) you need to point to composer.json to the version 1.0.* (not maintained)
+- If you are working with an older version (Laravel 4.x), use version 1.0.* (not maintained)
+
+[![CircleCI](https://img.shields.io/circleci/project/github/auth0//laravel-auth0/master.svg)](https://circleci.com/gh/auth0/laravel-auth0)
+[![Latest Stable Version](https://poser.pugx.org/auth0/laravel-auth0/v/stable)](https://packagist.org/packages/auth0/laravel-auth0)
+[![License](https://poser.pugx.org/auth0/laravel-auth0/license)](https://packagist.org/packages/auth0/laravel-auth0)
+[![Total Downloads](https://poser.pugx.org/auth0/laravel-auth0/downloads)](https://packagist.org/packages/auth0/laravel-auth0)
 
 ## Documentation
 
@@ -25,7 +30,7 @@ use Illuminate\Support\Facades\Cache;
         $this->app->bind(
             '\Auth0\SDK\Helpers\Cache\CacheHandler',
             function() {
-                static $cacheWrapper = null; 
+                static $cacheWrapper = null;
                 if ($cacheWrapper === null) {
                 $cache = Cache::store();
                 $cacheWrapper = new LaravelCacheWrapper($cache);
@@ -39,7 +44,7 @@ You can implement your own cache strategy by creating a new class that implement
 
 ### Storing users in your database
 
-You can customize the way you handle the users in your application by creating your own `UserRepository`. This class should implement the `Auth0\Login\Contract\Auth0UserRepository` contract. Please see the [Custom User Handling section of the Laravel Quickstart](https://auth0.com/docs/quickstart/webapp/laravel#optional-custom-user-handling) for the latest example. 
+You can customize the way you handle the users in your application by creating your own `UserRepository`. This class should implement the `Auth0\Login\Contract\Auth0UserRepository` contract. Please see the [Custom User Handling section of the Laravel Quickstart](https://auth0.com/docs/quickstart/webapp/laravel#optional-custom-user-handling) for the latest example.
 
 ## Installation
 
