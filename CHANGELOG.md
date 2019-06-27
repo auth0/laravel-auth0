@@ -1,7 +1,7 @@
 # Change Log
 
-## [5.1.1](https://github.com/auth0/laravel-auth0/tree/5.1.1) (2019-06-27)
-[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.1.0...5.1.1)
+## [5.2.0](https://github.com/auth0/laravel-auth0/tree/5.2.0) (2019-06-27)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.1.0...5.2.0)
 
 **Closed issues**
 - Authenticate as a Laravel API user using the Auth0 token [\#129](https://github.com/auth0/laravel-auth0/issues/129)
