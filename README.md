@@ -7,10 +7,10 @@ This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with
 - The 2.x branch (not maintained) targets Laravel 5.0 and 5.1 compatibility.
 - If you are working with an older version (Laravel 4.x), use version 1.0.* (not maintained)
 
-[![CircleCI](https://img.shields.io/circleci/project/github/auth0//laravel-auth0/master.svg)](https://circleci.com/gh/auth0/laravel-auth0)
-[![Latest Stable Version](https://poser.pugx.org/auth0/laravel-auth0/v/stable)](https://packagist.org/packages/auth0/laravel-auth0)
-[![License](https://poser.pugx.org/auth0/laravel-auth0/license)](https://packagist.org/packages/auth0/laravel-auth0)
-[![Total Downloads](https://poser.pugx.org/auth0/laravel-auth0/downloads)](https://packagist.org/packages/auth0/laravel-auth0)
+[![CircleCI](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/master.svg)](https://circleci.com/gh/auth0/laravel-auth0)
+[![Latest Stable Version](https://poser.pugx.org/auth0/login/v/stable)](https://packagist.org/packages/auth0/login)
+[![License](https://poser.pugx.org/auth0/login/license)](https://packagist.org/packages/auth0/login)
+[![Total Downloads](https://poser.pugx.org/auth0/login/downloads)](https://packagist.org/packages/auth0/login)
 
 ## Documentation
 
