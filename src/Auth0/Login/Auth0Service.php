@@ -2,11 +2,12 @@
 
 namespace Auth0\Login;
 
-use Config;
-use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Auth0;
-use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
+use Auth0\SDK\JWTVerifier;
+use Auth0\SDK\Store\StoreInterface;
+use Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -14,21 +15,33 @@ use Illuminate\Contracts\Container\BindingResolutionException;
  */
 class Auth0Service
 {
-    private $auth0Config;
+    /**
+     * @var Auth0
+     */
     private $auth0;
-    private $authApi;
+    
     private $apiuser;
     private $_onLoginCb = null;
     private $rememberUser = false;
 
-    public function __construct() {
-      $this->auth0Config = config('laravel-auth0');
+    /**
+     * Auth0Service constructor.
+     *
+     * @param array $auth0Config
+     * @param StoreInterface $sessionStorage
+     *
+     * @throws \Auth0\SDK\Exception\CoreException
+     */
+    public function __construct(
+        array $auth0Config,
+        StoreInterface $sessionStorage,
+        SessionStateHandler $sessionStateHandler
+    )
+    {
+        $auth0Config['store'] = $sessionStorage;
+        $auth0Config['state_handler'] = $sessionStateHandler;
 
-      $this->auth0Config['store'] = new LaravelSessionStore();
-
-      $this->authApi = new Authentication($this->auth0Config['domain'], $this->auth0Config['client_id']);
-
-      $this->auth0 = new Auth0($this->auth0Config);
+        $this->auth0 = new Auth0($auth0Config);
     }
 
     /**
@@ -139,7 +152,7 @@ class Auth0Service
         $secret_base64_encoded = config('laravel-auth0.secret_base64_encoded');
 
         if (is_null($secret_base64_encoded)) {
-          $secret_base64_encoded = true;
+            $secret_base64_encoded = true;
         }
 
         $verifier = new JWTVerifier([
