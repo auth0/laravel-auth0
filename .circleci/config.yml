@@ -14,6 +14,7 @@ commands:
           root: .
           paths:
             - composer.*
+            - .snyk
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
