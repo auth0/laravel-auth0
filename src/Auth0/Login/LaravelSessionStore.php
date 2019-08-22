@@ -21,6 +21,7 @@ class LaravelSessionStore implements StoreInterface
     {
         $key_name = $this->getSessionKeyName($key);
         Session::put($key_name, $value);
+        Session::save();
     }
 
     /**
