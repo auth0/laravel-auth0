@@ -21,11 +21,6 @@ class LaravelSessionStore implements StoreInterface
     {
         $key_name = $this->getSessionKeyName($key);
         Session::put($key_name, $value);
-
-        // The Auth0 SDK might decide to redirect and exit the PHP execution
-        // before the Laravel middleware can write the changes.
-        // thus we have to persist our changes early
-        Session::save();
     }
 
     /**
