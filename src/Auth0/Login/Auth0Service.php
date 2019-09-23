@@ -2,14 +2,15 @@
 
 namespace Auth0\Login;
 
+use Auth0\Login\Sdk\Auth0;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
-use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Store\StoreInterface;
 use Config;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -76,11 +77,13 @@ class Auth0Service
 
     /**
      * Redirects the user to the hosted login page
+     *
+     * @return RedirectResponse
      */
     public function login($connection = null, $state = null, $additional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
         $additional_params['response_type'] = $response_type;
-        $this->auth0->login($state, $connection, $additional_params);
+        return $this->auth0->login($state, $connection, $additional_params);
     }
 
     /**
