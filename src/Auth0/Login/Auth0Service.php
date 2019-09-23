@@ -8,6 +8,7 @@ use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Store\StoreInterface;
 use Config;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -19,7 +20,7 @@ class Auth0Service
      * @var Auth0
      */
     private $auth0;
-    
+
     private $apiuser;
     private $_onLoginCb = null;
     private $rememberUser = false;
@@ -33,14 +34,25 @@ class Auth0Service
      * @throws \Auth0\SDK\Exception\CoreException
      */
     public function __construct(
-        array $auth0Config,
-        StoreInterface $sessionStorage,
-        SessionStateHandler $sessionStateHandler
+        array $auth0Config = null,
+        StoreInterface $sessionStorage = null,
+        SessionStateHandler $sessionStateHandler = null
     )
     {
+        // Backwards compatible fallbacks
+        if (!$auth0Config instanceof Repository && !is_array($auth0Config)) {
+            $auth0Config = config('laravel-auth0');
+        }
+        if (!$sessionStorage instanceof StoreInterface) {
+            $sessionStorage = new LaravelSessionStore();
+        }
+        if (!$sessionStateHandler instanceof SessionStateHandler) {
+            $sessionStateHandler = new SessionStateHandler($sessionStorage);
+        }
+
+
         $auth0Config['store'] = $sessionStorage;
         $auth0Config['state_handler'] = $sessionStateHandler;
-
         $this->auth0 = new Auth0($auth0Config);
     }
 
