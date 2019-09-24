@@ -10,6 +10,7 @@ use Auth0\SDK\Store\StoreInterface;
 use Config;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -50,7 +51,6 @@ class Auth0Service
             $sessionStateHandler = new SessionStateHandler($sessionStorage);
         }
 
-
         $auth0Config['store'] = $sessionStorage;
         $auth0Config['state_handler'] = $sessionStateHandler;
         $this->auth0 = new Auth0($auth0Config);
@@ -79,8 +79,17 @@ class Auth0Service
      */
     public function login($connection = null, $state = null, $additional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
+        if ($connection && empty( $additional_params['connection'] )) {
+            $additional_params['connection'] = $connection;
+        }
+
+        if ($state && empty( $additional_params['state'] )) {
+            $additional_params['state'] = $state;
+        }
+
         $additional_params['response_type'] = $response_type;
-        $this->auth0->login($state, $connection, $additional_params);
+        $auth_url = $this->auth0->getLoginUrl($additional_params);
+        return new RedirectResponse($auth_url);
     }
 
     /**
