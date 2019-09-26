@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class LoginServiceProvider extends ServiceProvider
 {
 
-    const SDK_VERSION = "4.0.4";
+    const SDK_VERSION = "5.3.0";
 
     /**
      * Indicates if loading of the provider is deferred.

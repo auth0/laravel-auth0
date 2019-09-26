@@ -1,5 +1,18 @@
 # Change Log
 
+## [5.3.0](https://github.com/auth0/laravel-auth0/tree/5.3.0) (2019-09-26)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.2.0...5.3.0)
+
+**Closed issues**
+- Feature request: Add Laravel 6 support [\#138](https://github.com/auth0/laravel-auth0/issues/138)
+- SessionStateHandler should use LaravelSessionStore not SessionStore [\#125](https://github.com/auth0/laravel-auth0/issues/125)
+
+**Added**
+- Support Laravel 6 [\#139](https://github.com/auth0/laravel-auth0/pull/139) ([FreekVR](https://github.com/FreekVR))
+
+**Fixed**
+- Use LaravelSessionStore in the SessionStateHandler. [\#135](https://github.com/auth0/laravel-auth0/pull/135) ([nstapelbroek](https://github.com/nstapelbroek))
+
 ## [5.2.0](https://github.com/auth0/laravel-auth0/tree/5.2.0) (2019-06-27)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.1.0...5.2.0)
 
