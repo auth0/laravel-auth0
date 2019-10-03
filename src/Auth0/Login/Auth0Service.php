@@ -3,6 +3,7 @@
 namespace Auth0\Login;
 
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
+use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
@@ -37,7 +38,7 @@ class Auth0Service
     public function __construct(
         array $auth0Config = null,
         StoreInterface $sessionStorage = null,
-        SessionStateHandler $sessionStateHandler = null
+        StateHandler $stateHandler = null
     )
     {
         // Backwards compatible fallbacks
@@ -47,12 +48,12 @@ class Auth0Service
         if (!$sessionStorage instanceof StoreInterface) {
             $sessionStorage = new LaravelSessionStore();
         }
-        if (!$sessionStateHandler instanceof SessionStateHandler) {
-            $sessionStateHandler = new SessionStateHandler($sessionStorage);
+        if (!$stateHandler instanceof SessionStateHandler) {
+            $stateHandler = new SessionStateHandler($sessionStorage);
         }
 
         $auth0Config['store'] = $sessionStorage;
-        $auth0Config['state_handler'] = $sessionStateHandler;
+        $auth0Config['state_handler'] = $stateHandler;
         $this->auth0 = new Auth0($auth0Config);
     }
 
