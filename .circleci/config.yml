@@ -9,7 +9,7 @@ commands:
           keys:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
-      - run: composer install -n --prefer-dist
+      - run: composer update -n --prefer-dist
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
