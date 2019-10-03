@@ -3,6 +3,8 @@
 namespace Auth0\Login\Tests\Integration;
 
 use Auth0\Login\LaravelSessionStore;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class LaravelSessionStoreTest extends TestCase
 {
@@ -32,17 +34,24 @@ class LaravelSessionStoreTest extends TestCase
      */
     public function testDifferentSessionStorage()
     {
+        $testValue = 'Its happening!';
         $this->app['config']->set('session.driver', 'database');
-        $this->app['config']->set('session.table', 'sessions');
+        $this->app['config']->set('session.connection', 'sessions');
         $this->app['config']->set('database.default', 'sessions');
         $this->app['config']->set('database.connections.sessions', ['driver' => 'sqlite', 'database' => ':memory:']);
-        $testValue = 'Its happening!';
-        $this->artisan('migrate');
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->unique();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->text('payload');
+            $table->integer('last_activity');
+        });
 
         $this->sessionStorage->set('testkey', $testValue);
         $this->app->get('session')->save();
 
         $sessionsInDb = $this->app->get('db')->select('select * from sessions');
-        $this->assertEquals(1, count($sessionsInDb));
+        $this->assertCount(1, $sessionsInDb);
     }
 }

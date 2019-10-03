@@ -8,7 +8,7 @@ use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Http\RedirectResponse;
 
-class Auth0ServiceTest extends Testcase
+class Auth0ServiceTest extends TestCase
 {
     /**
      * @var Auth0Service
