@@ -14,13 +14,6 @@ class LoginServiceProvider extends ServiceProvider
     const SDK_VERSION = "5.3.0";
 
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Bootstrap the application events.
      */
     public function boot()
@@ -82,15 +75,5 @@ class LoginServiceProvider extends ServiceProvider
         \Event::listen('Illuminate\Auth\Events\Logout', function () {
             \App::make('auth0')->logout();
         });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [];
     }
 }
