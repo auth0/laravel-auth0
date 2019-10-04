@@ -41,34 +41,31 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the password for the user.
-     *
-     * @return string
+     * @return void
      */
     public function getAuthPassword()
     {
-        return;
     }
 
     /**
+     * @return void
      */
     public function getRememberToken()
     {
-        return;
     }
 
     /**
-     * @param $value
+     * @param string $value
      */
     public function setRememberToken($value)
     {
     }
 
     /**
+     * @return void
      */
     public function getRememberTokenName()
     {
-        return;
     }
 
     /**

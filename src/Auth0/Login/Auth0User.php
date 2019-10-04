@@ -57,24 +57,24 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
+     * @return void
      */
     public function getRememberToken()
     {
-        return;
     }
 
     /**
-     * @param $value
+     * @param string $value
      */
     public function setRememberToken($value)
     {
     }
 
     /**
+     * @return void
      */
     public function getRememberTokenName()
     {
-        return;
     }
 
     /**
