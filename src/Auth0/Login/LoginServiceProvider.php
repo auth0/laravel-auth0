@@ -40,7 +40,7 @@ class LoginServiceProvider extends ServiceProvider
         if ($oldInfoHeaders) {
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
 
-            $infoHeaders->setEnvironment('Laravel', $laravel::VERSION);
+            $infoHeaders->setEnvProperty('Laravel', $laravel::VERSION);
             $infoHeaders->setPackage('laravel-auth0', self::SDK_VERSION);
 
             ApiClient::setInfoHeadersData($infoHeaders);
