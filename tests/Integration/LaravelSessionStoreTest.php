@@ -13,7 +13,7 @@ class LaravelSessionStoreTest extends TestCase
      */
     private $sessionStorage;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->sessionStorage = new LaravelSessionStore();

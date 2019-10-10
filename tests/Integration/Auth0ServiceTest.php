@@ -15,7 +15,7 @@ class Auth0ServiceTest extends TestCase
      */
     protected $auth0Service;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->auth0Service = $this->app->get(Auth0Service::class);
