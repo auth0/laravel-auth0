@@ -10,26 +10,41 @@ commands:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
       - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.json" }}
+          paths:
+            - vendor
+  test:
+    steps:
+      - run: ./vendor/bin/phpunit
+jobs:
+  php_71:
+    docker:
+      - image: circleci/php:7.1
+    steps:
+      - prepare
+      - test
+  php_72:
+    docker:
+      - image: circleci/php:7.2
+    steps:
+      - prepare
+      - test
+  php_73:
+    docker:
+      - image: circleci/php:7.3
+    steps:
+      - prepare
+      - test
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
       - persist_to_workspace:
           root: .
           paths:
             - composer.*
             - .snyk
-      - save_cache:
-          key: composer-v1-{{ checksum "composer.json" }}
-          paths:
-            - vendor
-
-jobs: 
-  php_7: 
-    docker: 
-      - image: circleci/php:7.1
-    steps:
-      - prepare
-  snyk:
-    docker:
-      - image: snyk/snyk-cli:composer
-    steps:
       - attach_workspace:
           at: .
       - run: snyk test
@@ -45,9 +60,11 @@ jobs:
 workflows:
   snyk:
     jobs:
-      - php_7
+      - php_71
+      - php_72
+      - php_73
       - snyk:
           # Must define SNYK_TOKEN env
-          context: snyk-env 
-          requires: 
-            - php_7
+          context: snyk-env
+          requires:
+            - php_71
