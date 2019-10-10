@@ -1,0 +1,53 @@
+<?php
+
+namespace Auth0\Login\Tests\Integration;
+
+use Auth0\Login\Auth0Service;
+use Auth0\SDK\API\Helpers\State\SessionStateHandler;
+use Auth0\SDK\Store\StoreInterface;
+use Illuminate\Http\RedirectResponse;
+
+class Auth0ServiceTest extends TestCase
+{
+    /**
+     * @var Auth0Service
+     */
+    protected $auth0Service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->auth0Service = $this->app->make(Auth0Service::class);
+    }
+
+    public function testInitializeLoginWillReturnRedirectResponse()
+    {
+        $this->assertInstanceOf(RedirectResponse::class, $this->auth0Service->login());
+    }
+
+    public function testInitializeLoginWillIssueNewState()
+    {
+        /** @var StoreInterface $storage */
+        $storage = $this->app->make(StoreInterface::class);
+        $this->assertEmpty($storage->get(SessionStateHandler::STATE_NAME));
+
+        $this->auth0Service->login();
+
+        $this->assertNotEmpty($storage->get(SessionStateHandler::STATE_NAME));
+    }
+
+    public function testInitializeLoginWillOverwriteOldState()
+    {
+        /** @var StoreInterface $storage */
+        $storage = $this->app->make(StoreInterface::class);
+        $handler = $this->app->make(SessionStateHandler::class);
+        $handler->issue();
+        $oldState = $storage->get(SessionStateHandler::STATE_NAME);
+
+        $this->auth0Service->login();
+
+        $this->assertNotEmpty($oldState);
+        $this->assertNotEmpty($storage->get(SessionStateHandler::STATE_NAME));
+        $this->assertNotEquals($oldState, $storage->get(SessionStateHandler::STATE_NAME));
+    }
+}
