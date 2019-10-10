@@ -12,7 +12,7 @@ class Auth0JWTUserTest extends TestCase
      */
     protected $auth0JwtUser;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->auth0JwtUser = new Auth0JWTUser((object)[
