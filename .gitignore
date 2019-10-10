@@ -1,5 +1,7 @@
+build/
 vendor/
 .env
 .DS_Store
 composer.lock
 composer.phar
+.phpunit.result.cache
