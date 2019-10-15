@@ -2,14 +2,12 @@
 
 namespace Auth0\Login;
 
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Store\StoreInterface;
 use Config;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 
@@ -37,22 +35,11 @@ class Auth0Service
      * @throws \Auth0\SDK\Exception\CoreException
      */
     public function __construct(
-        array $auth0Config = null,
-        StoreInterface $sessionStorage = null,
-        StateHandler $stateHandler = null
+        array $auth0Config,
+        StoreInterface $sessionStorage,
+        StateHandler $stateHandler
     )
     {
-        // Backwards compatible fallbacks
-        if (!$auth0Config instanceof Repository && !is_array($auth0Config)) {
-            $auth0Config = config('laravel-auth0');
-        }
-        if (!$sessionStorage instanceof StoreInterface) {
-            $sessionStorage = new LaravelSessionStore();
-        }
-        if (!$stateHandler instanceof StateHandler) {
-            $stateHandler = new SessionStateHandler($sessionStorage);
-        }
-
         $auth0Config['store'] = $sessionStorage;
         $auth0Config['state_handler'] = $stateHandler;
         $this->auth0 = new Auth0($auth0Config);
