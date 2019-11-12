@@ -2,6 +2,7 @@
 
 namespace Auth0\Login;
 
+use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
@@ -36,23 +37,26 @@ class Auth0Service
      */
     public function __construct(
         array $auth0Config = null,
-        StoreInterface $sessionStorage = null,
-        SessionStateHandler $sessionStateHandler = null
+        StoreInterface $store = null,
+        StateHandler $stateHandler = null
     )
     {
-        // Backwards compatible fallbacks
         if (!$auth0Config instanceof Repository && !is_array($auth0Config)) {
             $auth0Config = config('laravel-auth0');
         }
-        if (!$sessionStorage instanceof StoreInterface) {
-            $sessionStorage = new LaravelSessionStore();
-        }
-        if (!$sessionStateHandler instanceof SessionStateHandler) {
-            $sessionStateHandler = new SessionStateHandler($sessionStorage);
+
+        $store = $auth0Config['store'] ?? $store;
+        if (false !== $store && !$store instanceof StoreInterface) {
+            $store = new LaravelSessionStore();
         }
 
-        $auth0Config['store'] = $sessionStorage;
-        $auth0Config['state_handler'] = $sessionStateHandler;
+        $stateHandler = $auth0Config['state_handler'] ?? $stateHandler;
+        if (false !== $stateHandler && !$stateHandler instanceof StateHandler) {
+            $stateHandler = new SessionStateHandler($store);
+        }
+
+        $auth0Config['store'] = $store;
+        $auth0Config['state_handler'] = $stateHandler;
         $this->auth0 = new Auth0($auth0Config);
     }
 
