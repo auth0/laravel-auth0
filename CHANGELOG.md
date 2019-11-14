@@ -1,5 +1,16 @@
 # Change Log
 
+## [5.3.1](https://github.com/auth0/laravel-auth0/tree/5.3.1) (2019-11-14)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.3.0...5.3.1)
+
+**Closed issues**
+- Setting of state_handler in Auth0Service causes "Invalid state" error [\#154](https://github.com/auth0/laravel-auth0/issues/154)
+
+**Fixed**
+- Allow store and state_handler to be passed in from config [\#156](https://github.com/auth0/laravel-auth0/pull/156) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add 'persist_refresh_token' key to laravel-auth0 configuration file. [\#152](https://github.com/auth0/laravel-auth0/pull/152) ([tpenaranda](https://github.com/tpenaranda))
+- Replace`setEnvironment` with `setEnvProperty` [\#145](https://github.com/auth0/laravel-auth0/pull/145) ([nstapelbroek](https://github.com/nstapelbroek))
+
 ## [5.3.0](https://github.com/auth0/laravel-auth0/tree/5.3.0) (2019-09-26)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.2.0...5.3.0)
 
