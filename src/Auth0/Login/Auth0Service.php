@@ -45,12 +45,12 @@ class Auth0Service
             $auth0Config = config('laravel-auth0');
         }
 
-        $store = $auth0Config['store'] ?? $store;
+        $store = isset( $auth0Config['store'] ) ? $auth0Config['store'] : $store;
         if (false !== $store && !$store instanceof StoreInterface) {
             $store = new LaravelSessionStore();
         }
 
-        $stateHandler = $auth0Config['state_handler'] ?? $stateHandler;
+        $stateHandler = isset( $auth0Config['state_handler'] ) ? $auth0Config['state_handler'] : $stateHandler;
         if (false !== $stateHandler && !$stateHandler instanceof StateHandler) {
             $stateHandler = new SessionStateHandler($store);
         }
