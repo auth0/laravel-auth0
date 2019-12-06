@@ -7,7 +7,6 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Store\StoreInterface;
-use Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 
@@ -31,8 +30,6 @@ class Auth0Service
      * @param array $auth0Config
      * @param StoreInterface $sessionStorage
      * @param StateHandler|null $stateHandler
-     *
-     * @throws \Auth0\SDK\Exception\CoreException
      */
     public function __construct(
         array $auth0Config,
