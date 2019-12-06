@@ -3,9 +3,11 @@ namespace Auth0\Login\Tests;
 
 use Auth0\Login\Auth0Service;
 use Auth0\Login\Facade\Auth0 as Auth0Facade;
+use Auth0\Login\LaravelSessionStore;
 use Auth0\Login\LoginServiceProvider as Auth0ServiceProvider;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 use Auth0\SDK\Store\EmptyStore;
+use Auth0\SDK\Store\SessionStore;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Session;
 
@@ -27,7 +29,7 @@ class Auth0ServiceTest extends OrchestraTestCase
     public function testThatServiceUsesSessionStoreByDefault()
     {
         Session::put('auth0__user', '__test_user__');
-        $service = new Auth0Service(self::$defaultConfig);
+        $service = new Auth0Service(self::$defaultConfig, new LaravelSessionStore(), new DummyStateHandler());
         $user = $service->getUser();
 
         $this->assertArrayHasKey('profile', $user);

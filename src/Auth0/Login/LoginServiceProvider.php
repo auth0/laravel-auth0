@@ -6,14 +6,13 @@ use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
-use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
 {
 
-    const SDK_VERSION = "5.3.1";
+    const SDK_VERSION = "7.0.0";
 
     /**
      * Bootstrap the application events.
