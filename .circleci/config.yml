@@ -20,12 +20,18 @@ commands:
           paths:
             - vendor
 
-jobs: 
-  php_7: 
-    docker: 
+jobs:
+  php_7:
+    docker:
       - image: circleci/php:7.1
     steps:
       - prepare
+      - run:
+          name: Check PHP Compatibility
+          command: composer phpcs
+      - run:
+          name: Run Tests
+          command: composer test
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -48,6 +54,6 @@ workflows:
       - php_7
       - snyk:
           # Must define SNYK_TOKEN env
-          context: snyk-env 
-          requires: 
+          context: snyk-env
+          requires:
             - php_7

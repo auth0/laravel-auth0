@@ -45,11 +45,13 @@ return [
     |--------------------------------------------------------------------------
     |   persist_user            (Boolean) Optional. Indicates if you want to persist the user info, default true
     |   persist_access_token    (Boolean) Optional. Indicates if you want to persist the access token, default false
+    |   persist_refresh_token   (Boolean) Optional. Indicates if you want to persist the refresh token, default false
     |   persist_id_token        (Boolean) Optional. Indicates if you want to persist the id token, default false
     |
     */
     'persist_user' => true,
     'persist_access_token' => false,
+    'persist_refresh_token' => false,
     'persist_id_token' => false,
 
     /*

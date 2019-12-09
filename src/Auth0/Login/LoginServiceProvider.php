@@ -4,15 +4,15 @@ namespace Auth0\Login;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\StateHandler;
+use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
 {
 
-    const SDK_VERSION = "5.3.0";
+    const SDK_VERSION = "7.0.0";
 
     /**
      * Bootstrap the application events.
@@ -59,7 +59,7 @@ class LoginServiceProvider extends ServiceProvider
             return new Auth0Service(
                 $app->make('config')->get('laravel-auth0'),
                 $app->make(StoreInterface::class),
-                $app->make(SessionStateHandler::class)
+                $app->make(StateHandler::class)
             );
         });
         $this->app->singleton('auth0', function () {

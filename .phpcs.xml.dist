@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel-Auth0" namespace="Auth0PHP\CS\Standard">
+    <description>A custom coding standard for the Laravel Auth0 package</description>
+
+    <file>./src</file>
+
+    <!-- Only check PHP files. -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Show progress, show the error codes for each message (source). -->
+    <arg value="sp"/>
+
+    <!-- Strip the filepaths down to the relevant bit. -->
+    <arg name="basepath" value="."/>
+
+    <!-- Show coloured output, if available. -->
+    <arg name="colors"/>
+
+    <!--
+    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
+    https://github.com/PHPCompatibility/PHPCompatibility
+    -->
+    <config name="testVersion" value="5.5-"/>
+    <rule ref="PHPCompatibility"/>
+
+</ruleset>
