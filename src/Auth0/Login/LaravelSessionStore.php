@@ -2,7 +2,6 @@
 
 namespace Auth0\Login;
 
-use Session;
 use Auth0\SDK\Store\StoreInterface;
 
 class LaravelSessionStore implements StoreInterface
@@ -12,16 +11,14 @@ class LaravelSessionStore implements StoreInterface
     /**
      * Persists $value on $_SESSION, identified by $key.
      *
-     * @see Auth0SDK\BaseAuth0
-     *
      * @param string $key
      * @param mixed  $value
      */
-    public function set($key, $value)
+    public function set(string $key, $value)
     {
         $key_name = $this->getSessionKeyName($key);
 
-        Session::put($key_name, $value);
+        \session([$key_name, $value]);
     }
 
     /**
@@ -30,11 +27,11 @@ class LaravelSessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $key_name = $this->getSessionKeyName($key);
 
-        return Session::get($key_name, $default);
+        return \session($key_name, $default);
     }
 
     /**
@@ -44,11 +41,11 @@ class LaravelSessionStore implements StoreInterface
      *
      * @param string $key
      */
-    public function delete($key)
+    public function delete(string $key)
     {
         $key_name = $this->getSessionKeyName($key);
 
-        Session::forget($key_name);
+        \session([$key_name, null]);
     }
 
     /**

@@ -3,13 +3,12 @@ namespace Auth0\Login\Tests;
 
 use Auth0\Login\Auth0Service;
 use Auth0\Login\Facade\Auth0 as Auth0Facade;
-use Auth0\Login\LaravelSessionStore;
 use Auth0\Login\LoginServiceProvider as Auth0ServiceProvider;
-use Auth0\SDK\API\Helpers\State\DummyStateHandler;
-use Auth0\SDK\Store\EmptyStore;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Session;
 
 class Auth0ServiceTest extends OrchestraTestCase
 {
@@ -23,13 +22,19 @@ class Auth0ServiceTest extends OrchestraTestCase
             'client_id' => '__test_client_id__',
             'client_secret' => '__test_client_secret__',
             'redirect_uri' => 'https://example.com/callback',
+            'transient_store' => new SessionStore(),
         ];
+    }
+
+    public function tearDown() : void
+    {
+        Cache::flush();
     }
 
     public function testThatServiceUsesSessionStoreByDefault()
     {
-        Session::put('auth0__user', '__test_user__');
-        $service = new Auth0Service(self::$defaultConfig, new LaravelSessionStore(), new DummyStateHandler());
+        session(['auth0__user' => '__test_user__']);
+        $service = new Auth0Service(self::$defaultConfig);
         $user = $service->getUser();
 
         $this->assertArrayHasKey('profile', $user);
@@ -38,12 +43,9 @@ class Auth0ServiceTest extends OrchestraTestCase
 
     public function testThatServiceSetsEmptyStoreFromConfigAndConstructor()
     {
-        Session::put('auth0__user', '__test_user__');
+        session(['auth0__user' => '__test_user__']);
 
-        $service = new Auth0Service(self::$defaultConfig + ['store' => false, 'state_handler' => false]);
-        $this->assertNull($service->getUser());
-
-        $service = new Auth0Service(self::$defaultConfig, new EmptyStore(), new DummyStateHandler());
+        $service = new Auth0Service(self::$defaultConfig + ['store' => false]);
         $this->assertNull($service->getUser());
 
         $service = new Auth0Service(self::$defaultConfig);
@@ -52,11 +54,10 @@ class Auth0ServiceTest extends OrchestraTestCase
 
     public function testThatServiceLoginReturnsRedirect()
     {
-
         $service = new Auth0Service(self::$defaultConfig);
         $redirect = $service->login();
 
-        $this->assertInstanceOf( \Illuminate\Http\RedirectResponse::class, $redirect );
+        $this->assertInstanceOf( RedirectResponse::class, $redirect );
 
         $targetUrl = parse_url($redirect->getTargetUrl());
 
@@ -66,6 +67,22 @@ class Auth0ServiceTest extends OrchestraTestCase
 
         $this->assertContains('redirect_uri=https%3A%2F%2Fexample.com%2Fcallback', $targetUrlQuery);
         $this->assertContains('client_id=__test_client_id__', $targetUrlQuery);
+    }
+
+    /**
+     * @throws InvalidTokenException
+     */
+    public function testThatServiceCanUseLaravelCache()
+    {
+        $cache_key = md5('https://__invalid_domain__/.well-known/jwks.json');
+        cache([$cache_key => [uniqid()]], 10);
+        session(['auth0__nonce' => uniqid()]);
+
+        $service = new Auth0Service(['domain' => '__invalid_domain__'] + self::$defaultConfig);
+
+        // Without the cache set above, would expect a cURL error for a bad domain.
+        $this->expectException(InvalidTokenException::class);
+        $service->decodeJWT(uniqid());
     }
 
     /*
