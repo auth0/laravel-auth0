@@ -4,8 +4,6 @@ namespace Auth0\Login;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Helpers\State\StateHandler;
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -50,16 +48,12 @@ class LoginServiceProvider extends ServiceProvider
             return new LaravelSessionStore();
         });
 
-        $this->app->bind(StateHandler::class, function ($app) {
-            return new SessionStateHandler($app->make(LaravelSessionStore::class));
-        });
-
         // Bind the auth0 name to a singleton instance of the Auth0 Service
         $this->app->singleton(Auth0Service::class, function ($app) {
             return new Auth0Service(
                 $app->make('config')->get('laravel-auth0'),
                 $app->make(StoreInterface::class),
-                $app->make(StateHandler::class)
+                $app->make('cache.store')
             );
         });
         $this->app->singleton('auth0', function () {
