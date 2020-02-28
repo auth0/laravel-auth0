@@ -4,6 +4,8 @@ namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Auth0Controller extends Controller
 {
@@ -40,13 +42,12 @@ class Auth0Controller extends Controller
             // If we have a user, we are going to log them in, but if
             // there is an onLogin defined we need to allow the Laravel developer
             // to implement the user as they want an also let them store it.
+            $user = $auth0User;
             if ($service->hasOnLogin()) {
-                $user = $service->callOnLogin($auth0User);
-            } else {
-                // If not, the user will be fine
-                $user = $auth0User;
+                $user = $service->callOnLogin($user);
             }
-            \Auth::login($user, $service->rememberUser());
+
+            Auth::login($user, $service->rememberUser());
         }
 
         return \Redirect::intended('/');
