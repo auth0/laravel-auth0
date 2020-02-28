@@ -39,7 +39,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
         $user = \App::make('auth0')->getUser();
 
         if ($user === null) {
-            return;
+            return null;
         }
 
         // Build the user
