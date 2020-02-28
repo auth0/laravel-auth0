@@ -3,6 +3,7 @@
 namespace Auth0\Login;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Contracts\Auth\UserProvider;
 use Auth0\Login\Contract\Auth0UserRepository;
 use Auth0\SDK\Exception\CoreException;
@@ -35,7 +36,7 @@ class Auth0UserProvider implements UserProvider
      *
      * @param mixed $identifier
      *
-     * @return Authenticatable
+     * @return User
      */
     public function retrieveByID($identifier)
     {
@@ -45,7 +46,7 @@ class Auth0UserProvider implements UserProvider
     /**
      * @param array $credentials
      *
-     * @return bool|Authenticatable
+     * @return User|null
      */
     public function retrieveByCredentials(array $credentials)
     {
