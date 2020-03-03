@@ -1,6 +1,7 @@
 <?php
 namespace Auth0\Login\Tests;
 
+use Auth0\Login\Auth0JWTUser;
 use Auth0\Login\Auth0Service;
 use Auth0\Login\Facade\Auth0 as Auth0Facade;
 use Auth0\Login\LoginServiceProvider as Auth0ServiceProvider;
@@ -85,6 +86,17 @@ class Auth0ServiceTest extends OrchestraTestCase
         $service->decodeJWT(uniqid());
     }
 
+    public function testThatGuardAuthenticatesUsers()
+    {
+        $this->assertTrue(\Auth('auth0')->guest());
+
+        $user = new Auth0JWTUser((object)['sub' => 'x']);
+
+        \Auth('auth0')->setUser($user);
+
+        $this->assertTrue(\Auth('auth0')->check());
+    }
+
     /*
      * Test suite helpers
      */
@@ -99,5 +111,12 @@ class Auth0ServiceTest extends OrchestraTestCase
         return [
             'Auth0' => Auth0Facade::class,
         ];
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('auth.guards.auth0', ['driver' => 'auth0', 'provider' => 'auth0']);
+        $app['config']->set('auth.providers.auth0', ['driver' => 'auth0']);
+        $app['config']->set('laravel-auth0', self::$defaultConfig);
     }
 }
