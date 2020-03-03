@@ -46,6 +46,36 @@ You can implement your own cache strategy by creating a new class that implement
 
 You can customize the way you handle the users in your application by creating your own `UserRepository`. This class should implement the `Auth0\Login\Contract\Auth0UserRepository` contract. Please see the [Custom User Handling section of the Laravel Quickstart](https://auth0.com/docs/quickstart/webapp/laravel#optional-custom-user-handling) for the latest example.
 
+### Using auth guard
+
+To use the auth0 guard add it to the config/auth.php with the driver "auth0":
+```
+'guards' => [
+    ...
+    'auth0' => [
+        'driver' => 'auth0',
+        'provider' => 'auth0',
+    ],
+],
+
+'providers' => [
+    ...
+    'auth0' => [
+        'driver' => 'auth0',
+    ],
+],
+```
+
+After that simply use just like any other guard e.g.:
+```
+// get user
+auth('auth0')->user();
+// check if logged in
+auth('auth0')->check();
+// protect routes via middleware use
+Route::group(['middleware' => 'auth:auth0'], function () {});
+```
+
 ## Installation
 
 Install this plugin into a new or existing project using [Composer](https://getcomposer.org/doc/00-intro.md):
