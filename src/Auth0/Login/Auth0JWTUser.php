@@ -71,7 +71,7 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Add a generic getter to get all the properties of the userInfo.
      *
-     * @return the related value or null if it is not set
+     * @return mixed the related value or null if it is not set
      */
     public function __get($name)
     {

@@ -9,7 +9,7 @@ use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
 class Auth0UserRepository implements Auth0UserRepositoryContract
 {
     /**
-     * @param \Auth0\Login\Contract\stdClass $jwt
+     * @param \stdClass $jwt
      *
      * @return Auth0JWTUser
      */
@@ -29,7 +29,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
     }
 
     /**
-     * @param \Auth0\Login\Contract\the $identifier
+     * @param mixed $identifier
      *
      * @return Auth0User|\Illuminate\Contracts\Auth\Authenticatable|null
      */
