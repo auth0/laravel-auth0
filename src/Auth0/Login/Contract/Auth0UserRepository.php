@@ -5,7 +5,7 @@ namespace Auth0\Login\Contract;
 interface Auth0UserRepository
 {
     /**
-     * @param stdClass $jwt with the data provided in the JWT
+     * @param \stdClass $jwt with the data provided in the JWT
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable
      */
@@ -19,7 +19,7 @@ interface Auth0UserRepository
     public function getUserByUserInfo($userInfo);
 
     /**
-     * @param $identifier the user id
+     * @param mixed $identifier the user id
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable
      */

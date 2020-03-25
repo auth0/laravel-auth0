@@ -14,8 +14,8 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Auth0User constructor.
      *
-     * @param $userInfo
-     * @param $accessToken
+     * @param array $userInfo
+     * @param string|null $accessToken
      */
     public function __construct($userInfo, $accessToken)
     {
