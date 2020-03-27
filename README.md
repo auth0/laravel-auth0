@@ -2,7 +2,7 @@
 
 This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps.
 
-- Master targets Laravel 6 compatibility.
+- Master targets Laravel 7 compatibility.
 - The 3.x branch (not maintained) targets Laravel 5.2 compatibility.
 - The 2.x branch (not maintained) targets Laravel 5.0 and 5.1 compatibility.
 - If you are working with an older version (Laravel 4.x), use version 1.0.* (not maintained)
