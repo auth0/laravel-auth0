@@ -1,5 +1,17 @@
 # Change Log
 
+## [5.4.0](https://github.com/auth0/laravel-auth0/tree/5.4.0) (2020-03-27)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.3.1...5.4.0)
+
+**Closed issues**
+- Laravel 7.0 supported release. [\#171](https://github.com/auth0/laravel-auth0/issues/171)
+
+**Fixed**
+- Fixed PHPDocs [\#170](https://github.com/auth0/laravel-auth0/pull/170) ([YAhiru](https://github.com/YAhiru))
+
+**Added**
+- Laravel 7 support [\#167](https://github.com/auth0/laravel-auth0/pull/167) ([giannidhooge](https://github.com/giannidhooge))
+
 ## [5.3.1](https://github.com/auth0/laravel-auth0/tree/5.3.1) (2019-11-14)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.3.0...5.3.1)
 
