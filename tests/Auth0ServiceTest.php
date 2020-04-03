@@ -15,7 +15,7 @@ class Auth0ServiceTest extends OrchestraTestCase
 {
     public static $defaultConfig;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$defaultConfig = [
