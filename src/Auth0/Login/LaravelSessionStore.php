@@ -18,7 +18,7 @@ class LaravelSessionStore implements StoreInterface
     {
         $key_name = $this->getSessionKeyName($key);
 
-        \session([$key_name, $value]);
+        \session([$key_name => $value]);
     }
 
     /**
@@ -45,7 +45,7 @@ class LaravelSessionStore implements StoreInterface
     {
         $key_name = $this->getSessionKeyName($key);
 
-        \session([$key_name, null]);
+        \session([$key_name => null]);
     }
 
     /**
