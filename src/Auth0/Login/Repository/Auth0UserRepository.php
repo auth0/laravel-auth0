@@ -9,11 +9,11 @@ use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
 class Auth0UserRepository implements Auth0UserRepositoryContract
 {
     /**
-     * @param \Auth0\Login\Contract\stdClass $jwt
+     * @param array $jwt Verified and decoded JWT.
      *
      * @return Auth0JWTUser
      */
-    public function getUserByDecodedJWT($jwt)
+    public function getUserByDecodedJWT(array $jwt) : Auth0JWTUser
     {
         return new Auth0JWTUser($jwt);
     }
@@ -23,7 +23,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
      *
      * @return Auth0User
      */
-    public function getUserByUserInfo($userInfo)
+    public function getUserByUserInfo(array $userInfo)
     {
         return new Auth0User($userInfo['profile'], $userInfo['accessToken']);
     }

@@ -17,10 +17,10 @@ class Auth0User implements Authenticatable
     /**
      * Auth0User constructor.
      *
-     * @param $userInfo
-     * @param $accessToken
+     * @param array $userInfo
+     * @param null|string $accessToken
      */
-    public function __construct($userInfo, $accessToken)
+    public function __construct(array $userInfo, ?string $accessToken)
     {
         $this->userInfo = $userInfo;
         $this->accessToken = $accessToken;

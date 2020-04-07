@@ -17,17 +17,17 @@ class Auth0JWTUser implements Authenticatable
     /**
      * Auth0JWTUser constructor.
      *
-     * @param $userInfo
+     * @param array $userInfo
      */
-    public function __construct($userInfo)
+    public function __construct(array $userInfo)
     {
-        $this->userInfo = get_object_vars($userInfo);
+        $this->userInfo = $userInfo;
     }
 
     /**
      * Get the unique identifier for the user.
      *
-     * @return mixed
+     * @return string|null
      */
     public function getAuthIdentifierName()
     {
