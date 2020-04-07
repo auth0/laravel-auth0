@@ -37,8 +37,6 @@ class LaravelSessionStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @see Auth0SDK\BaseAuth0
-     *
      * @param string $key
      */
     public function delete(string $key)

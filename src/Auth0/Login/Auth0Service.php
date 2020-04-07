@@ -163,6 +163,7 @@ class Auth0Service
      * @param array $verifierOptions
      *
      * @return array
+     *
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
