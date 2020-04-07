@@ -33,4 +33,14 @@ class Auth0JWTUser implements Authenticatable
     {
         return $this->userInfo['sub'] ?? null;
     }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return null
+     */
+    public function getAuthPassword()
+    {
+        return null;
+    }
 }
