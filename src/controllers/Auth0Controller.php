@@ -5,7 +5,6 @@ namespace Auth0\Login;
 use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class Auth0Controller extends Controller
 {

@@ -2,10 +2,11 @@
 
 namespace Auth0\Login\Contract;
 
-use \Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 interface Auth0UserRepository
 {
+
     /**
      * @param array $decodedJwt with the data provided in the JWT
      *
@@ -14,7 +15,7 @@ interface Auth0UserRepository
     public function getUserByDecodedJWT(array $decodedJwt) : Authenticatable;
 
     /**
-     * @param array $userInfo representing the user profile and user accessToken
+     * @param array $userInfo Array representing the user's identity
      *
      * @return Authenticatable
      */

@@ -2,8 +2,8 @@
 
 namespace Auth0\Login\Repository;
 
-use Auth0\Login\Auth0User;
 use Auth0\Login\Auth0JWTUser;
+use Auth0\Login\Auth0User;
 use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -12,7 +12,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
     /**
      * @param array $decodedJwt
      *
-     * @return Auth0JWTUser
+     * @return Authenticatable
      */
     public function getUserByDecodedJWT(array $decodedJwt) : Authenticatable
     {

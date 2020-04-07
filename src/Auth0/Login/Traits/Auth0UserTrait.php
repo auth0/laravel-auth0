@@ -10,7 +10,7 @@ trait Auth0UserTrait {
     protected $userInfo;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $accessToken;
 
@@ -45,9 +45,9 @@ trait Auth0UserTrait {
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getUserInfo() : ?array
+    public function getUserInfo() : array
     {
         return $this->userInfo;
     }
@@ -67,7 +67,7 @@ trait Auth0UserTrait {
      *
      * @return string
      */
-    public function getRememberToken()
+    public function getRememberToken() : string
     {
         return '';
     }
@@ -78,14 +78,14 @@ trait Auth0UserTrait {
      * @param  string  $value
      * @return void
      */
-    public function setRememberToken($value) {}
+    public function setRememberToken($value) : void {}
 
     /**
      * Get the column name for the "remember me" token.
      *
      * @return string
      */
-    public function getRememberTokenName()
+    public function getRememberTokenName() : string
     {
         return '';
     }
@@ -95,17 +95,17 @@ trait Auth0UserTrait {
      *
      * @param string $name Userinfo key name.
      *
-     * @return string|null
+     * @return mixed|null
      */
-    public function __get(string $name) : ?string
+    public function __get(string $name)
     {
         return $this->userInfo[$name] ?? null;
     }
 
     /**
-     * @return string
+     * @return string|bool
      */
-    public function __toString() : string
+    public function __toString()
     {
         return json_encode($this->userInfo);
     }
