@@ -1,5 +1,25 @@
 # Change Log
 
+## [6.0.0](https://github.com/auth0/laravel-auth0/tree/6.0.0) (2020-04-09)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.4.0...6.0.0)
+
+**This is a major release and includes breaking changes!** This release also includes a major version change for the PHP SDK that it relies on. Please see the [migration guide](https://github.com/auth0/auth0-PHP/blob/master/MIGRATE-v5-TO-v7.md) for the PHP SDK for more information.
+
+**Closed issues**
+- auth0-PHP 7.0 - State and nonce handling [\#163](https://github.com/auth0/laravel-auth0/issues/163)
+- Cannot use actingAs unit tests functionality [\#161](https://github.com/auth0/laravel-auth0/issues/161)
+
+**Added**
+- Implement auth0 guard [\#166](https://github.com/auth0/laravel-auth0/pull/166) ([Tamrael](https://github.com/Tamrael))
+
+**Changed**
+- Use array for Auth0JWTUser and add repo return types [\#176](https://github.com/auth0/laravel-auth0/pull/176) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update PHP SDK to v7.0.0 [\#162](https://github.com/auth0/laravel-auth0/pull/162) ([joshcanhelp](https://github.com/joshcanhelp))
+- Bind SessionState handler interface in container [\#147](https://github.com/auth0/laravel-auth0/pull/147) ([nstapelbroek](https://github.com/nstapelbroek))
+
+**Fixed**
+- Fix Laravel session management [\#174](https://github.com/auth0/laravel-auth0/pull/174) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.4.0](https://github.com/auth0/laravel-auth0/tree/5.4.0) (2020-03-27)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.3.1...5.4.0)
 
