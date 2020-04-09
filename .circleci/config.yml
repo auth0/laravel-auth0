@@ -10,11 +10,6 @@ commands:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
       - run: composer install -n --prefer-dist
-      - persist_to_workspace:
-          root: .
-          paths:
-            - composer.*
-            - .snyk
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
@@ -32,28 +27,9 @@ jobs:
       - run:
           name: Run Tests
           command: composer test
-  snyk:
-    docker:
-      - image: snyk/snyk-cli:composer
-    steps:
-      - attach_workspace:
-          at: .
-      - run: snyk test
-      - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]
-            then
-            snyk monitor --org=auth0-sdks
-            fi
-          when: always
 
 #Each workflow represents a Github check
 workflows:
   snyk:
     jobs:
       - php_7
-      - snyk:
-          # Must define SNYK_TOKEN env
-          context: snyk-env
-          requires:
-            - php_7
