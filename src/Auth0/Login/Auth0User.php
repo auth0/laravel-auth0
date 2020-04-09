@@ -14,10 +14,10 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Auth0User constructor.
      *
-     * @param $userInfo
+     * @param array $userInfo
      * @param $accessToken
      */
-    public function __construct($userInfo, $accessToken)
+    public function __construct(array $userInfo, $accessToken)
     {
         $this->userInfo = $userInfo;
         $this->accessToken = $accessToken;

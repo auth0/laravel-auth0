@@ -162,12 +162,12 @@ class Auth0Service
      * @param $encUser
      * @param array $verifierOptions
      *
-     * @return object
+     * @return array
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
     {
-        $this->apiuser = (object) $this->auth0->decodeIdToken($encUser, $verifierOptions);
+        $this->apiuser = $this->auth0->decodeIdToken($encUser, $verifierOptions);
         return $this->apiuser;
     }
 
