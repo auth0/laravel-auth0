@@ -2,26 +2,29 @@
 
 namespace Auth0\Login\Contract;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 interface Auth0UserRepository
 {
-    /**
-     * @param stdClass $jwt with the data provided in the JWT
-     *
-     * @return \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public function getUserByDecodedJWT($jwt);
 
     /**
-     * @param array $userInfo representing the user profile and user accessToken
+     * @param array $jwt Decoded JWT
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable
+     * @return Authenticatable
      */
-    public function getUserByUserInfo($userInfo);
+    public function getUserByDecodedJWT(array $jwt) : Authenticatable;
 
     /**
-     * @param $identifier the user id
+     * @param array $userInfo Array representing the user's identity
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable
+     * @return Authenticatable
      */
-    public function getUserByIdentifier($identifier);
+    public function getUserByUserInfo(array $userInfo) : Authenticatable;
+
+    /**
+     * @param string|null $identifier User identifier
+     *
+     * @return Authenticatable|null
+     */
+    public function getUserByIdentifier(?string $identifier) : ?Authenticatable;
 }

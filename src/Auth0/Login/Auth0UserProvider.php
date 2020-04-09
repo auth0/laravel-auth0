@@ -20,8 +20,8 @@ class Auth0UserProvider implements UserProvider
     /**
      * Auth0UserProvider constructor.
      *
-     * @param Auth0UserRepository       $userRepository
-     * @param \Auth0\Login\Auth0Service $auth0
+     * @param Auth0UserRepository $userRepository
+     * @param Auth0Service        $auth0
      */
     public function __construct(Auth0UserRepository $userRepository, Auth0Service $auth0)
     {
@@ -45,7 +45,7 @@ class Auth0UserProvider implements UserProvider
     /**
      * @param array $credentials
      *
-     * @return bool|Authenticatable
+     * @return Authenticatable
      */
     public function retrieveByCredentials(array $credentials)
     {

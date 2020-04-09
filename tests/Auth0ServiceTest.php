@@ -90,7 +90,7 @@ class Auth0ServiceTest extends OrchestraTestCase
     {
         $this->assertTrue(\Auth('auth0')->guest());
 
-        $user = new Auth0JWTUser((object)['sub' => 'x']);
+        $user = new Auth0JWTUser(['sub' => 'x']);
 
         \Auth('auth0')->setUser($user);
 

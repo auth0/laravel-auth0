@@ -2,18 +2,19 @@
 
 namespace Auth0\Login\Repository;
 
-use Auth0\Login\Auth0User;
 use Auth0\Login\Auth0JWTUser;
+use Auth0\Login\Auth0User;
 use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class Auth0UserRepository implements Auth0UserRepositoryContract
 {
     /**
-     * @param \Auth0\Login\Contract\stdClass $jwt
+     * @param array $jwt Verified and decoded JWT.
      *
-     * @return Auth0JWTUser
+     * @return Authenticatable
      */
-    public function getUserByDecodedJWT($jwt)
+    public function getUserByDecodedJWT(array $jwt) : Authenticatable
     {
         return new Auth0JWTUser($jwt);
     }
@@ -23,23 +24,23 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
      *
      * @return Auth0User
      */
-    public function getUserByUserInfo($userInfo)
+    public function getUserByUserInfo(array $userInfo) : Authenticatable
     {
         return new Auth0User($userInfo['profile'], $userInfo['accessToken']);
     }
 
     /**
-     * @param \Auth0\Login\Contract\the $identifier
+     * @param string|null $identifier
      *
-     * @return Auth0User|\Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Auth0User|null
      */
-    public function getUserByIdentifier($identifier)
+    public function getUserByIdentifier(?string $identifier) : ?Authenticatable
     {
         // Get the user info of the user logged in (probably in session)
         $user = \App::make('auth0')->getUser();
 
         if ($user === null) {
-            return;
+            return null;
         }
 
         // Build the user
