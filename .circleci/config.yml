@@ -7,11 +7,11 @@ commands:
       - run: sudo composer self-update
       - restore_cache:
           keys:
-            - composer-v1-{{ checksum "composer.json" }}
+            - composer-v1-{{ checksum "composer.lock" }}
             - composer-v1-
       - run: composer install -n --prefer-dist
       - save_cache:
-          key: composer-v1-{{ checksum "composer.json" }}
+          key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
 
