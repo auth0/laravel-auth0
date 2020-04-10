@@ -15,9 +15,9 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
      *
      * @param $userInfo
      */
-    public function __construct($userInfo)
+    public function __construct(array $userInfo)
     {
-        $this->userInfo = get_object_vars($userInfo);
+        $this->userInfo = $userInfo;
     }
 
     /**

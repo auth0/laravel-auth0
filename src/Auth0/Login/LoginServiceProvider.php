@@ -2,17 +2,19 @@
 
 namespace Auth0\Login;
 
+use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
+use Auth0\Login\Repository\Auth0UserRepository;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Helpers\State\StateHandler;
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Store\StoreInterface;
+use Illuminate\Auth\RequestGuard;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
 {
 
-    const SDK_VERSION = "5.4.0";
+    const SDK_VERSION = "6.0.0";
 
     /**
      * Bootstrap the application events.
@@ -21,6 +23,12 @@ class LoginServiceProvider extends ServiceProvider
     {
         \Auth::provider('auth0', function ($app, array $config) {
             return $app->make(Auth0UserProvider::class);
+        });
+
+        \Auth::extend('auth0', function ($app, $name, $config) {
+            return new RequestGuard(function (Request $request, Auth0UserProvider $provider) {
+                return $provider->retrieveByCredentials(['api_token' => $request->bearerToken()]);
+            }, $app['request'], $app['auth']->createUserProvider($config['provider']));
         });
 
         $this->publishes([
@@ -50,16 +58,14 @@ class LoginServiceProvider extends ServiceProvider
             return new LaravelSessionStore();
         });
 
-        $this->app->bind(StateHandler::class, function ($app) {
-            return new SessionStateHandler($app->make(LaravelSessionStore::class));
-        });
+        $this->app->bind(Auth0UserRepositoryContract::class, Auth0UserRepository::class);
 
         // Bind the auth0 name to a singleton instance of the Auth0 Service
         $this->app->singleton(Auth0Service::class, function ($app) {
             return new Auth0Service(
                 $app->make('config')->get('laravel-auth0'),
                 $app->make(StoreInterface::class),
-                $app->make(StateHandler::class)
+                $app->make('cache.store')
             );
         });
         $this->app->singleton('auth0', function () {

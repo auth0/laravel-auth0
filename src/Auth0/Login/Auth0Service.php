@@ -2,16 +2,11 @@
 
 namespace Auth0\Login;
 
-use Auth0\SDK\API\Helpers\State\StateHandler;
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Auth0;
-use Auth0\SDK\Helpers\Cache\CacheHandler;
-use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Store\StoreInterface;
-use Config;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -30,33 +25,35 @@ class Auth0Service
     /**
      * Auth0Service constructor.
      *
-     * @param array $auth0Config
-     * @param StoreInterface $sessionStorage
+     * @param array|null $auth0Config
+     * @param StoreInterface|null $store
+     * @param CacheInterface|null $cache
      *
-     * @throws \Auth0\SDK\Exception\CoreException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __construct(
-        array $auth0Config = null,
+        array $auth0Config,
         StoreInterface $store = null,
-        StateHandler $stateHandler = null
+        CacheInterface $cache = null
     )
     {
-        if (!$auth0Config instanceof Repository && !is_array($auth0Config)) {
+
+        if (!$auth0Config instanceof ConfigRepository && !is_array($auth0Config)) {
             $auth0Config = config('laravel-auth0');
         }
 
-        $store = isset( $auth0Config['store'] ) ? $auth0Config['store'] : $store;
+        $store = $auth0Config['store'] ?? $store;
         if (false !== $store && !$store instanceof StoreInterface) {
             $store = new LaravelSessionStore();
         }
-
-        $stateHandler = isset( $auth0Config['state_handler'] ) ? $auth0Config['state_handler'] : $stateHandler;
-        if (false !== $stateHandler && !$stateHandler instanceof StateHandler) {
-            $stateHandler = new SessionStateHandler($store);
-        }
-
         $auth0Config['store'] = $store;
-        $auth0Config['state_handler'] = $stateHandler;
+
+        $cache = $auth0Config['cache_handler'] ?? $cache;
+        if (!($cache instanceof CacheInterface)) {
+            $cache = app()->make('cache.store');
+        }
+        $auth0Config['cache_handler'] = $cache;
+
         $this->auth0 = new Auth0($auth0Config);
     }
 
@@ -163,35 +160,14 @@ class Auth0Service
 
     /**
      * @param $encUser
+     * @param array $verifierOptions
      *
-     * @return mixed
+     * @return array
+     * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
-    public function decodeJWT($encUser)
+    public function decodeJWT($encUser, array $verifierOptions = [])
     {
-        try {
-            $cache = \App::make(CacheHandler::class);
-        } catch (BindingResolutionException $e) {
-            $cache = null;
-        }
-
-        $secret_base64_encoded = config('laravel-auth0.secret_base64_encoded');
-
-        if (is_null($secret_base64_encoded)) {
-            $secret_base64_encoded = true;
-        }
-
-        $verifier = new JWTVerifier([
-            'valid_audiences' => [config('laravel-auth0.client_id'), config('laravel-auth0.api_identifier')],
-            'supported_algs' => config('laravel-auth0.supported_algs', ['HS256']),
-            'client_secret' => config('laravel-auth0.client_secret'),
-            'authorized_iss' => config('laravel-auth0.authorized_issuers'),
-            'secret_base64_encoded' => $secret_base64_encoded,
-            'cache' => $cache,
-            'guzzle_options' => config('laravel-auth0.guzzle_options'),
-        ]);
-
-        $this->apiuser = $verifier->verifyAndDecode($encUser);
-
+        $this->apiuser = $this->auth0->decodeIdToken($encUser, $verifierOptions);
         return $this->apiuser;
     }
 
