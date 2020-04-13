@@ -43,7 +43,7 @@ jobs:
           command: |
             if [[ "${CIRCLE_BRANCH}" == "master" ]]
             then
-            snyk monitor --org=auth0-sdks
+            snyk monitor --org=auth0-sdks --project-name=laravel-auth0
             fi
           when: always
 
