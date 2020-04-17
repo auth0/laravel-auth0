@@ -173,21 +173,17 @@ class Auth0Service
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
     {
-
-        // TODO - check if config values are set and throw for those that are required
         $token_issuer  = 'https://'.$this->auth0Config['domain'].'/';
         $apiIdentifier = $this->auth0Config['api_identifier'];
+        $idTokenAlg = $this->auth0Config['supported_algs'][0] ?? 'RS256';
 
         $signature_verifier = null;
-        $idTokenAlg = $this->auth0Config['id_token_alg'] ?? 'RS256';
-
         if ('RS256' === $idTokenAlg) {
             $jwksUri       = $this->auth0Config['jwks_uri'] ?? 'https://'.$this->auth0Config['domain'].'/.well-known/jwks.json';
             $jwks_fetcher = new JWKFetcher($this->auth0Config['cache_handler']);
             $jwks        = $jwks_fetcher->getKeys($jwksUri);
             $signature_verifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $idTokenAlg) {
-            // TODO - client_secret not being set in config?
             $signature_verifier = new SymmetricVerifier($this->auth0Config['client_secret']);
         }
 
@@ -197,8 +193,8 @@ class Auth0Service
             $apiIdentifier,
             $signature_verifier
         );
-        
-        $this->apiuser = $token_verifier->verify($encUser);
+
+        $this->apiuser = $token_verifier->verify($encUser, $verifierOptions);
         return $this->apiuser;
     }
 
