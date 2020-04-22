@@ -6,7 +6,7 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
-use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
+use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
@@ -188,7 +188,7 @@ class Auth0Service
         }
 
         // Use IdTokenVerifier since Auth0-issued JWTs contain the 'sub' claim, which is used by the Laravel user model
-        $token_verifier = new IdTokenVerifier(
+        $token_verifier = new TokenVerifier(
             $token_issuer,
             $apiIdentifier,
             $signature_verifier
