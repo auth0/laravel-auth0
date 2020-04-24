@@ -3,6 +3,7 @@
 namespace Auth0\Login;
 
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
@@ -185,6 +186,8 @@ class Auth0Service
             $signature_verifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $idTokenAlg) {
             $signature_verifier = new SymmetricVerifier($this->auth0Config['client_secret']);
+        } else {
+            throw new InvalidTokenException('Unsupported token signing algorithm configured. Must be either RS256 or HS256.');
         }
 
         // Use IdTokenVerifier since Auth0-issued JWTs contain the 'sub' claim, which is used by the Laravel user model
