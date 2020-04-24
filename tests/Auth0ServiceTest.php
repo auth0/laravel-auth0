@@ -24,6 +24,7 @@ class Auth0ServiceTest extends OrchestraTestCase
             'client_secret' => '__test_client_secret__',
             'redirect_uri' => 'https://example.com/callback',
             'transient_store' => new SessionStore(),
+            'api_identifier' => 'https://example-audience.com'
         ];
     }
 

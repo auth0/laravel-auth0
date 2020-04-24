@@ -3,6 +3,11 @@
 namespace Auth0\Login;
 
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Exception\InvalidTokenException;
+use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +26,7 @@ class Auth0Service
     private $apiuser;
     private $_onLoginCb = null;
     private $rememberUser = false;
+    private $auth0Config = [];
 
     /**
      * Auth0Service constructor.
@@ -54,6 +60,7 @@ class Auth0Service
         }
         $auth0Config['cache_handler'] = $cache;
 
+        $this->auth0Config = $auth0Config;
         $this->auth0 = new Auth0($auth0Config);
     }
 
@@ -167,7 +174,30 @@ class Auth0Service
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
     {
-        $this->apiuser = $this->auth0->decodeIdToken($encUser, $verifierOptions);
+        $token_issuer = 'https://'.$this->auth0Config['domain'].'/';
+        $apiIdentifier = $this->auth0Config['api_identifier'];
+        $idTokenAlg = $this->auth0Config['supported_algs'][0] ?? 'RS256';
+
+        $signature_verifier = null;
+        if ('RS256' === $idTokenAlg) {
+            $jwksUri = $this->auth0Config['jwks_uri'] ?? 'https://'.$this->auth0Config['domain'].'/.well-known/jwks.json';
+            $jwks_fetcher = new JWKFetcher($this->auth0Config['cache_handler']);
+            $jwks = $jwks_fetcher->getKeys($jwksUri);
+            $signature_verifier = new AsymmetricVerifier($jwks);
+        } else if ('HS256' === $idTokenAlg) {
+            $signature_verifier = new SymmetricVerifier($this->auth0Config['client_secret']);
+        } else {
+            throw new InvalidTokenException('Unsupported token signing algorithm configured. Must be either RS256 or HS256.');
+        }
+
+        // Use IdTokenVerifier since Auth0-issued JWTs contain the 'sub' claim, which is used by the Laravel user model
+        $token_verifier = new TokenVerifier(
+            $token_issuer,
+            $apiIdentifier,
+            $signature_verifier
+        );
+
+        $this->apiuser = $token_verifier->verify($encUser, $verifierOptions);
         return $this->apiuser;
     }
 
