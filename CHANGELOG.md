@@ -1,5 +1,11 @@
 # Change Log
 
+## [6.0.1](https://github.com/auth0/laravel-auth0/tree/6.0.1) (2020-04-28)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.0.0...6.0.1)
+
+**Fixed**
+- Fix access token decoding and validation [\#183](https://github.com/auth0/laravel-auth0/pull/183) ([jimmyjames](https://github.com/jimmyjames))
+
 ## [6.0.0](https://github.com/auth0/laravel-auth0/tree/6.0.0) (2020-04-09)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/5.4.0...6.0.0)
 

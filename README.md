@@ -81,7 +81,7 @@ Route::group(['middleware' => 'auth:auth0'], function () {});
 Install this plugin into a new or existing project using [Composer](https://getcomposer.org/doc/00-intro.md):
 
 ```bash
-$ composer require auth0/login:"~5.0"
+$ composer require auth0/login:"~6.0"
 ```
 
 Additional steps to install can be found in the [quickstart](https://auth0.com/docs/quickstart/webapp/laravel#integrate-auth0-in-your-application).
