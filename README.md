@@ -11,6 +11,7 @@ This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with
 [![Latest Stable Version](https://poser.pugx.org/auth0/login/v/stable)](https://packagist.org/packages/auth0/login)
 [![License](https://poser.pugx.org/auth0/login/license)](https://packagist.org/packages/auth0/login)
 [![Total Downloads](https://poser.pugx.org/auth0/login/downloads)](https://packagist.org/packages/auth0/login)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0?ref=badge_shield)
 
 ## Documentation
 
@@ -116,3 +117,6 @@ Auth0 helps you to easily:
 ## License
 
 The Auth0 Laravel Login plugin is licensed under MIT - [LICENSE](LICENSE.txt)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0?ref=badge_large)
