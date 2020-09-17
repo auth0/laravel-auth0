@@ -1,5 +1,14 @@
 # Change Log
 
+## [6.1.0](https://github.com/auth0/laravel-auth0/tree/6.1.0) (2020-09-17)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.0.1...6.1.0)
+
+**Added**
+- Support Laravel 8 [\#190](https://github.com/auth0/laravel-auth0/pull/190) ([giannidhooge](hhttps://github.com/giannidhooge))
+
+**Fixed**
+- Fix composer.json whitespace issue [\#192](https://github.com/auth0/laravel-auth0/pull/192) ([jimmyjames](https://github.com/jimmyjames))
+
 ## [6.0.1](https://github.com/auth0/laravel-auth0/tree/6.0.1) (2020-04-28)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.0.0...6.0.1)
 
