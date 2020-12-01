@@ -50,5 +50,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
         if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
             return $auth0User;
         }
+        
+        return null;
     }
 }
