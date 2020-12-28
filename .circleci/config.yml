@@ -9,7 +9,7 @@ commands:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
           root: .
           paths:
