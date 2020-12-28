@@ -79,11 +79,3 @@ workflows:
           context: snyk-env
           requires:
             - php_7_3
-  snyk:
-    jobs:
-      - php_7_3
-      - snyk:
-          # Must define SNYK_TOKEN env
-          context: snyk-env
-          requires:
-            - php_7_3
