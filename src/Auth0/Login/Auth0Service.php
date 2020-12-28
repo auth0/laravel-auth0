@@ -12,6 +12,7 @@ use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
 use Psr\SimpleCache\CacheInterface;
+use \Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -31,7 +32,7 @@ class Auth0Service
     /**
      * Auth0Service constructor.
      *
-     * @param array|null $auth0Config
+     * @param array $auth0Config
      * @param StoreInterface|null $store
      * @param CacheInterface|null $cache
      *
@@ -124,9 +125,9 @@ class Auth0Service
     /**
      * Sets a callback to be called when the user is logged in.
      *
-     * @param callback $cb A function that receives an auth0User and receives a Laravel user
+     * @param callable $cb A function that receives an auth0User and receives a Laravel user
      */
-    public function onLogin($cb)
+    public function onLogin(callable $cb)
     {
         $this->_onLoginCb = $cb;
     }
@@ -140,7 +141,7 @@ class Auth0Service
     }
 
     /**
-     * @param $auth0User
+     * @param Authenticatable $auth0User
      *
      * @return mixed
      */
@@ -166,13 +167,13 @@ class Auth0Service
     }
 
     /**
-     * @param $encUser
+     * @param string $encUser
      * @param array $verifierOptions
      *
      * @return array
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
-    public function decodeJWT($encUser, array $verifierOptions = [])
+    public function decodeJWT(string $encUser, array $verifierOptions = [])
     {
         $token_issuer = 'https://'.$this->auth0Config['domain'].'/';
         $apiIdentifier = $this->auth0Config['api_identifier'];

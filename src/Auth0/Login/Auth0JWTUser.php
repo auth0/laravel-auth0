@@ -13,7 +13,7 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Auth0JWTUser constructor.
      *
-     * @param $userInfo
+     * @param array $userInfo
      */
     public function __construct(array $userInfo)
     {
