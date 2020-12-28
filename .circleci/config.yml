@@ -19,9 +19,12 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
+  run-php-compatibility:
+    steps:
+      - run: composer compat
   run-static-analysis:
     steps:
-      - run composer static-analysis
+      - run: composer static-analysis
   run-unit-tests:
     steps:
       - run: composer test
