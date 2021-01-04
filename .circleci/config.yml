@@ -24,7 +24,7 @@ commands:
       - run: composer compat
   run-static-analysis:
     steps:
-      - run: composer static-analysis
+      - run: composer analyze
   run-unit-tests:
     steps:
       - run: composer test
