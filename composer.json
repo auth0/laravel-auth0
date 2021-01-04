@@ -26,12 +26,12 @@
     "nunomaduro/larastan": "^0.6.11"
   },
   "scripts": {
-    "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text ",
-    "analyze": "\"vendor/bin/phpstan\" analyze",
+    "test": "SHELL_INTERACTIVE=1 \"./vendor/bin/phpunit\" --coverage-text ",
+    "analyze": "@php ./vendor/bin/phpstan analyze",
     "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
     "format": "@php ./vendor/bin/phpcbf",
     "lint": "@php ./vendor/bin/phpcs",
-    "sniffs": "\"vendor/bin/phpcs\" -e",
+    "sniffs": "@php ./vendor/bin/phpcs -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
     "pre-commit": [
       "@analyze",
