@@ -2,7 +2,7 @@
 
 namespace Auth0\Login\Contract;
 
-use \Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 interface Auth0UserRepository
 {

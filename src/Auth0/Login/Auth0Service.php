@@ -12,7 +12,7 @@ use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
 use Psr\SimpleCache\CacheInterface;
-use \Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Service that provides access to the Auth0 SDK.
