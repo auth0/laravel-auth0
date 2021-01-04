@@ -130,7 +130,7 @@ class Auth0Service
     /**
      * Sets a callback to be called when the user is logged in.
      *
-     * @param $cb A function that receives an auth0User and receives a Laravel user
+     * @param mixed $cb A function that receives an auth0User and receives a Laravel user
      */
     public function onLogin($cb)
     {
