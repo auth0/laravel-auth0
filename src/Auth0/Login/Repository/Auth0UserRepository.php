@@ -30,7 +30,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
     }
 
     /**
-     * @param string|int|null $identifier
+     * @param string|integer|null $identifier
      *
      * @return Authenticatable|null
      */

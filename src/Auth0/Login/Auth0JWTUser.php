@@ -8,6 +8,7 @@ namespace Auth0\Login;
  */
 class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
 {
+
     private $userInfo;
 
     /**
@@ -75,7 +76,7 @@ class Auth0JWTUser implements \Illuminate\Contracts\Auth\Authenticatable
      */
     public function __get($name)
     {
-        if (!array_key_exists($name, $this->userInfo)) {
+        if (! array_key_exists($name, $this->userInfo)) {
             return;
         }
 

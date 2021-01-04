@@ -21,7 +21,7 @@ interface Auth0UserRepository
     public function getUserByUserInfo(array $userInfo) : Authenticatable;
 
     /**
-     * @param string|int|null $identifier the user id
+     * @param string|integer|null $identifier the user id
      *
      * @return Authenticatable|null
      */
