@@ -1,22 +1,18 @@
 {
   "name": "auth0/login",
-  "description": "Laravel plugin that helps authenticate with the auth0 service",
+  "description": "Laravel plugin that helps authenticate with the Auth0 service",
   "license": "MIT",
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/auth0/auth0-PHP.git"
-    },
-    {
-      "type": "git",
-      "url": "https://github.com/evansims/php-jwt.git"
+      "url": "https://github.com/auth0/php-jwt.git"
     }
   ],
   "require": {
     "php": "^7.3 | ^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
-    "auth0/auth0-php": "dev-update-php8",
+    "auth0/auth0-php": "^7.6",
     "lcobucci/jwt": "dev-3.3-php8-compatibility#daa6aff67a22bf737504143ae55a6913d9ff484d",
     "illuminate/support": " ^6.0 | ^7.0 | ^8.0",
     "illuminate/contracts": "^6.0 | ^7.0 | ^8.0"
@@ -31,14 +27,14 @@
   },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text ",
-    "static-analysis": "\"vendor/bin/phpstan\" analyze",
+    "analyze": "\"vendor/bin/phpstan\" analyze",
     "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
     "format": "@php ./vendor/bin/phpcbf",
     "lint": "@php ./vendor/bin/phpcs",
     "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
     "pre-commit": [
-      "@static-analysis",
+      "@analyze",
       "@test",
       "@format",
       "@compat"
