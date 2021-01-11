@@ -1,0 +1,8 @@
+parameters:
+    checkGenericClassInNonGenericObjectType: false
+    level: 2
+    ignoreErrors:
+        - '#Call to an undefined static method Event::listen#'
+        - '#Call to static method#'
+    paths:
+        - src

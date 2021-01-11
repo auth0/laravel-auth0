@@ -12,26 +12,31 @@ use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
 use Psr\SimpleCache\CacheInterface;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Service that provides access to the Auth0 SDK.
  */
 class Auth0Service
 {
+
     /**
      * @var Auth0
      */
     private $auth0;
 
     private $apiuser;
+
     private $_onLoginCb = null;
+
     private $rememberUser = false;
+
     private $auth0Config = [];
 
     /**
      * Auth0Service constructor.
      *
-     * @param array|null $auth0Config
+     * @param array               $auth0Config
      * @param StoreInterface|null $store
      * @param CacheInterface|null $cache
      *
@@ -43,25 +48,26 @@ class Auth0Service
         CacheInterface $cache = null
     )
     {
-
-        if (!$auth0Config instanceof ConfigRepository && !is_array($auth0Config)) {
+        if (! $auth0Config instanceof ConfigRepository && ! is_array($auth0Config)) {
             $auth0Config = config('laravel-auth0');
         }
 
         $store = $auth0Config['store'] ?? $store;
-        if (false !== $store && !$store instanceof StoreInterface) {
+        if (false !== $store && ! $store instanceof StoreInterface) {
             $store = new LaravelSessionStore();
         }
+
         $auth0Config['store'] = $store;
 
         $cache = $auth0Config['cache_handler'] ?? $cache;
-        if (!($cache instanceof CacheInterface)) {
+        if (! ($cache instanceof CacheInterface)) {
             $cache = app()->make('cache.store');
         }
+
         $auth0Config['cache_handler'] = $cache;
 
         $this->auth0Config = $auth0Config;
-        $this->auth0 = new Auth0($auth0Config);
+        $this->auth0       = new Auth0($auth0Config);
     }
 
     /**
@@ -96,7 +102,7 @@ class Auth0Service
         }
 
         $additional_params['response_type'] = $response_type;
-        $auth_url = $this->auth0->getLoginUrl($additional_params);
+        $auth_url                           = $this->auth0->getLoginUrl($additional_params);
         return new RedirectResponse($auth_url);
     }
 
@@ -109,7 +115,7 @@ class Auth0Service
     {
         // Get the user info from auth0
         $auth0 = $this->getSDK();
-        $user = $auth0->getUser();
+        $user  = $auth0->getUser();
 
         if ($user === null) {
             return;
@@ -124,7 +130,7 @@ class Auth0Service
     /**
      * Sets a callback to be called when the user is logged in.
      *
-     * @param callback $cb A function that receives an auth0User and receives a Laravel user
+     * @param mixed $cb A function that receives an auth0User and receives a Laravel user
      */
     public function onLogin($cb)
     {
@@ -132,7 +138,7 @@ class Auth0Service
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function hasOnLogin()
     {
@@ -140,7 +146,7 @@ class Auth0Service
     }
 
     /**
-     * @param $auth0User
+     * @param Authenticatable $auth0User
      *
      * @return mixed
      */
@@ -154,7 +160,7 @@ class Auth0Service
      *
      * @param null $value
      *
-     * @return bool|null
+     * @return boolean|null
      */
     public function rememberUser($value = null)
     {
@@ -166,23 +172,23 @@ class Auth0Service
     }
 
     /**
-     * @param $encUser
-     * @param array $verifierOptions
+     * @param string $encUser
+     * @param array  $verifierOptions
      *
      * @return array
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
     {
-        $token_issuer = 'https://'.$this->auth0Config['domain'].'/';
+        $token_issuer  = 'https://'.$this->auth0Config['domain'].'/';
         $apiIdentifier = $this->auth0Config['api_identifier'];
-        $idTokenAlg = $this->auth0Config['supported_algs'][0] ?? 'RS256';
+        $idTokenAlg    = $this->auth0Config['supported_algs'][0] ?? 'RS256';
 
         $signature_verifier = null;
         if ('RS256' === $idTokenAlg) {
-            $jwksUri = $this->auth0Config['jwks_uri'] ?? 'https://'.$this->auth0Config['domain'].'/.well-known/jwks.json';
-            $jwks_fetcher = new JWKFetcher($this->auth0Config['cache_handler']);
-            $jwks = $jwks_fetcher->getKeys($jwksUri);
+            $jwksUri            = $this->auth0Config['jwks_uri'] ?? 'https://'.$this->auth0Config['domain'].'/.well-known/jwks.json';
+            $jwks_fetcher       = new JWKFetcher($this->auth0Config['cache_handler']);
+            $jwks               = $jwks_fetcher->getKeys($jwksUri);
             $signature_verifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $idTokenAlg) {
             $signature_verifier = new SymmetricVerifier($this->auth0Config['client_secret']);

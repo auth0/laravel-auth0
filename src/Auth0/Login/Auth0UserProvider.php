@@ -14,7 +14,9 @@ use Auth0\SDK\Exception\InvalidTokenException;
  */
 class Auth0UserProvider implements UserProvider
 {
+
     protected $userRepository;
+
     protected $auth0;
 
     /**
@@ -26,7 +28,7 @@ class Auth0UserProvider implements UserProvider
     public function __construct(Auth0UserRepository $userRepository, Auth0Service $auth0)
     {
         $this->userRepository = $userRepository;
-        $this->auth0 = $auth0;
+        $this->auth0          = $auth0;
     }
 
     /**
@@ -45,11 +47,11 @@ class Auth0UserProvider implements UserProvider
     /**
      * @param array $credentials
      *
-     * @return bool|Authenticatable
+     * @return boolean|Authenticatable
      */
     public function retrieveByCredentials(array $credentials)
     {
-        if (!isset($credentials['api_token'])) {
+        if (! isset($credentials['api_token'])) {
             return null;
         }
 

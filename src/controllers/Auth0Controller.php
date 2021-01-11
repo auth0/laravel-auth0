@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 
 class Auth0Controller extends Controller
 {
+
     /**
      * @var Auth0UserRepository
      */
@@ -46,6 +47,7 @@ class Auth0Controller extends Controller
                 // If not, the user will be fine
                 $user = $auth0User;
             }
+
             \Auth::login($user, $service->rememberUser());
         }
 

@@ -2,7 +2,7 @@
 
 namespace Auth0\Login\Contract;
 
-use \Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 interface Auth0UserRepository
 {
@@ -21,7 +21,7 @@ interface Auth0UserRepository
     public function getUserByUserInfo(array $userInfo) : Authenticatable;
 
     /**
-     * @param string|int|null $identifier the user id
+     * @param string|integer|null $identifier the user id
      *
      * @return Authenticatable|null
      */

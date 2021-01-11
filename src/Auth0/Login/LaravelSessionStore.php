@@ -22,8 +22,8 @@ class LaravelSessionStore implements StoreInterface
     }
 
     /**
-     * @param $key
-     * @param null $default
+     * @param string $key
+     * @param null   $default
      *
      * @return mixed
      */

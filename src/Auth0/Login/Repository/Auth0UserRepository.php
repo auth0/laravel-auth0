@@ -30,7 +30,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
     }
 
     /**
-     * @param string|int|null $identifier
+     * @param string|integer|null $identifier
      *
      * @return Authenticatable|null
      */
@@ -50,7 +50,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
         if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
             return $auth0User;
         }
-        
+
         return null;
     }
 }
