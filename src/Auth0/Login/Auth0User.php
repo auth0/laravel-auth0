@@ -8,18 +8,20 @@ namespace Auth0\Login;
  */
 class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
 {
+
     protected $userInfo;
+
     protected $accessToken;
 
     /**
      * Auth0User constructor.
      *
-     * @param array $userInfo
+     * @param array       $userInfo
      * @param string|null $accessToken
      */
     public function __construct(array $userInfo, $accessToken)
     {
-        $this->userInfo = $userInfo;
+        $this->userInfo    = $userInfo;
         $this->accessToken = $accessToken;
     }
 
@@ -30,10 +32,11 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
      */
     public function getAuthIdentifier()
     {
-      if (isset($this->userInfo['sub'])) {
-        return $this->userInfo['sub'];
-      }
-      return $this->userInfo['user_id'];
+        if (isset($this->userInfo['sub'])) {
+            return $this->userInfo['sub'];
+        }
+
+        return $this->userInfo['user_id'];
     }
 
     /**
@@ -80,11 +83,11 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Add a generic getter to get all the properties of the userInfo.
      *
-     * @return the related value or null if it is not set
+     * @return null|mixed Returns the related value, or null if not set.
      */
     public function __get($name)
     {
-        if (!array_key_exists($name, $this->userInfo)) {
+        if (! array_key_exists($name, $this->userInfo)) {
             return;
         }
 
