@@ -152,7 +152,11 @@ class Auth0Service
      */
     public function callOnLogin($auth0User)
     {
-        return call_user_func($this->_onLoginCb, $auth0User);
+        $user = call_user_func($this->_onLoginCb, $auth0User);
+
+        $this->getSDK()->setUser($user);
+
+        return $user;
     }
 
     /**
