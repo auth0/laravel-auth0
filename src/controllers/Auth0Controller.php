@@ -35,7 +35,7 @@ class Auth0Controller extends Controller
         $profile = $service->getUser();
 
         // Get the user related to the profile
-        $auth0User = $this->userRepository->getUserByUserInfo($profile);
+        $auth0User = $profile ? $this->userRepository->getUserByUserInfo($profile) : null;
 
         if ($auth0User) {
             // If we have a user, we are going to log them in, but if
