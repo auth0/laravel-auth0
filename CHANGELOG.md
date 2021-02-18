@@ -1,5 +1,17 @@
 # Change Log
 
+## [6.3.0](https://github.com/auth0/laravel-auth0/tree/6.3.0) (2020-02-18)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.2.0...6.3.0)
+
+**Changed**
+
+- Store changes made to the user object during the onLogin event hook [\#206](https://github.com/auth0/laravel-auth0/pull/206) ([evansims](https://github.com/evansims))
+
+**Fixed**
+
+- Avoid throwing an error when calling getUserByUserInfo() during login callback event when the supplied profile is empty/null [\#207](https://github.com/auth0/laravel-auth0/pull/207) ([evansims](https://github.com/evansims))
+
 ## [6.2.0](https://github.com/auth0/laravel-auth0/tree/6.2.0) (2020-01-15)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.1.0...6.2.0)
