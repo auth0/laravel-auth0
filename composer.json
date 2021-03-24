@@ -6,7 +6,7 @@
     "php": "^7.3 | ^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
-    "auth0/auth0-php": "^7.6",
+    "auth0/auth0-php": "^7.7",
     "illuminate/support": " ^6.0 | ^7.0 | ^8.0",
     "illuminate/contracts": "^6.0 | ^7.0 | ^8.0"
   },
