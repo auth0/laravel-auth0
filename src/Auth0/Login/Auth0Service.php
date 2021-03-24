@@ -107,6 +107,22 @@ class Auth0Service
     }
 
     /**
+     * If invitation parameters are present in the request, handle extraction and automatically redirect to Universal Login.
+     */
+    public function handleInvitation()
+    {
+        $this->getSDK()->handleInvitation();
+    }
+
+    /**
+     * Extract invitation details from any incoming GET request.
+     */
+    public function getInvitationParameters()
+    {
+        return $this->getSDK()->getInvitationParameters();
+    }
+
+    /**
      * If the user is logged in, returns the user information.
      *
      * @return array with the User info as described in https://docs.auth0.com/user-profile and the user access token
