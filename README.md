@@ -80,6 +80,86 @@ auth('auth0')->check();
 Route::group(['middleware' => 'auth:auth0'], function () {});
 ```
 
+## Examples
+
+### Organizations (Closed Beta)
+
+Organizations is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
+
+Using Organizations, you can:
+
+- Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your applications, as organizations.
+- Manage their membership in a variety of ways, including user invitation.
+- Configure branded, federated login flows for each organization.
+- Implement role-based access control, such that users can have different roles when authenticating in the context of different organizations.
+- Build administration capabilities into your products, using Organizations APIs, so that those businesses can manage their own organizations.
+
+Note that Organizations is currently only available to customers on our Enterprise and Startup subscription plans.
+
+#### Logging in with an Organization
+
+Open your Auth0 Laravel plugin configuration file (usually `config/laravel-auth0.php`) uncomment the `organization` optiion and specify the Id for your Organization (found in your Organization settings on the Auth0 Dashboard.)
+
+```php
+// config/laravel-auth0.php
+// ...
+
+/*
+|--------------------------------------------------------------------------
+|   Auth0 Organizations
+|--------------------------------------------------------------------------
+|   organization (string) Optional. Id of an Organization, if being used. Used when generating log in urls and validating token claims.
+*/
+
+'organization' => 'org_E6WbrPMQU2UJn6Rz',
+```
+
+From there, the Organization will automatically be used throughout your Laravel application's authentication login, including redirecting to the Universal Login page.
+
+```php
+// Expects the Laravel plugin to be configured first, as demonstrated above.
+
+App::make('auth0')->login();
+```
+
+#### Accepting user invitations
+
+Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The URL the user will arrive at is based on your configured `Application Login URI`, which you can change from your Application's settings inside the Auth0 dashboard.
+
+When the user arrives at your application using an invite link, you can expect three query parameters to be provided: `invitation`, `organization`, and `organization_name`. These will always be delivered using a GET request.
+
+A helper function is provided to handle extracting these query parameters and automatically redirecting to the Universal Login page. Invoke this from your application's logic, such as a controller for an authentication route, to handle this process automatically.
+
+```php
+// routes/example.php
+
+Route::get('/invite', [ExampleIndexController::class, 'invite'])->name('invite');
+```
+
+```php
+// Http/Controllers/Example/ExampleIndexController.php
+
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
+
+class ExampleIndexController extends Controller
+{
+  /**
+   * Redirect to Auth0 Universal Login using the invitation code
+   *
+   * @return void
+   */
+  public function invite()
+  {
+      App::make('auth0')->handleInvitation();
+  }
+
+```
+
 ## Installation
 
 Install this plugin into a new or existing project using [Composer](https://getcomposer.org/doc/00-intro.md):
