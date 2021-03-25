@@ -62,6 +62,15 @@ return [
     */
     // 'api_identifier'  => '',
 
+
+    /*
+        |--------------------------------------------------------------------------
+        |   Auth0 Organizations
+        |--------------------------------------------------------------------------
+        |   organization (string) Optional. Id of an Organization, if being used. Used when generating log in urls and validating token claims.
+    */
+    // 'organization'  => '',
+
     /*
         |--------------------------------------------------------------------------
         |   The secret format
