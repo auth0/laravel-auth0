@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.4.0](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-03-25)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.3.0...6.4.0)
+
+**Changed**
+
+- Add support for Auth0 Organizations [\#209](https://github.com/auth0/laravel-auth0/pull/209) ([evansims](https://github.com/evansims))
+
 ## [6.3.0](https://github.com/auth0/laravel-auth0/tree/6.3.0) (2020-02-18)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.2.0...6.3.0)
