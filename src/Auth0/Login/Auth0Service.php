@@ -66,6 +66,11 @@ class Auth0Service
 
         $auth0Config['cache_handler'] = $cache;
 
+        if(isset($auth0Config['api_identifier'])) {
+            // Auth0\SDK\Auth0 is using `audience` to create a login link.
+            $auth0Config['audience'] = $auth0Config['api_identifier'];
+        }
+
         $this->auth0Config = $auth0Config;
         $this->auth0       = new Auth0($auth0Config);
     }
