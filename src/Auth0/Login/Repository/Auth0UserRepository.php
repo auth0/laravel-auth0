@@ -37,7 +37,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
     public function getUserByIdentifier($identifier) : ?Authenticatable
     {
         // Get the user info of the user logged in (probably in session)
-        $user = \Illuminate\Support\Facades\App::make('auth0')->getUser();
+        $user = app('auth0')->getUser();
 
         if ($user === null) {
             return null;
