@@ -9,6 +9,8 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Auth\RequestGuard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
@@ -21,11 +23,11 @@ class LoginServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Auth::provider('auth0', function ($app, array $config) {
+        Auth::provider('auth0', function ($app, array $config) {
             return $app->make(Auth0UserProvider::class);
         });
 
-        \Auth::extend('auth0', function ($app, $name, $config) {
+        Auth::extend('auth0', function ($app, $name, $config) {
             return new RequestGuard(function (Request $request, Auth0UserProvider $provider) {
                 return $provider->retrieveByCredentials(['api_token' => $request->bearerToken()]);
             }, $app['request'], $app['auth']->createUserProvider($config['provider']));
@@ -73,14 +75,14 @@ class LoginServiceProvider extends ServiceProvider
         });
 
         // When Laravel logs out, logout the auth0 SDK trough the service
-        \Event::listen('auth.logout', function () {
-            \App::make('auth0')->logout();
+        Event::listen('auth.logout', function () {
+            app('auth0')->logout();
         });
-        \Event::listen('user.logout', function () {
-            \App::make('auth0')->logout();
+        Event::listen('user.logout', function () {
+            app('auth0')->logout();
         });
-        \Event::listen('Illuminate\Auth\Events\Logout', function () {
-            \App::make('auth0')->logout();
+        Event::listen('Illuminate\Auth\Events\Logout', function () {
+            app('auth0')->logout();
         });
     }
 }
