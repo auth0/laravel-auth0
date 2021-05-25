@@ -98,7 +98,7 @@ Note that Organizations is currently only available to customers on our Enterpri
 
 #### Logging in with an Organization
 
-Open your Auth0 Laravel plugin configuration file (usually `config/laravel-auth0.php`) uncomment the `organization` optiion and specify the Id for your Organization (found in your Organization settings on the Auth0 Dashboard.)
+Open your Auth0 Laravel plugin configuration file (usually `config/laravel-auth0.php`) uncomment the `organization` option and specify the Id for your Organization (found in your Organization settings on the Auth0 Dashboard.)
 
 ```php
 // config/laravel-auth0.php
