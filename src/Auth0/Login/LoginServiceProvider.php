@@ -63,14 +63,15 @@ class LoginServiceProvider extends ServiceProvider
         $this->app->bind(Auth0UserRepositoryContract::class, Auth0UserRepository::class);
 
         // Bind the auth0 name to a singleton instance of the Auth0 Service
-        $this->app->singleton(Auth0Service::class, function ($app) {
+        $this->app->bind(Auth0Service::class, function ($app) {
             return new Auth0Service(
                 $app->make('config')->get('laravel-auth0'),
                 $app->make(StoreInterface::class),
                 $app->make('cache.store')
             );
         });
-        $this->app->singleton('auth0', function () {
+
+        $this->app->bind('auth0', function () {
             return $this->app->make(Auth0Service::class);
         });
 
