@@ -2,7 +2,7 @@
 
 namespace Auth0\Login;
 
-use Auth0\SDK\Auth0;
+use Auth0\Login\Auth0;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
