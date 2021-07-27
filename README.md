@@ -1,6 +1,6 @@
 # Laravel Auth0 Plugin
 
-[![CircleCI](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/master.svg)](https://circleci.com/gh/auth0/laravel-auth0)
+[![CircleCI](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/main.svg)](https://circleci.com/gh/auth0/laravel-auth0)
 [![Latest Stable Version](https://poser.pugx.org/auth0/login/v/stable)](https://packagist.org/packages/auth0/login)
 [![License](https://poser.pugx.org/auth0/login/license)](https://packagist.org/packages/auth0/login)
 [![Total Downloads](https://poser.pugx.org/auth0/login/downloads)](https://packagist.org/packages/auth0/login)
