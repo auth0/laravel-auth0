@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
 use Auth0\SDK\Auth0;
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
@@ -12,7 +13,6 @@ use Auth0\SDK\Store\StoreInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\RedirectResponse;
 use Psr\SimpleCache\CacheInterface;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -27,7 +27,7 @@ class Auth0Service
 
     private $apiuser;
 
-    private $_onLoginCb = null;
+    private $onLoginCb = null;
 
     private $rememberUser = false;
 
@@ -44,8 +44,8 @@ class Auth0Service
      */
     public function __construct(
         array $auth0Config,
-        StoreInterface $store = null,
-        CacheInterface $cache = null
+        ?StoreInterface $store = null,
+        ?CacheInterface $cache = null
     )
     {
         if (! $auth0Config instanceof ConfigRepository && ! is_array($auth0Config)) {
@@ -53,7 +53,7 @@ class Auth0Service
         }
 
         $store = $auth0Config['store'] ?? $store;
-        if (false !== $store && ! $store instanceof StoreInterface) {
+        if ($store !== false && ! $store instanceof StoreInterface) {
             $store = new LaravelSessionStore();
         }
 
@@ -66,7 +66,7 @@ class Auth0Service
 
         $auth0Config['cache_handler'] = $cache;
 
-        if(isset($auth0Config['api_identifier'])) {
+        if (isset($auth0Config['api_identifier'])) {
             // Auth0\SDK\Auth0 is using `audience` to create a login link.
             $auth0Config['audience'] = $auth0Config['api_identifier'];
         }
@@ -98,16 +98,16 @@ class Auth0Service
      */
     public function login($connection = null, $state = null, $additional_params = ['scope' => 'openid profile email'], $response_type = 'code')
     {
-        if ($connection && empty( $additional_params['connection'] )) {
+        if ($connection && ! isset( $additional_params['connection'] )) {
             $additional_params['connection'] = $connection;
         }
 
-        if ($state && empty( $additional_params['state'] )) {
+        if ($state && ! isset( $additional_params['state'] )) {
             $additional_params['state'] = $state;
         }
 
         $additional_params['response_type'] = $response_type;
-        $auth_url                           = $this->auth0->getLoginUrl($additional_params);
+        $auth_url = $this->auth0->getLoginUrl($additional_params);
         return new RedirectResponse($auth_url);
     }
 
@@ -155,25 +155,25 @@ class Auth0Service
      */
     public function onLogin($cb)
     {
-        $this->_onLoginCb = $cb;
+        $this->onLoginCb = $cb;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasOnLogin()
     {
-        return $this->_onLoginCb !== null;
+        return $this->onLoginCb !== null;
     }
 
     /**
-     * @param Authenticatable $auth0User
+     * @param \Illuminate\Contracts\Auth\Authenticatable $auth0User
      *
      * @return mixed
      */
     public function callOnLogin($auth0User)
     {
-        $user = call_user_func($this->_onLoginCb, $auth0User);
+        $user = call_user_func($this->onLoginCb, $auth0User);
 
         $this->getSDK()->setUser($user);
 
@@ -185,7 +185,7 @@ class Auth0Service
      *
      * @param null $value
      *
-     * @return boolean|null
+     * @return bool|null
      */
     public function rememberUser($value = null)
     {
@@ -201,6 +201,7 @@ class Auth0Service
      * @param array  $verifierOptions
      *
      * @return array
+     *
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
     public function decodeJWT($encUser, array $verifierOptions = [])
@@ -210,15 +211,15 @@ class Auth0Service
         $idTokenAlg    = $this->auth0Config['supported_algs'][0] ?? 'RS256';
 
         $signature_verifier = null;
-        if ('RS256' === $idTokenAlg) {
+        if ($idTokenAlg === 'RS256') {
             $jwksUri            = $this->auth0Config['jwks_uri'] ?? 'https://'.$this->auth0Config['domain'].'/.well-known/jwks.json';
             $jwks_fetcher       = new JWKFetcher($this->auth0Config['cache_handler']);
             $jwks               = $jwks_fetcher->getKeys($jwksUri);
             $signature_verifier = new AsymmetricVerifier($jwks);
-        } else if ('HS256' === $idTokenAlg) {
+        } elseif ($idTokenAlg === 'HS256') {
             $signature_verifier = new SymmetricVerifier($this->auth0Config['client_secret']);
         } else {
-            throw new InvalidTokenException('Unsupported token signing algorithm configured. Must be either RS256 or HS256.');
+            throw new \Auth0\SDK\Exception\InvalidTokenException('Unsupported token signing algorithm configured. Must be either RS256 or HS256.');
         }
 
         // Use IdTokenVerifier since Auth0-issued JWTs contain the 'sub' claim, which is used by the Laravel user model

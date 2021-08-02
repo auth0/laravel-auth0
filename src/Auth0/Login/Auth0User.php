@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
 /**
@@ -83,7 +85,7 @@ class Auth0User implements \Illuminate\Contracts\Auth\Authenticatable
     /**
      * Add a generic getter to get all the properties of the userInfo.
      *
-     * @return null|mixed Returns the related value, or null if not set.
+     * @return mixed|null Returns the related value, or null if not set.
      */
     public function __get($name)
     {

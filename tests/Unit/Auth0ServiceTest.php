@@ -25,7 +25,7 @@ class Auth0ServiceTest extends TestCase
             'redirect_uri' => 'https://example.com/callback',
             'transient_store' => new SessionStore(),
             'api_identifier' => '__test_api_identifier__',
-            'supported_algs' => ['HS256']    
+            'supported_algs' => ['HS256']
         ];
     }
 
@@ -33,7 +33,7 @@ class Auth0ServiceTest extends TestCase
     {
         $service = new Auth0Service(self::$defaultConfig);
         $token = self::getToken();
-        
+
         $this->assertNotEmpty($service->decodeJWT($token));
     }
 
@@ -62,6 +62,6 @@ class Auth0ServiceTest extends TestCase
             $builder->withClaim($claim, $value);
         }
 
-        return $builder->getToken(new HsSigner(), new Key('__test_secret__'));
+        return (string) $builder->getToken(new HsSigner(), new Key('__test_secret__'));
     }
 }

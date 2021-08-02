@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login\Contract;
 
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -11,19 +13,19 @@ interface Auth0UserRepository
      *
      * @return Authenticatable
      */
-    public function getUserByDecodedJWT(array $decodedJwt) : Authenticatable;
+    public function getUserByDecodedJWT(array $decodedJwt): Authenticatable;
 
     /**
      * @param array $userInfo representing the user profile and user accessToken
      *
      * @return Authenticatable
      */
-    public function getUserByUserInfo(array $userInfo) : Authenticatable;
+    public function getUserByUserInfo(array $userInfo): Authenticatable;
 
     /**
-     * @param string|integer|null $identifier the user id
+     * @param string|int|null $identifier the user id
      *
      * @return Authenticatable|null
      */
-    public function getUserByIdentifier($identifier) : ?Authenticatable;
+    public function getUserByIdentifier($identifier): ?Authenticatable;
 }

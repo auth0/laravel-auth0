@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
+use Auth0\Login\Contract\Auth0UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Auth0\Login\Contract\Auth0UserRepository;
-use Auth0\SDK\Exception\CoreException;
-use Auth0\SDK\Exception\InvalidTokenException;
 
 /**
  * Service that provides an Auth0\LaravelAuth0\Auth0User stored in the session. This User provider
@@ -47,7 +47,7 @@ class Auth0UserProvider implements UserProvider
     /**
      * @param array $credentials
      *
-     * @return boolean|Authenticatable
+     * @return bool|Authenticatable
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -59,9 +59,9 @@ class Auth0UserProvider implements UserProvider
 
         try {
             $decodedJWT = $this->auth0->decodeJWT($encUser);
-        } catch (CoreException $e) {
+        } catch (\Auth0\SDK\Exception\CoreException $e) {
             return null;
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             return null;
         }
 

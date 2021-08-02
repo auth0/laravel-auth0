@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository;
