@@ -5,20 +5,6 @@ body:
   - type: markdown
     attributes:
       value: Thanks for taking the time to help us improve this project!
-  - type: textarea
-    id: bug-description
-    attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-    validations:
-      required: true
-  - type: textarea
-    id: bug-reproduction
-    attributes:
-      label: How can we reproduce this issue?
-      description: Detail the steps taken to reproduce this error, and whether this can be reproduced consistently or if it is intermittent.
-    validations:
-      required: true
   - type: dropdown
     id: sdk
     attributes:
@@ -50,6 +36,20 @@ body:
       options:
         - 2.x
         - 1.x
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: bug-reproduction
+    attributes:
+      label: How can we reproduce this issue?
+      description: Detail the steps taken to reproduce this error, and whether this can be reproduced consistently or if it is intermittent.
     validations:
       required: true
   - type: textarea
