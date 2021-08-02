@@ -94,11 +94,7 @@ jobs:
           at: .
       - run: snyk test
       - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "main" ]]
-            then
-            snyk monitor --org=auth0-sdks --project-name=laravel-auth0
-            fi
+          command: snyk monitor --org=auth0-sdks --project-name=laravel-auth0
           when: always
 
   run-codecov-uploader:
