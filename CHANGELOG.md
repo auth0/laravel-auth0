@@ -6,7 +6,8 @@
 
 **Changed**
 
-- Update Auth0-SDK dependency [\#222](https://github.com/auth0/laravel-auth0/pull/222) ([evansims](https://github.com/evansims))
+- Remove facade aliases [\#215](https://github.com/auth0/laravel-auth0/pull/215) ([Rezouce](https://github.com/Rezouce))
+- Update auth0-PHP dependency [\#222](https://github.com/auth0/laravel-auth0/pull/222) ([evansims](https://github.com/evansims))
 
 ## [6.4.0](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-03-25)
 
