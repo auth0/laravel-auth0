@@ -21,7 +21,7 @@ body:
         - 7.x
         - 6.4.1
         - 6.4.0
-        - Other (please specify in 'additional context')
+        - Other (specify in 'additional context')
     validations:
       required: true
   - type: dropdown
@@ -33,6 +33,7 @@ body:
         - PHP 8.0
         - PHP 7.4
         - PHP 7.3
+        - Other (specify in 'additional context')
     validations:
       required: true
   - type: dropdown
