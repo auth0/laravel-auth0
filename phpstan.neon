@@ -1,7 +1,10 @@
 parameters:
-    checkGenericClassInNonGenericObjectType: false
     level: 2
-    ignoreErrors:
-        - '#Call to static method#'
+
     paths:
         - src
+
+    ignoreErrors:
+        - '#Call to static method#'
+
+    reportUnmatchedIgnoredErrors: false
