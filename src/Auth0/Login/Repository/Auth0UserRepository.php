@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login\Repository;
 
-use Auth0\Login\Auth0User;
 use Auth0\Login\Auth0JWTUser;
+use Auth0\Login\Auth0User;
 use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -14,7 +16,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
      *
      * @return Auth0JWTUser
      */
-    public function getUserByDecodedJWT(array $decodedJwt) : Authenticatable
+    public function getUserByDecodedJWT(array $decodedJwt): Authenticatable
     {
         return new Auth0JWTUser($decodedJwt);
     }
@@ -24,17 +26,17 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
      *
      * @return Auth0User
      */
-    public function getUserByUserInfo(array $userInfo) : Authenticatable
+    public function getUserByUserInfo(array $userInfo): Authenticatable
     {
         return new Auth0User($userInfo['profile'], $userInfo['accessToken']);
     }
 
     /**
-     * @param string|integer|null $identifier
+     * @param string|int|null $identifier
      *
      * @return Authenticatable|null
      */
-    public function getUserByIdentifier($identifier) : ?Authenticatable
+    public function getUserByIdentifier($identifier): ?Authenticatable
     {
         // Get the user info of the user logged in (probably in session)
         $user = app('auth0')->getUser();
@@ -47,7 +49,7 @@ class Auth0UserRepository implements Auth0UserRepositoryContract
         $auth0User = $this->getUserByUserInfo($user);
 
         // It is not the same user as logged in, it is not valid
-        if ($auth0User && $auth0User->getAuthIdentifier() == $identifier) {
+        if ($auth0User && $auth0User->getAuthIdentifier() === $identifier) {
             return $auth0User;
         }
 

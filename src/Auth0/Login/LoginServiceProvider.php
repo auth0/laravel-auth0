@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository as Auth0UserRepositoryContract;
@@ -15,20 +17,19 @@ use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
 {
-
-    const SDK_VERSION = '6.4.0';
+    public const SDK_VERSION = '6.4.0';
 
     /**
      * Bootstrap the application events.
      */
     public function boot()
     {
-        Auth::provider('auth0', function ($app, array $config) {
+        Auth::provider('auth0', static function ($app, array $config) {
             return $app->make(Auth0UserProvider::class);
         });
 
-        Auth::extend('auth0', function ($app, $name, $config) {
-            return new RequestGuard(function (Request $request, Auth0UserProvider $provider) {
+        Auth::extend('auth0', static function ($app, $name, $config) {
+            return new RequestGuard(static function (Request $request, Auth0UserProvider $provider) {
                 return $provider->retrieveByCredentials(['api_token' => $request->bearerToken()]);
             }, $app['request'], $app['auth']->createUserProvider($config['provider']));
         });
@@ -56,14 +57,14 @@ class LoginServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(StoreInterface::class, function () {
+        $this->app->bind(StoreInterface::class, static function () {
             return new LaravelSessionStore();
         });
 
         $this->app->bind(Auth0UserRepositoryContract::class, Auth0UserRepository::class);
 
         // Bind the auth0 name to a singleton instance of the Auth0 Service
-        $this->app->singleton(Auth0Service::class, function ($app) {
+        $this->app->singleton(Auth0Service::class, static function ($app) {
             return new Auth0Service(
                 $app->make('config')->get('laravel-auth0'),
                 $app->make(StoreInterface::class),
@@ -75,13 +76,13 @@ class LoginServiceProvider extends ServiceProvider
         });
 
         // When Laravel logs out, logout the auth0 SDK trough the service
-        Event::listen('auth.logout', function () {
+        Event::listen('auth.logout', static function () {
             app('auth0')->logout();
         });
-        Event::listen('user.logout', function () {
+        Event::listen('user.logout', static function () {
             app('auth0')->logout();
         });
-        Event::listen('Illuminate\Auth\Events\Logout', function () {
+        Event::listen('Illuminate\Auth\Events\Logout', static function () {
             app('auth0')->logout();
         });
     }

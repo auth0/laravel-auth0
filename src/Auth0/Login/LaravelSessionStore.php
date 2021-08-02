@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Login;
 
 use Auth0\SDK\Store\StoreInterface;
 
 class LaravelSessionStore implements StoreInterface
 {
-    const BASE_NAME = 'auth0_';
+    private const BASE_NAME = 'auth0_';
 
     /**
      * Persists $value on $_SESSION, identified by $key.
