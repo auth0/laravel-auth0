@@ -140,10 +140,10 @@ workflows:
               only:
                 - main
           context: snyk-env
-          requires: [run-pest-7.3]
+          requires: [run-phpunit-7.3]
       - run-codecov-uploader:
           filters:
             branches:
               only:
                 - main
-          requires: [run-pest-7.4]
+          requires: [run-phpunit-7.4]
