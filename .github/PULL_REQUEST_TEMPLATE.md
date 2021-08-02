@@ -1,29 +1,30 @@
+<!--
+  Please only send a pull request to branches that are currently supported.
+  Pull requests without a descriptive title, thorough description, or tests will be closed.
+-->
+
 ### Changes
 
-Please describe both what is changing and why this is important. Include:
-
-- Endpoints added, deleted, deprecated, or changed
-- Classes and methods added, deleted, deprecated, or changed
-- Screenshots of new or changed UI, if applicable
-- A summary of usage if this is a new feature or change to a public API (this should also be added to relevant documentation once released)
-- Any alternative designs or approaches considered
+<!--
+  Would you please describe both what is changing and why this is important?
+  Explain the benefit to end-users, why it does not break any existing features, how it makes building applications easier, etc.
+-->
 
 ### References
 
-Please include relevant links supporting this change such as a:
+<!--
+  All pull requests should link to an associated issue tagged 'selected for development' by an Auth0 engineer.
+-->
 
-- support ticket
-- community post
-- StackOverflow post
-- support forum thread
+Resolves #
 
 ### Testing
 
-Please describe how this can be tested by reviewers. Be specific about anything not tested and reasons why. If this library has unit and/or integration testing, tests should be added for new functionality and existing tests should complete without errors. 
+<!--
+  Would you please describe how reviewers can test this? Be specific about anything not tested and the reasons why. Tests must be added for new functionality, and existing tests should complete without errors.
+-->
 
-[ ] This change has been tested on the latest version Laravel
-
-### Checklist
+### Contributor Checklist
 
 [ ] I have read the [Auth0 general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 
