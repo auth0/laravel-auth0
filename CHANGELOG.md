@@ -1,5 +1,13 @@
 # Change Log
 
+## [6.4.1](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-08-02)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.4.0...6.4.1)
+
+**Changed**
+
+- Update Auth0-SDK dependency [\#222](https://github.com/auth0/laravel-auth0/pull/222) ([evansims](https://github.com/evansims))
+
 ## [6.4.0](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-03-25)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.3.0...6.4.0)
