@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Auth0 Community
-    url: https://community.auth0.com/c/sdks/5
-    about: Discuss this SDK in the Auth0 Community forums
+  - name: Auth0 PHP SDK Issues
+    url: https://github.com/auth0/auth0-PHP/
+    about: For bug reports related to the PHP SDK itself, please report them in that repository.
+  - name: Auth0 Community Support
+    url: https://community.auth0.com/tags/c/sdks/5/laravel
+    about: Please ask general usage questions here.
+  - name: Auth0 Responsible Disclosure Program
+    url: https://auth0.com/whitehat
+    about: Please do not report security vulnerabilities on the public GitHub issue tracker. The Responsible Disclosure Program details the procedure for disclosing security issues.

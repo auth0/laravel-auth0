@@ -1,0 +1,52 @@
+name: laravel-auth0 Bug Report
+description: Found a bug or issue? Let us know with a bug report.
+labels: [triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve this project!
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+  - type: dropdown
+    id: sdk
+    attributes:
+      label: SDK Version
+      description: What version of our Laravel plugin are you running? (`composer show | grep auth0/login`)
+      options:
+        - 7.x
+        - 6.4.1
+        - 6.4.0
+        - Other (please specify in 'additional context')
+    validations:
+      required: true
+  - type: dropdown
+    id: php
+    attributes:
+      label: PHP Version
+      description: What version of PHP are you running? (`php -v`)
+      options:
+        - PHP 8.0
+        - PHP 7.4
+        - PHP 7.3
+    validations:
+      required: true
+  - type: dropdown
+    id: composer
+    attributes:
+      label: Composer Version
+      description: What version of Composer are you running? (`composer -v`)
+      options:
+        - 2.x
+        - 1.x
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
