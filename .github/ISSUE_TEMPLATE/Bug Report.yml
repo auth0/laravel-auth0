@@ -25,7 +25,6 @@ body:
       label: SDK Version
       description: What version of our Laravel plugin are you running? (`composer show | grep auth0/login`)
       options:
-        - 7.x
         - 6.4.1
         - 6.4.0
         - Other (specify in 'additional context')
