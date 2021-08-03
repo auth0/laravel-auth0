@@ -1,5 +1,15 @@
 # Change Log
 
+## [6.4.1](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-08-02)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.4.0...6.4.1)
+
+**Fixed**
+
+- Use the fully qualified facade class names [\#215](https://github.com/auth0/laravel-auth0/pull/215) ([Rezouce](https://github.com/Rezouce))
+- Update auth0-PHP dependency [\#222](https://github.com/auth0/laravel-auth0/pull/222) ([evansims](https://github.com/evansims))
+- Pass api_identifier config as audience to Auth0\SDK\Auth0 [\#214](https://github.com/auth0/laravel-auth0/pull/214) ([iSerter](https://github.com/iSerter))
+
 ## [6.4.0](https://github.com/auth0/laravel-auth0/tree/6.4.0) (2021-03-25)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.3.0...6.4.0)
