@@ -10,7 +10,7 @@ This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with
 
 ## Supported Framework Versions
 
-This library follows the [Laravel support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules. We do not support Laravel or PHP releases after they reach end-of-life. At the time of this writing this includes [Laravel 6](https://laravel.com/docs/6.x/) and [Laravel 8](https://laravel.com/docs/8.x) on PHP 7.3 or newer.
+This library follows the [Laravel support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules. We do not support Laravel or PHP releases after they reach end-of-life. At the time of writing this includes [Laravel 6](https://laravel.com/docs/6.x/) and [Laravel 8](https://laravel.com/docs/8.x) on PHP 7.3 or newer.
 
 As Composer handles these deprecations safely, this is not considered a breaking change and we may drop version support with minor library releases. Please ensure you are always running the latest PHP version to keep your application up to date with PHP's security fixes, and continue to receive our latest library updates.
 
