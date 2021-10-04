@@ -33,6 +33,8 @@ class Auth0Service
 
     private $auth0Config = [];
 
+    private $singletons = [];
+
     /**
      * Auth0Service constructor.
      *
@@ -86,6 +88,26 @@ class Auth0Service
     }
 
     /**
+     * Instantiate a singleton of the Auth0 Authentication class, using the provided configuration.
+     */
+    private function getAuthenticationClass()
+    {
+        if (isset($this->singletons['authentication'])) {
+            return $this->singletons['authentication'];
+        }
+
+        return $this->singletons['authentication'] = new \Auth0\SDK\API\Authentication(
+            $this->auth0Config['domain'] ?? null,
+            $this->auth0Config['client_id'] ?? null,
+            $this->auth0Config['client_secret'] ?? null,
+            $this->auth0Config['audience'] ?? null,
+            null,
+            [],
+            $this->auth0Config['organization'] ?? null,
+        );
+    }
+
+    /**
      * Logs the user out from the SDK.
      */
     public function logout()
@@ -108,7 +130,42 @@ class Auth0Service
 
         $additional_params['response_type'] = $response_type;
         $auth_url = $this->auth0->getLoginUrl($additional_params);
+
         return new RedirectResponse($auth_url);
+    }
+
+    /**
+     * Start passwordless login process for email
+     *
+     * @param string      $email        Email address to use.
+     * @param string      $type         Use null or "link" to send a link, use "code" to send a verification code.
+     * @param array       $authParams   Optional. Link parameters (like scope, redirect_uri, protocol, response_type) to modify.
+     * @param string|null $forwardedFor Optional. Source IP address. requires Trust Token Endpoint IP Header
+     *
+     * @link https://auth0.com/docs/api/authentication#get-code-or-link
+     */
+    public function emailPasswordlessStart(
+        string $email,
+        string $type,
+        array $authParams = [],
+        ?string $forwardedFor = null
+    ): array {
+        return $this->getAuthenticationClass()->email_passwordless_start($email, $type, $authParams, $forwardedFor);
+    }
+
+    /**
+     * Start passwordless login process for SMS.
+     *
+     * @param string      $phoneNumber  Phone number to use.
+     * @param string|null $forwardedFor Optional. Source IP address. requires Trust Token Endpoint IP Header
+     *
+     * @link https://auth0.com/docs/api/authentication#get-code-or-link
+     */
+    public function smsPasswordlessStart(
+        string $phoneNumber,
+        ?string $forwardedFor = null
+    ): array {
+        return $this->getAuthenticationClass()->sms_passwordless_start($phoneNumber, $forwardedFor);
     }
 
     /**
