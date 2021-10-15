@@ -17,7 +17,7 @@ use Illuminate\Support\ServiceProvider;
 
 class LoginServiceProvider extends ServiceProvider
 {
-    public const SDK_VERSION = '6.4.1';
+    public const SDK_VERSION = '6.5.0';
 
     /**
      * Bootstrap the application events.
