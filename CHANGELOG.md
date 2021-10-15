@@ -4,7 +4,7 @@
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.4.1...6.5.0)
 
-**Fixed**
+**Added**
 
 - Add SDK alias methods for passwordless endpoints [\#228](https://github.com/auth0/laravel-auth0/pull/228) ([evansims](https://github.com/evansims))
 
