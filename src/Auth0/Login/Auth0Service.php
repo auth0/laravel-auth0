@@ -232,7 +232,15 @@ class Auth0Service
     {
         $user = call_user_func($this->onLoginCb, $auth0User);
 
-        $this->getSDK()->setUser($user);
+        if(is_array($user) || method_exists($user, 'toArray')) {
+            if(! is_array($user)) {
+                $array = $user->toArray();
+            } else {
+                $array = $user;
+            }
+
+            $this->getSDK()->setUser($array);
+        }
 
         return $user;
     }
