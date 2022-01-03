@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Login\Facade;
+namespace Auth0\Laravel\Facade;
 
-class Auth0 extends \Illuminate\Support\Facades\Facade
+final class Auth0 extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.
