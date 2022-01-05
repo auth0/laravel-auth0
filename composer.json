@@ -48,17 +48,13 @@
     "lcobucci/jwt": "*"
   },
   "autoload": {
-    "classmap": [
-      "src/controllers",
-      "src/facade"
-    ],
-    "psr-0": {
-      "Auth0\\Login\\": "src/"
+    "psr-4": {
+      "Auth0\\Laravel\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Auth0\\Login\\Tests\\": "tests"
+      "Auth0\\Laravel\\Tests\\": "tests"
     }
   },
   "extra": {
