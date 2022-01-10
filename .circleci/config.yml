@@ -71,9 +71,6 @@ workflows:
   run-tests:
     jobs:
       - run-unit-tests:
-          name: run-phpunit-7.3
-          php: "7.3"
-      - run-unit-tests:
           name: run-phpunit-7.4
           php: "7.4"
       - run-unit-tests:
@@ -85,4 +82,4 @@ workflows:
               only:
                 - main
           context: snyk-env
-          requires: [run-phpunit-7.3]
+          requires: [run-phpunit-7.4]

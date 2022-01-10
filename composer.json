@@ -1,6 +1,6 @@
 {
   "name": "auth0/login",
-  "description": "Laravel plugin that helps authenticate with the Auth0 service",
+  "description": "Auth0 Laravel SDK. Straight-forward and tested methods for implementing authentication, and accessing Auth0's Management API endpoints.",
   "type": "library",
   "keywords": [
     "laravel",
@@ -29,23 +29,33 @@
     }
   ],
   "require": {
-    "php": "^7.3 || ^8.0",
-    "ext-json": "*",
-    "ext-openssl": "*",
+    "php": "^7.4 || ^8.0, <8.2",
     "ext-filter": "*",
+    "ext-json": "*",
     "ext-mbstring": "*",
-    "auth0/auth0-php": "^7.9",
-    "illuminate/support": " ^6.0 || ^7.0 || ^8.0",
-    "illuminate/contracts": "^6.0 || ^7.0 || ^8.0"
+    "ext-openssl": "*",
+    "auth0/auth0-php": "^8.0",
+    "illuminate/contracts": "^8.0 || ^9.0",
+    "illuminate/http": "^8.0 || ^9.0",
+    "illuminate/support": " ^8.0 || ^9.0",
+    "spatie/laravel-package-tools": "^1.9"
   },
   "require-dev": {
-    "nunomaduro/phpinsights": "^1.13 || ^2.0",
-    "phpunit/phpunit": "^9.5",
-    "orchestra/testbench": "^4.0 || ^5.0",
-    "nunomaduro/larastan": "^0.7"
-  },
-  "conflict": {
-    "lcobucci/jwt": "*"
+    "ergebnis/phpstan-rules": "^0.15",
+    "firebase/php-jwt": "^5.0",
+    "hyperf/event": "^2.2",
+    "infection/infection": "^0.23",
+    "mockery/mockery": "^1.4",
+    "nunomaduro/phpinsights": "^2.0",
+    "nyholm/psr7": "^1.4",
+    "pestphp/pest": "^1.18",
+    "pestphp/pest-plugin-parallel": "^0.2",
+    "php-http/mock-client": "^1.4",
+    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan-strict-rules": "^0.12",
+    "symfony/cache": "^4.4 || ^5.2",
+    "thecodingmachine/phpstan-strict-rules": "^0.12",
+    "vimeo/psalm": "^4.10"
   },
   "autoload": {
     "psr-4": {
@@ -60,10 +70,10 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Auth0\\Login\\LoginServiceProvider"
+        "Auth0\\Laravel\\ServiceProvider"
       ],
       "aliases": {
-        "Auth0": "Auth0\\Login\\Facade\\Auth0"
+        "Auth0": "Auth0\\Laravel\\Facade\\Auth0"
       }
     }
   },
