@@ -6,12 +6,39 @@ namespace Auth0\Laravel\Model;
 
 abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
 {
+    /**
+     * Profile data for the user context, when available.
+     */
     private array $profile;
+
+    /**
+     * ID Token for the user context, when available.
+     */
     private ?string $idToken;
+
+    /**
+     * Access Token for the user context, when available.
+     */
     private ?string $accessToken;
+
+    /**
+     * Access Token scopes for the user context, when available.
+     */
     private ?array $accessTokenScope;
+
+    /**
+     * Access Token expiration timestamp for the user context, when available.
+     */
     private ?int $accessTokenExpiration;
+
+    /**
+     * Access Token expiration indicator for the user context, when available.
+     */
     private ?bool $accessTokenExpired;
+
+    /**
+     * Refresh Token for the user context, when available.
+     */
     private ?string $refreshToken;
 
     /**
@@ -116,36 +143,57 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
         return '';
     }
 
+    /**
+     * Return the profile data for the user context. Null when unavailable.
+     */
     public function getProfile(): ?array
     {
         return $this->profile;
     }
 
+    /**
+     * Return the ID Token for the user context. Null when unavailable.
+     */
     public function getIdToken(): ?string
     {
         return $this->idToken;
     }
 
+    /**
+     * Return the Access Token for the user context. Null when unavailable.
+     */
     public function getAccessToken(): ?string
     {
         return $this->accessToken;
     }
 
+    /**
+     * Return the Access Token's scope for the user context. Null when unavailable.
+     */
     public function getAccessTokenScope(): ?array
     {
         return $this->accessTokenScope;
     }
 
+    /**
+     * Return the Access Token's expiration (represented as a unix timestamp) for the user context. Null when unavailable.
+     */
     public function getAccessTokenExpiration(): ?int
     {
         return $this->accessTokenExpiration;
     }
 
+    /**
+     * Return true if the Access Token has expired for the user context. Null when unavailable.
+     */
     public function getAccessTokenExpired(): ?bool
     {
         return $this->accessTokenExpired;
     }
 
+    /**
+     * Return the Refresh Token for the user context. Null when unavailable.
+     */
     public function getRefreshToken(): ?string
     {
         return $this->refreshToken;

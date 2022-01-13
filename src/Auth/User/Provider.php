@@ -8,8 +8,6 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
 {
     private Repository $repository;
 
-    private \Auth0\Laravel\Auth0 $service;
-
     /**
      * Auth0UserProvider constructor.
      *
@@ -27,6 +25,10 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
     public function retrieveById(
         $identifier
     ): ?\Illuminate\Contracts\Auth\Authenticatable {
+        if (! is_string($identifier)) {
+            return null;
+        }
+
         $decoded = app('auth0')->getSdk()->decode($identifier, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ID_TOKEN)->toArray();
         $scope = $decoded['scope'] ?? '';
 
