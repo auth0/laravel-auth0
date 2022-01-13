@@ -3,12 +3,10 @@
 declare(strict_types=1);
 
 return [
-    'preset' => 'default',
+    'preset' => 'laravel',
     'ide' => null,
 
-    'exclude' => [
-        // 'path/to/directory-or-file'
-    ],
+    'exclude' => [],
 
     'add' => [
         \NunoMaduro\PhpInsights\Domain\Metrics\Code\Comments::class => [
@@ -41,7 +39,6 @@ return [
     'config' => [
         \PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\DeprecatedFunctionsSniff::class => [
             'exclude' => [
-                // 'src/Token/Verifier.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff::class => [
@@ -51,7 +48,6 @@ return [
         ],
         \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [
             'exclude' => [
-                // 'src/Mixins/ConfigurableMixin.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Classes\RequireMultiLineMethodSignatureSniff::class => [
