@@ -113,7 +113,17 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
      */
     public function id()
     {
-        return $this->user() !== null ? $this->user()->getAuthIdentifier() : null;
+        $response = null;
+
+        if ($this->user() !== null) {
+            $id = $this->user()->getAuthIdentifier();
+
+            if (is_string($id) || is_int($id)) {
+                $response = $id;
+            }
+        }
+
+        return $response;
     }
 
     /**
@@ -215,7 +225,11 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
             $token = $this->request->getPassword();
         }
 
-        return $token;
+        if ($token !== null && is_string($token)) {
+            return $token;
+        }
+
+        return null;
     }
 
     private function getInstance(): \Auth0\Laravel\StateInstance

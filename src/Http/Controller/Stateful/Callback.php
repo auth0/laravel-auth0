@@ -6,6 +6,11 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 
 final class Callback
 {
+    /**
+     * Process the session for the end user after returning from authenticating with Auth0.
+     *
+     * @param \Illuminate\Http\Request $request The incoming request instance.
+     */
     public function __invoke(
         \Illuminate\Http\Request $request
     ): \Illuminate\Http\RedirectResponse {
@@ -18,7 +23,6 @@ final class Callback
         try {
             if ($request->query('state') !== null && $request->query('code') !== null) {
                 app('auth0')->getSdk()->exchange();
-                // var_dump(app('auth0')->getSdk()->getUser());
             }
         } catch (\Throwable $exception) {
             app('auth0')->getSdk()->clear();
@@ -34,9 +38,9 @@ final class Callback
         }
 
         if ($request->query('error') !== null && $request->query('error_description') !== null) {
-            // Workaround to aid static analysis, due to the lax formatting of the query() response:
-            $error = $request->query('error') ?? '';
-            $errorDescription = $request->query('error_description') ?? '';
+            // Workaround to aid static analysis, due to the mixed formatting of the query() response:
+            $error = $request->query('error', '');
+            $errorDescription = $request->query('error_description', '');
             $error = is_string($error) ? $error : '';
             $errorDescription = is_string($errorDescription) ? $error : '';
 
@@ -54,6 +58,18 @@ final class Callback
             if ($event->getThrowException() === true) {
                 throw $exception;
             }
+        }
+
+        // Ensure we have a valid user:
+        $user = auth()->guard('auth0')->user();
+
+        if ($user !== null) {
+            // Throw hookable event to allow custom application logic for successful logins:
+            $event = new \Auth0\Laravel\Event\Stateful\AuthenticationSucceeded($user);
+            event($event);
+
+            // Apply any mutations to the user object:
+            auth()->guard('auth0')->setUser($event->getUser());
         }
 
         return redirect()->intended('/');
