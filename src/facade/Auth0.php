@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Facade;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class Auth0 extends \Illuminate\Support\Facades\Facade
 {
     /**

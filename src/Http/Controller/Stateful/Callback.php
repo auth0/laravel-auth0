@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
-final class Callback
+final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Callback
 {
     /**
-     * Process the session for the end user after returning from authenticating with Auth0.
-     *
-     * @param \Illuminate\Http\Request $request The incoming request instance.
+     * @inheritdoc
      */
     public function __invoke(
         \Illuminate\Http\Request $request

@@ -4,51 +4,35 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth;
 
-final class Guard implements \Illuminate\Contracts\Auth\Guard
+final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Contract\Auth\Guard
 {
     /**
      * The user provider implementation.
-     *
-     * @var \Illuminate\Contracts\Auth\UserProvider
      */
-    private $provider;
+    private \Illuminate\Contracts\Auth\UserProvider $provider;
 
     /**
      * The request instance.
-     *
-     * @var \Illuminate\Http\Request
      */
-    private $request;
+    private \Illuminate\Http\Request $request;
 
     /**
      * The name of the query string item from the request containing the API token.
-     *
-     * @var string
      */
-    private $inputKey;
+    private string $inputKey;
 
     /**
      * The name of the token "column" in persistent storage.
-     *
-     * @var string
      */
-    private $storageKey;
+    private string $storageKey;
 
     /**
      * Indicates if the API token is hashed in storage.
-     *
-     * @var bool
      */
-    private $hash = false;
+    private bool $hash = false;
 
     /**
-     * Create a new authentication guard.
-     *
-     * @param \Illuminate\Contracts\Auth\UserProvider $provider
-     * @param \Illuminate\Http\Request $request
-     * @param string $inputKey
-     * @param string $storageKey
-     * @param bool $hash
+     * @inheritdoc
      */
     public function __construct(
         \Illuminate\Contracts\Auth\UserProvider $provider,
@@ -65,9 +49,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Set the current user.
-     *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @inheritdoc
      */
     public function login(
         \Illuminate\Contracts\Auth\Authenticatable $user
@@ -77,7 +59,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Clear the current user.
+     * @inheritdoc
      */
     public function logout(): self
     {
@@ -87,9 +69,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Determine if the current user is authenticated.
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function check(): bool
     {
@@ -97,9 +77,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Determine if the current user is a guest.
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function guest(): bool
     {
@@ -107,9 +85,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Get the ID for the currently authenticated user.
-     *
-     * @return int|string|null
+     * @inheritdoc
      */
     public function id()
     {
@@ -127,9 +103,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Validate a user's credentials.
-     *
-     * @param array $credentials
+     * @inheritdoc
      */
     public function validate(
         array $credentials = []
@@ -144,7 +118,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Determine if the guard has a user instance.
+     * @inheritdoc
      */
     public function hasUser(): bool
     {
@@ -152,9 +126,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Set the current user.
-     *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     *  @inheritdoc
      */
     public function setUser(
         \Illuminate\Contracts\Auth\Authenticatable $user
@@ -164,9 +136,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Set the current request instance.
-     *
-     * @param \Illuminate\Http\Request $request
+     * @inheritdoc
      */
     public function setRequest(
         \Illuminate\Http\Request $request
@@ -176,7 +146,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Get the currently authenticated user.
+     * @inheritdoc
      */
     public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
@@ -207,7 +177,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
     }
 
     /**
-     * Get the token for the current request.
+     * @inheritdoc
      */
     public function getTokenForRequest(): ?string
     {
@@ -232,6 +202,9 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard
         return null;
     }
 
+    /**
+     * Return the current request's StateInstance singleton.
+     */
     private function getInstance(): \Auth0\Laravel\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);

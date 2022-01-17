@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Model;
 
-abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
+abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth0\Laravel\Contract\Model\User
 {
     /**
      * Profile data for the user context, when available.
@@ -42,7 +42,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     private ?string $refreshToken;
 
     /**
-     * \Auth0\Laravel\Model\User constructor.
+     * @inheritdoc
      */
     public function __construct(
         array $profile,
@@ -63,9 +63,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Add a generic getter to get all the properties of the user.
-     *
-     * @return mixed|null Returns the related value, or null if not set.
+     * @inheritdoc
      */
     public function __get(
         string $name
@@ -74,7 +72,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return a JSON-encoded representation of the user.
+     * @inheritdoc
      */
     public function __toString(): string
     {
@@ -82,9 +80,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the unique identifier for the user.
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getAuthIdentifier()
     {
@@ -96,9 +92,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the name of the unique identifier for the user.
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getAuthIdentifierName()
     {
@@ -106,9 +100,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the password for the user.
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getAuthPassword(): string
     {
@@ -116,7 +108,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the token value for the "remember me" session.
+     * @inheritdoc
      */
     public function getRememberToken(): string
     {
@@ -124,9 +116,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Set the token value for the "remember me" session.
-     *
-     * @param string $value
+     * @inheritdoc
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -136,7 +126,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Get the column name for the "remember me" token.
+     * @inheritdoc
      */
     public function getRememberTokenName(): string
     {
@@ -144,7 +134,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the profile data for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getProfile(): ?array
     {
@@ -152,7 +142,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the ID Token for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getIdToken(): ?string
     {
@@ -160,7 +150,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the Access Token for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getAccessToken(): ?string
     {
@@ -168,7 +158,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the Access Token's scope for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getAccessTokenScope(): ?array
     {
@@ -176,7 +166,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the Access Token's expiration (represented as a unix timestamp) for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getAccessTokenExpiration(): ?int
     {
@@ -184,7 +174,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return true if the Access Token has expired for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getAccessTokenExpired(): ?bool
     {
@@ -192,7 +182,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable
     }
 
     /**
-     * Return the Refresh Token for the user context. Null when unavailable.
+     * @inheritdoc
      */
     public function getRefreshToken(): ?string
     {

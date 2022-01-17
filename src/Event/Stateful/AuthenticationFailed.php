@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Event\Stateful;
 
-use Throwable;
-
-final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
+final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Stateful\AuthenticationFailed
 {
     /**
      * An exception instance in which to throw for the authentication failure.
@@ -19,10 +17,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
     private bool $throwException = true;
 
     /**
-     * AuthenticationFailed constructor.
-     *
-     * @param Throwable $exception      An exception instance in which to throw for the authentication failure.
-     * @param bool      $throwException Whether or not $exception will be thrown.
+     * @inheritdoc
      */
     public function __construct(
         \Throwable $exception,
@@ -33,9 +28,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
     }
 
     /**
-     * Overwrite the exception to be thrown.
-     *
-     * @param Throwable $exception An exception instance in which to throw for the authentication failure.
+     * @inheritdoc
      */
     public function setException(
         \Throwable $exception
@@ -46,7 +39,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
     }
 
     /**
-     * Returns the exception to be thrown.
+     * @inheritdoc
      */
     public function getException(): \Throwable
     {
@@ -54,9 +47,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
     }
 
     /**
-     * Determine whether the provided exception will be thrown by the SDK.
-     *
-     * @param bool $throwException Whether or not $exception will be thrown.
+     * @inheritdoc
      */
     public function setThrowException(
         bool $throwException
@@ -66,7 +57,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event
     }
 
     /**
-     * Returns whether the provided exception will be thrown by the SDK.
+     * @inheritdoc
      */
     public function getThrowException(): bool
     {

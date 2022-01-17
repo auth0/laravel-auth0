@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth\User;
 
-final class Provider implements \Illuminate\Contracts\Auth\UserProvider
+final class Provider implements \Illuminate\Contracts\Auth\UserProvider, \Auth0\Laravel\Contract\Auth\User\Provider
 {
+    /**
+     * A repository instance.
+     */
     private Repository $repository;
 
     /**
-     * Auth0UserProvider constructor.
-     *
-     * @param \Auth0\Laravel\Auth\User\Repository $repository
+     * @inheritdoc
      */
     public function __construct(
-        Repository $repository
+        \Auth0\Laravel\Auth\User\Repository $repository
     ) {
         $this->repository = $repository;
     }
 
     /**
-     * Returns a \Auth0\Laravel\Model\Stateless\User instance from an Id Token.
+     * @inheritdoc
      */
     public function retrieveById(
         $identifier
@@ -45,7 +46,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
     }
 
     /**
-     * Returns a \Auth0\Laravel\Model\Stateless\User instance from an Access Token.
+     * @inheritdoc
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -68,7 +69,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
     }
 
     /**
-     * Returns a \Auth0\Laravel\Model\Stateless\User instance translated from an Auth0-PHP SDK session.
+     * @inheritdoc
      */
     public function retrieveByCredentials(
         array $credentials
@@ -85,7 +86,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
     }
 
     /**
-     * Returns true if the provided $user's unique identifier matches the credentials payload.
+     * @inheritdoc
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -97,7 +98,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider
     }
 
     /**
-     * Method required by interface. Not supported.
+     * @inheritdoc
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
