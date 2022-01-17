@@ -41,6 +41,7 @@
     "spatie/laravel-package-tools": "^1.9"
   },
   "require-dev": {
+    "laravel/laravel": "^8.4.4 || ^9.0",
     "ergebnis/phpstan-rules": "^1.0",
     "nunomaduro/larastan": "^1.0",
     "nunomaduro/phpinsights": "^2.0",
