@@ -124,15 +124,7 @@ workflows:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
-      - psalm:
-          matrix:
-            parameters:
-              php: ["7.4", "8.0", "8.1"]
       - pest:
-          matrix:
-            parameters:
-              php: ["7.4", "8.0", "8.1"]
-      - infection:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
