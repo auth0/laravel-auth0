@@ -19,7 +19,7 @@ function createServiceConfiguration(
 }
 
 function createService(
-    ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null,
+    ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null
 ): \Auth0\Laravel\Auth0 {
     if ($configuration === null) {
         $configuration = createServiceConfiguration();
