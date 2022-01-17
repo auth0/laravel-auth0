@@ -7,7 +7,7 @@ namespace Auth0\Laravel;
 /**
  * Service that provides access to the Auth0 SDK.
  */
-final class Auth0
+final class Auth0 implements \Auth0\Laravel\Contract\Auth0
 {
     /**
      * The Laravel-Auth0 SDK version:
@@ -25,7 +25,7 @@ final class Auth0
     private ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null;
 
     /**
-     * Create/return instance of the Auth0-PHP SDK.
+     * @inheritdoc
      */
     public function getSdk(): \Auth0\SDK\Auth0
     {
@@ -37,7 +37,17 @@ final class Auth0
     }
 
     /**
-     * Create/return instance of the Auth0-PHP SdkConfiguration.
+     * @inheritdoc
+     */
+    public function setSdk(
+        \Auth0\SDK\Auth0 $sdk
+    ): self {
+        $this->sdk = $sdk;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
     {
@@ -49,7 +59,17 @@ final class Auth0
     }
 
     /**
-     * Create/create a request state instance, a storage singleton containing authenticated user data.
+     * @inheritdoc
+     */
+    public function setConfiguration(
+        \Auth0\SDK\Configuration\SdkConfiguration $configuration
+    ): self {
+        $this->configuration = $configuration;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getState(): \Auth0\Laravel\StateInstance
     {

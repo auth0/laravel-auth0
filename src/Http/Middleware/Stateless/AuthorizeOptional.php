@@ -9,15 +9,10 @@ namespace Auth0\Laravel\Http\Middleware\Stateless;
  *
  * @package Auth0\Laravel\Http\Middleware
  */
-final class AuthorizeOptional
+final class AuthorizeOptional implements \Auth0\Laravel\Contract\Http\Middleware\Stateless\AuthorizeOptional
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function handle(
         \Illuminate\Http\Request $request,

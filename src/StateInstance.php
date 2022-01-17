@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-
 final class StateInstance
 {
     /**
@@ -14,9 +12,7 @@ final class StateInstance
     private ?\Illuminate\Contracts\Auth\Authenticatable $user = null;
 
     /**
-     * Set the authenticated user context for the current request.
-     *
-     * @param Authenticatable|null $user An authenticated user context.
+     * @inheritdoc
      */
     public function setUser(
         ?\Illuminate\Contracts\Auth\Authenticatable $user
@@ -26,7 +22,7 @@ final class StateInstance
     }
 
     /**
-     * Return the authenticated user context for the current request.
+     * @inheritdoc
      */
     public function getUser(): ?\Illuminate\Contracts\Auth\Authenticatable
     {

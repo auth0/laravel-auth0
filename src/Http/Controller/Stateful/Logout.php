@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
-final class Logout
+final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Logout
 {
     /**
-     * Redirect to Auth0's logout endpoint if a session is available.
-     * Otherwise, redirect to the "/" route.
-     *
-     * @param \Illuminate\Http\Request $request The incoming request instance.
+     * @inheritdoc
      */
     public function __invoke(
         \Illuminate\Http\Request $request
