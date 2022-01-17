@@ -1,85 +1,140 @@
 version: 2.1
 
 commands:
-  prepare:
+  setup:
     steps:
-      - checkout
       - run:
-          name: Perform composer self-update
-          command: sudo composer self-update
-      - restore-cache
-      - run:
-          name: Enable code coverage
+          name: Configure environment
           command: |
-            sudo apt update
-            sudo apt install libonig-dev
-            sudo pecl install pcov
-            sudo docker-php-ext-enable pcov
-            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-            sudo docker-php-ext-install posix
-            sudo docker-php-ext-install pcntl
-            sudo docker-php-ext-install mbstring
-      - run:
-          name: Install composer dependencies
-          command: composer install --no-interaction --prefer-dist
-      - run:
-          name: Update composer dependencies
-          command: composer update --prefer-dist --no-interaction
-      - save-cache
+            apk update
 
-  save-cache:
-    steps:
-      - persist_to_workspace:
-          root: .
-          paths:
-            - composer.*
-            - .snyk
-      - save_cache:
-          key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-          paths:
-            - vendor
+      - checkout
 
-  restore-cache:
+      - run:
+          name: Install dependencies
+          command: |
+            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+                >&2 echo 'ERROR: Invalid installer checksum'
+                rm composer-setup.php
+                exit 1
+            fi
+
+            php composer-setup.php --quiet
+            RESULT=$?
+            rm composer-setup.php
+
+            php composer.phar install --no-interaction --prefer-dist
+
+  setup-pcov:
     steps:
-      - restore_cache:
-          keys:
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}
+      - run:
+          name: Configure pcov
+          command: |
+            apk add autoconf gcc make musl-dev
+            pecl install pcov
+            docker-php-ext-enable pcov
+
+  run-phpinsights:
+    steps:
+      - run:
+          name: Run code quality analysis (PHP Insights)
+          command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
+
+  run-phpstan:
+    steps:
+      - run:
+          name: Run static code analysis (PHPStan)
+          command: php -d memory_limit=-1 ./vendor/bin/phpstan analyse --ansi
+
+  run-pest:
+    steps:
+      - run:
+          name: Run unit tests (Pest)
+          command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
+
+  run-snyk:
+    steps:
+      - run:
+          name: Run vulnerabilities tests (Snyk)
+          command: |
+            apk add npm
+            npm install -g snyk
+            snyk test --dev --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
-  run-unit-tests:
+  phpinsights:
     parameters:
       php:
         type: string
     docker:
-      - image: circleci/php:<< parameters.php >>
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
-
-  run-security-tests:
+      - setup
+      - run-phpinsights
+  phpstan:
+    parameters:
+      php:
+        type: string
     docker:
-      - image: snyk/snyk-cli:composer
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - attach_workspace:
-          at: .
-      - run: snyk test
+      - setup
+      - run-phpstan
+  semgrep:
+    docker:
+      - image: returntocorp/semgrep:latest
+    steps:
+      - checkout
       - run:
-          command: snyk monitor --org=auth0-sdks --project-name=laravel-auth0
-          when: always
+          name: Run static code analysis (Semgrep)
+          command: semgrep --config auto
+  pest:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-pcov
+      - run-pest
+  snyk:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - run-snyk
 
 workflows:
-  run-tests:
+  test:
     jobs:
-      - run-unit-tests:
-          name: run-phpunit-7.4
-          php: "7.4"
-      - run-unit-tests:
-          name: run-phpunit-8.0
-          php: "8.0"
-      - run-security-tests:
-          filters:
-            branches:
-              only:
-                - main
-          context: snyk-env
-          requires: [run-phpunit-7.4]
+      - semgrep
+      - phpinsights:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - phpstan:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - pest:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - hold:
+          type: approval
+      - snyk:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+          context:
+            - snyk-env
+          requires:
+            - hold
