@@ -17,10 +17,17 @@ final class Authorize implements \Auth0\Laravel\Contract\Http\Middleware\Statele
      */
     public function handle(
         \Illuminate\Http\Request $request,
-        \Closure $next
+        \Closure $next,
+        string $scope = ''
     ) {
-        if (auth()->guard('auth0')->check()) {
-            auth()->login(auth()->guard('auth0')->user());
+        $user = auth()->guard('auth0')->user();
+
+        if ($user !== null && $user instanceof \Auth0\Laravel\Model\Stateless\User) {
+            if (strlen($scope) >= 1 && auth()->guard('auth0')->hasScope($scope) === false) {
+                return abort(403, 'Unauthorized');
+            }
+
+            auth()->login($user);
             return $next($request);
         }
 

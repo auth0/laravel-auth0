@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+/**
+ * Please review available configuration options here:
+ * https://github.com/auth0/auth0-PHP#configuration-options
+ */
 return [
     // Should be assigned either 'api', 'management', or 'webapp' to indicate your application's use case for the SDK. Determines what configuration options will be required at initialization.
     'strategy' => env('AUTH0_STRATEGY', 'api'),
@@ -23,6 +27,9 @@ return [
 
     // One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
     'audience' => env('AUTH0_AUDIENCE', []),
+
+    // One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
+    'scope' => explode(' ', env('AUTH0_SCOPE', 'openid profile email')),
 
     // One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
     'organization' => env('AUTH0_ORGANIZATION', []),

@@ -30,7 +30,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getSdk(): \Auth0\SDK\Auth0
     {
         if ($this->sdk === null) {
-            $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
+            $this->setSdk(new \Auth0\SDK\Auth0($this->getConfiguration()));
         }
 
         return $this->sdk;
@@ -43,6 +43,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
         \Auth0\SDK\Auth0 $sdk
     ): self {
         $this->sdk = $sdk;
+        $this->setSdkTelemetry();
         return $this;
     }
 
@@ -74,5 +75,16 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getState(): \Auth0\Laravel\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);
+    }
+
+    /**
+     * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
+     */
+    private function setSdkTelemetry(): self
+    {
+        \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('Laravel', app()->version());
+        \Auth0\SDK\Utility\HttpTelemetry::setPackage('laravel', self::SDK_VERSION);
+
+        return $this;
     }
 }
