@@ -130,11 +130,10 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
      */
     public function hasScope(
         string $scope
-    ): bool
-    {
+    ): bool {
         $user = $this->getInstance()->getUser();
 
-        if ($user !== null && in_array($scope, $user->getAccessTokenScope())) {
+        if ($user !== null && in_array($scope, $user->getAccessTokenScope(), true)) {
             return true;
         }
 
@@ -261,7 +260,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
             $refreshed = $this->getUserFromSession();
 
             // Was refreshed successfully?
-            if ($refreshed->getAccessTokenExpired() === false) {
+            if ($refreshed !== null && $refreshed->getAccessTokenExpired() === false) {
                 // Inform the host application to enable custom handling behavior
                 $event = new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded($refreshed);
                 event($event);

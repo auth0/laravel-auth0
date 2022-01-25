@@ -53,10 +53,9 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
         });
 
         $router = app()->make(\Illuminate\Routing\Router::class);
-        $router->aliasMiddleware('auth0.authenticate',  \Auth0\Laravel\Http\Middleware\Stateful\Authenticate::class);
-        $router->aliasMiddleware('auth0.authenticate.optional',  \Auth0\Laravel\Http\Middleware\Stateful\AuthenticateOptional::class);
-        $router->aliasMiddleware('auth0.authorize',  \Auth0\Laravel\Http\Middleware\Stateless\Authorize::class);
-        $router->aliasMiddleware('auth0.authorize.optional',  \Auth0\Laravel\Http\Middleware\Stateless\AuthorizeOptional::class);
-        $router->aliasMiddleware('auth0.authorize.scope',  \Auth0\Laravel\Http\Middleware\Stateless\AuthorizeScope::class);
+        $router->aliasMiddleware('auth0.authenticate', \Auth0\Laravel\Http\Middleware\Stateful\Authenticate::class);
+        $router->aliasMiddleware('auth0.authenticate.optional', \Auth0\Laravel\Http\Middleware\Stateful\AuthenticateOptional::class);
+        $router->aliasMiddleware('auth0.authorize', \Auth0\Laravel\Http\Middleware\Stateless\Authorize::class);
+        $router->aliasMiddleware('auth0.authorize.optional', \Auth0\Laravel\Http\Middleware\Stateless\AuthorizeOptional::class);
     }
 }

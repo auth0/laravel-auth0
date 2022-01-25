@@ -6,5 +6,4 @@ namespace Auth0\Laravel\Contract\Event\Stateful;
 
 interface TokenRefreshFailed
 {
-
 }

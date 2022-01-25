@@ -30,7 +30,8 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getSdk(): \Auth0\SDK\Auth0
     {
         if ($this->sdk === null) {
-            $this->setSdk(new \Auth0\SDK\Auth0($this->getConfiguration()));
+            $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
+            $this->setSdkTelemetry();
         }
 
         return $this->sdk;
