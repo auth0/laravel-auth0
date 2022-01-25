@@ -83,7 +83,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     private function setSdkTelemetry(): self
     {
         \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('Laravel', app()->version());
-        \Auth0\SDK\Utility\HttpTelemetry::setPackage('laravel', self::SDK_VERSION);
+        \Auth0\SDK\Utility\HttpTelemetry::setPackage('laravel-auth0', self::SDK_VERSION);
 
         return $this;
     }
