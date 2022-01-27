@@ -12,7 +12,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * The Laravel-Auth0 SDK version:
      */
-    public const SDK_VERSION = '7.0.0';
+    public const VERSION = '7.0.0';
 
     /**
      * An instance of the Auth0-PHP SDK.
@@ -31,6 +31,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     {
         if ($this->sdk === null) {
             $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
+            $this->setSdkTelemetry();
         }
 
         return $this->sdk;
@@ -43,6 +44,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
         \Auth0\SDK\Auth0 $sdk
     ): self {
         $this->sdk = $sdk;
+        $this->setSdkTelemetry();
         return $this;
     }
 
@@ -74,5 +76,16 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getState(): \Auth0\Laravel\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);
+    }
+
+    /**
+     * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
+     */
+    private function setSdkTelemetry(): self
+    {
+        \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('Laravel', app()->version());
+        \Auth0\SDK\Utility\HttpTelemetry::setPackage('laravel-auth0', self::VERSION);
+
+        return $this;
     }
 }

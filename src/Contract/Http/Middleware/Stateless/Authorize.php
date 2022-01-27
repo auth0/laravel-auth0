@@ -11,11 +11,13 @@ interface Authorize
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
+     * @param string                   $scope
      *
      * @return mixed
      */
     public function handle(
         \Illuminate\Http\Request $request,
-        \Closure $next
+        \Closure $next,
+        string $scope
     );
 }

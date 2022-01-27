@@ -30,19 +30,30 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider, \Auth0\
             return null;
         }
 
-        $decoded = app('auth0')->getSdk()->decode($identifier, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ID_TOKEN)->toArray();
-        $scope = $decoded['scope'] ?? '';
+        try {
+            $decoded = app('auth0')->getSdk()->decode($identifier, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ID_TOKEN)->toArray();
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
+            $decoded = null;
+        }
 
-        // Process $identifier here ...
-        return $this->repository->fromAccessToken(
-            $decoded,
-            null,
-            $identifier,
-            explode(' ', $scope),
-            null,
-            null,
-            null,
-        );
+        if ($decoded !== null) {
+            $scope = $decoded['scope'] ?? '';
+            $exp = $decoded['exp'] ?? null;
+            $expired = time() > $exp;
+
+            // Process $identifier here ...
+            return $this->repository->fromAccessToken(
+                $decoded,
+                null,
+                $identifier,
+                explode(' ', $scope),
+                $exp,
+                $expired,
+                null,
+            );
+        }
+
+        return null;
     }
 
     /**
@@ -54,18 +65,29 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider, \Auth0\
         $identifier,
         $token
     ): ?\Illuminate\Contracts\Auth\Authenticatable {
-        $decoded = app('auth0')->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
-        $scope = $decoded['scope'] ?? '';
+        try {
+            $decoded = app('auth0')->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
+            $decoded = null;
+        }
 
-        return $this->repository->fromAccessToken(
-            $decoded,
-            null,
-            $token,
-            explode(' ', $scope),
-            null,
-            null,
-            null,
-        );
+        if ($decoded !== null) {
+            $scope = $decoded['scope'] ?? '';
+            $exp = $decoded['exp'] ?? null;
+            $expired = time() > $exp;
+
+            return $this->repository->fromAccessToken(
+                $decoded,
+                null,
+                $token,
+                explode(' ', $scope),
+                $exp,
+                $expired,
+                null,
+            );
+        }
+
+        return null;
     }
 
     /**
