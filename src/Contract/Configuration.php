@@ -14,7 +14,7 @@ interface Configuration
      */
     public static function stringToArrayOrNull(
         ?string $config,
-        string $delimiter = ' ',
+        string $delimiter = ' '
     ): ?array;
 
     /**

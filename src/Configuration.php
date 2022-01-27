@@ -14,7 +14,7 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
      */
     public static function stringToArrayOrNull(
         ?string $config,
-        string $delimiter = ' ',
+        string $delimiter = ' '
     ): ?array {
         if (is_string($config) === true && strlen($config) >= 1 && strlen($delimiter) >= 1) {
             $response = explode($delimiter, $config);
