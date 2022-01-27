@@ -15,7 +15,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         // Check if the user already has a session:
         if (auth()->guard('auth0')->check()) {
             // They do; redirect to homepage.
-            return redirect()->intended('/');
+            return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
         try {
@@ -70,6 +70,6 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             auth()->guard('auth0')->setUser($event->getUser());
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
     }
 }

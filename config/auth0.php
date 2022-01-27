@@ -53,8 +53,7 @@ return [
 
     // Named routes within your Laravel application that the SDK may call during stateful requests for redirections.
     'routes' => [
-        'login' => env('AUTH0_ROUTE_LOGIN', 'login'),
-        'logout' => env('AUTH0_ROUTE_LOGOUT', 'logout'),
-        'callback' => env('AUTH0_ROUTE_CALLBACK', 'callback')
+        'home' => env('AUTH0_ROUTE_HOME', '/'),
+        'login' => env('AUTH0_ROUTE_LOGIN', 'login')
     ]
 ];

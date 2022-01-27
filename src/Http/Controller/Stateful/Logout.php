@@ -21,6 +21,6 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
             return redirect()->away(app('auth0')->getSdk()->authentication()->getLogoutLink());
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
     }
 }

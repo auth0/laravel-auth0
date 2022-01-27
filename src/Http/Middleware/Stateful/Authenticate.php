@@ -27,6 +27,6 @@ final class Authenticate implements \Auth0\Laravel\Contract\Http\Middleware\Stat
             return $next($request);
         }
 
-        return redirect('login');
+        return redirect(app()->make('config')->get('auth0.routes.login', 'login'));
     }
 }

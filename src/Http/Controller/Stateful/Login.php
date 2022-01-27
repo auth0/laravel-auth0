@@ -15,7 +15,7 @@ final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Lo
         \Illuminate\Http\Request $request
     ): \Illuminate\Http\RedirectResponse {
         if (auth()->guard('auth0')->check()) {
-            return redirect()->intended('/');
+            return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
         return redirect()->away(app('auth0')->getSdk()->login());
