@@ -38,11 +38,7 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
         if (is_string($config) === true && strlen($config) >= 1) {
             $config = strtolower(trim($config));
 
-            if ($config === 'true') {
-                return true;
-            }
-
-            return false;
+            return $config === 'true';
         }
 
         return $default;

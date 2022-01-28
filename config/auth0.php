@@ -49,7 +49,7 @@ return [
     'cookiePath' => env('AUTH0_COOKIE_PATH'),
 
     // Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
-    'cookieSecure' => \Auth0\Laravel\Configuration::stringToBoolOrNull(env('AUTH0_COOKIE_SECRET'), false),
+    'cookieSecure' => \Auth0\Laravel\Configuration::stringToBoolOrNull(env('AUTH0_COOKIE_SECURE'), false),
 
     // Named routes within your Laravel application that the SDK may call during stateful requests for redirections.
     'routes' => [
