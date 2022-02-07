@@ -1,176 +1,259 @@
-# Laravel Auth0 Plugin
+# Auth0 Laravel SDK
 
-[![CircleCI](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/main.svg)](https://circleci.com/gh/auth0/laravel-auth0)
-[![Latest Stable Version](https://poser.pugx.org/auth0/login/v/stable)](https://packagist.org/packages/auth0/login)
-[![License](https://poser.pugx.org/auth0/login/license)](https://packagist.org/packages/auth0/login)
-[![Total Downloads](https://poser.pugx.org/auth0/login/downloads)](https://packagist.org/packages/auth0/login)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0?ref=badge_shield)
+[![Build Status](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/main.svg)](https://circleci.com/gh/auth0/laravel-auth0)
+[![Latest Stable Version](https://img.shields.io/packagist/v/auth0/login?label=stable)](https://packagist.org/packages/auth0/laravel-auth0)
+[![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
+[![License](https://img.shields.io/packagist/l/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
 
-This plugin helps you integrate your [Laravel](https://laravel.com/) WebApp with [Auth0](https://auth0.com/) to achieve Single Sign On with a few simple steps.
+> ***⚠️ β Beta Note — Please note this README includes documentation for the 7.x BETA release of the Auth0 Laravel SDK. As with all beta software, this should not considered stable or suitable for production use, but your experimentation with and feedback around it is greatly appreciated. Documentation for the stable release of this SDK, v6, [is available here.](https://github.com/auth0/laravel-auth0/tree/6.x)***
 
-## Supported Framework Versions
+This SDK helps you integrate your [Laravel](https://laravel.com/) application with [Auth0](https://auth0.com/) to achieve single sign-on with a few simple steps. The SDK also provides an easy method of integration all the functionality of the underlying [Auth0-PHP](https://github.com/auth0/auth-PHP) inside your Laravel application, including all types of authentication, authorization of API endpoints, and issuing Management API calls.
 
-This library follows the [Laravel support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules. We do not support Laravel or PHP releases after they reach end-of-life. At the time of writing this includes [Laravel 6](https://laravel.com/docs/6.x/) and [Laravel 8](https://laravel.com/docs/8.x) on PHP 7.3 or newer.
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Configuration the SDK](#configuration-the-sdk)
+    - [Regular Web Applications](#regular-web-applications)
+    - [Backend API Applications](#backend-api-applications)
+    - [Additional Options](#additional-options)
+  - [Configure your Application](#configure-your-application)
+  - [Authentication Routes](#authentication-routes)
+  - [Protecting Routes with Middleware](#protecting-routes-with-middleware)
+    - [Regular Web Applications](#regular-web-applications-1)
+    - [Backend API Applications](#backend-api-applications-1)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [Support + Feedback](#support--feedback)
+- [Vulnerability Reporting](#vulnerability-reporting)
+- [What is Auth0?](#what-is-auth0)
+- [License](#license)
 
-As Composer handles these deprecations safely, this is not considered a breaking change and we may drop version support with minor library releases. Please ensure you are always running the latest PHP version to keep your application up to date with PHP's security fixes, and continue to receive our latest library updates.
+## Requirements
 
-Past releases of our plugin may potentially run on earlier, now unsupported versions of the Laravel framework, but these releases are not maintained.
+| Laravel Version | PHP Version¹ | SDK Version | [Support Ends²](https://laravel.com/docs/master/releases#support-policy) |
+| --------------- | ------------ | ----------- | ------------------------------------------------------------------------ |
+| 9.0 (LTS)       | ≥ 8.0        | ≥ 7.0       | February 2025                                                            |
+| 8.0             | 7.4³, ≥ 8.0  | ≥ 6.0       | January 2023                                                             |
+| 6.0 (LTS)       | 7.4³, ≥ 8.0  | 6.0         | September 2022                                                           |
 
-## Documentation
+¹ This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions after they [reach end of life](https://www.php.net/supported-versions.php).
 
-Please see the [Laravel webapp quickstart](https://auth0.com/docs/quickstart/webapp/laravel) for a complete guide on how to install this in an existing project or to download a pre-configured sample project. Additional documentation on specific scenarios is below.
+² This library follows the [Laravel release support schedule](https://laravel.com/docs/releases#support-policy). We do not support Laravel framework versions after they [reach end of life](https://laravel.com/docs/master/releases#support-policy).
 
-### Setting up a JWKs cache
+³ [PHP 7 will reach its end of life in November 2022.](https://www.php.net/supported-versions.php) Please upgrade to PHP 8.
 
-In the `register` method of your `AppServiceProvider` add:
+## Usage
+
+### Getting Started
+
+- Create a [free Auth0 account](https://auth0.com/signup) and register an [Application](https://auth0.com/docs/applications).
+- If you do not already have one, [prepare a Laravel project](https://laravel.com/docs/master/installation).
+
+### Installation
+
+The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
+
+```bash
+composer require auth0/login:dev-main
+```
+
+***⚠️ β Beta Note*** — Due to the pre-production nature of the current release, you may need to update your `composer.json` file to allow Composer to install unstable code. This can be achieved by adding the following items to that file:
+
+```json
+"minimum-stability": "dev",
+"prefer-stable": true,
+```
+
+### Configuration the SDK
+
+Use the Laravel `vendor:publish` command to import the configuration file into your application:
+
+```sh
+php artisan vendor:publish --tag=auth0-config
+```
+
+Now edit your `.env` file and add Auth0 tenants details for your project, depending on the type of application you're building:
+
+#### Regular Web Applications
+
+```sh
+# The URL of your Auth0 tenant domain
+# You'll find this in your Auth0 Application's settings page.
+AUTH0_DOMAIN=...
+
+# Your Auth0 application's Client ID
+# You'll find this in your Auth0 Application's settings page.
+AUTH0_CLIENT_ID=...
+
+# Your Auth0 application's Client ID
+# You'll find this in your Auth0 Application's settings page.
+AUTH0_CLIENT_SECRET=...
+
+# Your Auth0 Custom API identifier/audience.
+# You'll find this in your Custom API's settings page.
+AUTH0_AUDIENCE=...
+
+# Authentication callback URI, as defined in your Auth0 Application settings.
+# (Update this as appropriate for your application's location.)
+# (You must configure this in your Auth0 Application's settings page as well!)
+AUTH0_REDIRECT_URI=http://localhost:3000/auth0/callback
+```
+
+#### Backend API Applications
+
+These are applications that accept an Access Token through the 'Authorization' header of a request.
+
+```sh
+# This tells the Auth0 Laravel SDK about your use case to customize its behavior.
+# The 'api' strategy is used for backend API applications like we're building here.
+# See: https://github.com/auth0/auth0-PHP/blob/main/README.md#configuration-strategies
+AUTH0_STRATEGY=api
+
+# The URL of your Auth0 tenant domain
+# You'll find this in your Auth0 Application's settings page.
+AUTH0_DOMAIN=...
+
+# Your Auth0 application's Client ID
+# You'll find this in your Auth0 Application's settings page.
+AUTH0_CLIENT_ID=...
+
+# Your Auth0 Custom API identifier/audience.
+# You'll find this in your Custom API's settings page.
+AUTH0_AUDIENCE=...
+```
+
+#### Additional Options
+
+The default configuration provided by the Auth0 Laravel SDK is intentionally limited and designed to support only the most common types of applications. More complex applications may require more robust configuration customizations available in the underlying Auth0-PHP SDK. You can add support for more configuration options by modifying your `config/auth0.php` and `.env` files. A complete list of configuration options are available [from the Auth0-PHP SDK README](https://github.com/auth0/auth0-PHP/blob/main/README.md#configuration-options).
+
+### Configure your Application
+
+Integrating the SDK's Guard requires some small changes to your `config\auth.php` file.
+
+To begin, find the `defaults` section. Set the default `guard` to `auth0`, like this:
 
 ```php
-// app/Providers/AppServiceProvider.php
-use Illuminate\Support\Facades\Cache;
-// ...
-    public function register()
-    {
-        // ...
-        $this->app->bind(
-            '\Auth0\SDK\Helpers\Cache\CacheHandler',
-            function() {
-                static $cacheWrapper = null;
-                if ($cacheWrapper === null) {
-                $cache = Cache::store();
-                $cacheWrapper = new LaravelCacheWrapper($cache);
-            }
-            return $cacheWrapper;
-        });
-    }
+// 📂 config/auth.php
+'defaults' => [
+    'guard' => 'auth0',
+    // 📝 Leave any other settings in this section alone.
+],
 ```
 
-You can implement your own cache strategy by creating a new class that implements the `Auth0\SDK\Helpers\Cache\CacheHandler` contract, or just use the cache strategy you want by picking that store with `Cache::store('your_store_name')`;
-
-### Storing users in your database
-
-You can customize the way you handle the users in your application by creating your own `UserRepository`. This class should implement the `Auth0\Login\Contract\Auth0UserRepository` contract. Please see the [Custom User Handling section of the Laravel Quickstart](https://auth0.com/docs/quickstart/webapp/laravel#optional-custom-user-handling) for the latest example.
-
-### Using auth guard
-
-To protect APIs using an access token generated by Auth0, there is an `auth0` API guard provided ([Laravel documentation on guards](https://laravel.com/docs/7.x/authentication#adding-custom-guards)). To use this guard, add it to `config/auth.php` with the driver `auth0`:
-
-```
+Next, find the `guards` section, and add `auth0` there:
+```php
+// 👆 Continued from above, in config/auth.php
 'guards' => [
-    ...
+    // 📝 Any additional guards you use should stay here, too.
     'auth0' => [
         'driver' => 'auth0',
         'provider' => 'auth0',
     ],
 ],
+```
 
+Finally, find the `providers` section, and add `auth0` there as well:
+```php
+// 👆 Continued from above, in config/auth.php
 'providers' => [
-    ...
+    // 📝 Any additional providers you use should stay here, too.
     'auth0' => [
         'driver' => 'auth0',
+        'repository' => \Auth0\Laravel\Auth\User\Repository::class
     ],
 ],
 ```
 
-Once that has been added, add the guard to the middleware of any API route and check authentication during the request:
+### Authentication Routes
 
-```
-// get user
-auth('auth0')->user();
-// check if logged in
-auth('auth0')->check();
-// protect routes via middleware use
-Route::group(['middleware' => 'auth:auth0'], function () {});
-```
-
-## Examples
-
-### Organizations
-
-[Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
-
-Using Organizations, you can:
-
-- Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your applications, as organizations.
-- Manage their membership in a variety of ways, including user invitation.
-- Configure branded, federated login flows for each organization.
-- Implement role-based access control, such that users can have different roles when authenticating in the context of different organizations.
-- Build administration capabilities into your products, using Organizations APIs, so that those businesses can manage their own organizations.
-
-Note that Organizations is currently only available to customers on our Enterprise and Startup subscription plans.
-
-#### Logging in with an Organization
-
-Open your Auth0 Laravel plugin configuration file (usually `config/laravel-auth0.php`) uncomment the `organization` option and specify the Id for your Organization (found in your Organization settings on the Auth0 Dashboard.)
+The SDK offers a number of convenience route controllers to ease supporting authentication in regular web application (that is, an application that handles end users logging in and out).
 
 ```php
-// config/laravel-auth0.php
-// ...
-
-/*
-|--------------------------------------------------------------------------
-|   Auth0 Organizations
-|--------------------------------------------------------------------------
-|   organization (string) Optional. Id of an Organization, if being used. Used when generating log in urls and validating token claims.
-*/
-
-'organization' => 'org_E6WbrPMQU2UJn6Rz',
+Route::get('/login', \Auth0\Laravel\Http\Controller\Stateful\Login::class)->name('login');
+Route::get('/logout', \Auth0\Laravel\Http\Controller\Stateful\Logout::class)->name('logout');
+Route::get('/auth0/callback', \Auth0\Laravel\Http\Controller\Stateful\Callback::class)->name('auth0.callback');
 ```
 
-From there, the Organization will automatically be used throughout your Laravel application's authentication login, including redirecting to the Universal Login page.
+These routes will automatically handle your regular web application's authentication flow for you.
+
+### Protecting Routes with Middleware
+
+The Auth0 Laravel SDK includes a number of middleware that simplify either authenticating (regular web applications) or authorizing (backend api applications) your Laravel routes, depending on the type of application you're building.
+
+#### Regular Web Applications
+
+These are for traditional applications that handle logging in and out.
+
+The `auth0.authenticate` middleware will check for an available user session and redirect any requests without one to the login route:
 
 ```php
-// Expects the Laravel plugin to be configured first, as demonstrated above.
-
-App::make('auth0')->login();
+Route::get('/required', function () {
+    return view('example.user.template');
+})->middleware(['auth0.authenticate']);
 ```
 
-#### Accepting user invitations
-
-Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The URL the user will arrive at is based on your configured `Application Login URI`, which you can change from your Application's settings inside the Auth0 dashboard.
-
-When the user arrives at your application using an invite link, you can expect three query parameters to be provided: `invitation`, `organization`, and `organization_name`. These will always be delivered using a GET request.
-
-A helper function is provided to handle extracting these query parameters and automatically redirecting to the Universal Login page. Invoke this from your application's logic, such as a controller for an authentication route, to handle this process automatically.
+The `auth0.authenticate.optional` middleware will check for an available user session, but won't reject or redirect requests without one, allowing you to treat such requests as "guest" requests:
 
 ```php
-// routes/example.php
+Route::get('/', function () {
+    if (Auth::check()) {
+        return view('example.user.template');
+    }
 
-Route::get('/invite', [ExampleIndexController::class, 'invite'])->name('invite');
+    return view('example.guest.template');
+})->middleware(['auth0.authenticate.optional']);
 ```
+
+Note that the `example.user.template` and `example.guest.templates` views are just examples and are not part of the SDK; replace these as appropriate for your app.
+
+#### Backend API Applications
+
+These are applications that accept an Access Token through the 'Authorization' header of a request.
+
+The `auth0.authorize` middleware will resolve a Access Token and reject any request with an invalid token.
 
 ```php
-// Http/Controllers/Example/ExampleIndexController.php
-
-<?php
-
-namespace App\Http\Controllers\Auth;
-
-use Illuminate\Support\Facades\App;
-use App\Http\Controllers\Controller;
-
-class ExampleIndexController extends Controller
-{
-  /**
-   * Redirect to Auth0 Universal Login using the invitation code
-   *
-   * @return void
-   */
-  public function invite()
-  {
-      App::make('auth0')->handleInvitation();
-  }
-
+Route::get('/api/private', function () {
+    return response()->json([
+        'message' => 'Hello from a private endpoint! You need to be authenticated to see this.',
+        'authorized' => Auth::check(),
+        'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
+    ], 200, [], JSON_PRETTY_PRINT);
+})->middleware(['auth0.authorize']);
 ```
 
-## Installation
+The `auth0.authorize` middleware also allows you to optionally filter requests for access tokens based on scopes:
 
-Install this plugin into a new or existing project using [Composer](https://getcomposer.org/doc/00-intro.md):
-
-```bash
-$ composer require auth0/login:"~6.0"
+```php
+Route::get('/api/private-scoped', function () {
+    return response()->json([
+        'message' => 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.',
+        'authorized' => Auth::check(),
+        'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
+    ], 200, [], JSON_PRETTY_PRINT);
+})->middleware(['auth0.authorize:read:messages']);
 ```
 
-Additional steps to install can be found in the [quickstart](https://auth0.com/docs/quickstart/webapp/laravel#integrate-auth0-in-your-application).
+The `auth0.authorize.optional` middleware will resolve an available Access Token, but won't block requests without one. This is useful when you want to treat tokenless requests as "guests":
+
+```php
+Route::get('/api/public', function () {
+    return response()->json([
+        'message' => 'Hello from a public endpoint! You don\'t need to be authenticated to see this.',
+        'authorized' => Auth::check(),
+        'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
+    ], 200, [], JSON_PRETTY_PRINT);
+})->middleware(['auth0.authorize.optional']);
+```
+
+## Documentation
+
+We provide a number of sample apps that demonstrate common use cases, to help you get started using this SDK:
+
+- [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/laravel-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-php-web-app/tree/beta))
+- [Backend API Authorization](https://auth0.com/docs/quickstart/backend/laravel-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-api-samples/tree/beta))
 
 ## Contributing
 
@@ -181,26 +264,31 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 
 ## Support + Feedback
 
-Include information on how to get support. Consider adding:
+- The [Auth0 Community](https://community.auth0.com/) is a valuable resource for asking questions and finding answers, staffed by the Auth0 team and a community of enthusiastic developers
+- For code-level support (such as feature requests and bug reports), we encourage you to [open issues](https://github.com/auth0/laravel-auth0/issues) here on our repo
+- For customers on [paid plans](https://auth0.com/pricing/), our [support center](https://support.auth0.com/) is available for opening tickets with our knowledgeable support specialists
 
-- Use [Community](https://community.auth0.com/tags/laravel) for usage, questions, specific cases
-- Use [Issues](https://github.com/auth0/laravel-auth0/issues) for code-level support
+Further details about our support solutions are [available on our website.](https://auth0.com/docs/support)
+
+## Vulnerability Reporting
+
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ## What is Auth0?
 
-Auth0 helps you to easily:
+Auth0 helps you to:
 
-- implement authentication with multiple identity providers, including social (e.g., Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, etc), or enterprise (e.g., Windows Azure AD, Google Apps, Active Directory, ADFS, SAML, etc.)
-- log in users with username/password databases, passwordless, or multi-factor authentication
-- link multiple user accounts together
-- generate signed JSON Web Tokens to authorize your API calls and flow the user identity securely
-- access demographics and analytics detailing how, when, and where users are logging in
-- enrich user profiles from other data sources using customizable JavaScript rules
+- Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, Box, Salesforce (amongst others), or enterprise identity systems like Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider.
+- Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+- Add support for [passwordless](https://auth0.com/passwordless) and [multi-factor authentication](https://auth0.com/docs/mfa).
+- Add support for [linking different user accounts](https://docs.auth0.com/link-accounts) with the same user.
+- Analytics of how, when, and where users are logging in.
+- Pull data from other sources and add it to the user profile through [JavaScript rules](https://docs.auth0.com/rules).
 
 [Why Auth0?](https://auth0.com/why-auth0)
 
 ## License
 
-The Auth0 Laravel Login plugin is licensed under MIT - [LICENSE](LICENSE.txt)
+The Auth0 Laravel SDK is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE.txt) file for more info.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0?ref=badge_large)
