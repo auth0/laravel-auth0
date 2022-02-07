@@ -32,11 +32,11 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
 
 ## Requirements
 
-| Laravel Version | PHP Version¹ | SDK Version | [Support Ends²](https://laravel.com/docs/master/releases#support-policy) |
-| --------------- | ------------ | ----------- | ------------------------------------------------------------------------ |
-| 9.0 (LTS)       | ≥ 8.0        | ≥ 7.0       | February 2025                                                            |
-| 8.0             | 7.4³, ≥ 8.0  | ≥ 6.0       | January 2023                                                             |
-| 6.0 (LTS)       | 7.4³, ≥ 8.0  | 6.0         | September 2022                                                           |
+| Laravel Version | PHP Version¹ | SDK Version | [Laravel Version Support Ends²](https://laravel.com/docs/master/releases#support-policy) |
+| --------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------- |
+| 9.0 (LTS)       | ≥ 8.0        | ≥ 7.0       | February 2025                                                                            |
+| 8.0             | 7.4³, ≥ 8.0  | ≥ 6.0       | January 2023                                                                             |
+| 6.0 (LTS)       | 7.4³, ≥ 8.0  | 6.0         | September 2022                                                                           |
 
 ¹ This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions after they [reach end of life](https://www.php.net/supported-versions.php).
 
