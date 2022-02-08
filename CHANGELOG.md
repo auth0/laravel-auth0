@@ -1,5 +1,26 @@
 # Change Log
 
+## [7.0.0-BETA1](https://github.com/auth0/laravel-auth0/tree/7.0.0-BETA1) (2022-02-08)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.5.0...7.0.0-BETA1)
+
+Auth0 Laravel SDK v7 includes many significant changes over previous versions:
+
+- Support for Laravel 9.
+- Support for Auth0-PHP SDK 8.
+- New authentication route controllers for plug-and-play login support.
+- Improved authentication middleware for regular web applications.
+- New authorization middleware for token-based backend API applications.
+
+As expected with a major release, Auth0 Laravel SDK v7 includes breaking changes. Please review the [upgrade guide](UPGRADE.md) thoroughly to understand the changes required to migrate your application to v7.
+
+**Breaking Changes Summary**
+
+- Namespace has been updated from `Auth0\Login` to `Auth0\Laravel`
+- Auth0-PHP SDK dependency updated to V8
+- New configuration format
+- SDK now self-registers it's services and middleware
+
 ## [6.5.0](https://github.com/auth0/laravel-auth0/tree/6.5.0) (2021-10-15)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.4.1...6.5.0)
