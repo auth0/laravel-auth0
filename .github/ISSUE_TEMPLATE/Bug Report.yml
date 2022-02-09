@@ -11,6 +11,7 @@ body:
       label: SDK Version
       description: What version of our Laravel plugin are you running? (`composer show | grep auth0/login`)
       options:
+        - 7.0
         - 6.5
         - 6.4
         - Other (specify in 'additional context')
@@ -22,9 +23,9 @@ body:
       label: PHP Version
       description: What version of PHP are you running? (`php -v`)
       options:
+        - PHP 8.1
         - PHP 8.0
         - PHP 7.4
-        - PHP 7.3
         - Other (specify in 'additional context')
     validations:
       required: true
