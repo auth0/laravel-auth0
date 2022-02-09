@@ -15,7 +15,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider, \Auth0\
      * @inheritdoc
      */
     public function __construct(
-        \Auth0\Laravel\Auth\User\Repository $repository
+        \Auth0\Laravel\Contract\Auth\User\Repository $repository
     ) {
         $this->repository = $repository;
     }
