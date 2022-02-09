@@ -9,7 +9,7 @@ final class Provider implements \Illuminate\Contracts\Auth\UserProvider, \Auth0\
     /**
      * A repository instance.
      */
-    private Repository $repository;
+    private \Auth0\Laravel\Contract\Auth\User\Repository $repository;
 
     /**
      * @inheritdoc
