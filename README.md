@@ -34,7 +34,7 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
 
 | Laravel Version | PHP Version¹ | SDK Version | [Laravel Version Support Ends²](https://laravel.com/docs/master/releases#support-policy) |
 | --------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------- |
-| 9.0 (LTS)       | ≥ 8.0        | ≥ 7.0       | February 2025                                                                            |
+| 9.0             | ≥ 8.0        | ≥ 7.0       | February 2024                                                                            |
 | 8.0             | 7.4³, ≥ 8.0  | ≥ 6.0       | January 2023                                                                             |
 | 6.0 (LTS)       | 7.4³, ≥ 8.0  | 6.0         | September 2022                                                                           |
 
