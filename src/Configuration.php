@@ -20,7 +20,7 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
             $response = explode($delimiter, $config);
 
             // @phpstan-ignore-next-line
-            if (is_array($response) === true && count($response) >= 1 && strlen(trim($response[0])) !== '') {
+            if (is_array($response) === true && count($response) >= 1 && strlen(trim($response[0])) !== 0) {
                 return $response;
             }
         }
