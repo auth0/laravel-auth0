@@ -22,7 +22,7 @@ final class Authenticate implements \Auth0\Laravel\Contract\Http\Middleware\Stat
     ) {
         $user = auth()->guard('auth0')->user();
 
-        if ($user !== null && $user instanceof \Auth0\Laravel\Model\Stateful\User) {
+        if ($user !== null && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
             auth()->guard('auth0')->login($user);
             return $next($request);
         }
