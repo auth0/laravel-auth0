@@ -20,7 +20,7 @@ final class AuthorizeOptional implements \Auth0\Laravel\Contract\Http\Middleware
     ) {
         $user = auth()->guard('auth0')->user();
 
-        if ($user !== null && $user instanceof \Auth0\Laravel\Model\Stateless\User) {
+        if ($user !== null && $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
             auth()->guard('auth0')->login($user);
         }
 
