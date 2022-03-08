@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth;
 
-final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Contract\Auth\Guard
+final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Contracts\Auth\Guard
 {
     /**
      * The user provider implementation.
@@ -17,35 +17,14 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
     private \Illuminate\Http\Request $request;
 
     /**
-     * The name of the query string item from the request containing the API token.
-     */
-    private string $inputKey;
-
-    /**
-     * The name of the token "column" in persistent storage.
-     */
-    private string $storageKey;
-
-    /**
-     * Indicates if the API token is hashed in storage.
-     */
-    private bool $hash = false;
-
-    /**
      * @inheritdoc
      */
     public function __construct(
         \Illuminate\Contracts\Auth\UserProvider $provider,
-        \Illuminate\Http\Request $request,
-        $inputKey = 'api_token',
-        $storageKey = 'api_token',
-        $hash = false
+        \Illuminate\Http\Request $request
     ) {
         $this->provider = $provider;
         $this->request = $request;
-        $this->inputKey = $inputKey;
-        $this->storageKey = $storageKey;
-        $this->hash = $hash;
     }
 
     /**
@@ -54,7 +33,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
     public function login(
         \Illuminate\Contracts\Auth\Authenticatable $user
     ): self {
-        $this->getInstance()->setUser($user);
+        $this->getState()->setUser($user);
         return $this;
     }
 
@@ -63,7 +42,7 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
      */
     public function logout(): self
     {
-        $this->getInstance()->setUser(null);
+        $this->getState()->setUser(null);
         app('auth0')->getSdk()->clear();
         return $this;
     }
@@ -87,6 +66,14 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
     /**
      * @inheritdoc
      */
+    public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
+        return $this->getState()->getUser() ?? $this->getUserFromToken() ?? $this->getUserFromSession() ?? null;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function id()
     {
         $response = null;
@@ -104,39 +91,12 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
 
     /**
      * @inheritdoc
+     *
+     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
     public function validate(
         array $credentials = []
     ): bool {
-        if (! isset($credentials[$this->inputKey])) {
-            return false;
-        }
-
-        $credentials = [$this->storageKey => $credentials[$this->inputKey]];
-
-        return $this->provider->retrieveByCredentials($credentials) !== null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasUser(): bool
-    {
-        return ! is_null($this->getInstance()->getUser());
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasScope(
-        string $scope
-    ): bool {
-        $user = $this->getInstance()->getUser();
-
-        if ($user !== null && in_array($scope, $user->getAccessTokenScope(), true)) {
-            return true;
-        }
-
         return false;
     }
 
@@ -146,67 +106,158 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
     public function setUser(
         \Illuminate\Contracts\Auth\Authenticatable $user
     ): self {
-        $user = $this->getInstance()->setUser($user);
+        $user = $this->getState()->setUser($user);
         return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function setRequest(
-        \Illuminate\Http\Request $request
-    ): self {
-        $this->request = $request;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function hasUser(): bool
     {
-        $instance = $this->getInstance();
-        $user = null;
-        $token = $this->getTokenForRequest();
+        return ! is_null($this->getState()->getUser());
+    }
 
-        if ($token !== null) {
-            $user = $this->provider->retrieveByToken([], $token);
+    /**
+     * @inheritdoc
+     */
+    public function hasScope(
+        string $scope
+    ): bool {
+        $state = $this->getState();
+
+        if (in_array($scope, $state->getAccessTokenScope() ?? [], true)) {
+            return true;
         }
 
-        if ($user === null && $token === null) {
-            $user = $this->getUserFromSession();
-            $user = $this->handleTokenExpiration($user);
+        return false;
+    }
+
+    /**
+     * Get the user context from a provided access token.
+     */
+    private function getUserFromToken(): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
+        // Retrieve an available bearer token from the request.
+        $token = $this->request->bearerToken();
+
+        // If a session is not available, return null.
+        if ($token === null) {
+            return null;
         }
 
+        try {
+            // Attempt to decode the bearer token.
+            $decoded = app('auth0')->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
+            // Invalid bearer token.
+            return null;
+        }
+
+        // Query the UserProvider to retrieve tue user for the token.
+        $user = $this->getProvider()->getRepository()->fromAccessToken($decoded);
+
+        // Was a user retrieved successfully?
         if ($user !== null) {
-            $instance->setUser($user);
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+                die('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
+            }
+
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
+                die('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
+            }
+
+            $this->getState()
+                ->clear()
+                ->setDecoded($decoded)
+                ->setAccessToken($token)
+                ->setAccessTokenScope(explode(' ', $decoded['scope'] ?? ''))
+                ->setAccessTokenExpiration($decoded['exp'] ?? null);
         }
 
         return $user;
     }
 
     /**
-     * @inheritdoc
+     * Get the user context from an Auth0-PHP SDK session..
      */
-    public function getTokenForRequest(): ?string
+    private function getUserFromSession(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
-        $token = $this->request->query($this->inputKey);
+        // Retrieve an available session from the Auth0-PHP SDK.
+        $session = app('auth0')->getSdk()->getCredentials();
 
-        if ($token === null) {
-            $token = $this->request->input($this->inputKey);
+        // If a session is not available, return null.
+        if ($session === null) {
+            return null;
         }
 
-        if ($token === null) {
-            $token = $this->request->bearerToken();
+        // Query the UserProvider to retrieve tue user for the session.
+        $user = $this->getProvider()->getRepository()->fromSession($session->user);
+
+        // Was a user retrieved successfully?
+        if ($user !== null) {
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+                die('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
+            }
+
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
+                die('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
+            }
+
+            $this->getState()
+                ->clear()
+                ->setDecoded($session->user)
+                ->setIdToken($session->idToken)
+                ->setAccessToken($session->accessToken)
+                ->setAccessTokenScope($session->accessTokenScope)
+                ->setAccessTokenExpiration($session->accessTokenExpiration)
+                ->setRefreshToken($session->refreshToken);
+
+            $user = $this->handleSessionExpiration($user);
         }
 
-        if ($token === null) {
-            $token = $this->request->getPassword();
+        return $user;
+    }
+
+    /**
+     * Handle instances of session token expiration.
+     */
+    private function handleSessionExpiration(
+        ?\Illuminate\Contracts\Auth\Authenticatable $user
+    ): ?\Illuminate\Contracts\Auth\Authenticatable {
+        $state = $this->getState();
+
+        // Unless our token expired, we have nothing to do here.
+        if ($state->getAccessTokenExpired() !== true) {
+            return $user;
         }
 
-        if ($token !== null && is_string($token)) {
-            return $token;
+        // Do we have a refresh token?
+        if ($state->getRefreshToken() !== null) {
+            try {
+                // Try to renew our token.
+                app('auth0')->getSdk()->renew();
+            } catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed) {
+                // Renew failed. Inform application.
+                event(new \Auth0\Laravel\Event\Stateful\TokenRefreshFailed());
+            }
+
+            // Retrieve updated state data
+            $refreshed = app('auth0')->getSdk()->getCredentials();
+
+            if ($refreshed !== null && $refreshed->accessTokenExpired === false) {
+                event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
+                return $user;
+            }
         }
+
+        // We didn't have a refresh token, or the refresh failed.
+        // Clear session.
+        $state->clear();
+        app('auth0')->getSdk()->clear();
+
+        // Inform host application.
+        event(new \Auth0\Laravel\Event\Stateful\TokenExpired());
 
         return null;
     }
@@ -214,77 +265,16 @@ final class Guard implements \Illuminate\Contracts\Auth\Guard, \Auth0\Laravel\Co
     /**
      * Return the current request's StateInstance singleton.
      */
-    private function getInstance(): \Auth0\Laravel\StateInstance
+    private function getState(): \Auth0\Laravel\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);
     }
 
     /**
-     * Get the local user session.
+     * Return the current request's StateInstance singleton.
      */
-    private function getUserFromSession(): ?\Illuminate\Contracts\Auth\Authenticatable
+    private function getProvider(): \Illuminate\Contracts\Auth\UserProvider
     {
-        $session = app('auth0')->getSdk()->getCredentials();
-
-        if ($session !== null) {
-            return $this->provider->retrieveByCredentials((array) $session);
-        }
-
-        return null;
-    }
-
-    /**
-     * Handle instances of access token expiration.
-     */
-    private function handleTokenExpiration(
-        ?\Illuminate\Contracts\Auth\Authenticatable $user
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
-        if ($user === null) {
-            return null;
-        }
-
-        if ($user->getAccessTokenExpired() === false) {
-            return $user;
-        }
-
-        // Did we scope with 'offline_access' (and does the API allow) for a refresh token?
-        if ($user->getRefreshToken() !== null) {
-            try {
-                app('auth0')->getSdk()->renew();
-            } catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed) {
-                // Inform the host application token refresh failed, to enable custom handling behavior
-                event(new \Auth0\Laravel\Event\Stateful\TokenRefreshFailed());
-            }
-
-            // Retrieve any potentially updated state data
-            $refreshed = $this->getUserFromSession();
-
-            // Was refreshed successfully?
-            if ($refreshed !== null && $refreshed->getAccessTokenExpired() === false) {
-                // Inform the host application to enable custom handling behavior
-                $event = new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded($refreshed);
-                event($event);
-
-                return $event->getUser();
-            }
-        }
-
-        // We didn't have a refresh token, or the refresh failed. Inform host application.
-        $event = new \Auth0\Laravel\Event\Stateful\TokenExpired($user);
-        event($event);
-
-        // Did the host application override default expiration handling?
-        if ($event->getUser()->getAccessTokenExpired() === false) {
-            // Unless the host application expressly opted into not clearing the local user session, do so:
-            return $event->getUser();
-        }
-
-        if ($event->getClearSession() === true) {
-            // Clear the local user session:
-            $this->getInstance()->setUser(null);
-            app('auth0')->getSdk()->clear();
-        }
-
-        return null;
+        return $this->provider;
     }
 }

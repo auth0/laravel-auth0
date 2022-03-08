@@ -8,103 +8,65 @@ interface User
 {
     /**
      * \Auth0\Laravel\Model\User constructor.
+     *
+     * @param array $attributes Attributes representing the user data.
      */
     public function __construct(
-        array $profile,
-        ?string $idToken,
-        ?string $accessToken,
-        ?array $accessTokenScope,
-        ?int $accessTokenExpiration,
-        ?bool $accessTokenExpired,
-        ?string $refreshToken
+        array $attributes = []
     );
 
     /**
-     * Add a generic getter to get all the properties of the user.
+     * Dynamically retrieve attributes on the model.
      *
-     * @return mixed|null Returns the related value, or null if not set.
-     */
-    public function __get(
-        string $name
-    );
-
-    /**
-     * Return a JSON-encoded representation of the user.
-     */
-    public function __toString(): string;
-
-    /**
-     * Get the unique identifier for the user.
+     * @param string $key
      *
      * @return mixed
      */
-    public function getAuthIdentifier();
+    public function __get(
+        string $key
+    );
 
     /**
-     * Get the name of the unique identifier for the user.
+     * Dynamically set attributes on the model.
      *
-     * @return string
+     * @param string $key
+     * @param mixed $value
      */
-    public function getAuthIdentifierName();
-
-    /**
-     * Get the password for the user.
-     *
-     * @return string
-     */
-    public function getAuthPassword(): string;
-
-    /**
-     * Get the token value for the "remember me" session.
-     */
-    public function getRememberToken(): string;
-
-    /**
-     * Set the token value for the "remember me" session.
-     *
-     * @param string $value
-     */
-    public function setRememberToken(
+    public function __set(
+        string $key,
         $value
     ): void;
 
     /**
-     * Get the column name for the "remember me" token.
+     * Fill the model with an array of attributes.
+     *
+     * @param array $attributes
      */
-    public function getRememberTokenName(): string;
+    public function fill(
+        array $attributes
+    ): self;
 
     /**
-     * Return the profile data for the user context. Null when unavailable.
+     * Set a given attribute on the model.
+     *
+     * @param string $key
+     * @param mixed $value
      */
-    public function getProfile(): ?array;
+    public function setAttribute(
+        string $key,
+        $value
+    ): self;
 
     /**
-     * Return the ID Token for the user context. Null when unavailable.
+     * Get an attribute from the model.
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
      */
-    public function getIdToken(): ?string;
-
-    /**
-     * Return the Access Token for the user context. Null when unavailable.
-     */
-    public function getAccessToken(): ?string;
-
-    /**
-     * Return the Access Token's scope for the user context. Null when unavailable.
-     */
-    public function getAccessTokenScope(): ?array;
-
-    /**
-     * Return the Access Token's expiration (represented as a unix timestamp) for the user context. Null when unavailable.
-     */
-    public function getAccessTokenExpiration(): ?int;
-
-    /**
-     * Return true if the Access Token has expired for the user context. Null when unavailable.
-     */
-    public function getAccessTokenExpired(): ?bool;
-
-    /**
-     * Return the Refresh Token for the user context. Null when unavailable.
-     */
-    public function getRefreshToken(): ?string;
+    public function getAttribute(
+        string $key,
+        $default = null
+    );
 }
