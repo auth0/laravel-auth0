@@ -9,9 +9,8 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * The model's attributes.
      *
-     * @var array
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @inheritdoc
