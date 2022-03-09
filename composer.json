@@ -94,12 +94,17 @@
   "scripts": {
     "tests": [
       "@tests:phpinsights",
+      "@tests:rector",
       "@tests:phpstan",
       "@tests:pest"
     ],
     "tests:phpinsights": [
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/phpinsights -v --no-interaction"
+    ],
+    "tests:rector": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/rector process src --dry-run"
     ],
     "tests:phpstan": [
       "Composer\\Config::disableProcessTimeout",
