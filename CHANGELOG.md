@@ -1,5 +1,16 @@
 # Change Log
 
+## [7.0.0-BETA2](https://github.com/auth0/laravel-auth0/tree/7.0.0-BETA2) (2022-03-09)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.5.0...7.0.0-BETA2)
+
+Please review the [BETA1 changelog notes below](#700-beta1-2022-02-08) before upgrading your application from 6.x, as 7.0 is a new major containing breaking changes. As with all beta releases, this should not be considered stable or suitable for production use, but your experimentation with and feedback around it is greatly appreciated.
+
+**Changes**
+- Update Middleware interface checks for custom user model types [\#263](https://github.com/auth0/laravel-auth0/pull/263) ([sheggi](https://github.com/sheggi))
+- Updated UserProvider API [\#264](https://github.com/auth0/laravel-auth0/pull/264) ([evansims](https://github.com/evansims))
+- Add Rector to test suite [\#265](https://github.com/auth0/laravel-auth0/pull/265) ([evansims](https://github.com/evansims))
+
 ## [7.0.0-BETA1](https://github.com/auth0/laravel-auth0/tree/7.0.0-BETA1) (2022-02-08)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.5.0...7.0.0-BETA1)
@@ -19,7 +30,7 @@ As expected with a major release, Auth0 Laravel SDK v7 includes breaking changes
 - Namespace has been updated from `Auth0\Login` to `Auth0\Laravel`
 - Auth0-PHP SDK dependency updated to V8
 - New configuration format
-- SDK now self-registers it's services and middleware
+- SDK now self-registers its services and middleware
 
 ## [6.5.0](https://github.com/auth0/laravel-auth0/tree/6.5.0) (2021-10-15)
 
