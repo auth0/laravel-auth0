@@ -14,32 +14,32 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     /**
      * Decoded token data from the request context.
      */
-    private ?array $decoded;
+    private ?array $decoded = null;
 
     /**
      * ID Token for the request context, when available.
      */
-    private ?string $idToken;
+    private ?string $idToken = null;
 
     /**
      * Access Token for the request context, when available.
      */
-    private ?string $accessToken;
+    private ?string $accessToken = null;
 
     /**
      * Access Token scopes for the request context, when available.
      */
-    private ?array $accessTokenScope;
+    private ?array $accessTokenScope = null;
 
     /**
      * Access Token expiration timestamp for the request context, when available.
      */
-    private ?int $accessTokenExpiration;
+    private ?int $accessTokenExpiration = null;
 
     /**
      * Refresh Token for the request context, when available.
      */
-    private ?string $refreshToken;
+    private ?string $refreshToken = null;
 
     /**
      * @inheritdoc
