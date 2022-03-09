@@ -51,6 +51,7 @@
     "pestphp/pest-plugin-laravel": "^1.2",
     "phpstan/phpstan-strict-rules": "^1.1",
     "phpunit/phpunit": "^9.5",
+    "rector/rector": "^0.12.16",
     "thecodingmachine/phpstan-strict-rules": "^1.0",
     "wikimedia/composer-merge-plugin": "^2.0"
   },
@@ -93,12 +94,17 @@
   "scripts": {
     "tests": [
       "@tests:phpinsights",
+      "@tests:rector",
       "@tests:phpstan",
       "@tests:pest"
     ],
     "tests:phpinsights": [
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/phpinsights -v --no-interaction"
+    ],
+    "tests:rector": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/rector process src --dry-run"
     ],
     "tests:phpstan": [
       "Composer\\Config::disableProcessTimeout",

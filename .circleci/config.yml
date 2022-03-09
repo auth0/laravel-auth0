@@ -44,6 +44,12 @@ commands:
           name: Run code quality analysis (PHP Insights)
           command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
 
+  run-rector:
+    steps:
+      - run:
+          name: Run code quality analysis (Rector)
+          command: php -d memory_limit=-1 ./vendor/bin/rector process src --dry-run
+
   run-phpstan:
     steps:
       - run:
@@ -75,6 +81,15 @@ jobs:
     steps:
       - setup
       - run-phpinsights
+  rector:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - run-rector
   phpstan:
     parameters:
       php:
@@ -117,6 +132,10 @@ workflows:
     jobs:
       - semgrep
       - phpinsights:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - rector:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]

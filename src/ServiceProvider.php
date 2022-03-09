@@ -22,21 +22,13 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
      */
     public function registeringPackage(): void
     {
-        app()->singleton(Auth0::class, static function (): \Auth0\Laravel\Auth0 {
-            return new Auth0();
-        });
+        app()->singleton(Auth0::class, static fn (): \Auth0\Laravel\Auth0 => new Auth0());
 
-        app()->singleton('auth0', static function (): \Auth0\Laravel\Auth0 {
-            return app()->make(Auth0::class);
-        });
+        app()->singleton('auth0', static fn (): \Auth0\Laravel\Auth0 => app()->make(Auth0::class));
 
-        app()->singleton(StateInstance::class, static function (): \Auth0\Laravel\StateInstance {
-            return new StateInstance();
-        });
+        app()->singleton(StateInstance::class, static fn (): \Auth0\Laravel\StateInstance => new StateInstance());
 
-        app()->singleton(\Auth0\Laravel\Auth\User\Repository::class, static function (): \Auth0\Laravel\Auth\User\Repository {
-            return new \Auth0\Laravel\Auth\User\Repository();
-        });
+        app()->singleton(\Auth0\Laravel\Auth\User\Repository::class, static fn (): \Auth0\Laravel\Auth\User\Repository => new \Auth0\Laravel\Auth\User\Repository());
     }
 
     /**
@@ -44,13 +36,9 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
      */
     public function bootingPackage(): void
     {
-        auth()->provider('auth0', static function ($app, array $config): \Auth0\Laravel\Auth\User\Provider {
-            return new \Auth0\Laravel\Auth\User\Provider(app()->make($config['repository']));
-        });
+        auth()->provider('auth0', static fn ($app, array $config): \Auth0\Laravel\Auth\User\Provider => new \Auth0\Laravel\Auth\User\Provider(app()->make($config['repository'])));
 
-        auth()->extend('auth0', static function ($app, $name, array $config): \Auth0\Laravel\Auth\Guard {
-            return new \Auth0\Laravel\Auth\Guard(auth()->createUserProvider($config['provider']), $app->make('request'));
-        });
+        auth()->extend('auth0', static fn ($app, $name, array $config): \Auth0\Laravel\Auth\Guard => new \Auth0\Laravel\Auth\Guard(auth()->createUserProvider($config['provider']), $app->make('request')));
 
         $router = app()->make(\Illuminate\Routing\Router::class);
         $router->aliasMiddleware('auth0.authenticate', \Auth0\Laravel\Http\Middleware\Stateful\Authenticate::class);
