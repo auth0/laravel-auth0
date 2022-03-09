@@ -8,7 +8,6 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
 {
     /**
      * The model's attributes.
-     *
      */
     private array $attributes = [];
 
