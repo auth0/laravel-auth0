@@ -7,76 +7,72 @@ namespace Auth0\Laravel\Model;
 abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth0\Laravel\Contract\Model\User
 {
     /**
-     * Profile data for the user context, when available.
+     * The model's attributes.
+     *
+     * @var array
      */
-    private array $profile;
-
-    /**
-     * ID Token for the user context, when available.
-     */
-    private ?string $idToken;
-
-    /**
-     * Access Token for the user context, when available.
-     */
-    private ?string $accessToken;
-
-    /**
-     * Access Token scopes for the user context, when available.
-     */
-    private ?array $accessTokenScope;
-
-    /**
-     * Access Token expiration timestamp for the user context, when available.
-     */
-    private ?int $accessTokenExpiration;
-
-    /**
-     * Access Token expiration indicator for the user context, when available.
-     */
-    private ?bool $accessTokenExpired;
-
-    /**
-     * Refresh Token for the user context, when available.
-     */
-    private ?string $refreshToken;
+    private $attributes = [];
 
     /**
      * @inheritdoc
      */
     public function __construct(
-        array $profile,
-        ?string $idToken,
-        ?string $accessToken,
-        ?array $accessTokenScope,
-        ?int $accessTokenExpiration,
-        ?bool $accessTokenExpired,
-        ?string $refreshToken
+        array $attributes = []
     ) {
-        $this->profile = $profile;
-        $this->idToken = $idToken;
-        $this->accessToken = $accessToken;
-        $this->accessTokenScope = $accessTokenScope;
-        $this->accessTokenExpiration = $accessTokenExpiration;
-        $this->accessTokenExpired = $accessTokenExpired;
-        $this->refreshToken = $refreshToken;
+        $this->fill($attributes);
     }
 
     /**
      * @inheritdoc
      */
     public function __get(
-        string $name
+        string $key
     ) {
-        return array_key_exists($name, $this->profile) ? $this->profile[$name] : null;
+        return $this->getAttribute($key);
     }
 
     /**
      * @inheritdoc
      */
-    public function __toString(): string
-    {
-        return json_encode($this->profile, JSON_THROW_ON_ERROR, 512);
+    public function __set(
+        string $key,
+        $value
+    ): void {
+        $this->setAttribute($key, $value);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function fill(
+        array $attributes
+    ): self {
+        foreach ($attributes as $key => $value) {
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAttribute(
+        string $key,
+        $value
+    ): self {
+        $this->attributes[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAttribute(
+        string $key,
+        $default = null
+    ) {
+        return $this->attributes[$key] ?? $default;
     }
 
     /**
@@ -84,11 +80,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
      */
     public function getAuthIdentifier()
     {
-        if (isset($this->profile['sub'])) {
-            return $this->profile['sub'];
-        }
-
-        return $this->profile['user_id'];
+        return $this->attributes['sub'] ?? $this->attributes['user_id'] ?? $this->attributes['email'] ?? null;
     }
 
     /**
@@ -131,61 +123,5 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     public function getRememberTokenName(): string
     {
         return '';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getProfile(): ?array
-    {
-        return $this->profile;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getIdToken(): ?string
-    {
-        return $this->idToken;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAccessToken(): ?string
-    {
-        return $this->accessToken;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAccessTokenScope(): ?array
-    {
-        return $this->accessTokenScope;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAccessTokenExpiration(): ?int
-    {
-        return $this->accessTokenExpiration;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAccessTokenExpired(): ?bool
-    {
-        return $this->accessTokenExpired;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getRefreshToken(): ?string
-    {
-        return $this->refreshToken;
     }
 }
