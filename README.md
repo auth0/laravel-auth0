@@ -7,8 +7,6 @@
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
 
-> ***⚠️ β Beta Note — Please note this README includes documentation for the 7.x BETA release of the Auth0 Laravel SDK. As with all beta software, this should not considered stable or suitable for production use, but your experimentation with and feedback around it is greatly appreciated. Documentation for the stable release of this SDK, v6, [is available here.](https://github.com/auth0/laravel-auth0/tree/6.x)***
-
 This SDK helps you integrate your [Laravel](https://laravel.com/) application with [Auth0](https://auth0.com/) to achieve single sign-on with a few simple steps. The SDK also provides an easy method of integration all the functionality of the underlying [Auth0-PHP](https://github.com/auth0/auth-PHP) inside your Laravel application, including all types of authentication, authorization of API endpoints, and issuing Management API calls.
 
 - [Requirements](#requirements)
@@ -58,13 +56,6 @@ The supported method of SDK installation is through [Composer](https://getcompos
 
 ```bash
 composer require auth0/login:dev-main
-```
-
-***⚠️ β Beta Note*** — Due to the pre-production nature of the current release, you may need to update your `composer.json` file to allow Composer to install unstable code. This can be achieved by adding the following items to that file:
-
-```json
-"minimum-stability": "dev",
-"prefer-stable": true,
 ```
 
 ### Configuration the SDK
@@ -253,8 +244,8 @@ Route::get('/api/public', function () {
 
 We provide a number of sample apps that demonstrate common use cases, to help you get started using this SDK:
 
-- [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/laravel-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-php-web-app/tree/beta))
-- [Backend API Authorization](https://auth0.com/docs/quickstart/backend/laravel-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-api-samples/tree/beta))
+- [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/laravel/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-php-web-app))
+- [Backend API Authorization](https://auth0.com/docs/quickstart/backend/laravel/) ([GitHub repo](https://github.com/auth0-samples/auth0-laravel-api-samples))
 
 ## Contributing
 
