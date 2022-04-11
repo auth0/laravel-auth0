@@ -81,6 +81,7 @@ jobs:
     steps:
       - setup
       - run-phpinsights
+
   rector:
     parameters:
       php:
@@ -90,6 +91,7 @@ jobs:
     steps:
       - setup
       - run-rector
+
   phpstan:
     parameters:
       php:
@@ -99,14 +101,7 @@ jobs:
     steps:
       - setup
       - run-phpstan
-  semgrep:
-    docker:
-      - image: returntocorp/semgrep:latest
-    steps:
-      - checkout
-      - run:
-          name: Run static code analysis (Semgrep)
-          command: semgrep --config auto
+
   pest:
     parameters:
       php:
@@ -117,6 +112,7 @@ jobs:
       - setup
       - setup-pcov
       - run-pest
+
   snyk:
     parameters:
       php:
@@ -126,6 +122,19 @@ jobs:
     steps:
       - setup
       - run-snyk
+
+  semgrep:
+    docker:
+      - image: returntocorp/semgrep-agent:v1
+    environment:
+      SEMGREP_REPO_NAME: "auth0/laravel-auth0"
+      SEMGREP_REPO_URL: "https://github.com/auth0/laravel-auth0"
+    steps:
+      - checkout
+      - run:
+          name: Run vulnerabilities tests (Semgrep)
+          command: |
+            semgrep-agent --baseline-ref main --publish-token $SEMGREP_TOKEN
 
 workflows:
   test:
@@ -147,13 +156,12 @@ workflows:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
-      - hold:
-          type: approval
+      - semgrep:
+          context:
+            - semgrep-env
       - snyk:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
           context:
             - snyk-env
-          requires:
-            - hold
