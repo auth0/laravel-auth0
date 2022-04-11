@@ -139,7 +139,6 @@ jobs:
 workflows:
   test:
     jobs:
-      - semgrep
       - phpinsights:
           matrix:
             parameters:
