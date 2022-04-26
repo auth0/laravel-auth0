@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Laravel\Traits;
 
 use Auth0\Laravel\Model\Stateless\User;
@@ -8,7 +10,10 @@ use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 
 trait ActingAsAuth0User
 {
-    abstract public function actingAs(UserContract $user, $guard = null);
+    abstract public function actingAs(
+        UserContract $user,
+        $guard = null
+    );
 
     /**
      * use this method to impersonate a specific auth0 user
@@ -17,23 +22,25 @@ trait ActingAsAuth0User
      * @param array $attributes
      * @return mixed
      */
-    public function actingAsAuth0User(array $attributes = []){
+    public function actingAsAuth0User(
+        array $attributes = []
+    ) {
 
         $defaults = [
-            "sub"=>"some-auth0-user-id",
-            "azp"=> "some-auth0-appplication-client-id",
-            "iat"=>time(),
-            "exp"=>time()+60*60,
-            "scope"=>""
+            'sub' => 'some-auth0-user-id',
+            'azp' => 'some-auth0-appplication-client-id',
+            'iat' => time(),
+            'exp' => time()+60*60,
+            'scope' => '',
         ];
 
-        $auth0user = new User(array_merge($defaults,$attributes));
+        $auth0user = new User(array_merge($defaults, $attributes));
 
-        if($auth0user->getAttribute("scope")){
-            app()->make(StateInstance::class)->setAccessTokenScope(explode(" ",$auth0user->getAttribute("scope")));
+        if($auth0user->getAttribute('scope')){
+            app()->make(StateInstance::class)->setAccessTokenScope(explode(' ', $auth0user->getAttribute('scope')));
         }
 
-        return $this->actingAs($auth0user, "auth0");
+        return $this->actingAs($auth0user, 'auth0');
     }
 
 }
