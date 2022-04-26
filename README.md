@@ -22,6 +22,7 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
   - [Protecting Routes with Middleware](#protecting-routes-with-middleware)
     - [Regular Web Applications](#regular-web-applications-1)
     - [Backend API Applications](#backend-api-applications-1)
+  - [Authorizing HTTP Tests](#authorizing-http-tests)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Support + Feedback](#support--feedback)
@@ -239,6 +240,37 @@ Route::get('/api/public', function () {
     ], 200, [], JSON_PRETTY_PRINT);
 })->middleware(['auth0.authorize.optional']);
 ```
+
+### Authorizing HTTP Tests
+If your application does contain HTTP tests which access routes that are protected by the `auth0.authorize` middleware, you can use the trait `Auth0\Laravel\Traits\ActingAsAuth0User` in your tests, which will give you a helper method `actingAsAuth0User(array $attributes=[])` simmilar to Laravels `actingAs` method, that allows you to fake beeing authenticated as a Auth0 user.
+
+The argument `attributes` is optional and you can use it to set any auth0 specific user attributes like scope, sub, azp, iap and so on. If no attributes are set, some default values are used.
+
+#### Example with a scope protected route
+Let's assume you have a route like the following, that is protected by the scope `read:messages`:
+```php
+Route::get('/api/private-scoped', function () {
+    return response()->json([
+        'message' => 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.',
+        'authorized' => Auth::check(),
+        'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
+    ], 200, [], JSON_PRETTY_PRINT);
+})->middleware(['auth0.authorize:read:messages']);
+```
+
+To be able to test the route from above, the implementation of your test would have to look like this:
+```php
+    use Auth0\Laravel\Traits\ActingAsAuth0User;
+
+    public function test_readMessages(){
+        $response = $this->actingAsAuth0User([
+            "scope"=>"read:messages"
+        ])->getJson("/api/private-scoped");
+
+        $response->assertStatus(200);
+    }
+```
+
 
 ## Documentation
 
