@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Auth0\Login;
 
 use Auth0\Login\Contract\Auth0UserRepository;
+use Illuminate\Container\Container;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -34,7 +34,7 @@ class Auth0Controller extends Controller
     public function callback()
     {
         // Get a handle of the Auth0 service (we don't know if it has an alias)
-        $service = App::make('auth0');
+        $service = Container::getInstance()->make('auth0');
 
         // Try to get the user information
         $profile = $service->getUser();
