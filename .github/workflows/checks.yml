@@ -17,3 +17,13 @@ jobs:
 
       - name: Composer normalize
         uses: docker://ergebnis/composer-normalize-action
+
+  fossa-scan:
+    name: FOSSA License Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: fossas/fossa-action@main
+        with:
+          api-key: ${{secrets.FOSSA_API_KEY}}
+          run-tests: true
