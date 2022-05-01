@@ -22,8 +22,16 @@ jobs:
     name: FOSSA License Compliance
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
-      - uses: fossas/fossa-action@main
+
+      - name: "Run FOSSA Scan"
+        uses: fossas/fossa-action@main
+        with:
+          api-key: ${{secrets.FOSSA_API_KEY}}
+
+      - name: "Run FOSSA Test"
+        uses: fossas/fossa-action@main
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
           run-tests: true
