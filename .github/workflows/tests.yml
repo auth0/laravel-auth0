@@ -30,7 +30,7 @@ jobs:
         run: composer update --no-interaction --no-progress
 
       - name: Execute PHPStan
-        run: vendor/bin/phpstan analyze --no-progress
+        run: vendor/bin/phpstan analyze --no-progress -c .github/workflows-configs/phpstan.neon.dist
 
   phpinsights:
     name: PHPInsights
@@ -55,7 +55,7 @@ jobs:
         run: composer update --no-interaction --no-progress
 
       - name: Execute PHPInsights
-        run: vendor/bin/phpinsights --no-interaction
+        run: vendor/bin/phpinsights --no-interaction -c .github/workflows-configs/phpinsights.php
 
   rector:
     name: Rector
@@ -80,7 +80,7 @@ jobs:
         run: composer update --no-interaction --no-progress
 
       - name: Execute Rector
-        run: vendor/bin/rector process src --dry-run
+        run: vendor/bin/rector process src --dry-run -c .github/workflows-configs/rector.php
 
   pest:
     name: Pest
@@ -105,4 +105,4 @@ jobs:
         run: composer update --no-interaction --no-progress
 
       - name: Execute Pest
-        run: vendor/bin/pest --stop-on-failure --coverage
+        run: vendor/bin/pest --ci --coverage -c .github/workflows-configs/phpunit.xml.dist
