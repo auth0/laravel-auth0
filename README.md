@@ -67,7 +67,7 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
 The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
 
 ```bash
-composer require auth0/login:dev-main
+composer require auth0/login
 ```
 
 ### Configuration the SDK
