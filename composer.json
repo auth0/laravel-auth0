@@ -1,6 +1,7 @@
 {
   "name": "auth0/login",
   "description": "Auth0 Laravel SDK. Straight-forward and tested methods for implementing authentication, and accessing Auth0's Management API endpoints.",
+  "license": "MIT",
   "type": "library",
   "keywords": [
     "laravel",
@@ -19,8 +20,6 @@
     "protect",
     "api"
   ],
-  "homepage": "https://github.com/auth0/laravel-auth0",
-  "license": "MIT",
   "authors": [
     {
       "name": "Auth0",
@@ -28,6 +27,7 @@
       "homepage": "https://auth0.com/"
     }
   ],
+  "homepage": "https://github.com/auth0/laravel-auth0",
   "require": {
     "php": "^7.4 || ^8.0",
     "ext-filter": "*",
@@ -37,10 +37,11 @@
     "auth0/auth0-php": "^8.0",
     "illuminate/contracts": "^8.0 || ^9.0",
     "illuminate/http": "^8.0 || ^9.0",
-    "illuminate/support": " ^8.0 || ^9.0",
+    "illuminate/support": "^8.0 || ^9.0",
     "spatie/laravel-package-tools": "^1.9"
   },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2.25",
     "ergebnis/phpstan-rules": "^1.0",
     "laravel/laravel": "^8.4.4 || ^9.0",
     "nunomaduro/larastan": "^1.0",
@@ -65,54 +66,60 @@
       "Auth0\\Laravel\\Tests\\": "tests"
     }
   },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Auth0\\Laravel\\ServiceProvider"
-      ],
-      "aliases": {
-        "Auth0": "Auth0\\Laravel\\Facade\\Auth0"
-      }
-    },
-    "merge-plugin": {
-      "include": [
-        "composer.local.json"
-      ],
-      "recurse": true,
-      "replace": true,
-      "ignore-duplicates": false,
-      "merge-dev": true,
-      "merge-extra": false,
-      "merge-extra-deep": false,
-      "merge-scripts": false
-    }
-  },
   "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true,
+      "ergebnis/composer-normalize": true,
+      "wikimedia/composer-merge-plugin": true
+    },
     "optimize-autoloader": true,
     "sort-packages": true
   },
+  "extra": {
+    "laravel": {
+      "aliases": {
+        "Auth0": "Auth0\\Laravel\\Facade\\Auth0"
+      },
+      "providers": [
+        "Auth0\\Laravel\\ServiceProvider"
+      ]
+    },
+    "merge-plugin": {
+      "ignore-duplicates": false,
+      "include": [
+        "composer.local.json"
+      ],
+      "merge-dev": true,
+      "merge-extra": false,
+      "merge-extra-deep": false,
+      "merge-scripts": false,
+      "recurse": true,
+      "replace": true
+    }
+  },
   "scripts": {
     "tests": [
+      "@tests:pest",
       "@tests:phpinsights",
-      "@tests:rector",
       "@tests:phpstan",
-      "@tests:pest"
+      "@tests:rector"
+    ],
+    "tests:pest": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/pest --stop-on-failure --coverage"
     ],
     "tests:phpinsights": [
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/phpinsights -v --no-interaction"
     ],
-    "tests:rector": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/rector process src --dry-run"
-    ],
     "tests:phpstan": [
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M"
     ],
-    "tests:pest": [
+    "tests:rector": [
       "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/pest --stop-on-failure --coverage"
+      "@php ./vendor/bin/rector process src --dry-run"
     ]
   }
 }
