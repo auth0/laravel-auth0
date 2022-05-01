@@ -1,0 +1,23 @@
+name: Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  snyk:
+    name: Snyk
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
