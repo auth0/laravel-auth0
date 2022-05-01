@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
+
       - name: Execute PHPStan
-        run: vendor/bin/phpstan analyze --no-progress -c .github/workflows-configs/phpstan.neon.dist
+        run: vendor/bin/phpstan analyze --no-progress
 
   phpinsights:
     name: PHPInsights
@@ -54,8 +57,11 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpinsights.php $GITHUB_WORKSPACE/phpinsights.php
+
       - name: Execute PHPInsights
-        run: vendor/bin/phpinsights --no-interaction -c .github/workflows-configs/phpinsights.php
+        run: vendor/bin/phpinsights --no-interaction
 
   rector:
     name: Rector
@@ -79,8 +85,11 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/rector.php $GITHUB_WORKSPACE/rector.php
+
       - name: Execute Rector
-        run: vendor/bin/rector process src --dry-run -c .github/workflows-configs/rector.php
+        run: vendor/bin/rector process src --dry-run
 
   pest:
     name: Pest
@@ -104,5 +113,8 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
+
       - name: Execute Pest
-        run: vendor/bin/pest --ci --coverage -c .github/workflows-configs/phpunit.xml.dist
+        run: vendor/bin/pest --ci --coverage
