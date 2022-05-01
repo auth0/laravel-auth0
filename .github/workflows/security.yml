@@ -28,7 +28,7 @@ jobs:
 
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
-6
+
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/php@master
         continue-on-error: true
