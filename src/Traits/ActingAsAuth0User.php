@@ -20,27 +20,26 @@ trait ActingAsAuth0User
      * if you pass an attributes array, it will be merged with a set of default values
      *
      * @param array $attributes
+     *
      * @return mixed
      */
     public function actingAsAuth0User(
         array $attributes = []
     ) {
-
         $defaults = [
             'sub' => 'some-auth0-user-id',
             'azp' => 'some-auth0-appplication-client-id',
             'iat' => time(),
-            'exp' => time()+60*60,
+            'exp' => time() + 60 * 60,
             'scope' => '',
         ];
 
         $auth0user = new User(array_merge($defaults, $attributes));
 
-        if($auth0user->getAttribute('scope')){
+        if ($auth0user->getAttribute('scope')) {
             app()->make(StateInstance::class)->setAccessTokenScope(explode(' ', $auth0user->getAttribute('scope')));
         }
 
         return $this->actingAs($auth0user, 'auth0');
     }
-
 }
