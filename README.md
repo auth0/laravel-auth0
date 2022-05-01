@@ -3,11 +3,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/login?label=stable)](https://packagist.org/packages/auth0/laravel-auth0)
 [![Latest Version](https://img.shields.io/packagist/v/auth0/login?include_prereleases&label=latest)](https://packagist.org/packages/auth0/laravel-auth0)
 [![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
-![Build Status](https://github.com/auth0/laravel-auth0/actions/workflows/checks.yml/badge.svg)
-![Build Status](https://github.com/auth0/laravel-auth0/actions/workflows/security.yml/badge.svg)
-![Build Status](https://github.com/auth0/laravel-auth0/actions/workflows/tests.yml/badge.svg)
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
 
 This SDK helps you integrate your [Laravel](https://laravel.com/) application with [Auth0](https://auth0.com/) to achieve single sign-on with a few simple steps. The SDK also provides an easy method of integration all the functionality of the underlying [Auth0-PHP](https://github.com/auth0/auth-PHP) inside your Laravel application, including all types of authentication, authorization of API endpoints, and issuing Management API calls.
 
