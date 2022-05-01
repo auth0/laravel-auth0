@@ -31,17 +31,26 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
 
 ## Requirements
 
-| Laravel Version | PHP Version¹ | SDK Version | [Laravel Version Support Ends²](https://laravel.com/docs/master/releases#support-policy) |
-| --------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------- |
-| 9.0             | ≥ 8.0        | ≥ 7.0       | February 2024                                                                            |
-| 8.0             | 7.4³, ≥ 8.0  | ≥ 6.0       | January 2023                                                                             |
-| 6.0 (LTS)       | 7.4³, ≥ 8.0  | 6.0         | September 2022                                                                           |
+| SDK Version | Laravel Version¹ | PHP Version² | Support Ends³ |
+|-------------|------------------|--------------|---------------|
+| 7           | 9                | 8.1          | Feb 2024      |
+|             |                  | 8.0          | Nov 2023      |
+|             | 8                | 8.1          | Jan 2023      |
+|             |                  | 8.0          | Jan 2023      |
+|             |                  | 7.4          | Nov 2022      |
+| 6⁴          | 8                | 8.1          | Jan 2023      |
+|             |                  | 8.0          | Jan 2023      |
+|             |                  | 7.4          | Nov 2022      |
+|             | 6 (LTS)          | 8.0          | Sep 2022      |
+|             |                  | 7.4          | Sep 2022      |
 
-¹ This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions after they [reach end of life](https://www.php.net/supported-versions.php).
+¹ This library follows the [Laravel release support schedule](https://laravel.com/docs/releases#support-policy). We do not support framework versions after they stop receiving security fixes from Laravel.
 
-² This library follows the [Laravel release support schedule](https://laravel.com/docs/releases#support-policy). We do not support Laravel framework versions after they [reach end of life](https://laravel.com/docs/master/releases#support-policy).
+² This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support runtime versions after they stop receiving security fixes from the PHP Group.
 
-³ [PHP 7 will reach its end of life in November 2022.](https://www.php.net/supported-versions.php) Please upgrade to PHP 8.
+³ Our support windows are determined by the Laravel and PHP Group support schedules, and support ends when either the Laravel framework or PHP runtime outlined above stop receiving security fixes, whichever comes first.
+
+⁴ With the release of Laravel SDK v7, v6 is now in bug-fix only mode. Please migrate to v7 to continue to receive feature enhancements.
 
 ## Usage
 
