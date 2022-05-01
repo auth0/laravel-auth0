@@ -271,15 +271,15 @@ Route::get('/api/private-scoped', function () {
 
 To be able to test the route from above, the implementation of your test would have to look like this:
 ```php
-    use Auth0\Laravel\Traits\ActingAsAuth0User;
+use Auth0\Laravel\Traits\ActingAsAuth0User;
 
-    public function test_readMessages(){
-        $response = $this->actingAsAuth0User([
-            "scope"=>"read:messages"
-        ])->getJson("/api/private-scoped");
+public function test_readMessages(){
+    $response = $this->actingAsAuth0User([
+        "scope"=>"read:messages"
+    ])->getJson("/api/private-scoped");
 
-        $response->assertStatus(200);
-    }
+    $response->assertStatus(200);
+}
 ```
 
 
