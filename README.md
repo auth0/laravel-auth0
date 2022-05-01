@@ -1,9 +1,11 @@
 # Auth0 Laravel SDK
 
-[![Build Status](https://img.shields.io/circleci/project/github/auth0/laravel-auth0/main.svg)](https://circleci.com/gh/auth0/laravel-auth0)
 [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/login?label=stable)](https://packagist.org/packages/auth0/laravel-auth0)
 [![Latest Version](https://img.shields.io/packagist/v/auth0/login?include_prereleases&label=latest)](https://packagist.org/packages/auth0/laravel-auth0)
 [![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
+![example branch parameter](https://github.com/auth0/laravel-auth0/actions/workflows/checks.yml/badge.svg)
+![example branch parameter](https://github.com/auth0/laravel-auth0/actions/workflows/security.yml/badge.svg)
+![example branch parameter](https://github.com/auth0/laravel-auth0/actions/workflows/tests.yml/badge.svg)
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Flaravel-auth0.svg?type=shield)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
 
