@@ -97,29 +97,5 @@
       "recurse": true,
       "replace": true
     }
-  },
-  "scripts": {
-    "tests": [
-      "@tests:pest",
-      "@tests:phpinsights",
-      "@tests:phpstan",
-      "@tests:rector"
-    ],
-    "tests:pest": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/pest --stop-on-failure --coverage"
-    ],
-    "tests:phpinsights": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/phpinsights -v --no-interaction"
-    ],
-    "tests:phpstan": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M"
-    ],
-    "tests:rector": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/rector process src --dry-run"
-    ]
   }
 }
