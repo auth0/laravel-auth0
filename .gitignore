@@ -6,3 +6,7 @@ composer.lock
 composer.phar
 .phpunit.result.cache
 composer.local.json
+phpinsights.php
+phpstan.neon.dist
+phpunit.xml.dist
+rector.php
