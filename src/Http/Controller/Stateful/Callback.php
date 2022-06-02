@@ -40,7 +40,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             $error = $request->query('error', '');
             $errorDescription = $request->query('error_description', '');
             $error = is_string($error) ? $error : '';
-            $errorDescription = is_string($errorDescription) ? $error : '';
+            $errorDescription = is_string($errorDescription) ? $errorDescription : '';
 
             // Clear the local session via the Auth0-PHP SDK:
             app('auth0')->getSdk()->clear();
