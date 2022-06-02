@@ -1,5 +1,16 @@
 # Change Log
 
+## [7.0.1](https://github.com/auth0/laravel-auth0/tree/7.0.1) (2022-06-01)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.0...7.0.1)
+
+**Fixed**
+
+- Fixed an issue in `Auth0\Laravel\Http\Controller\Stateful\Callback` where `$errorDescription`'s value was assigned an incorrect value when an error was encountered. [\#266](https://github.com/auth0/laravel-auth0/pull/288) ([evansims](https://github.com/evansims))
+
+**Closed Issues**
+- Resolves [\#287](https://github.com/auth0/laravel-auth0/issues/287) ([piljac1](https://github.com/piljac1))
+
 ## [7.0.0](https://github.com/auth0/laravel-auth0/tree/7.0.0) (2022-03-21)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/6.5.0...7.0.0)
