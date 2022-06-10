@@ -30,7 +30,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException() === true) {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }
@@ -53,7 +53,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException() === true) {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }

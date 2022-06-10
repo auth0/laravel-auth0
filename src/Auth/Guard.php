@@ -125,12 +125,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         string $scope
     ): bool {
         $state = $this->getState();
-
-        if (in_array($scope, $state->getAccessTokenScope() ?? [], true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
 
     /**

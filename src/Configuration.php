@@ -16,11 +16,11 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
         ?string $config,
         string $delimiter = ' '
     ): ?array {
-        if (is_string($config) === true && strlen($config) >= 1 && strlen($delimiter) >= 1) {
+        if (is_string($config) && strlen($config) >= 1 && strlen($delimiter) >= 1) {
             $response = explode($delimiter, $config);
 
             // @phpstan-ignore-next-line
-            if (is_array($response) === true && count($response) >= 1 && strlen(trim($response[0])) !== 0) {
+            if (is_array($response) && count($response) >= 1 && strlen(trim($response[0])) !== 0) {
                 return $response;
             }
         }
@@ -35,7 +35,7 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
         ?string $config,
         ?bool $default = null
     ): ?bool {
-        if (is_string($config) === true && strlen($config) >= 1) {
+        if (is_string($config) && strlen($config) >= 1) {
             $config = strtolower(trim($config));
 
             return $config === 'true';
