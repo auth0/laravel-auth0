@@ -18,6 +18,6 @@ final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Lo
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
-        return redirect()->away(app('auth0')->getSdk()->login());
+        return redirect()->away(app(\Auth0\Laravel\Auth0::class)->getSdk()->login());
     }
 }
