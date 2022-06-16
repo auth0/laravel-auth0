@@ -20,17 +20,17 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
 
         try {
             if ($request->query('state') !== null && $request->query('code') !== null) {
-                app('auth0')->getSdk()->exchange();
+                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange();
             }
         } catch (\Throwable $exception) {
-            app('auth0')->getSdk()->clear();
+            app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
 
             // Throw hookable $event to allow custom error handling scenarios.
             $event = new \Auth0\Laravel\Event\Stateful\AuthenticationFailed($exception, true);
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException() === true) {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }
@@ -43,7 +43,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             $errorDescription = is_string($errorDescription) ? $errorDescription : '';
 
             // Clear the local session via the Auth0-PHP SDK:
-            app('auth0')->getSdk()->clear();
+            app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
 
             // Create a dynamic exception to report the API error response:
             $exception = \Auth0\Laravel\Exception\Stateful\CallbackException::apiException($error, $errorDescription);
@@ -53,7 +53,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException() === true) {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }

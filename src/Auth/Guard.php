@@ -43,7 +43,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     public function logout(): self
     {
         $this->getState()->setUser(null);
-        app('auth0')->getSdk()->clear();
+        app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
         return $this;
     }
 
@@ -125,12 +125,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         string $scope
     ): bool {
         $state = $this->getState();
-
-        if (in_array($scope, $state->getAccessTokenScope() ?? [], true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
 
     /**
@@ -148,7 +143,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         try {
             // Attempt to decode the bearer token.
-            $decoded = app('auth0')->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
+            $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
         } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
             // Invalid bearer token.
             return null;
@@ -184,7 +179,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     private function getUserFromSession(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
         // Retrieve an available session from the Auth0-PHP SDK.
-        $session = app('auth0')->getSdk()->getCredentials();
+        $session = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
         // If a session is not available, return null.
         if ($session === null) {
@@ -236,14 +231,14 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         if ($state->getRefreshToken() !== null) {
             try {
                 // Try to renew our token.
-                app('auth0')->getSdk()->renew();
+                app(\Auth0\Laravel\Auth0::class)->getSdk()->renew();
             } catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed) {
                 // Renew failed. Inform application.
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshFailed());
             }
 
             // Retrieve updated state data
-            $refreshed = app('auth0')->getSdk()->getCredentials();
+            $refreshed = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
             if ($refreshed !== null && $refreshed->accessTokenExpired === false) {
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
@@ -254,7 +249,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         // We didn't have a refresh token, or the refresh failed.
         // Clear session.
         $state->clear();
-        app('auth0')->getSdk()->clear();
+        app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
 
         // Inform host application.
         event(new \Auth0\Laravel\Event\Stateful\TokenExpired());
