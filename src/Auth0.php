@@ -22,7 +22,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * An instance of the Auth0-PHP SDK's SdkConfiguration, which handles configuration state.
      */
-    private ?\Auth0\SDK\Contract\ConfigurableContract $configuration = null;
+    private ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null;
 
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function getConfiguration(): \Auth0\SDK\Contract\ConfigurableContract
+    public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
     {
         if ($this->configuration === null) {
             $this->configuration = new \Auth0\SDK\Configuration\SdkConfiguration(app()->make('config')->get('auth0'));
@@ -64,7 +64,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
      * @inheritdoc
      */
     public function setConfiguration(
-        \Auth0\SDK\Contract\ConfigurableContract $configuration
+        \Auth0\SDK\Configuration\SdkConfiguration $configuration
     ): self {
         $this->configuration = $configuration;
         return $this;

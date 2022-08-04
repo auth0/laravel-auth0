@@ -21,13 +21,13 @@ interface Auth0
     /**
      * Create/return instance of the Auth0-PHP SdkConfiguration.
      */
-    public function getConfiguration(): \Auth0\SDK\Contract\ConfigurableContract;
+    public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration;
 
     /**
      * Assign the Auth0-PHP SdkConfiguration.
      */
     public function setConfiguration(
-        \Auth0\SDK\Contract\ConfigurableContract $configuration
+        \Auth0\SDK\Configuration\SdkConfiguration $configuration
     ): self;
 
     /**
