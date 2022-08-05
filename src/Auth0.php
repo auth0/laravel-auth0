@@ -17,7 +17,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * An instance of the Auth0-PHP SDK.
      */
-    private ?\Auth0\SDK\Auth0 $sdk = null;
+    private ?\Auth0\SDK\Contract\Auth0Interface $sdk = null;
 
     /**
      * An instance of the Auth0-PHP SDK's SdkConfiguration, which handles configuration state.
@@ -27,7 +27,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function getSdk(): \Auth0\SDK\Auth0
+    public function getSdk(): \Auth0\SDK\Contract\Auth0Interface
     {
         if ($this->sdk === null) {
             $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
@@ -41,7 +41,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
      * @inheritdoc
      */
     public function setSdk(
-        \Auth0\SDK\Auth0 $sdk
+        \Auth0\SDK\Contract\Auth0Interface $sdk
     ): self {
         $this->sdk = $sdk;
         $this->setSdkTelemetry();
@@ -73,7 +73,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function getState(): \Auth0\Laravel\StateInstance
+    public function getState(): \Auth0\Laravel\Contract\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);
     }

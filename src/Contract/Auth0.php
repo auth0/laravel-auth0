@@ -9,13 +9,13 @@ interface Auth0
     /**
      * Create/return instance of the Auth0-PHP SDK.
      */
-    public function getSdk(): \Auth0\SDK\Auth0;
+    public function getSdk(): \Auth0\SDK\Contract\Auth0Interface;
 
     /**
      * Create/return instance of the Auth0-PHP SDK.
      */
     public function setSdk(
-        \Auth0\SDK\Auth0 $sdk
+        \Auth0\SDK\Contract\Auth0Interface $sdk
     ): self;
 
     /**
@@ -33,5 +33,5 @@ interface Auth0
     /**
      * Create/create a request state instance, a storage singleton containing authenticated user data.
      */
-    public function getState(): \Auth0\Laravel\StateInstance;
+    public function getState(): \Auth0\Laravel\Contract\StateInstance;
 }
