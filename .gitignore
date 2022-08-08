@@ -1,5 +1,6 @@
 build/
 vendor/
+.idea/
 .env
 .DS_Store
 composer.lock
