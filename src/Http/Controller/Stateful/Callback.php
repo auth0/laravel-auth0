@@ -20,7 +20,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
 
         try {
             if ($request->query('state') !== null && $request->query('code') !== null) {
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange();
+                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(null, $request->query('code'), $request->query('state'));
             }
         } catch (\Throwable $exception) {
             app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
