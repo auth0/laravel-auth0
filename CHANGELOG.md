@@ -1,5 +1,15 @@
 # Change Log
 
+## [7.1.0](https://github.com/auth0/laravel-auth0/tree/7.1.0) (2022-08-08)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.1...7.1.0)
+
+**Changed**
+- [SDK-3576] Return interfaces instead of concrete classes [\#296](https://github.com/auth0/laravel-auth0/pull/296) ([evansims](https://github.com/evansims))
+- change: Use class names for app() calls [\#291](https://github.com/auth0/laravel-auth0/pull/291) ([evansims](https://github.com/evansims))
+
+**Fixed**
+- [SDK-3585] Fix: `Missing Code` error on Callback Route for Octane Customers [\#297](https://github.com/auth0/laravel-auth0/pull/297) ([evansims](https://github.com/evansims))
+
 ## [7.0.1](https://github.com/auth0/laravel-auth0/tree/7.0.1) (2022-06-01)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.0...7.0.1)
