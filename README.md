@@ -20,7 +20,10 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
   - [Protecting Routes with Middleware](#protecting-routes-with-middleware)
     - [Regular Web Applications](#regular-web-applications-1)
     - [Backend API Applications](#backend-api-applications-1)
-  - [Custom User Providers](#custom-user-providers)
+  - [Custom User Models and Repositories](#custom-user-models-and-repositories)
+    - [Creating a Custom User Model](#creating-a-custom-user-model)
+    - [Creating a Custom User Repository](#creating-a-custom-user-repository)
+    - [Using a Custom User Repository](#using-a-custom-user-repository)
   - [Authorizing HTTP Tests](#authorizing-http-tests)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
@@ -342,7 +345,7 @@ class CustomUserRepository implements \Auth0\Laravel\Contract\Auth\User\Reposito
 }
 ```
 
-#### Creating a Custom User Repository
+#### Using a Custom User Repository
 
 Finally, update your application's `config/auth.php` file. Within the Auth0 provider, assign a custom `repository` value pointing to your new custom user provider class. For example:
 
