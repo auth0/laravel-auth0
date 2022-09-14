@@ -396,9 +396,9 @@ public function test_readMessages(){
 
 Octane compatibility is currently considered experimental and unsupported.
 
-Although we are working toward ensuring the SDK is fully compatible with this performance-enhancing technique using Open Swoole and RoadRunner, we do not recommend using this feature with our SDK in production until we have greenlit support fully. Due to the aggressive structural changes Octane introduces, there is a lot of room of opportunity for problem spots and niche edge cases we haven't resolved yet.
+Although we are working toward ensuring the SDK is fully compatible with this performance-enhancing technique backed by Open Swoole and RoadRunner, we do not recommend using this feature with our SDK in production until we have full confidence and greenlit support. Due to the aggressive changes Octane makes to Laravel's behavior, there is opportunity for problems we haven't fully identified or resolved yet.
 
-In the meantime, feedback and bug fix contributions are greatly appreciated.
+Feedback and bug fix contributions are greatly appreciated as we work on Octane support.
 
 ## Documentation
 
