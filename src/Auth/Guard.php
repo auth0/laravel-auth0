@@ -280,5 +280,4 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     {
         return $this->provider;
     }
-
 }
