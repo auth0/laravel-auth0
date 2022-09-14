@@ -25,6 +25,7 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
     - [Creating a Custom User Repository](#creating-a-custom-user-repository)
     - [Using a Custom User Repository](#using-a-custom-user-repository)
   - [Authorizing HTTP Tests](#authorizing-http-tests)
+  - [Octane](#octane)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Support + Feedback](#support--feedback)
@@ -391,6 +392,13 @@ public function test_readMessages(){
 }
 ```
 
+### Octane
+
+Octane compatibility is currently considered experimental and unsupported.
+
+Although we are working toward ensuring the SDK is fully compatible with this performance-enhancing technique using Open Swoole and RoadRunner, we do not recommend using this feature with our SDK in production until we have greenlit support fully. Due to the aggressive structural changes Octane introduces, there is a lot of room of opportunity for problem spots and niche edge cases we haven't resolved yet.
+
+In the meantime, feedback and bug fix contributions are greatly appreciated.
 
 ## Documentation
 
