@@ -127,6 +127,14 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $state = $this->getState();
         return in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
+    
+    /**
+     * Always returns false to keep third-party apps happy
+     */
+    public function viaRemember(): bool
+    {
+        return false;
+    }
 
     /**
      * Get the user context from a provided access token.
