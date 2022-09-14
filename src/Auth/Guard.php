@@ -131,7 +131,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * Always returns false to keep third-party apps happy
      */
-    public function viaRemember()
+    public function viaRemember(): bool
     {
         return false;
     }
