@@ -21,7 +21,6 @@ enabled:
   - combine_nested_dirname
   - compact_nullable_typehint
   - concat_with_spaces
-  - concat_without_spaces
   - const_visibility_required
   - declare_equal_normalize
   - deprecation_error_suppression
