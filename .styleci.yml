@@ -16,7 +16,6 @@ enabled:
   - blank_line_before_throw
   - blank_line_before_try
   - cast_spaces
-  - class_definition
   - class_reference_name_casing
   - clean_namespace
   - combine_nested_dirname
@@ -154,7 +153,6 @@ enabled:
   - property_visibility_required
   - protected_to_private
   - psr12_braces
-  - psr12_class_definition
   - psr4
   - return_type_declaration
   - self_accessor
