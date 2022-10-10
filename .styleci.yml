@@ -1,6 +1,6 @@
 risky: true
 version: 8.0
-preset: laravel
+preset: psr12
 finder:
   exclude:
     - "modules"
