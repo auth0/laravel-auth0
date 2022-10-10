@@ -10,7 +10,7 @@ uses(\Auth0\Laravel\Tests\TestCase::class)
 
 function createServiceConfiguration(
     array $configuration = []
-): \Auth0\SDK\Configuration\SdkConfiguration {
+): Auth0\SDK\Configuration\SdkConfiguration {
     $defaults = [
         'strategy' => 'none',
     ];
@@ -19,9 +19,9 @@ function createServiceConfiguration(
 }
 
 function createService(
-    ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null
-): \Auth0\Laravel\Auth0 {
-    if ($configuration === null) {
+    ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null
+): Auth0\Laravel\Auth0 {
+    if (null === $configuration) {
         $configuration = createServiceConfiguration();
     }
 
@@ -29,9 +29,9 @@ function createService(
 }
 
 function createSdk(
-    ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null
-): \Auth0\SDK\Auth0 {
-    if ($configuration === null) {
+    ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null
+): Auth0\SDK\Auth0 {
+    if (null === $configuration) {
         $configuration = createServiceConfiguration();
     }
 

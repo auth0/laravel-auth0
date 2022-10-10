@@ -14,7 +14,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     private SdkConfiguration $configuration;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(SdkConfiguration $configuration)
     {
@@ -22,7 +22,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setConfiguration(SdkConfiguration $configuration): self
     {
@@ -32,7 +32,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConfiguration(): SdkConfiguration
     {

@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Callback
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -18,7 +18,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         }
 
         try {
-            if ($request->query('state') !== null && $request->query('code') !== null) {
+            if (null !== $request->query('state') && null !== $request->query('code')) {
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
                     null,
                     $request->query('code'),
@@ -38,12 +38,12 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             }
         }
 
-        if ($request->query('error') !== null && $request->query('error_description') !== null) {
+        if (null !== $request->query('error') && null !== $request->query('error_description')) {
             // Workaround to aid static analysis, due to the mixed formatting of the query() response:
             $error = $request->query('error', '');
             $errorDescription = $request->query('error_description', '');
-            $error = is_string($error) ? $error : '';
-            $errorDescription = is_string($errorDescription) ? $errorDescription : '';
+            $error = \is_string($error) ? $error : '';
+            $errorDescription = \is_string($errorDescription) ? $errorDescription : '';
 
             // Clear the local session via the Auth0-PHP SDK:
             app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
@@ -66,7 +66,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             ->guard('auth0')
             ->user();
 
-        if ($user !== null) {
+        if (null !== $user) {
             // Throw hookable event to allow custom application logic for successful logins:
             $event = new \Auth0\Laravel\Event\Stateful\AuthenticationSucceeded($user);
             event($event);

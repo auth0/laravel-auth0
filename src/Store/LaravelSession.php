@@ -34,7 +34,7 @@ final class LaravelSession implements StoreInterface
      * Psr14Store constructor.
      *
      * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param  string  $sessionPrefix  A string to prefix session keys with.
+     * @param  string  $sessionPrefix  a string to prefix session keys with
      */
     public function __construct(SdkConfiguration $configuration, string $sessionPrefix = 'auth0')
     {
@@ -45,7 +45,7 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to toggle state deferrance.
      *
-     * @param  bool  $deferring  Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      */
     public function defer(bool $deferring): void
     {
@@ -54,8 +54,8 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to set the value of a key-value pair.
      *
-     * @param  string  $key  Session key to set.
-     * @param  mixed  $value  Value to use.
+     * @param  string  $key  session key to set
+     * @param  mixed  $value  value to use
      */
     public function set(string $key, $value): void
     {
@@ -67,8 +67,8 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to retrieve the value of a key-value pair.
      *
-     * @param  string  $key  Session key to query.
-     * @param  mixed  $default  Default to return if nothing was found.
+     * @param  string  $key  session key to query
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -91,10 +91,10 @@ final class LaravelSession implements StoreInterface
 
         $pairs = $this->getStore()
             ->all();
-        $prefix = $this->sessionPrefix.'_';
+        $prefix = $this->sessionPrefix . '_';
 
         foreach (array_keys($pairs) as $key) {
-            if (substr($key, 0, strlen($prefix)) === $prefix) {
+            if (substr($key, 0, \strlen($prefix)) === $prefix) {
                 $this->delete($key);
             }
         }
@@ -103,7 +103,7 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to delete key-value pair.
      *
-     * @param  string  $key  Session key to delete.
+     * @param  string  $key  session key to delete
      */
     public function delete(string $key): void
     {
@@ -140,8 +140,8 @@ final class LaravelSession implements StoreInterface
 
     private function getPrefixedKey(string $key): string
     {
-        if ($this->sessionPrefix !== '') {
-            return $this->sessionPrefix.'_'.$key;
+        if ('' !== $this->sessionPrefix) {
+            return $this->sessionPrefix . '_' . $key;
         }
 
         return $key;

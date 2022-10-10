@@ -67,7 +67,7 @@ final class LaravelCacheItem implements CacheItemInterface
      */
     public function expiresAfter(mixed $time): static
     {
-        if ($time === null) {
+        if (null === $time) {
             $this->expires = null;
 
             return $this;

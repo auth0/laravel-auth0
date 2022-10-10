@@ -28,11 +28,11 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     private ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSdk(): \Auth0\SDK\Contract\Auth0Interface
     {
-        if ($this->sdk === null) {
+        if (null === $this->sdk) {
             $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
             $this->setSdkTelemetry();
         }
@@ -41,7 +41,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setSdk(\Auth0\SDK\Contract\Auth0Interface $sdk): self
     {
@@ -52,11 +52,11 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
     {
-        if ($this->configuration === null) {
+        if (null === $this->configuration) {
             $config = app()
                 ->make('config')
                 ->get('auth0');
@@ -100,7 +100,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setConfiguration(\Auth0\SDK\Configuration\SdkConfiguration $configuration): self
     {
@@ -110,9 +110,9 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getState(): \Auth0\Laravel\Contract\StateInstance
+    public function getState(): Contract\StateInstance
     {
         return app()->make(\Auth0\Laravel\StateInstance::class);
     }

@@ -10,7 +10,7 @@ namespace Auth0\Laravel\Http\Middleware\Stateless;
 final class AuthorizeOptional implements \Auth0\Laravel\Contract\Http\Middleware\Stateless\AuthorizeOptional
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function handle(\Illuminate\Http\Request $request, \Closure $next)
     {
@@ -18,7 +18,7 @@ final class AuthorizeOptional implements \Auth0\Laravel\Contract\Http\Middleware
             ->guard('auth0')
             ->user();
 
-        if ($user !== null && $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
+        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
             auth()->guard('auth0')
                 ->login($user);
         }

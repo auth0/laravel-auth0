@@ -12,7 +12,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     private \Auth0\Laravel\Contract\Auth\User\Repository $repository;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(\Auth0\Laravel\Contract\Auth\User\Repository $repository)
     {
@@ -20,7 +20,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -30,7 +30,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -40,7 +40,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -50,7 +50,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -62,7 +62,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -71,7 +71,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRepository(): \Auth0\Laravel\Contract\Auth\User\Repository
     {

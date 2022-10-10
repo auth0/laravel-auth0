@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Auth\User;
 final class Repository implements \Auth0\Laravel\Contract\Auth\User\Repository
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function fromSession(array $user): ?\Illuminate\Contracts\Auth\Authenticatable
     {
@@ -15,7 +15,7 @@ final class Repository implements \Auth0\Laravel\Contract\Auth\User\Repository
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function fromAccessToken(array $user): ?\Illuminate\Contracts\Auth\Authenticatable
     {

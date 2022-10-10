@@ -29,5 +29,5 @@ interface Auth0
     /**
      * Create/create a request state instance, a storage singleton containing authenticated user data.
      */
-    public function getState(): \Auth0\Laravel\Contract\StateInstance;
+    public function getState(): StateInstance;
 }
