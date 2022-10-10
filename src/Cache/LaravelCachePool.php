@@ -25,15 +25,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $this->manager = app()->make(\Illuminate\Cache\CacheManager::class);
     }
 
-    /**
-     * Returns a Cache Item representing the specified key.
-     *
-     * @param string $key The key for which to return the corresponding Cache Item.
-     *
-     * @return CacheItemInterface
-     */
-
-    public function getItem(mixed $key)
+    public function getItem(string $key): CacheItemInterface
     {
         $value = $this->getStore()->get($key);
 
