@@ -44,14 +44,14 @@ enabled:
   - const_separation
   - const_visibility_required
   - declare_equal_normalize
-  - deprecation_error_suppression
   - declare_strict_types
-  - doctrine_annotation_spaces
-  - doctrine_annotation_indentation
-  - doctrine_annotation_braces
-  - doctrine_annotation_array_assignment
+  - deprecation_error_suppression
   - die_to_exit
   - dir_constant
+  - doctrine_annotation_array_assignment
+  - doctrine_annotation_braces
+  - doctrine_annotation_indentation
+  - doctrine_annotation_spaces
   - elseif
   - empty_loop_body_braces
   - empty_loop_condition
@@ -93,7 +93,6 @@ enabled:
   - magic_constant_casing
   - magic_method_casing
   - mb_str_functions
-  - magic_method_casing
   - method_argument_space_strict
   - method_chaining_indentation
   - method_separation
@@ -162,10 +161,10 @@ enabled:
   - no_whitespace_in_blank_line
   - non_printable_character
   - normalize_index_brace
-  - nullable_type_declarations
   - not_operator_with_successor_space
-  - operator_linebreak_end
+  - nullable_type_declarations
   - object_operator_without_whitespace
+  - operator_linebreak_end
   - ordered_class_elements
   - php_unit_fqcn_annotation
   - phpdoc_add_missing_param_annotation
@@ -175,14 +174,13 @@ enabled:
   - phpdoc_inline_tag_normalizer
   - phpdoc_link_to_see
   - phpdoc_no_access
-  - phpdoc_no_package
   - phpdoc_no_empty_return
+  - phpdoc_no_package
   - phpdoc_no_useless_inheritdoc
   - phpdoc_property
   - phpdoc_return_self_reference
   - phpdoc_scalar
   - phpdoc_single_line_var_spacing
-  - single_blank_line_before_namespace
   - phpdoc_singular_inheritdoc
   - phpdoc_summary
   - phpdoc_to_comment
@@ -191,9 +189,9 @@ enabled:
   - phpdoc_type_to_var
   - phpdoc_types
   - phpdoc_types_null_last
-  - phpdoc_var_without_name
   - phpdoc_types_order
   - phpdoc_var_order
+  - phpdoc_var_without_name
   - pow_to_exponentiation
   - pre_increment
   - print_to_echo
@@ -228,9 +226,9 @@ enabled:
   - space_after_semicolon
   - standardize_increment
   - standardize_not_equals
-  - strict_param
   - static_lambda
   - strict_comparison
+  - strict_param
   - string_length_to_empty
   - string_line_ending
   - switch_case_semicolon_to_colon
@@ -242,8 +240,8 @@ enabled:
   - ternary_to_elvis_operator
   - ternary_to_null_coalescing
   - trailing_comma_in_multiline_array
-  - trailing_comma_in_multiline_definition
   - trailing_comma_in_multiline_call
+  - trailing_comma_in_multiline_definition
   - trim_array_spaces
   - unalign_equals
   - unary_operator_spaces
