@@ -9,7 +9,7 @@ interface Provider
     /**
      * \Auth0\Laravel\Contract\Auth\User\Provider constructor.
      *
-     * @param \Auth0\Laravel\Auth\User\Repository $repository A repository instance.
+     * @param  \Auth0\Laravel\Auth\User\Repository  $repository  A repository instance.
      */
     public function __construct(\Auth0\Laravel\Auth\User\Repository $repository);
 

@@ -63,7 +63,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function guest(): bool
     {
-        return !$this->check();
+        return ! $this->check();
     }
 
     /**
@@ -178,11 +178,11 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         // Was a user retrieved successfully?
         if ($user !== null) {
-            if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (!$user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
                 exit('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
             }
 
@@ -217,11 +217,11 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         // Was a user retrieved successfully?
         if ($user !== null) {
-            if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (!$user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
                 exit('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
             }
 
