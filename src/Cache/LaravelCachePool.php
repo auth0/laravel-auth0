@@ -32,7 +32,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
      *
      * @return CacheItemInterface
      */
-    public function getItem($key)
+
+    public function getItem(mixed $key)
     {
         $value = $this->getStore()->get($key);
 
@@ -70,7 +71,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
      *
      * @return bool
      */
-    public function hasItem($key): bool
+    public function hasItem(mixed $key): bool
     {
         return $this->getItem($key)
             ->isHit();
@@ -87,7 +88,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
      *
      * @return bool
      */
-    public function deleteItem($key): bool
+    public function deleteItem(mixed $key): bool
     {
         return $this->getStore()->forget($key);
     }

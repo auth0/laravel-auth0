@@ -11,21 +11,9 @@ parameters:
         - tests/constants.php
 
     ignoreErrors:
-        - '#Function (app|auth|event|redirect) not found.#'
-        - '#Constructor in (.*) has parameter (.*) with default value.#'
-        - '#Constructor in (.*) has parameter (.*) with null as default value.#'
-        - '#Method (.*) has parameter (.*) with a nullable type declaration.#'
-        - '#Method (.*) has parameter (.*) with null as default value.#'
-        - '#Method (.*) has a nullable return type declaration.#'
-        - '#Language construct isset\(\) should not be used.#'
         - '#Method (.*) has parameter (.*) with no value type specified in iterable type array.#'
-        - '#not allowed to extend#'
         - '#Cannot call method (.*) on mixed#'
         - '#no value type specified in iterable type array.#'
-        - '#is not final, but since the containing class is abstract, it should be.#'
-        - '#Class "Auth0\\Login\\Exception\\(.*)" is not allowed to extend "Exception".#'
-        - '#Class "Auth0\\Laravel\\Exception\\(.*)" is not allowed to extend "Exception".#'
         - '#Call to an undefined method Illuminate\\(.*).#'
-        - '#\$hash is never read, only written.#'
 
     reportUnmatchedIgnoredErrors: false
