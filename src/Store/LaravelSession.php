@@ -33,8 +33,8 @@ final class LaravelSession implements StoreInterface
     /**
      * Psr14Store constructor.
      *
-     * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $sessionPrefix A string to prefix session keys with.
+     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  string  $sessionPrefix  A string to prefix session keys with.
      */
     public function __construct(SdkConfiguration $configuration, string $sessionPrefix = 'auth0')
     {
@@ -45,18 +45,17 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to toggle state deferrance.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  Whether to defer persisting the storage state.
      */
     public function defer(bool $deferring): void
     {
-
     }
 
     /**
      * Dispatch event to set the value of a key-value pair.
      *
-     * @param string $key   Session key to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  Session key to set.
+     * @param  mixed  $value  Value to use.
      */
     public function set(string $key, $value): void
     {
@@ -68,9 +67,8 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to retrieve the value of a key-value pair.
      *
-     * @param string $key     Session key to query.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  Session key to query.
+     * @param  mixed  $default  Default to return if nothing was found.
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -105,7 +103,7 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to delete key-value pair.
      *
-     * @param string $key Session key to delete.
+     * @param  string  $key  Session key to delete.
      */
     public function delete(string $key): void
     {
@@ -119,15 +117,14 @@ final class LaravelSession implements StoreInterface
      */
     private function boot(): void
     {
-        if (!$this->booted) {
-            if (!$this->getStore()->isStarted()) {
+        if (! $this->booted) {
+            if (! $this->getStore()->isStarted()) {
                 $this->getStore()
                     ->start();
             }
 
             $this->booted = true;
         }
-
     }
 
     private function getStore(): \Illuminate\Session\Store

@@ -63,7 +63,7 @@ final class LaravelCacheItem implements CacheItemInterface
     }
 
     /**
-     * @param DateInterval|int|null $time
+     * @param  DateInterval|int|null  $time
      */
     public function expiresAfter(mixed $time): static
     {

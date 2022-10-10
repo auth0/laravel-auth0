@@ -61,14 +61,14 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 ->make('config')
                 ->get('auth0');
 
-            if (!isset($config['tokenCache']) || !isset($config['managementTokenCache'])) {
+            if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
                 $cache = new LaravelCachePool();
 
-                if (!isset($config['tokenCache'])) {
+                if (! isset($config['tokenCache'])) {
                     $config['tokenCache'] = $cache;
                 }
 
-                if (!isset($config['managementTokenCache'])) {
+                if (! isset($config['managementTokenCache'])) {
                     $config['managementTokenCache'] = $cache;
                 }
             }
@@ -76,14 +76,14 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
             $configuration = new \Auth0\SDK\Configuration\SdkConfiguration($config);
 
             // If no sessionStorage is defined, use an LaravelSession store instance.
-            if (!isset($config['sessionStorage'])) {
+            if (! isset($config['sessionStorage'])) {
                 $configuration->setSessionStorage(
                     new LaravelSession($configuration, $configuration->getSessionStorageId())
                 );
             }
 
             // If no transientStorage is defined, use an LaravelSession store instance.
-            if (!isset($config['transientStorage'])) {
+            if (! isset($config['transientStorage'])) {
                 $configuration->setTransientStorage(
                     new LaravelSession($configuration, $configuration->getSessionStorageId())
                 );
