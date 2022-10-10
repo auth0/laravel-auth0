@@ -34,6 +34,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     {
         $this->getState()
             ->setUser($user);
+
         return $this;
     }
 
@@ -45,6 +46,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $this->getState()
             ->setUser(null);
         app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
+
         return $this;
     }
 
@@ -61,7 +63,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function guest(): bool
     {
-        return ! $this->check();
+        return !$this->check();
     }
 
     /**
@@ -109,6 +111,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     {
         $user = $this->getState()
             ->setUser($user);
+
         return $this;
     }
 
@@ -126,11 +129,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     public function hasScope(string $scope): bool
     {
         $state = $this->getState();
+
         return in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
 
     /**
-     * Always returns false to keep third-party apps happy
+     * Always returns false to keep third-party apps happy.
      */
     public function viaRemember(): bool
     {
@@ -174,12 +178,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         // Was a user retrieved successfully?
         if ($user !== null) {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
-                die('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
+            if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+                exit('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
-                die('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
+            if (!$user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
+                exit('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
             }
 
             $this->getState()
@@ -213,12 +217,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         // Was a user retrieved successfully?
         if ($user !== null) {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
-                die('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
+            if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+                exit('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
-                die('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
+            if (!$user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
+                exit('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
             }
 
             $this->getState()
@@ -264,6 +268,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
             if ($refreshed !== null && $refreshed->accessTokenExpired === false) {
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
+
                 return $user;
             }
         }

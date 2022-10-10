@@ -27,6 +27,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     public function setConfiguration(SdkConfiguration $configuration): self
     {
         $this->configuration = $configuration;
+
         return $this;
     }
 

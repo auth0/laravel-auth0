@@ -32,6 +32,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
     {
         $this->exception = $exception;
         $this->mutated = true;
+
         return $this;
     }
 
@@ -49,6 +50,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
     public function setThrowException(bool $throwException): self
     {
         $this->throwException = $throwException;
+
         return $this;
     }
 

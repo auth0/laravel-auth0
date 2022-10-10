@@ -18,20 +18,20 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->sets([SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);
 
     $ecsConfig->paths([
-        __DIR__ . '/bin',
-        __DIR__ . '/src',
-        __DIR__ . '/packages',
-        __DIR__ . '/packages-tests',
-        __DIR__ . '/rules',
-        __DIR__ . '/rules-tests',
-        __DIR__ . '/tests',
-        __DIR__ . '/utils',
-        __DIR__ . '/config',
-        __DIR__ . '/ecs.php',
-        __DIR__ . '/easy-ci.php',
-        __DIR__ . '/rector.php',
-        __DIR__ . '/scoper.php',
-        __DIR__ . '/build/build-preload.php',
+        __DIR__.'/bin',
+        __DIR__.'/src',
+        __DIR__.'/packages',
+        __DIR__.'/packages-tests',
+        __DIR__.'/rules',
+        __DIR__.'/rules-tests',
+        __DIR__.'/tests',
+        __DIR__.'/utils',
+        __DIR__.'/config',
+        __DIR__.'/ecs.php',
+        __DIR__.'/easy-ci.php',
+        __DIR__.'/rector.php',
+        __DIR__.'/scoper.php',
+        __DIR__.'/build/build-preload.php',
     ]);
 
     $ecsConfig->ruleWithConfiguration(NoSuperfluousPhpdocTagsFixer::class, [
@@ -64,9 +64,9 @@ return static function (ECSConfig $ecsConfig): void {
 
         PhpdocTypesFixer::class => [
             // double to Double false positive
-            __DIR__ . '/rules/Php74/Rector/Double/RealToFloatTypeCastRector.php',
+            __DIR__.'/rules/Php74/Rector/Double/RealToFloatTypeCastRector.php',
             // skip for enum types
-            __DIR__ . '/rules/Php70/Rector/MethodCall/ThisCallOnStaticMethodToStaticCallRector.php',
+            __DIR__.'/rules/Php70/Rector/MethodCall/ThisCallOnStaticMethodToStaticCallRector.php',
         ],
 
         // breaking and handled better by Rector PHPUnit code quality set, removed in symplify dev-main
@@ -74,16 +74,16 @@ return static function (ECSConfig $ecsConfig): void {
 
         // skip add space on &$variable
         FunctionTypehintSpaceFixer::class => [
-            __DIR__ . '/src/PhpParser/Printer/BetterStandardPrinter.php',
-            __DIR__ . '/src/DependencyInjection/Loader/Configurator/RectorServiceConfigurator.php',
-            __DIR__ . '/rules/Php70/EregToPcreTransformer.php',
+            __DIR__.'/src/PhpParser/Printer/BetterStandardPrinter.php',
+            __DIR__.'/src/DependencyInjection/Loader/Configurator/RectorServiceConfigurator.php',
+            __DIR__.'/rules/Php70/EregToPcreTransformer.php',
         ],
 
-        AssignmentInConditionSniff::class . '.FoundInWhileCondition',
+        AssignmentInConditionSniff::class.'.FoundInWhileCondition',
 
         // null on purpose as no change
         PhpdocNoEmptyReturnFixer::class => [
-            __DIR__ . '/rules/DeadCode/Rector/ConstFetch/RemovePhpVersionIdCheckRector.php',
+            __DIR__.'/rules/DeadCode/Rector/ConstFetch/RemovePhpVersionIdCheckRector.php',
         ],
     ]);
 };
