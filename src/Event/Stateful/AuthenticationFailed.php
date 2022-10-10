@@ -19,10 +19,8 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
     /**
      * @inheritdoc
      */
-    public function __construct(
-        \Throwable $exception,
-        bool $throwException = true
-    ) {
+    public function __construct(\Throwable $exception, bool $throwException = true)
+    {
         $this->exception = $exception;
         $this->throwException = $throwException;
     }
@@ -30,9 +28,8 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
     /**
      * @inheritdoc
      */
-    public function setException(
-        \Throwable $exception
-    ): self {
+    public function setException(\Throwable $exception): self
+    {
         $this->exception = $exception;
         $this->mutated = true;
         return $this;
@@ -49,9 +46,8 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
     /**
      * @inheritdoc
      */
-    public function setThrowException(
-        bool $throwException
-    ): self {
+    public function setThrowException(bool $throwException): self
+    {
         $this->throwException = $throwException;
         return $this;
     }

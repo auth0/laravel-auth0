@@ -14,37 +14,32 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * @inheritdoc
      */
-    public function __construct(
-        array $attributes = []
-    ) {
+    public function __construct(array $attributes = [])
+    {
         $this->fill($attributes);
     }
 
     /**
      * @inheritdoc
      */
-    public function __get(
-        string $key
-    ) {
+    public function __get(string $key)
+    {
         return $this->getAttribute($key);
     }
 
     /**
      * @inheritdoc
      */
-    public function __set(
-        string $key,
-        $value
-    ): void {
+    public function __set(string $key, $value): void
+    {
         $this->setAttribute($key, $value);
     }
 
     /**
      * @inheritdoc
      */
-    public function fill(
-        array $attributes
-    ): self {
+    public function fill(array $attributes): self
+    {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
         }
@@ -55,10 +50,8 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * @inheritdoc
      */
-    public function setAttribute(
-        string $key,
-        $value
-    ): self {
+    public function setAttribute(string $key, $value): self
+    {
         $this->attributes[$key] = $value;
         return $this;
     }
@@ -66,10 +59,8 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * @inheritdoc
      */
-    public function getAttribute(
-        string $key,
-        $default = null
-    ) {
+    public function getAttribute(string $key, $default = null)
+    {
         return $this->attributes[$key] ?? $default;
     }
 
@@ -110,9 +101,8 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function setRememberToken(
-        $value
-    ): void {
+    public function setRememberToken($value): void
+    {
     }
 
     /**

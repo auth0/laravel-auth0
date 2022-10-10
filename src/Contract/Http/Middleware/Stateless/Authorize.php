@@ -9,15 +9,7 @@ interface Authorize
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string                   $scope
-     *
      * @return mixed
      */
-    public function handle(
-        \Illuminate\Http\Request $request,
-        \Closure $next,
-        string $scope
-    );
+    public function handle(\Illuminate\Http\Request $request, \Closure $next, string $scope);
 }

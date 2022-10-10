@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
+use Auth0\Laravel\Cache\LaravelCachePool;
+use Auth0\Laravel\Store\LaravelSession;
+
 /**
  * Service that provides access to the Auth0 SDK.
  */
@@ -40,9 +43,8 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function setSdk(
-        \Auth0\SDK\Contract\Auth0Interface $sdk
-    ): self {
+    public function setSdk(\Auth0\SDK\Contract\Auth0Interface $sdk): self
+    {
         $this->sdk = $sdk;
         $this->setSdkTelemetry();
         return $this;
@@ -54,7 +56,43 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
     {
         if ($this->configuration === null) {
-            $this->configuration = new \Auth0\SDK\Configuration\SdkConfiguration(app()->make('config')->get('auth0'));
+            $config = app()
+                ->make('config')
+                ->get('auth0');
+
+            if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
+                $cache = new LaravelCachePool();
+
+                if (! isset($config['tokenCache'])) {
+                    $config['tokenCache'] = $cache;
+                }
+
+                if (! isset($config['managementTokenCache'])) {
+                    $config['managementTokenCache'] = $cache;
+                }
+            }
+
+            $configuration = new \Auth0\SDK\Configuration\SdkConfiguration($config);
+
+            // If no sessionStorage is defined, use an LaravelSession store instance.
+            if (! isset($config['sessionStorage'])) {
+                $configuration->setSessionStorage(
+                    new LaravelSession($configuration, $configuration->getSessionStorageId())
+                );
+            }
+
+            // If no transientStorage is defined, use an LaravelSession store instance.
+            if (! isset($config['transientStorage'])) {
+                $configuration->setTransientStorage(
+                    new LaravelSession($configuration, $configuration->getSessionStorageId())
+                );
+            }
+
+            // Give apps an opportunity to mutate the configuration before applying it.
+            $event = new \Auth0\Laravel\Event\Configuration\Built($configuration);
+            event($event);
+
+            $this->configuration = $event->getConfiguration();
         }
 
         return $this->configuration;
@@ -63,9 +101,8 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function setConfiguration(
-        \Auth0\SDK\Configuration\SdkConfiguration $configuration
-    ): self {
+    public function setConfiguration(\Auth0\SDK\Configuration\SdkConfiguration $configuration): self
+    {
         $this->configuration = $configuration;
         return $this;
     }

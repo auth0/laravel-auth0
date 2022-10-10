@@ -10,22 +10,16 @@ use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 
 trait ActingAsAuth0User
 {
-    abstract public function actingAs(
-        UserContract $user,
-        $guard = null
-    );
+    abstract public function actingAs(UserContract $user, $guard = null);
 
     /**
      * use this method to impersonate a specific auth0 user
      * if you pass an attributes array, it will be merged with a set of default values
      *
-     * @param array $attributes
-     *
      * @return mixed
      */
-    public function actingAsAuth0User(
-        array $attributes = []
-    ) {
+    public function actingAsAuth0User(array $attributes = [])
+    {
         $defaults = [
             'sub' => 'some-auth0-user-id',
             'azp' => 'some-auth0-appplication-client-id',

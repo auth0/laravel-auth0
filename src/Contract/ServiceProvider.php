@@ -9,9 +9,7 @@ interface ServiceProvider
     /**
      * Configure package details for Laravel's consumption.
      */
-    public function configurePackage(
-        \Spatie\LaravelPackageTools\Package $package
-    ): void;
+    public function configurePackage(\Spatie\LaravelPackageTools\Package $package): void;
 
     /**
      * Register application services.

@@ -21,9 +21,7 @@ interface StateInstance
      *
      * @param \Illuminate\Contracts\Auth\Authenticatable|null $user An authenticated user context.
      */
-    public function setUser(
-        ?\Illuminate\Contracts\Auth\Authenticatable $user
-    ): self;
+    public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self;
 
     /**
      * Retrieve the decoded token data for the request context, if available.
@@ -33,9 +31,7 @@ interface StateInstance
     /**
      * Set the decoded token data for the request context.
      */
-    public function setDecoded(
-        ?array $data
-    ): self;
+    public function setDecoded(?array $data): self;
 
     /**
      * Retrieve the id token for the request context, if available.
@@ -45,9 +41,7 @@ interface StateInstance
     /**
      * Set the id token for the request context.
      */
-    public function setIdToken(
-        ?string $idToken
-    ): self;
+    public function setIdToken(?string $idToken): self;
 
     /**
      * Retrieve the access token for the request context, if available.
@@ -57,9 +51,7 @@ interface StateInstance
     /**
      * Set the access token for the request context.
      */
-    public function setAccessToken(
-        ?string $accessToken
-    ): self;
+    public function setAccessToken(?string $accessToken): self;
 
     /**
      * Retrieve the access token scopes for the request context, if available.
@@ -69,9 +61,7 @@ interface StateInstance
     /**
      * Set the access token scopes for the request context.
      */
-    public function setAccessTokenScope(
-        ?array $accessTokenScope
-    ): self;
+    public function setAccessTokenScope(?array $accessTokenScope): self;
 
     /**
      * Retrieve the access token expiration timestamp for the request context, if available.
@@ -81,9 +71,7 @@ interface StateInstance
     /**
      * Set the access token expiration timestamp for the request context.
      */
-    public function setAccessTokenExpiration(
-        ?int $accessTokenExpiration
-    ): self;
+    public function setAccessTokenExpiration(?int $accessTokenExpiration): self;
 
     /**
      * Retrieve the access token expiration state, if available.
@@ -100,7 +88,5 @@ interface StateInstance
      *
      * @param string $refreshToken Refresh token returned from the code exchange.
      */
-    public function setRefreshToken(
-        ?string $refreshToken
-    ): self;
+    public function setRefreshToken(?string $refreshToken): self;
 }

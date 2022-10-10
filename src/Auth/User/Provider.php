@@ -14,9 +14,8 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
     /**
      * @inheritdoc
      */
-    public function __construct(
-        \Auth0\Laravel\Contract\Auth\User\Repository $repository
-    ) {
+    public function __construct(\Auth0\Laravel\Contract\Auth\User\Repository $repository)
+    {
         $this->repository = $repository;
     }
 
@@ -25,9 +24,8 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveById(
-        $identifier
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
+    public function retrieveById($identifier): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
         return null;
     }
 
@@ -36,10 +34,8 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveByToken(
-        $identifier,
-        $token
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
+    public function retrieveByToken($identifier, $token): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
         return null;
     }
 
@@ -48,9 +44,8 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveByCredentials(
-        array $credentials
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
+    public function retrieveByCredentials(array $credentials): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
         return null;
     }
 
@@ -71,10 +66,8 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function updateRememberToken(
-        \Illuminate\Contracts\Auth\Authenticatable $user,
-        $token
-    ): void {
+    public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token): void
+    {
     }
 
     /**

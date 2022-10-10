@@ -9,9 +9,8 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        \Illuminate\Http\Request $request
-    ): \Illuminate\Http\RedirectResponse {
+    public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
+    {
         // Check if the user already has a session:
         if (auth()->guard('auth0')->check()) {
             // They do; redirect to homepage.
@@ -20,7 +19,11 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
 
         try {
             if ($request->query('state') !== null && $request->query('code') !== null) {
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(null, $request->query('code'), $request->query('state'));
+                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
+                    null,
+                    $request->query('code'),
+                    $request->query('state')
+                );
             }
         } catch (\Throwable $exception) {
             app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
@@ -59,7 +62,9 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         }
 
         // Ensure we have a valid user:
-        $user = auth()->guard('auth0')->user();
+        $user = auth()
+            ->guard('auth0')
+            ->user();
 
         if ($user !== null) {
             // Throw hookable event to allow custom application logic for successful logins:
@@ -67,7 +72,9 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // Apply any mutations to the user object:
-            auth()->guard('auth0')->setUser($event->getUser());
+            auth()
+                ->guard('auth0')
+                ->setUser($event->getUser());
         }
 
         return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
