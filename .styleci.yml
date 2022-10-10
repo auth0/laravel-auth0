@@ -81,7 +81,6 @@ enabled:
   - laravel_phpdoc_alignment
   - laravel_phpdoc_order
   - laravel_phpdoc_separation
-  - length_ordered_imports
   - linebreak_after_opening_tag
   - logical_operators
   - lowercase_cast
