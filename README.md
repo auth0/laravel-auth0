@@ -41,12 +41,8 @@ This SDK helps you integrate your [Laravel](https://laravel.com/) application wi
 |             |                  | 8.0          | Nov 2023      |
 |             | 8                | 8.1          | Jan 2023      |
 |             |                  | 8.0          | Jan 2023      |
-|             |                  | 7.4          | Nov 2022      |
 | 6⁴          | 8                | 8.1          | Jan 2023      |
 |             |                  | 8.0          | Jan 2023      |
-|             |                  | 7.4          | Nov 2022      |
-|             | 6 (LTS)          | 8.0          | Sep 2022      |
-|             |                  | 7.4          | Sep 2022      |
 
 ¹ This library follows the [Laravel release support schedule](https://laravel.com/docs/releases#support-policy). We do not support framework versions after they stop receiving security fixes from Laravel.
 
