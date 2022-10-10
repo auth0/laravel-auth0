@@ -2,7 +2,6 @@ risky: true
 version: 8.0
 preset: none
 enabled:
-  - align_comments
   - align_double_arrow
   - align_equals
   - align_phpdoc
