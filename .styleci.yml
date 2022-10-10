@@ -3,7 +3,6 @@ version: 8.0
 preset: none
 enabled:
   - align_double_arrow
-  - align_equals
   - align_phpdoc
   - alpha_ordered_imports
   - alpha_ordered_traits
