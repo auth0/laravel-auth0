@@ -129,7 +129,6 @@ enabled:
   - phpdoc_no_access
   - phpdoc_no_package
   - phpdoc_no_useless_inheritdoc
-  - phpdoc_order
   - phpdoc_property
   - phpdoc_return_self_reference
   - phpdoc_scalar
