@@ -30,6 +30,27 @@ enabled:
   - blank_line_before_try
   - blank_line_before_while
   - blank_line_before_yield
+  - cast_spaces
+  - class_keyword_remove
+  - class_reference_name_casing
+  - clean_namespace
+  - combine_consecutive_issets
+  - combine_consecutive_unsets
+  - combine_nested_dirname
+  - comment_to_phpdoc
+  - compact_nullable_typehint
+  - concat_with_spaces
+  - const_separation
+  - const_visibility_required
+  - declare_equal_normalize
+  - declare_strict_types
+  - deprecation_error_suppression
+  - die_to_exit
+  - dir_constant
+  - doctrine_annotation_array_assignment
+  - doctrine_annotation_braces
+  - doctrine_annotation_indentation
+  - doctrine_annotation_spaces
 
 finder:
   exclude:
