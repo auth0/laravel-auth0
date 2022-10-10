@@ -8,9 +8,6 @@ interface Guard
 {
     /**
      * Create a new authentication guard.
-     *
-     * @param \Illuminate\Contracts\Auth\UserProvider $provider
-     * @param \Illuminate\Http\Request $request
      */
     public function __construct(
         \Illuminate\Contracts\Auth\UserProvider $provider,
@@ -19,12 +16,8 @@ interface Guard
 
     /**
      * Set the current user.
-     *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
      */
-    public function login(
-        \Illuminate\Contracts\Auth\Authenticatable $user
-    ): self;
+    public function login(\Illuminate\Contracts\Auth\Authenticatable $user): self;
 
     /**
      * Clear the current user.

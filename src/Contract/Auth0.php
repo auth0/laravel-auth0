@@ -14,9 +14,7 @@ interface Auth0
     /**
      * Create/return instance of the Auth0-PHP SDK.
      */
-    public function setSdk(
-        \Auth0\SDK\Contract\Auth0Interface $sdk
-    ): self;
+    public function setSdk(\Auth0\SDK\Contract\Auth0Interface $sdk): self;
 
     /**
      * Create/return instance of the Auth0-PHP SdkConfiguration.
@@ -26,9 +24,7 @@ interface Auth0
     /**
      * Assign the Auth0-PHP SdkConfiguration.
      */
-    public function setConfiguration(
-        \Auth0\SDK\Configuration\SdkConfiguration $configuration
-    ): self;
+    public function setConfiguration(\Auth0\SDK\Configuration\SdkConfiguration $configuration): self;
 
     /**
      * Create/create a request state instance, a storage singleton containing authenticated user data.

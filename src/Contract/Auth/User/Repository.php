@@ -11,16 +11,12 @@ interface Repository
      *
      * @param array $user An array containing the raw Auth0 user data.
      */
-    public function fromSession(
-        array $user
-    ): ?\Illuminate\Contracts\Auth\Authenticatable;
+    public function fromSession(array $user): ?\Illuminate\Contracts\Auth\Authenticatable;
 
     /**
      * Generate a \Auth0\Laravel\Model\Stateful\User instance from a parsed Access Token.
      *
      * @param array $user An array containing the raw Auth0 user data.
      */
-    public function fromAccessToken(
-        array $user
-    ): ?\Illuminate\Contracts\Auth\Authenticatable;
+    public function fromAccessToken(array $user): ?\Illuminate\Contracts\Auth\Authenticatable;
 }

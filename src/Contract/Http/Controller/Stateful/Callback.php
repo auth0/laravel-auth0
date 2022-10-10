@@ -11,7 +11,5 @@ interface Callback
      *
      * @param \Illuminate\Http\Request $request The incoming request instance.
      */
-    public function __invoke(
-        \Illuminate\Http\Request $request
-    ): \Illuminate\Http\RedirectResponse;
+    public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse;
 }

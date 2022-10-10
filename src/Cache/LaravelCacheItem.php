@@ -12,15 +12,15 @@ use Psr\Cache\CacheItemInterface;
 final class LaravelCacheItem implements CacheItemInterface
 {
     private ?int $expires = null;
+
     private string $key;
+
     private mixed $value;
+
     private bool $is_hit;
 
-    public function __construct(
-        string $key,
-        mixed $value,
-        bool $is_hit
-    ) {
+    public function __construct(string $key, mixed $value, bool $is_hit)
+    {
         $this->key = $key;
         $this->value = $value;
         $this->is_hit = $is_hit;

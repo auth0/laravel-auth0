@@ -30,10 +30,10 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * @inheritdoc
      */
-    public function login(
-        \Illuminate\Contracts\Auth\Authenticatable $user
-    ): self {
-        $this->getState()->setUser($user);
+    public function login(\Illuminate\Contracts\Auth\Authenticatable $user): self
+    {
+        $this->getState()
+            ->setUser($user);
         return $this;
     }
 
@@ -42,7 +42,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function logout(): self
     {
-        $this->getState()->setUser(null);
+        $this->getState()
+            ->setUser(null);
         app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
         return $this;
     }
@@ -68,7 +69,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
-        return $this->getState()->getUser() ?? $this->getUserFromToken() ?? $this->getUserFromSession() ?? null;
+        return $this->getState()
+            ->getUser() ?? $this->getUserFromToken() ?? $this->getUserFromSession() ?? null;
     }
 
     /**
@@ -79,7 +81,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $response = null;
 
         if ($this->user() !== null) {
-            $id = $this->user()->getAuthIdentifier();
+            $id = $this->user()
+                ->getAuthIdentifier();
 
             if (is_string($id) || is_int($id)) {
                 $response = $id;
@@ -94,19 +97,18 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function validate(
-        array $credentials = []
-    ): bool {
+    public function validate(array $credentials = []): bool
+    {
         return false;
     }
 
     /**
      *  @inheritdoc
      */
-    public function setUser(
-        \Illuminate\Contracts\Auth\Authenticatable $user
-    ): self {
-        $user = $this->getState()->setUser($user);
+    public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self
+    {
+        $user = $this->getState()
+            ->setUser($user);
         return $this;
     }
 
@@ -115,15 +117,14 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function hasUser(): bool
     {
-        return ! is_null($this->getState()->getUser());
+        return $this->getState()->getUser() !== null;
     }
 
     /**
      * @inheritdoc
      */
-    public function hasScope(
-        string $scope
-    ): bool {
+    public function hasScope(string $scope): bool
+    {
         $state = $this->getState();
         return in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
@@ -151,14 +152,25 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         try {
             // Attempt to decode the bearer token.
-            $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN)->toArray();
+            $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode(
+                $token,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                \Auth0\SDK\Token::TYPE_TOKEN
+            )->toArray();
         } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
             // Invalid bearer token.
             return null;
         }
 
         // Query the UserProvider to retrieve tue user for the token.
-        $user = $this->getProvider()->getRepository()->fromAccessToken($decoded);
+        $user = $this->getProvider()
+            ->getRepository()
+            ->fromAccessToken($decoded);
 
         // Was a user retrieved successfully?
         if ($user !== null) {
@@ -195,7 +207,9 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         }
 
         // Query the UserProvider to retrieve tue user for the session.
-        $user = $this->getProvider()->getRepository()->fromSession($session->user);
+        $user = $this->getProvider()
+            ->getRepository()
+            ->fromSession($session->user);
 
         // Was a user retrieved successfully?
         if ($user !== null) {

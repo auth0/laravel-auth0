@@ -12,10 +12,8 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
     /**
      * @inheritdoc
      */
-    public static function stringToArrayOrNull(
-        ?string $config,
-        string $delimiter = ' '
-    ): ?array {
+    public static function stringToArrayOrNull(?string $config, string $delimiter = ' '): ?array
+    {
         if (is_string($config) && strlen($config) >= 1 && strlen($delimiter) >= 1) {
             $response = explode($delimiter, $config);
 
@@ -31,10 +29,8 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
     /**
      * @inheritdoc
      */
-    public static function stringToBoolOrNull(
-        ?string $config,
-        ?bool $default = null
-    ): ?bool {
+    public static function stringToBoolOrNull(?string $config, ?bool $default = null): ?bool
+    {
         if (is_string($config) && strlen($config) >= 1) {
             $config = strtolower(trim($config));
 

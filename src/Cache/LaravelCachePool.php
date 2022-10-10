@@ -22,12 +22,14 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     public function __construct()
     {
-        $this->manager = app()->make(\Illuminate\Cache\CacheManager::class);
+        $this->manager = app()
+            ->make(\Illuminate\Cache\CacheManager::class);
     }
 
     public function getItem(string $key): CacheItemInterface
     {
-        $value = $this->getStore()->get($key);
+        $value = $this->getStore()
+            ->get($key);
 
         if ($value === false) {
             return LaravelCacheItem::miss($key);
@@ -47,7 +49,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
             return [];
         }
 
-        $results = $this->getStore()->many($keys);
+        $results = $this->getStore()
+            ->many($keys);
         $items = [];
 
         foreach ($results as $key => $value) {
@@ -60,8 +63,6 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     /**
      * @param string $key The key for which to return the corresponding Cache Item.
-     *
-     * @return bool
      */
     public function hasItem(mixed $key): bool
     {
@@ -72,17 +73,17 @@ final class LaravelCachePool implements CacheItemPoolInterface
     public function clear(): bool
     {
         $this->deferred = [];
-        return $this->getStore()->flush();
+        return $this->getStore()
+            ->flush();
     }
 
     /**
      * @param string $key The key for which to return the corresponding Cache Item.
-     *
-     * @return bool
      */
     public function deleteItem(mixed $key): bool
     {
-        return $this->getStore()->forget($key);
+        return $this->getStore()
+            ->forget($key);
     }
 
     public function deleteItems(array $keys): bool
@@ -117,7 +118,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
             $ttl = $expires - time();
         }
 
-        return $this->getStore()->put($key, $value, $ttl);
+        return $this->getStore()
+            ->put($key, $value, $ttl);
     }
 
     public function saveDeferred(CacheItemInterface $item): bool

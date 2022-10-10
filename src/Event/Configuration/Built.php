@@ -16,18 +16,16 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     /**
      * @inheritdoc
      */
-    public function __construct(
-        SdkConfiguration $configuration
-    ) {
+    public function __construct(SdkConfiguration $configuration)
+    {
         $this->configuration = $configuration;
     }
 
     /**
      * @inheritdoc
      */
-    public function setConfiguration(
-        SdkConfiguration $configuration
-    ): self {
+    public function setConfiguration(SdkConfiguration $configuration): self
+    {
         $this->configuration = $configuration;
         return $this;
     }

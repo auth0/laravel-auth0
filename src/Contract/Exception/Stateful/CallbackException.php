@@ -12,8 +12,5 @@ interface CallbackException
      * @param string $error            The error message to return.
      * @param string $errorDescription The error description to return.
      */
-    public static function apiException(
-        string $error,
-        string $errorDescription
-    ): self;
+    public static function apiException(string $error, string $errorDescription): self;
 }

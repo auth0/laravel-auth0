@@ -13,9 +13,7 @@ interface Built
      *
      * @param SdkConfiguration $configuration An instance of Auth0\SDK\Configuration\SdkConfiguration for use with the Auth0-PHP SDK.
      */
-    public function __construct(
-        SdkConfiguration $configuration
-    );
+    public function __construct(SdkConfiguration $configuration);
 
     /**
      * Returns the exception to be thrown.
@@ -27,7 +25,5 @@ interface Built
      *
      * @param SdkConfiguration $configuration An instance of Auth0\SDK\Configuration\SdkConfiguration for use with the Auth0-PHP SDK.
      */
-    public function setConfiguration(
-        SdkConfiguration $configuration
-    ): self;
+    public function setConfiguration(SdkConfiguration $configuration): self;
 }

@@ -36,10 +36,8 @@ final class LaravelSession implements StoreInterface
      * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      * @param string           $sessionPrefix A string to prefix session keys with.
      */
-    public function __construct(
-        SdkConfiguration $configuration,
-        string $sessionPrefix = 'auth0'
-    ) {
+    public function __construct(SdkConfiguration $configuration, string $sessionPrefix = 'auth0')
+    {
         $this->configuration = $configuration;
         $this->sessionPrefix = $sessionPrefix;
     }
@@ -49,9 +47,8 @@ final class LaravelSession implements StoreInterface
      *
      * @param bool $deferring Whether to defer persisting the storage state.
      */
-    public function defer(
-        bool $deferring
-    ): void {
+    public function defer(bool $deferring): void
+    {
         return;
     }
 
@@ -61,12 +58,11 @@ final class LaravelSession implements StoreInterface
      * @param string $key   Session key to set.
      * @param mixed  $value Value to use.
      */
-    public function set(
-        string $key,
-        $value
-    ): void {
+    public function set(string $key, $value): void
+    {
         $this->boot();
-        $this->getStore()->put($this->getPrefixedKey($key), $value);
+        $this->getStore()
+            ->put($this->getPrefixedKey($key), $value);
     }
 
     /**
@@ -77,12 +73,11 @@ final class LaravelSession implements StoreInterface
      *
      * @return mixed
      */
-    public function get(
-        string $key,
-        $default = null
-    ) {
+    public function get(string $key, $default = null)
+    {
         $this->boot();
-        return $this->getStore()->get($this->getPrefixedKey($key), $default);
+        return $this->getStore()
+            ->get($this->getPrefixedKey($key), $default);
     }
 
     /**
@@ -95,7 +90,8 @@ final class LaravelSession implements StoreInterface
         // It would be unwise for us to simply flush() a session here, as it is shared with the app ecosystem.
         // Instead, iterate through the session data, and if they key is prefixed with our assigned string, delete it.
 
-        $pairs = $this->getStore()->all();
+        $pairs = $this->getStore()
+            ->all();
         $prefix = $this->sessionPrefix . '_';
 
         foreach (array_keys($pairs) as $key) {
@@ -110,11 +106,11 @@ final class LaravelSession implements StoreInterface
      *
      * @param string $key Session key to delete.
      */
-    public function delete(
-        string $key
-    ): void {
+    public function delete(string $key): void
+    {
         $this->boot();
-        $this->getStore()->forget($this->getPrefixedKey($key));
+        $this->getStore()
+            ->forget($this->getPrefixedKey($key));
     }
 
     /**
@@ -123,8 +119,9 @@ final class LaravelSession implements StoreInterface
     private function boot(): void
     {
         if (! $this->booted) {
-            if (!$this->getStore()->isStarted()) {
-                $this->getStore()->start();
+            if (! $this->getStore()->isStarted()) {
+                $this->getStore()
+                    ->start();
             }
 
             $this->booted = true;
@@ -141,7 +138,7 @@ final class LaravelSession implements StoreInterface
             return $request->session();
         }
 
-        throw new Exception("A cache must be configured.");
+        throw new Exception('A cache must be configured.');
     }
 
     private function getPrefixedKey(string $key): string

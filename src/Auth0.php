@@ -43,9 +43,8 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function setSdk(
-        \Auth0\SDK\Contract\Auth0Interface $sdk
-    ): self {
+    public function setSdk(\Auth0\SDK\Contract\Auth0Interface $sdk): self
+    {
         $this->sdk = $sdk;
         $this->setSdkTelemetry();
         return $this;
@@ -57,7 +56,9 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
     {
         if ($this->configuration === null) {
-            $config = app()->make('config')->get('auth0');
+            $config = app()
+                ->make('config')
+                ->get('auth0');
 
             if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
                 $cache = new LaravelCachePool();
@@ -75,12 +76,16 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
 
             // If no sessionStorage is defined, use an LaravelSession store instance.
             if (! isset($config['sessionStorage'])) {
-                $configuration->setSessionStorage(new LaravelSession($configuration, $configuration->getSessionStorageId()));
+                $configuration->setSessionStorage(
+                    new LaravelSession($configuration, $configuration->getSessionStorageId())
+                );
             }
 
             // If no transientStorage is defined, use an LaravelSession store instance.
             if (! isset($config['transientStorage'])) {
-                $configuration->setTransientStorage(new LaravelSession($configuration, $configuration->getSessionStorageId()));
+                $configuration->setTransientStorage(
+                    new LaravelSession($configuration, $configuration->getSessionStorageId())
+                );
             }
 
             // Give apps an opportunity to mutate the configuration before applying it.
@@ -96,9 +101,8 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * @inheritdoc
      */
-    public function setConfiguration(
-        \Auth0\SDK\Configuration\SdkConfiguration $configuration
-    ): self {
+    public function setConfiguration(\Auth0\SDK\Configuration\SdkConfiguration $configuration): self
+    {
         $this->configuration = $configuration;
         return $this;
     }

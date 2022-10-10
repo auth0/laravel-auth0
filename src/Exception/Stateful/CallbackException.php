@@ -14,10 +14,8 @@ final class CallbackException extends \Exception implements \Auth0\SDK\Exception
     /**
      * @inheritdoc
      */
-    public static function apiException(
-        string $error,
-        string $errorDescription
-    ): self {
+    public static function apiException(string $error, string $errorDescription): self
+    {
         return new self(sprintf(self::MSG_API_RESPONSE, $error, $errorDescription));
     }
 }
