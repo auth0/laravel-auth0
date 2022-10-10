@@ -132,7 +132,6 @@ enabled:
   - phpdoc_property
   - phpdoc_return_self_reference
   - phpdoc_scalar
-  - phpdoc_separation
   - phpdoc_single_line_var_spacing
   - phpdoc_singular_inheritdoc
   - phpdoc_summary
