@@ -121,7 +121,6 @@ enabled:
   - not_operator_with_successor_space
   - object_operator_without_whitespace
   - php_unit_fqcn_annotation
-  - phpdoc_align
   - phpdoc_annotation_without_dot
   - phpdoc_indent
   - phpdoc_inline_inheritdoc
