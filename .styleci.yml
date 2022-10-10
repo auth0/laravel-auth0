@@ -57,7 +57,6 @@ enabled:
   - lowercase_static_reference
   - magic_constant_casing
   - magic_method_casing
-  - method_argument_space
   - method_argument_space_strict
   - method_separation
   - method_visibility_required
