@@ -141,7 +141,6 @@ enabled:
   - phpdoc_types
   - phpdoc_types_null_last
   - phpdoc_var_without_name
-  - post_increment
   - pow_to_exponentiation
   - pre_increment
   - print_to_echo
