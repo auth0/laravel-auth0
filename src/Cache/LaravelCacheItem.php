@@ -12,12 +12,18 @@ use Psr\Cache\CacheItemInterface;
 final class LaravelCacheItem implements CacheItemInterface
 {
     private ?int $expires = null;
+    private string $key;
+    private mixed $value;
+    private bool $is_hit;
 
     public function __construct(
-        private string $key,
-        private mixed $value,
-        private bool $is_hit
+        string $key,
+        mixed $value,
+        bool $is_hit
     ) {
+        $this->key = $key;
+        $this->value = $value;
+        $this->is_hit = $is_hit;
     }
 
     public function getKey(): string
@@ -42,7 +48,7 @@ final class LaravelCacheItem implements CacheItemInterface
         return $this;
     }
 
-    public function expiresAt(?DateTimeInterface $expiration): static
+    public function expiresAt(mixed $expiration): static
     {
         if ($expiration instanceof DateTimeInterface) {
             $this->expires = $expiration->getTimestamp();
@@ -56,7 +62,7 @@ final class LaravelCacheItem implements CacheItemInterface
     /**
      * @param DateInterval|int|null $time
      */
-    public function expiresAfter(DateInterval|int|null $time): static
+    public function expiresAfter(mixed $time): static
     {
         if ($time === null) {
             $this->expires = null;

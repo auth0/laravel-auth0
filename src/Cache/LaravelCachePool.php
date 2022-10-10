@@ -25,7 +25,14 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $this->manager = app()->make(\Illuminate\Cache\CacheManager::class);
     }
 
-    public function getItem(string $key): CacheItemInterface
+    /**
+     * Returns a Cache Item representing the specified key.
+     *
+     * @param string $key The key for which to return the corresponding Cache Item.
+     *
+     * @return CacheItemInterface
+     */
+    public function getItem($key)
     {
         $value = $this->getStore()->get($key);
 
@@ -58,7 +65,12 @@ final class LaravelCachePool implements CacheItemPoolInterface
         return $items;
     }
 
-    public function hasItem(string $key): bool
+    /**
+     * @param string $key The key for which to return the corresponding Cache Item.
+     *
+     * @return bool
+     */
+    public function hasItem($key): bool
     {
         return $this->getItem($key)
             ->isHit();
@@ -70,7 +82,12 @@ final class LaravelCachePool implements CacheItemPoolInterface
         return $this->getStore()->flush();
     }
 
-    public function deleteItem(string $key): bool
+    /**
+     * @param string $key The key for which to return the corresponding Cache Item.
+     *
+     * @return bool
+     */
+    public function deleteItem($key): bool
     {
         return $this->getStore()->forget($key);
     }
