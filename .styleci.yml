@@ -185,7 +185,6 @@ enabled:
   - phpdoc_trim_consecutive_blank_line_separation
   - phpdoc_type_to_var
   - phpdoc_types
-  - phpdoc_types_null_last
   - phpdoc_types_order
   - phpdoc_var_order
   - phpdoc_var_without_name
