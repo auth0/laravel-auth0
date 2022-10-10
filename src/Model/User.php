@@ -12,7 +12,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     private array $attributes = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(array $attributes = [])
     {
@@ -20,7 +20,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __get(string $key)
     {
@@ -28,7 +28,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __set(string $key, $value): void
     {
@@ -36,7 +36,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function fill(array $attributes): self
     {
@@ -48,7 +48,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAttribute(string $key, $value): self
     {
@@ -58,7 +58,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAttribute(string $key, $default = null)
     {
@@ -66,7 +66,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAuthIdentifier()
     {
@@ -74,7 +74,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAuthIdentifierName()
     {
@@ -82,7 +82,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAuthPassword(): string
     {
@@ -90,7 +90,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRememberToken(): string
     {
@@ -98,7 +98,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -107,7 +107,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRememberTokenName(): string
     {

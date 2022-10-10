@@ -9,7 +9,7 @@ interface User
     /**
      * \Auth0\Laravel\Model\User constructor.
      *
-     * @param  array  $attributes  Attributes representing the user data.
+     * @param  array  $attributes  attributes representing the user data
      */
     public function __construct(array $attributes = []);
 

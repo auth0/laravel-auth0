@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Login
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */

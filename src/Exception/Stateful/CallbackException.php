@@ -12,7 +12,7 @@ final class CallbackException extends \Exception implements \Auth0\SDK\Exception
     public const MSG_API_RESPONSE = '%s: %s';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function apiException(string $error, string $errorDescription): self
     {

@@ -17,7 +17,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     private \Illuminate\Http\Request $request;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(
         \Illuminate\Contracts\Auth\UserProvider $provider,
@@ -28,7 +28,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function login(\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
@@ -39,7 +39,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function logout(): self
     {
@@ -51,15 +51,15 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function check(): bool
     {
-        return $this->user() !== null;
+        return null !== $this->user();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function guest(): bool
     {
@@ -67,7 +67,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
@@ -76,17 +76,17 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function id()
     {
         $response = null;
 
-        if ($this->user() !== null) {
+        if (null !== $this->user()) {
             $id = $this->user()
                 ->getAuthIdentifier();
 
-            if (is_string($id) || is_int($id)) {
+            if (\is_string($id) || \is_int($id)) {
                 $response = $id;
             }
         }
@@ -95,7 +95,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
@@ -105,7 +105,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     *  @inheritdoc
+     *  {@inheritdoc}
      */
     public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
@@ -116,21 +116,21 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hasUser(): bool
     {
-        return $this->getState()->getUser() !== null;
+        return null !== $this->getState()->getUser();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hasScope(string $scope): bool
     {
         $state = $this->getState();
 
-        return in_array($scope, $state->getAccessTokenScope() ?? [], true);
+        return \in_array($scope, $state->getAccessTokenScope() ?? [], true);
     }
 
     /**
@@ -150,7 +150,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $token = $this->request->bearerToken();
 
         // If a session is not available, return null.
-        if ($token === null) {
+        if (null === $token) {
             return null;
         }
 
@@ -177,7 +177,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             ->fromAccessToken($decoded);
 
         // Was a user retrieved successfully?
-        if ($user !== null) {
+        if (null !== $user) {
             if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
@@ -206,7 +206,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $session = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
         // If a session is not available, return null.
-        if ($session === null) {
+        if (null === $session) {
             return null;
         }
 
@@ -216,7 +216,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             ->fromSession($session->user);
 
         // Was a user retrieved successfully?
-        if ($user !== null) {
+        if (null !== $user) {
             if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
@@ -249,12 +249,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $state = $this->getState();
 
         // Unless our token expired, we have nothing to do here.
-        if ($state->getAccessTokenExpired() !== true) {
+        if (true !== $state->getAccessTokenExpired()) {
             return $user;
         }
 
         // Do we have a refresh token?
-        if ($state->getRefreshToken() !== null) {
+        if (null !== $state->getRefreshToken()) {
             try {
                 // Try to renew our token.
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->renew();
@@ -266,7 +266,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             // Retrieve updated state data
             $refreshed = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
-            if ($refreshed !== null && $refreshed->accessTokenExpired === false) {
+            if (null !== $refreshed && false === $refreshed->accessTokenExpired) {
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
 
                 return $user;

@@ -9,12 +9,12 @@ interface Provider
     /**
      * \Auth0\Laravel\Contract\Auth\User\Provider constructor.
      *
-     * @param  \Auth0\Laravel\Auth\User\Repository  $repository  A repository instance.
+     * @param  \Auth0\Laravel\Auth\User\Repository  $repository  a repository instance
      */
     public function __construct(\Auth0\Laravel\Auth\User\Repository $repository);
 
     /**
      * Returns the assigned user provider.
      */
-    public function getRepository(): \Auth0\Laravel\Contract\Auth\User\Repository;
+    public function getRepository(): Repository;
 }

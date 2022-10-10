@@ -21,7 +21,7 @@ return [
     'clientId' => env('AUTH0_CLIENT_ID'),
 
     // Authentication callback URI, as defined in your Auth0 Application settings.
-    'redirectUri' => env('AUTH0_REDIRECT_URI', env('APP_URL').'/callback'),
+    'redirectUri' => env('AUTH0_REDIRECT_URI', env('APP_URL') . '/callback'),
 
     // Client Secret, found in the Auth0 Application settings.
     'clientSecret' => env('AUTH0_CLIENT_SECRET'),

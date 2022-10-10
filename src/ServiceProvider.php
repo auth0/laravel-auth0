@@ -7,7 +7,7 @@ namespace Auth0\Laravel;
 final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServiceProvider implements \Auth0\Laravel\Contract\ServiceProvider
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configurePackage(\Spatie\LaravelPackageTools\Package $package): void
     {
@@ -17,7 +17,7 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function registeringPackage(): void
     {
@@ -37,7 +37,7 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function bootingPackage(): void
     {

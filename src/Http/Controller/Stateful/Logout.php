@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Logout
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
