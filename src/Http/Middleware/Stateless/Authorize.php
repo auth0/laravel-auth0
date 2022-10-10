@@ -26,6 +26,7 @@ final class Authorize implements \Auth0\Laravel\Contract\Http\Middleware\Statele
 
             auth()
                 ->login($user);
+
             return $next($request);
         }
 

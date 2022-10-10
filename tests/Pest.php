@@ -12,7 +12,7 @@ function createServiceConfiguration(
     array $configuration = []
 ): \Auth0\SDK\Configuration\SdkConfiguration {
     $defaults = [
-        'strategy' => 'none'
+        'strategy' => 'none',
     ];
 
     return new \Auth0\SDK\Configuration\SdkConfiguration(array_merge($defaults, $configuration));
@@ -25,7 +25,7 @@ function createService(
         $configuration = createServiceConfiguration();
     }
 
-    return (new \Auth0\Laravel\Auth0)->setConfiguration($configuration);
+    return (new \Auth0\Laravel\Auth0())->setConfiguration($configuration);
 }
 
 function createSdk(
@@ -35,5 +35,5 @@ function createSdk(
         $configuration = createServiceConfiguration();
     }
 
-    return (new \Auth0\SDK\Auth0($configuration));
+    return new \Auth0\SDK\Auth0($configuration);
 }

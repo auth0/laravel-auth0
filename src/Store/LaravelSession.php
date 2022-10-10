@@ -49,7 +49,7 @@ final class LaravelSession implements StoreInterface
      */
     public function defer(bool $deferring): void
     {
-        return;
+
     }
 
     /**
@@ -76,6 +76,7 @@ final class LaravelSession implements StoreInterface
     public function get(string $key, $default = null)
     {
         $this->boot();
+
         return $this->getStore()
             ->get($this->getPrefixedKey($key), $default);
     }
@@ -92,7 +93,7 @@ final class LaravelSession implements StoreInterface
 
         $pairs = $this->getStore()
             ->all();
-        $prefix = $this->sessionPrefix . '_';
+        $prefix = $this->sessionPrefix.'_';
 
         foreach (array_keys($pairs) as $key) {
             if (substr($key, 0, strlen($prefix)) === $prefix) {
@@ -118,8 +119,8 @@ final class LaravelSession implements StoreInterface
      */
     private function boot(): void
     {
-        if (! $this->booted) {
-            if (! $this->getStore()->isStarted()) {
+        if (!$this->booted) {
+            if (!$this->getStore()->isStarted()) {
                 $this->getStore()
                     ->start();
             }
@@ -127,7 +128,6 @@ final class LaravelSession implements StoreInterface
             $this->booted = true;
         }
 
-        return;
     }
 
     private function getStore(): \Illuminate\Session\Store
@@ -144,7 +144,7 @@ final class LaravelSession implements StoreInterface
     private function getPrefixedKey(string $key): string
     {
         if ($this->sessionPrefix !== '') {
-            return $this->sessionPrefix . '_' . $key;
+            return $this->sessionPrefix.'_'.$key;
         }
 
         return $key;

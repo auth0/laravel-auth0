@@ -53,6 +53,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     public function setAttribute(string $key, $value): self
     {
         $this->attributes[$key] = $value;
+
         return $this;
     }
 

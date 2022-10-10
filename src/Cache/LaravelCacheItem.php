@@ -45,6 +45,7 @@ final class LaravelCacheItem implements CacheItemInterface
     {
         $this->value = $value;
         $this->is_hit = true;
+
         return $this;
     }
 
@@ -52,10 +53,12 @@ final class LaravelCacheItem implements CacheItemInterface
     {
         if ($expiration instanceof DateTimeInterface) {
             $this->expires = $expiration->getTimestamp();
+
             return $this;
         }
 
         $this->expires = $expiration;
+
         return $this;
     }
 
@@ -66,6 +69,7 @@ final class LaravelCacheItem implements CacheItemInterface
     {
         if ($time === null) {
             $this->expires = null;
+
             return $this;
         }
 
@@ -73,10 +77,12 @@ final class LaravelCacheItem implements CacheItemInterface
             $dateTime = new DateTime();
             $dateTime->add($time);
             $this->expires = $dateTime->getTimestamp();
+
             return $this;
         }
 
         $this->expires = time() + $time;
+
         return $this;
     }
 

@@ -53,6 +53,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
         $this->accessTokenScope = null;
         $this->accessTokenExpiration = null;
         $this->refreshToken = null;
+
         return $this;
     }
 
@@ -70,6 +71,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setDecoded(?array $data): self
     {
         $this->decoded = $data;
+
         return $this;
     }
 
@@ -104,6 +107,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setIdToken(?string $idToken): self
     {
         $this->idToken = $idToken;
+
         return $this;
     }
 
@@ -121,6 +125,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setAccessToken(?string $accessToken): self
     {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 
@@ -138,6 +143,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
         $this->accessTokenScope = $accessTokenScope;
+
         return $this;
     }
 
@@ -155,6 +161,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setAccessTokenExpiration(?int $accessTokenExpiration): self
     {
         $this->accessTokenExpiration = $accessTokenExpiration;
+
         return $this;
     }
 
@@ -186,6 +193,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
+
         return $this;
     }
 }

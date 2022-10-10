@@ -26,6 +26,7 @@ final class AuthenticationSucceeded extends \Auth0\Laravel\Event\Auth0Event impl
     {
         $this->user = $user;
         $this->mutated = true;
+
         return $this;
     }
 
