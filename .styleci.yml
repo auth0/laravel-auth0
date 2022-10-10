@@ -2,14 +2,13 @@ risky: true
 version: 8.0
 preset: none
 enabled:
-  - no_alias_functions
-  - no_unreachable_default_argument_value
-  - psr4
-  - self_accessor
   - align_double_arrow
   - align_phpdoc
   - alpha_ordered_imports
+  - alpha_ordered_traits
   - array_indentation
+  - array_push
+  - backtick_to_shell_exec
   - binary_operator_spaces
   - blank_line_after_namespace
   - blank_line_after_opening_tag
@@ -20,106 +19,172 @@ enabled:
   - class_definition
   - class_reference_name_casing
   - clean_namespace
+  - combine_nested_dirname
   - compact_nullable_typehint
+  - concat_with_spaces
   - concat_without_spaces
+  - const_visibility_required
   - declare_equal_normalize
+  - deprecation_error_suppression
   - die_to_exit
+  - dir_constant
   - elseif
+  - empty_loop_body_braces
+  - empty_loop_condition
   - encoding
+  - ereg_to_preg
+  - fopen_flag_order
+  - fopen_flags
   - full_opening_tag
+  - fully_qualified_strict_types
   - function_declaration
+  - function_to_constant
   - function_typehint_space
   - hash_to_slash_comment
   - heredoc_to_nowdoc
+  - implode_call
   - include
   - indentation
   - integer_literal_case
+  - is_null
+  - laravel_braces
+  - laravel_phpdoc_alignment
+  - laravel_phpdoc_order
+  - laravel_phpdoc_separation
+  - linebreak_after_opening_tag
+  - logical_operators
   - lowercase_cast
   - lowercase_constants
   - lowercase_keywords
   - lowercase_static_reference
   - magic_constant_casing
   - magic_method_casing
+  - method_argument_space
   - method_argument_space_strict
   - method_separation
   - method_visibility_required
+  - modernize_types_casting
+  - native_constant_invocation_strict
   - native_function_casing
+  - native_function_invocation_symfony
   - native_function_type_declaration_casing
   - new_with_braces
+  - no_alias_functions
   - no_alternative_syntax
   - no_binary_string
   - no_blank_lines_after_class_opening
   - no_blank_lines_after_phpdoc
   - no_blank_lines_after_throw
+  - no_blank_lines_around_cases
+  - no_blank_lines_around_continue
+  - no_blank_lines_around_switch
   - no_blank_lines_between_imports
+  - no_break_comment
   - no_closing_tag
+  - no_empty_comment
   - no_empty_phpdoc
   - no_empty_statement
+  - no_extra_block_blank_lines
   - no_extra_consecutive_blank_lines
+  - no_homoglyph_names
   - no_leading_import_slash
   - no_leading_namespace_whitespace
   - no_multiline_whitespace_around_double_arrow
   - no_multiline_whitespace_before_semicolons
   - no_short_bool_cast
+  - no_short_echo_tag
   - no_singleline_whitespace_before_semicolons
   - no_space_around_double_colon
   - no_spaces_after_function_name
   - no_spaces_inside_offset
   - no_spaces_inside_parenthesis
   - no_spaces_outside_offset
+  - no_superfluous_phpdoc_tags_symfony
   - no_trailing_comma_in_list_call
   - no_trailing_comma_in_singleline_array
   - no_trailing_comma_in_singleline_function_call
   - no_trailing_whitespace
   - no_trailing_whitespace_in_comment
+  - no_trailing_whitespace_in_string
   - no_unneeded_control_parentheses
   - no_unneeded_curly_braces
+  - no_unneeded_final_method
   - no_unneeded_import_alias
+  - no_unreachable_default_argument_value
   - no_unset_cast
   - no_unused_imports
   - no_unused_lambda_imports
   - no_useless_return
+  - no_useless_sprintf
   - no_whitespace_before_comma_in_array
   - no_whitespace_in_blank_line
+  - non_printable_character
   - normalize_index_brace
+  - not_operator_with_successor_space
   - object_operator_without_whitespace
+  - php_unit_fqcn_annotation
   - phpdoc_align
+  - phpdoc_annotation_without_dot
   - phpdoc_indent
+  - phpdoc_inline_inheritdoc
   - phpdoc_inline_tag_normalizer
+  - phpdoc_link_to_see
   - phpdoc_no_access
   - phpdoc_no_package
   - phpdoc_no_useless_inheritdoc
   - phpdoc_order
+  - phpdoc_property
   - phpdoc_return_self_reference
   - phpdoc_scalar
   - phpdoc_separation
   - phpdoc_single_line_var_spacing
   - phpdoc_singular_inheritdoc
   - phpdoc_summary
+  - phpdoc_to_comment
   - phpdoc_trim
+  - phpdoc_trim_consecutive_blank_line_separation
   - phpdoc_type_to_var
   - phpdoc_types
+  - phpdoc_types_null_last
   - phpdoc_var_without_name
   - post_increment
+  - pow_to_exponentiation
+  - pre_increment
   - print_to_echo
   - property_visibility_required
+  - protected_to_private
+  - psr12_braces
+  - psr12_class_definition
+  - psr4
   - return_type_declaration
+  - self_accessor
+  - semicolon_after_instruction
+  - set_type_to_cast
   - short_array_syntax
+  - short_list_syntax
   - short_scalar_cast
   - single_blank_line_at_eof
   - single_blank_line_before_namespace
   - single_class_element_per_statement
   - single_import_per_statement
   - single_line_after_imports
+  - single_line_comment_spacing
+  - single_line_throw
   - single_quote
+  - single_space_after_construct
   - single_trait_insert_per_statement
   - space_after_semicolon
+  - standardize_increment
   - standardize_not_equals
+  - string_length_to_empty
+  - string_line_ending
   - switch_case_semicolon_to_colon
   - switch_case_space
   - switch_continue_to_break
   - symfony_braces
+  - symfony_class_definition
   - ternary_operator_spaces
+  - ternary_to_elvis_operator
   - trailing_comma_in_multiline_array
   - trim_array_spaces
   - unalign_equals
@@ -127,73 +192,7 @@ enabled:
   - union_type_without_spaces
   - unix_line_endings
   - whitespace_after_comma_in_array
-  - laravel_braces
-  - laravel_phpdoc_alignment
-  - laravel_phpdoc_order
-  - laravel_phpdoc_separation
-  - method_argument_space
-  - not_operator_with_successor_space
-  - short_list_syntax
-  - alpha_ordered_traits
-  - array_push
-  - combine_nested_dirname
-  - deprecation_error_suppression
-  - dir_constant
-  - ereg_to_preg
-  - fopen_flag_order
-  - fopen_flags
-  - function_to_constant
-  - implode_call
-  - is_null
-  - logical_operators
-  - modernize_types_casting
-  - native_constant_invocation_strict
-  - native_function_invocation_symfony
-  - no_homoglyph_names
-  - no_trailing_whitespace_in_string
-  - no_unneeded_final_method
-  - no_useless_sprintf
-  - non_printable_character
-  - pow_to_exponentiation
-  - set_type_to_cast
-  - string_length_to_empty
-  - string_line_ending
-  - ternary_to_elvis_operator
-  - backtick_to_shell_exec
-  - empty_loop_body_braces
-  - empty_loop_condition
-  - fully_qualified_strict_types
-  - linebreak_after_opening_tag
-  - no_blank_lines_around_cases
-  - no_blank_lines_around_continue
-  - no_blank_lines_around_switch
-  - no_break_comment
-  - no_empty_comment
-  - no_extra_block_blank_lines
-  - no_short_echo_tag
-  - no_superfluous_phpdoc_tags_symfony
-  - php_unit_fqcn_annotation
-  - phpdoc_annotation_without_dot
-  - phpdoc_inline_inheritdoc
-  - phpdoc_link_to_see
-  - phpdoc_property
-  - phpdoc_to_comment
-  - phpdoc_trim_consecutive_blank_line_separation
-  - phpdoc_types_null_last
-  - pre_increment
-  - protected_to_private
-  - semicolon_after_instruction
-  - single_line_comment_spacing
-  - single_line_throw
-  - single_space_after_construct
-  - standardize_increment
-  - symfony_class_definition
-  - unalign_double_arrow
   - yoda_style
-  - concat_with_spaces
-  - const_visibility_required
-  - psr12_braces
-  - psr12_class_definition
 finder:
   exclude:
     - "modules"
