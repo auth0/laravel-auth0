@@ -194,7 +194,6 @@ enabled:
   - property_separation
   - property_visibility_required
   - protected_to_private
-  - psr12_braces
   - psr4
   - random_api_migration
   - regular_callable_call
@@ -230,7 +229,6 @@ enabled:
   - switch_case_semicolon_to_colon
   - switch_case_space
   - switch_continue_to_break
-  - symfony_braces
   - symfony_class_definition
   - ternary_operator_spaces
   - ternary_to_elvis_operator
