@@ -184,7 +184,6 @@ enabled:
   - union_type_without_spaces
   - unix_line_endings
   - whitespace_after_comma_in_array
-  - yoda_style
 finder:
   exclude:
     - "modules"
