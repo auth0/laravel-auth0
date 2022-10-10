@@ -93,7 +93,6 @@ enabled:
   - magic_constant_casing
   - magic_method_casing
   - mb_str_functions
-  - magic_constant_casing
   - magic_method_casing
   - method_argument_space_strict
   - method_chaining_indentation
