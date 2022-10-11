@@ -11,7 +11,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <InvalidStringClass errorLevel="suppress"/>
         <MixedArgument errorLevel="suppress"/>
         <MixedArgumentTypeCoercion errorLevel="suppress"/>
         <MixedArrayAccess errorLevel="suppress"/>
@@ -19,8 +18,9 @@
         <MixedInferredReturnType errorLevel="suppress"/>
         <MixedPropertyTypeCoercion errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
-        <PossiblyNullArgument errorLevel="suppress"/>
-        <PossiblyNullPropertyAssignmentValue errorLevel="suppress"/>
-        <PossiblyNullReference errorLevel="suppress"/>
     </issueHandlers>
-<plugins><pluginClass class="Psalm\LaravelPlugin\Plugin"/></plugins></psalm>
+
+    <plugins>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+    </plugins>
+</psalm>

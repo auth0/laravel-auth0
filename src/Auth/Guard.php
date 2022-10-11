@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth;
 
+use Auth0\Laravel\Contract\Auth\User\Provider;
+
 final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Contracts\Auth\Guard
 {
     /**
@@ -81,10 +83,10 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     public function id()
     {
         $response = null;
+        $user = $this->user();
 
-        if (null !== $this->user()) {
-            $id = $this->user()->
-                getAuthIdentifier();
+        if (null !== $user) {
+            $id = $user->getAuthIdentifier();
 
             if (\is_string($id) || \is_int($id)) {
                 $response = $id;
@@ -106,6 +108,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
     /**
      *  {@inheritdoc}
+     *
+     * @psalm-suppress UnusedVariable
      */
     public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
@@ -157,14 +161,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         try {
             // Attempt to decode the bearer token.
             $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode(
-                $token,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                \Auth0\SDK\Token::TYPE_TOKEN,
+                token: $token,
+                tokenType: \Auth0\SDK\Token::TYPE_TOKEN
             )->toArray();
         } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
             // Invalid bearer token.
@@ -172,16 +170,18 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         }
 
         // Query the UserProvider to retrieve tue user for the token.
-        $user = $this->getProvider()->
+        $provider = $this->getProvider();
+
+        /**
+         * @var Provider $provider
+         */
+
+        $user = $provider->
             getRepository()->
             fromAccessToken($decoded);
 
         // Was a user retrieved successfully?
         if (null !== $user) {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
-                exit('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
-            }
-
             if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
                 exit('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
             }
@@ -210,17 +210,20 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             return null;
         }
 
+        // Query the UserProvider to retrieve tue user for the token.
+        $provider = $this->getProvider();
+
+        /**
+         * @var Provider $provider
+         */
+
         // Query the UserProvider to retrieve tue user for the session.
-        $user = $this->getProvider()->
+        $user = $provider->
             getRepository()->
             fromSession($session->user);
 
         // Was a user retrieved successfully?
         if (null !== $user) {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
-                exit('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
-            }
-
             if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
                 exit('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
             }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServiceProvider implements \Auth0\Laravel\Contract\ServiceProvider
 {
     /**
@@ -38,6 +41,8 @@ final class ServiceProvider extends \Spatie\LaravelPackageTools\PackageServicePr
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-suppress UndefinedInterfaceMethod
      */
     public function bootingPackage(): void
     {

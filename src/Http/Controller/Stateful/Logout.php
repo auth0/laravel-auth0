@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
+use Auth0\Laravel\Contract\Auth\Guard;
+
 final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Logout
 {
     /**
@@ -11,9 +13,20 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (auth()->guard('auth0')->check()) {
-            auth()->guard('auth0')->
-                logout();
+        $auth = auth();
+
+        /**
+         * @var \Illuminate\Contracts\Auth\Factory $auth
+         */
+
+        $guard = $auth->guard('auth0');
+
+        /**
+         * @var Guard $guard
+         */
+
+        if ($guard->check()) {
+            $guard->logout();
 
             $request->session()->
                 invalidate();

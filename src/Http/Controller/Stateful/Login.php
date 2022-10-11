@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
+use Auth0\Laravel\Contract\Auth\Guard;
+
 final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Login
 {
     /**
@@ -13,7 +15,19 @@ final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Lo
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (auth()->guard('auth0')->check()) {
+        $auth = auth();
+
+        /**
+         * @var \Illuminate\Contracts\Auth\Factory $auth
+         */
+
+        $guard = $auth->guard('auth0');
+
+        /**
+         * @var Guard $guard
+         */
+
+        if ($guard->check()) {
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 

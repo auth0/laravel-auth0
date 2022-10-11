@@ -61,6 +61,10 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 make('config')->
                 get('auth0');
 
+            /**
+             * @var array<mixed> $config
+             */
+
             if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
                 $cache = new LaravelCachePool();
 

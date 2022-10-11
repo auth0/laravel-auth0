@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Auth;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 interface Guard
 {
     /**
@@ -17,7 +19,7 @@ interface Guard
     /**
      * Set the current user.
      */
-    public function login(\Illuminate\Contracts\Auth\Authenticatable $user): self;
+    public function login(Authenticatable $user): self;
 
     /**
      * Clear the current user.
@@ -32,5 +34,23 @@ interface Guard
     /**
      * Get the currently authenticated user.
      */
-    public function user(): ?\Illuminate\Contracts\Auth\Authenticatable;
+    public function user(): ?Authenticatable;
+
+    /**
+     * Set the currently authenticated user.
+     */
+    public function setUser(Authenticatable $user): self;
+
+    /**
+     * Determine if an authenticated user is available.
+     */
+    public function check(): bool;
+
+    /**
+     * Returns true if the given user has the specified scope.
+     *
+     * @param  string  $scope
+     * @return bool
+     */
+    public function hasScope(string $scope): bool;
 }

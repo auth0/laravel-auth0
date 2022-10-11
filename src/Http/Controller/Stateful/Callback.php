@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
+use Auth0\Laravel\Contract\Auth\Guard;
+
 final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Callback
 {
     /**
@@ -11,18 +13,37 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
+        $auth = auth();
+
+        /**
+         * @var \Illuminate\Contracts\Auth\Factory $auth
+         */
+
+        $guard = $auth->guard('auth0');
+
+        /**
+         * @var Guard $guard
+         */
+
         // Check if the user already has a session:
-        if (auth()->guard('auth0')->check()) {
+        if ($guard->check()) {
             // They do; redirect to homepage.
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
+        $code = (is_string($request->query('code')) && '' !== $request->query('code')) ? $request->query('code') : null;
+        $state = (is_string($request->query('state')) && '' !== $request->query('state')) ? $request->query('state') : null;
+
+        /**
+         * @var string|null $code
+         * @var string|null $state
+         */
+
         try {
-            if (null !== $request->query('state') && null !== $request->query('code')) {
+            if (null !== $code && null !== $state) {
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
-                    null,
-                    $request->query('code'),
-                    $request->query('state'),
+                    code: $code,
+                    state: $state
                 );
             }
         } catch (\Throwable $exception) {
@@ -62,9 +83,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         }
 
         // Ensure we have a valid user:
-        $user = auth()->
-            guard('auth0')->
-            user();
+        $user = $guard->user();
 
         if (null !== $user) {
             // Throw hookable event to allow custom application logic for successful logins:
@@ -72,9 +91,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // Apply any mutations to the user object:
-            auth()->
-                guard('auth0')->
-                setUser($event->getUser());
+            $guard->setUser($event->getUser());
         }
 
         return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));

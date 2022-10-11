@@ -132,6 +132,48 @@ jobs:
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
 
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    needs: ["dependencies"]
+
+    strategy:
+      fail-fast: true
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1", "8.2"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
+      - name: Install dependencies
+        run: composer install --prefer-dist
+
+      - name: Execute Psalm
+        run: vendor/bin/psalm --no-progress
+
   pint:
     name: Laravel Pint
     runs-on: ubuntu-latest
