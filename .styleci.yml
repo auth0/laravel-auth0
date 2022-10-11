@@ -51,6 +51,21 @@ enabled:
   - doctrine_annotation_braces
   - doctrine_annotation_indentation
   - doctrine_annotation_spaces
+  - elseif
+  - empty_loop_body_braces
+  - empty_loop_condition
+  - encoding
+  - ereg_to_preg
+  - escape_implicit_backslashes
+  - explicit_indirect_variable
+  - explicit_string_variable
+  - final_internal_class
+  - final_public_method_for_abstract_class
+  - fopen_flag_order
+  - fopen_flags
+  - full_opening_tag
+  - fully_qualified_strict_types
+  - function_declaration
 
 finder:
   exclude:
