@@ -162,7 +162,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             // Attempt to decode the bearer token.
             $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode(
                 token: $token,
-                tokenType: \Auth0\SDK\Token::TYPE_TOKEN
+                tokenType: \Auth0\SDK\Token::TYPE_TOKEN,
             )->toArray();
         } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
             // Invalid bearer token.
@@ -175,7 +175,6 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         /**
          * @var Provider $provider
          */
-
         $user = $provider->
             getRepository()->
             fromAccessToken($decoded);

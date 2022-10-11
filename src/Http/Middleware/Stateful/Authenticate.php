@@ -23,13 +23,11 @@ final class Authenticate implements \Auth0\Laravel\Contract\Http\Middleware\Stat
         /**
          * @var \Illuminate\Contracts\Auth\Factory $auth
          */
-
         $guard = $auth->guard('auth0');
 
         /**
          * @var Guard $guard
          */
-
         $user = $guard->user();
 
         if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {

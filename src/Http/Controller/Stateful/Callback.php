@@ -18,7 +18,6 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         /**
          * @var \Illuminate\Contracts\Auth\Factory $auth
          */
-
         $guard = $auth->guard('auth0');
 
         /**
@@ -31,10 +30,10 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
-        $code = (is_string($request->query('code')) && '' !== $request->query('code')) ? $request->query('code') : null;
-        $state = (is_string($request->query('state')) && '' !== $request->query('state')) ? $request->query('state') : null;
+        $code = (\is_string($request->query('code')) && '' !== $request->query('code')) ? $request->query('code') : null;
+        $state = (\is_string($request->query('state')) && '' !== $request->query('state')) ? $request->query('state') : null;
 
-        /**
+        /*
          * @var string|null $code
          * @var string|null $state
          */
@@ -43,7 +42,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             if (null !== $code && null !== $state) {
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
                     code: $code,
-                    state: $state
+                    state: $state,
                 );
             }
         } catch (\Throwable $exception) {
