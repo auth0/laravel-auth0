@@ -216,11 +216,6 @@ enabled:
   - single_line_comment_spacing
   - single_line_throw
   - single_quote
-  - single_space_after_construct
-  - single_trait_insert_per_statement
-  - space_after_semicolon
-  - standardize_increment
-  - standardize_not_equals
 
 finder:
   exclude:
