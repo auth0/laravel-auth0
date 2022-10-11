@@ -56,7 +56,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      */
     public function validateCredentials(
         \Illuminate\Contracts\Auth\Authenticatable $user,
-        array $credentials
+        array $credentials,
     ): bool {
         return false;
     }

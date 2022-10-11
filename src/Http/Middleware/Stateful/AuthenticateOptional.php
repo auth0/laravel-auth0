@@ -16,13 +16,14 @@ final class AuthenticateOptional implements \Auth0\Laravel\Contract\Http\Middlew
      */
     public function handle(\Illuminate\Http\Request $request, \Closure $next)
     {
-        $user = auth()
-            ->guard('auth0')
-            ->user();
+        $user = auth()->
+            guard('auth0')->
+            user();
 
-        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
-            auth()->guard('auth0')
-                ->login($user);
+        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User)
+        {
+            auth()->guard('auth0')->
+                login($user);
         }
 
         return $next($request);
