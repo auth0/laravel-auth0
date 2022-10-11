@@ -7,8 +7,7 @@ use Rector\Core\ValueObject\PhpVersion;
 use Rector\Php74\Rector\Property\TypedPropertyRector;
 use Rector\Set\ValueObject\SetList;
 
-return static function (RectorConfig $rectorConfig): void
-{
+return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([__DIR__ . '/src', __DIR__ . '/tests']);
 
     $rectorConfig->sets([

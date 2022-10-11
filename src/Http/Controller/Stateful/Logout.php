@@ -11,8 +11,7 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (auth()->guard('auth0')->check())
-        {
+        if (auth()->guard('auth0')->check()) {
             auth()->guard('auth0')->
                 logout();
 

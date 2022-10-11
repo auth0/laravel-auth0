@@ -82,13 +82,11 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     {
         $response = null;
 
-        if (null !== $this->user())
-        {
+        if (null !== $this->user()) {
             $id = $this->user()->
                 getAuthIdentifier();
 
-            if (\is_string($id) || \is_int($id))
-            {
+            if (\is_string($id) || \is_int($id)) {
                 $response = $id;
             }
         }
@@ -152,13 +150,11 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $token = $this->request->bearerToken();
 
         // If a session is not available, return null.
-        if (null === $token)
-        {
+        if (null === $token) {
             return null;
         }
 
-        try
-        {
+        try {
             // Attempt to decode the bearer token.
             $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode(
                 $token,
@@ -170,9 +166,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
                 null,
                 \Auth0\SDK\Token::TYPE_TOKEN,
             )->toArray();
-        }
-        catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken)
-        {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
             // Invalid bearer token.
             return null;
         }
@@ -183,15 +177,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             fromAccessToken($decoded);
 
         // Was a user retrieved successfully?
-        if (null !== $user)
-        {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable)
-            {
+        if (null !== $user) {
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromAccessToken must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User)
-            {
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
                 exit('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
             }
 
@@ -215,8 +206,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $session = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
         // If a session is not available, return null.
-        if (null === $session)
-        {
+        if (null === $session) {
             return null;
         }
 
@@ -226,15 +216,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             fromSession($session->user);
 
         // Was a user retrieved successfully?
-        if (null !== $user)
-        {
-            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable)
-            {
+        if (null !== $user) {
+            if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 exit('User model returned fromSession must implement \Illuminate\Contracts\Auth\Authenticatable.');
             }
 
-            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User)
-            {
+            if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
                 exit('User model returned fromSession must implement \Auth0\Laravel\Contract\Model\Stateful\User.');
             }
 
@@ -262,21 +249,16 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         $state = $this->getState();
 
         // Unless our token expired, we have nothing to do here.
-        if (true !== $state->getAccessTokenExpired())
-        {
+        if (true !== $state->getAccessTokenExpired()) {
             return $user;
         }
 
         // Do we have a refresh token?
-        if (null !== $state->getRefreshToken())
-        {
-            try
-            {
+        if (null !== $state->getRefreshToken()) {
+            try {
                 // Try to renew our token.
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->renew();
-            }
-            catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed)
-            {
+            } catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed) {
                 // Renew failed. Inform application.
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshFailed());
             }
@@ -284,8 +266,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             // Retrieve updated state data
             $refreshed = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
-            if (null !== $refreshed && false === $refreshed->accessTokenExpired)
-            {
+            if (null !== $refreshed && false === $refreshed->accessTokenExpired) {
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
 
                 return $user;

@@ -12,25 +12,20 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
         // Check if the user already has a session:
-        if (auth()->guard('auth0')->check())
-        {
+        if (auth()->guard('auth0')->check()) {
             // They do; redirect to homepage.
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }
 
-        try
-        {
-            if (null !== $request->query('state') && null !== $request->query('code'))
-            {
+        try {
+            if (null !== $request->query('state') && null !== $request->query('code')) {
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
                     null,
                     $request->query('code'),
                     $request->query('state'),
                 );
             }
-        }
-        catch (\Throwable $exception)
-        {
+        } catch (\Throwable $exception) {
             app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
 
             // Throw hookable $event to allow custom error handling scenarios.
@@ -38,14 +33,12 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException())
-            {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }
 
-        if (null !== $request->query('error') && null !== $request->query('error_description'))
-        {
+        if (null !== $request->query('error') && null !== $request->query('error_description')) {
             // Workaround to aid static analysis, due to the mixed formatting of the query() response:
             $error = $request->query('error', '');
             $errorDescription = $request->query('error_description', '');
@@ -63,8 +56,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             event($event);
 
             // If the event was not hooked by the host application, throw an exception:
-            if ($event->getThrowException())
-            {
+            if ($event->getThrowException()) {
                 throw $exception;
             }
         }
@@ -74,8 +66,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             guard('auth0')->
             user();
 
-        if (null !== $user)
-        {
+        if (null !== $user) {
             // Throw hookable event to allow custom application logic for successful logins:
             $event = new \Auth0\Laravel\Event\Stateful\AuthenticationSucceeded($user);
             event($event);

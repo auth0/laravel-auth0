@@ -51,8 +51,7 @@ final class LaravelCacheItem implements CacheItemInterface
 
     public function expiresAt(mixed $expiration): static
     {
-        if ($expiration instanceof DateTimeInterface)
-        {
+        if ($expiration instanceof DateTimeInterface) {
             $this->expires = $expiration->getTimestamp();
 
             return $this;
@@ -68,15 +67,13 @@ final class LaravelCacheItem implements CacheItemInterface
      */
     public function expiresAfter(mixed $time): static
     {
-        if (null === $time)
-        {
+        if (null === $time) {
             $this->expires = null;
 
             return $this;
         }
 
-        if ($time instanceof DateInterval)
-        {
+        if ($time instanceof DateInterval) {
             $dateTime = new DateTime();
             $dateTime->add($time);
             $this->expires = $dateTime->getTimestamp();

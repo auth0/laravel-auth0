@@ -40,8 +40,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
      */
     final public function fill(array $attributes): self
     {
-        foreach ($attributes as $key => $value)
-        {
+        foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
         }
 

@@ -172,8 +172,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     {
         $expires = $this->getAccessTokenExpiration();
 
-        if (null === $expires)
-        {
+        if (null === $expires) {
             return null;
         }
 

@@ -93,10 +93,8 @@ final class LaravelSession implements StoreInterface
             all();
         $prefix = $this->sessionPrefix . '_';
 
-        foreach (array_keys($pairs) as $key)
-        {
-            if (mb_substr($key, 0, \mb_strlen($prefix)) === $prefix)
-            {
+        foreach (array_keys($pairs) as $key) {
+            if (mb_substr($key, 0, \mb_strlen($prefix)) === $prefix) {
                 $this->delete($key);
             }
         }
@@ -119,10 +117,8 @@ final class LaravelSession implements StoreInterface
      */
     private function boot(): void
     {
-        if (! $this->booted)
-        {
-            if (! $this->getStore()->isStarted())
-            {
+        if (! $this->booted) {
+            if (! $this->getStore()->isStarted()) {
                 $this->getStore()->
                     start();
             }
@@ -135,8 +131,7 @@ final class LaravelSession implements StoreInterface
     {
         $request = request();
 
-        if ($request instanceof \Illuminate\Http\Request)
-        {
+        if ($request instanceof \Illuminate\Http\Request) {
             return $request->session();
         }
 
@@ -145,8 +140,7 @@ final class LaravelSession implements StoreInterface
 
     private function getPrefixedKey(string $key): string
     {
-        if ('' !== $this->sessionPrefix)
-        {
+        if ('' !== $this->sessionPrefix) {
             return $this->sessionPrefix . '_' . $key;
         }
 

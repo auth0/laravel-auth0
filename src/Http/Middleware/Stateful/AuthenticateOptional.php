@@ -20,8 +20,7 @@ final class AuthenticateOptional implements \Auth0\Laravel\Contract\Http\Middlew
             guard('auth0')->
             user();
 
-        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User)
-        {
+        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
             auth()->guard('auth0')->
                 login($user);
         }

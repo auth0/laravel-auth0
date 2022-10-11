@@ -30,8 +30,7 @@ trait ActingAsAuth0User
 
         $auth0user = new User(array_merge($defaults, $attributes));
 
-        if ($auth0user->getAttribute('scope'))
-        {
+        if ($auth0user->getAttribute('scope')) {
             app()->make(StateInstance::class)->setAccessTokenScope(explode(' ', $auth0user->getAttribute('scope')));
         }
 

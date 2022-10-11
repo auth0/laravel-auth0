@@ -31,8 +31,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $value = $this->getStore()->
             get($key);
 
-        if (false === $value)
-        {
+        if (false === $value) {
             return LaravelCacheItem::miss($key);
         }
 
@@ -45,8 +44,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
      */
     public function getItems(array $keys = []): iterable
     {
-        if ([] === $keys)
-        {
+        if ([] === $keys) {
             return [];
         }
 
@@ -54,8 +52,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
             many($keys);
         $items = [];
 
-        foreach ($results as $key => $value)
-        {
+        foreach ($results as $key => $value) {
             $key = (string) $key;
             $items[$key] = $this->createItem($key, $value);
         }
@@ -93,10 +90,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
     {
         $deleted = true;
 
-        foreach ($keys as $key)
-        {
-            if (! $this->deleteItem($key))
-            {
+        foreach ($keys as $key) {
+            if (! $this->deleteItem($key)) {
                 $deleted = false;
             }
         }
@@ -106,8 +101,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     public function save(CacheItemInterface $item): bool
     {
-        if (! $item instanceof LaravelCacheItem)
-        {
+        if (! $item instanceof LaravelCacheItem) {
             return false;
         }
 
@@ -116,10 +110,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $expires = $item->expirationTimestamp();
         $ttl = 0;
 
-        if (null !== $expires)
-        {
-            if ($expires <= time())
-            {
+        if (null !== $expires) {
+            if ($expires <= time()) {
                 return $this->deleteItem($key);
             }
 
@@ -132,8 +124,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     public function saveDeferred(CacheItemInterface $item): bool
     {
-        if (! $item instanceof LaravelCacheItem)
-        {
+        if (! $item instanceof LaravelCacheItem) {
             return false;
         }
 
@@ -149,12 +140,10 @@ final class LaravelCachePool implements CacheItemPoolInterface
     {
         $success = true;
 
-        foreach (array_keys($this->deferred) as $singleDeferred)
-        {
+        foreach (array_keys($this->deferred) as $singleDeferred) {
             $item = $this->getDeferred((string) $singleDeferred);
 
-            if (null !== $item && ! $this->save($item))
-            {
+            if (null !== $item && ! $this->save($item)) {
                 $success = false;
             }
         }
@@ -171,15 +160,13 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     private function createItem(string $key, mixed $value): CacheItemInterface
     {
-        if (! \is_string($value))
-        {
+        if (! \is_string($value)) {
             return LaravelCacheItem::miss($key);
         }
 
         $value = unserialize($value);
 
-        if (false === $value || 'b:0;' !== $value)
-        {
+        if (false === $value || 'b:0;' !== $value) {
             return LaravelCacheItem::miss($key);
         }
 
@@ -188,8 +175,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     private function getDeferred(string $key): ?CacheItemInterface
     {
-        if (! isset($this->deferred[$key]))
-        {
+        if (! isset($this->deferred[$key])) {
             return null;
         }
 
@@ -197,8 +183,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $item = clone $deferred['item'];
         $expires = $deferred['expiration'];
 
-        if (null !== $expires && $expires <= time())
-        {
+        if (null !== $expires && $expires <= time()) {
             unset($this->deferred[$key]);
 
             return null;
