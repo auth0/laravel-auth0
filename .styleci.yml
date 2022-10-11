@@ -95,8 +95,8 @@ enabled:
   - modernize_strpos
   - modernize_types_casting
   - multiline_comment_opening_closing
-  - native_constant_invocation_strict
   - native_function_casing
+  - native_function_invocation_symfony
   - native_function_type_declaration_casing
   - new_with_braces
   - no_alias_functions
