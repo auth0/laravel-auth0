@@ -4,8 +4,10 @@
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.1.0...7.2.0)
 
 **Changed**
-- [SDK-3669] Add StoreInterface bridge for Laravel Sessions [\#307](https://github.com/auth0/laravel-auth0/pull/307) ([evansims](https://github.com/evansims))
-- Added viaRemember function to guard [\#306](https://github.com/auth0/laravel-auth0/pull/306) ([tonyfox-disguise](https://github.com/tonyfox-disguise))
+- `Auth0\Laravel\Store\LaravelSession` has been added as the default `sessionStorage` and `transientStorage` interfaces for the underlying [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP/). The SDK now leverages the native Laravel Session APIs by default. [\#307](https://github.com/auth0/laravel-auth0/pull/307) ([evansims](https://github.com/evansims))
+- `Auth0\Laravel\Cache\LaravelCachePool` and `Auth0\Laravel\Cache\ LaravelCacheItem` have been added as the default `tokenCache` and `managementTokenCache` interfaces for the underlying [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP/). The SDK now leverages the native Laravel Cache APIs by default. [\#307](https://github.com/auth0/laravel-auth0/pull/307) ([evansims](https://github.com/evansims))
+- `Auth0\Laravel\Auth\Guard` now supports viaRemember [\#306](https://github.com/auth0/laravel-auth0/pull/306) ([tonyfox-disguise](https://github.com/tonyfox-disguise))
+- `Auth0\Laravel\Http\Middleware\Stateless\Authorize` now returns a 401 status instead of 403 for unauthenticated users. [\#304](https://github.com/auth0/laravel-auth0/issues/304) ([jeovajr](https://github.com/jeovajr))
 
 ## [7.1.0](https://github.com/auth0/laravel-auth0/tree/7.1.0) (2022-08-08)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.1...7.1.0)
