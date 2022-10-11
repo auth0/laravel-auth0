@@ -20,13 +20,11 @@ final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Lo
         /**
          * @var \Illuminate\Contracts\Auth\Factory $auth
          */
-
         $guard = $auth->guard('auth0');
 
         /**
          * @var Guard $guard
          */
-
         if ($guard->check()) {
             return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
         }

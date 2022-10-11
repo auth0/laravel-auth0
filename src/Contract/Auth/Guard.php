@@ -48,9 +48,6 @@ interface Guard
 
     /**
      * Returns true if the given user has the specified scope.
-     *
-     * @param  string  $scope
-     * @return bool
      */
     public function hasScope(string $scope): bool;
 }
