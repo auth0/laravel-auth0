@@ -155,6 +155,20 @@ enabled:
   - no_useless_return
   - no_useless_sprintf
   - no_whitespace_before_comma_in_array
+  - no_whitespace_in_blank_line
+  - non_printable_character
+  - normalize_index_brace
+  - not_operator_with_successor_space
+  - nullable_type_declarations
+  - object_operator_without_whitespace
+  - operator_linebreak_end
+  - ordered_class_elements
+  - php_unit_fqcn_annotation
+  - phpdoc_add_missing_param_annotation
+  - phpdoc_annotation_without_dot
+  - phpdoc_indent
+  - phpdoc_inline_inheritdoc
+  - phpdoc_inline_tag_normalizer
 
 finder:
   exclude:
