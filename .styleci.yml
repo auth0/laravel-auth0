@@ -4,7 +4,6 @@ preset: none
 enabled:
   - align_double_arrow
   - align_phpdoc
-  - allman_braces
   - alpha_ordered_imports
   - alpha_ordered_traits
   - array_indentation
@@ -76,6 +75,7 @@ enabled:
   - indentation
   - integer_literal_case
   - is_null
+  - laravel_braces
   - laravel_phpdoc_alignment
   - laravel_phpdoc_order
   - laravel_phpdoc_separation
