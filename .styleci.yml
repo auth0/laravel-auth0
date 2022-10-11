@@ -209,6 +209,7 @@ enabled:
   - simple_to_complex_string_variable
   - simplified_if_return
   - single_blank_line_at_eof
+  - single_blank_line_before_namespace
 
 finder:
   exclude:
