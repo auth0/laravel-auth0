@@ -93,6 +93,8 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         $user = $guard->user();
 
         if (null !== $user) {
+            $request->session()->regenerate();
+
             // Throw hookable event to allow custom application logic for successful logins:
             $event = new \Auth0\Laravel\Event\Stateful\AuthenticationSucceeded($user);
             event($event);
