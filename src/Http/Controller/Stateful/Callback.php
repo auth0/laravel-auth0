@@ -33,11 +33,11 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         $code = $request->query('code');
         $state = $request->query('state');
 
-        if (! is_string($code) || '' === $code) {
+        if (! \is_string($code) || '' === $code) {
             $code = null;
         }
 
-        if (! is_string($state) || '' === $state) {
+        if (! \is_string($state) || '' === $state) {
             $state = null;
         }
 
