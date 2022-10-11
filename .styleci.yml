@@ -69,7 +69,6 @@ enabled:
   - function_to_constant
   - function_typehint_space
   - get_class_to_class_keyword
-  - group_import
   - hash_to_slash_comment
   - heredoc_indentation
   - heredoc_to_nowdoc
@@ -211,6 +210,7 @@ enabled:
   - single_blank_line_at_eof
   - single_blank_line_before_namespace
   - single_class_element_per_statement
+  - single_import_per_statement
   - single_line_after_imports
   - single_line_comment_spacing
   - single_line_throw
