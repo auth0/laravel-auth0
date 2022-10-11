@@ -223,28 +223,7 @@ enabled:
   - standardize_not_equals
   - static_lambda
   - strict_comparison
-  - strict_param
-  - string_length_to_empty
-  - string_line_ending
-  - switch_case_semicolon_to_colon
-  - switch_case_space
-  - switch_continue_to_break
-  - symfony_class_definition
-  - ternary_operator_spaces
-  - ternary_to_elvis_operator
-  - ternary_to_null_coalescing
-  - trailing_comma_in_multiline_array
-  - trailing_comma_in_multiline_call
-  - trailing_comma_in_multiline_definition
-  - trim_array_spaces
-  - unalign_equals
-  - unary_operator_spaces
-  - union_type_without_spaces
-  - unix_line_endings
-  - use_arrow_functions
-  - void_return
-  - whitespace_after_comma_in_array
-  - yoda_style
+
 finder:
   exclude:
     - "modules"
