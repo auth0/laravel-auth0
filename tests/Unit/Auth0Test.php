@@ -7,7 +7,7 @@ test('the service is created successfully', function (): void {
         toBeInstanceOf(\Auth0\Laravel\Auth0::class);
 }, );
 
-test('the service instantiates it\'s own configuration if none is assigned', static function (): void {
+test('the service instantiates it\'s own configuration if none is assigned', function (): void {
     $service = new \Auth0\Laravel\Auth0();
 
     expect($service->getConfiguration())->
