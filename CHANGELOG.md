@@ -1,5 +1,12 @@
 # Change Log
 
+## [7.2.0](https://github.com/auth0/laravel-auth0/tree/7.2.0) (2022-10-10)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.1.0...7.2.0)
+
+**Changed**
+- [SDK-3669] Add StoreInterface bridge for Laravel Sessions [\#307](https://github.com/auth0/laravel-auth0/pull/307) ([evansims](https://github.com/evansims))
+- Added viaRemember function to guard [\#306](https://github.com/auth0/laravel-auth0/pull/306) ([tonyfox-disguise](https://github.com/tonyfox-disguise))
+
 ## [7.1.0](https://github.com/auth0/laravel-auth0/tree/7.1.0) (2022-08-08)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.1...7.1.0)
 
