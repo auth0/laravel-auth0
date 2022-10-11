@@ -251,6 +251,7 @@ finder:
     - "storage"
     - "spark"
     - "vendor"
+    - "tests"
   name: "*.php"
   not-name:
     - "*.blade.php"
