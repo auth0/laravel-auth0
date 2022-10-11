@@ -208,14 +208,6 @@ enabled:
   - short_scalar_cast
   - simple_to_complex_string_variable
   - simplified_if_return
-  - single_blank_line_at_eof
-  - single_blank_line_before_namespace
-  - single_class_element_per_statement
-  - single_import_per_statement
-  - single_line_after_imports
-  - single_line_comment_spacing
-  - single_line_throw
-  - single_quote
 
 finder:
   exclude:
