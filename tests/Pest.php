@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 uses(\Auth0\Laravel\Tests\TestCase::class)->
-    beforeEach(function (): void
-    {
+    beforeEach(function (): void {
         $this->service = createService();
     }, )->
     in(__DIR__);
@@ -22,8 +21,7 @@ function createServiceConfiguration(
 function createService(
     ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null,
 ): Auth0\Laravel\Auth0 {
-    if (null === $configuration)
-    {
+    if (null === $configuration) {
         $configuration = createServiceConfiguration();
     }
 
@@ -33,8 +31,7 @@ function createService(
 function createSdk(
     ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null,
 ): Auth0\SDK\Auth0 {
-    if (null === $configuration)
-    {
+    if (null === $configuration) {
         $configuration = createServiceConfiguration();
     }
 

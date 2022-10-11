@@ -94,7 +94,7 @@ final class LaravelSession implements StoreInterface
         $prefix = $this->sessionPrefix . '_';
 
         foreach (array_keys($pairs) as $key) {
-            if (mb_substr($key, 0, \mb_strlen($prefix)) === $prefix) {
+            if (mb_substr($key, 0, mb_strlen($prefix)) === $prefix) {
                 $this->delete($key);
             }
         }
