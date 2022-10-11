@@ -19,7 +19,7 @@ interface StateInstance
     /**
      * Set the authenticated user context for the current request.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable|null $user An authenticated user context.
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user  an authenticated user context
      */
     public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self;
 
@@ -86,7 +86,7 @@ interface StateInstance
     /**
      * Set the refresh token for the request context, if available.
      *
-     * @param string $refreshToken Refresh token returned from the code exchange.
+     * @param  string  $refreshToken  refresh token returned from the code exchange
      */
     public function setRefreshToken(?string $refreshToken): self;
 }

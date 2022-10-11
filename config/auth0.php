@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Please review available configuration options here:
- * https://github.com/auth0/auth0-PHP#configuration-options
+ * https://github.com/auth0/auth0-PHP#configuration-options.
  */
 return [
     // Should be assigned either 'api', 'management', or 'webapp' to indicate your application's use case for the SDK.
@@ -53,7 +53,7 @@ return [
 
     // Named routes within your Laravel application that the SDK may call during stateful requests for redirections.
     'routes' => [
-        'home' => env('AUTH0_ROUTE_HOME', '/'),
-        'login' => env('AUTH0_ROUTE_LOGIN', 'login')
-    ]
+        'home'  => env('AUTH0_ROUTE_HOME', '/'),
+        'login' => env('AUTH0_ROUTE_LOGIN', 'login'),
+    ],
 ];

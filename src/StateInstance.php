@@ -42,7 +42,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     private ?string $refreshToken = null;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function clear(): self
     {
@@ -53,11 +53,12 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
         $this->accessTokenScope = null;
         $this->accessTokenExpiration = null;
         $this->refreshToken = null;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUser(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
@@ -65,16 +66,17 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDecoded(): ?array
     {
@@ -82,16 +84,17 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setDecoded(?array $data): self
     {
         $this->decoded = $data;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIdToken(): ?string
     {
@@ -99,16 +102,17 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setIdToken(?string $idToken): self
     {
         $this->idToken = $idToken;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAccessToken(): ?string
     {
@@ -116,16 +120,17 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAccessToken(?string $accessToken): self
     {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAccessTokenScope(): ?array
     {
@@ -133,16 +138,17 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
         $this->accessTokenScope = $accessTokenScope;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAccessTokenExpiration(): ?int
     {
@@ -150,22 +156,23 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setAccessTokenExpiration(?int $accessTokenExpiration): self
     {
         $this->accessTokenExpiration = $accessTokenExpiration;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAccessTokenExpired(): ?bool
     {
         $expires = $this->getAccessTokenExpiration();
 
-        if ($expires === null) {
+        if (null === $expires) {
             return null;
         }
 
@@ -173,7 +180,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRefreshToken(): ?string
     {
@@ -181,11 +188,12 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
+
         return $this;
     }
 }

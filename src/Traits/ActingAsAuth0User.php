@@ -14,17 +14,17 @@ trait ActingAsAuth0User
 
     /**
      * use this method to impersonate a specific auth0 user
-     * if you pass an attributes array, it will be merged with a set of default values
+     * if you pass an attributes array, it will be merged with a set of default values.
      *
      * @return mixed
      */
     public function actingAsAuth0User(array $attributes = [])
     {
         $defaults = [
-            'sub' => 'some-auth0-user-id',
-            'azp' => 'some-auth0-appplication-client-id',
-            'iat' => time(),
-            'exp' => time() + 60 * 60,
+            'sub'   => 'some-auth0-user-id',
+            'azp'   => 'some-auth0-appplication-client-id',
+            'iat'   => time(),
+            'exp'   => time() + 60 * 60,
             'scope' => '',
         ];
 

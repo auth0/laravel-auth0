@@ -9,7 +9,7 @@ interface User
     /**
      * \Auth0\Laravel\Model\User constructor.
      *
-     * @param array $attributes Attributes representing the user data.
+     * @param  array  $attributes  attributes representing the user data
      */
     public function __construct(array $attributes = []);
 
@@ -23,7 +23,7 @@ interface User
     /**
      * Dynamically set attributes on the model.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function __set(string $key, $value): void;
 
@@ -35,15 +35,14 @@ interface User
     /**
      * Set a given attribute on the model.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setAttribute(string $key, $value): self;
 
     /**
      * Get an attribute from the model.
      *
-     * @param mixed $default
-     *
+     * @param  mixed  $default
      * @return mixed
      */
     public function getAttribute(string $key, $default = null);

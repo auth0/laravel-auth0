@@ -12,7 +12,7 @@ final class AuthenticationSucceeded extends \Auth0\Laravel\Event\Auth0Event impl
     private \Illuminate\Contracts\Auth\Authenticatable $user;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user)
     {
@@ -20,17 +20,18 @@ final class AuthenticationSucceeded extends \Auth0\Laravel\Event\Auth0Event impl
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self
     {
         $this->user = $user;
         $this->mutated = true;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUser(): \Illuminate\Contracts\Auth\Authenticatable
     {

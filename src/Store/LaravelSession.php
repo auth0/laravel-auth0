@@ -17,7 +17,7 @@ final class LaravelSession implements StoreInterface
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    // @phpstan-ignore-next-line
+    /** @phpstan-ignore-next-line */
     private SdkConfiguration $configuration;
 
     /**
@@ -33,8 +33,8 @@ final class LaravelSession implements StoreInterface
     /**
      * Psr14Store constructor.
      *
-     * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $sessionPrefix A string to prefix session keys with.
+     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  string  $sessionPrefix  a string to prefix session keys with
      */
     public function __construct(SdkConfiguration $configuration, string $sessionPrefix = 'auth0')
     {
@@ -45,39 +45,38 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to toggle state deferrance.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      */
     public function defer(bool $deferring): void
     {
-        return;
     }
 
     /**
      * Dispatch event to set the value of a key-value pair.
      *
-     * @param string $key   Session key to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  session key to set
+     * @param  mixed  $value  value to use
      */
     public function set(string $key, $value): void
     {
         $this->boot();
-        $this->getStore()
-            ->put($this->getPrefixedKey($key), $value);
+        $this->getStore()->
+            put($this->getPrefixedKey($key), $value);
     }
 
     /**
      * Dispatch event to retrieve the value of a key-value pair.
      *
-     * @param string $key     Session key to query.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  session key to query
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(string $key, $default = null)
     {
         $this->boot();
-        return $this->getStore()
-            ->get($this->getPrefixedKey($key), $default);
+
+        return $this->getStore()->
+            get($this->getPrefixedKey($key), $default);
     }
 
     /**
@@ -90,12 +89,12 @@ final class LaravelSession implements StoreInterface
         // It would be unwise for us to simply flush() a session here, as it is shared with the app ecosystem.
         // Instead, iterate through the session data, and if they key is prefixed with our assigned string, delete it.
 
-        $pairs = $this->getStore()
-            ->all();
+        $pairs = $this->getStore()->
+            all();
         $prefix = $this->sessionPrefix . '_';
 
         foreach (array_keys($pairs) as $key) {
-            if (substr($key, 0, strlen($prefix)) === $prefix) {
+            if (mb_substr($key, 0, mb_strlen($prefix)) === $prefix) {
                 $this->delete($key);
             }
         }
@@ -104,13 +103,13 @@ final class LaravelSession implements StoreInterface
     /**
      * Dispatch event to delete key-value pair.
      *
-     * @param string $key Session key to delete.
+     * @param  string  $key  session key to delete
      */
     public function delete(string $key): void
     {
         $this->boot();
-        $this->getStore()
-            ->forget($this->getPrefixedKey($key));
+        $this->getStore()->
+            forget($this->getPrefixedKey($key));
     }
 
     /**
@@ -120,14 +119,12 @@ final class LaravelSession implements StoreInterface
     {
         if (! $this->booted) {
             if (! $this->getStore()->isStarted()) {
-                $this->getStore()
-                    ->start();
+                $this->getStore()->
+                    start();
             }
 
             $this->booted = true;
         }
-
-        return;
     }
 
     private function getStore(): \Illuminate\Session\Store
@@ -143,7 +140,7 @@ final class LaravelSession implements StoreInterface
 
     private function getPrefixedKey(string $key): string
     {
-        if ($this->sessionPrefix !== '') {
+        if ('' !== $this->sessionPrefix) {
             return $this->sessionPrefix . '_' . $key;
         }
 

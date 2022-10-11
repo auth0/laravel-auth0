@@ -9,15 +9,15 @@ interface AuthenticationFailed
     /**
      * AuthenticationFailed constructor.
      *
-     * @param \Throwable $exception      An exception instance in which to throw for the authentication failure.
-     * @param bool       $throwException Whether or not $exception will be thrown.
+     * @param  \Throwable  $exception  an exception instance in which to throw for the authentication failure
+     * @param  bool  $throwException  whether or not $exception will be thrown
      */
     public function __construct(\Throwable $exception, bool $throwException = true);
 
     /**
      * Overwrite the exception to be thrown.
      *
-     * @param \Throwable $exception An exception instance in which to throw for the authentication failure.
+     * @param  \Throwable  $exception  an exception instance in which to throw for the authentication failure
      */
     public function setException(\Throwable $exception): self;
 
@@ -29,7 +29,7 @@ interface AuthenticationFailed
     /**
      * Determine whether the provided exception will be thrown by the SDK.
      *
-     * @param bool $throwException Whether or not $exception will be thrown.
+     * @param  bool  $throwException  whether or not $exception will be thrown
      */
     public function setThrowException(bool $throwException): self;
 

@@ -13,15 +13,15 @@ class TestCase extends Orchestra
         parent::setUp();
     }
 
+    public function refreshServiceProvider(): void
+    {
+        (new \Auth0\Laravel\ServiceProvider($this->app))->packageBooted();
+    }
+
     protected function getPackageProviders($app)
     {
         return [
             \Auth0\Laravel\ServiceProvider::class,
         ];
-    }
-
-    public function refreshServiceProvider(): void
-    {
-        (new \Auth0\Laravel\ServiceProvider($this->app))->packageBooted();
     }
 }

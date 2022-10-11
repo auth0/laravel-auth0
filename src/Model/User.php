@@ -12,7 +12,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     private array $attributes = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(array $attributes = [])
     {
@@ -20,7 +20,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __get(string $key)
     {
@@ -28,7 +28,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __set(string $key, $value): void
     {
@@ -36,9 +36,9 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function fill(array $attributes): self
+    final public function fill(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
@@ -48,67 +48,68 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function setAttribute(string $key, $value): self
+    final public function setAttribute(string $key, $value): self
     {
         $this->attributes[$key] = $value;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAttribute(string $key, $default = null)
+    final public function getAttribute(string $key, $default = null)
     {
         return $this->attributes[$key] ?? $default;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAuthIdentifier()
+    final public function getAuthIdentifier()
     {
         return $this->attributes['sub'] ?? $this->attributes['user_id'] ?? $this->attributes['email'] ?? null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAuthIdentifierName()
+    final public function getAuthIdentifierName()
     {
         return 'id';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAuthPassword(): string
+    final public function getAuthPassword(): string
     {
         return '';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getRememberToken(): string
+    final public function getRememberToken(): string
     {
         return '';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function setRememberToken($value): void
+    final public function setRememberToken($value): void
     {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getRememberTokenName(): string
+    final public function getRememberTokenName(): string
     {
         return '';
     }
