@@ -32,7 +32,7 @@ final class Authorize implements \Auth0\Laravel\Contract\Http\Middleware\Statele
         $user = $guard->user();
 
         if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
-            if ('' !== $scope && false === $guard->hasScope($scope)) {
+            if ('' !== $scope && !$guard->hasScope($scope)) {
                 abort(403, 'Forbidden');
             }
 
