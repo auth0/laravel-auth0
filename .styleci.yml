@@ -210,6 +210,7 @@ enabled:
   - simplified_if_return
   - single_blank_line_at_eof
   - single_blank_line_before_namespace
+  - single_class_element_per_statement
 
 finder:
   exclude:
