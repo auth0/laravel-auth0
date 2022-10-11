@@ -12,7 +12,7 @@ Thank you to [tonyfox-disguise](https://github.com/tonyfox-disguise), [jeovajr](
 - `Auth0\Laravel\Http\Middleware\Stateless\Authorize` now returns a 401 status instead of 403 for unauthenticated users. [\#304](https://github.com/auth0/laravel-auth0/issues/304) ([jeovajr](https://github.com/jeovajr))
 - PHP 8.0 and Laravel 8.0 are now the minimum supported runtime and framework versions. Please review our [support matrix](https://github.com/auth0/laravel-auth0#requirements) for more information.
 
-¹ This change may require your application's users to reauthenticate. You can avoid this by changing the `sessionStorage` and `transientStorage` options in your SDK configuration to their previous default instances of `Auth0\SDK\Store\CookieStore`, but it is recommended you migrate to the new `LaravelSession` default.
+¹ This change may require your application's users to re-authenticate. You can avoid this by changing the `sessionStorage` and `transientStorage` options in your SDK configuration to their previous default instances of `Auth0\SDK\Store\CookieStore`, but it is recommended you migrate to the new `LaravelSession` default.
 
 ## [7.1.0](https://github.com/auth0/laravel-auth0/tree/7.1.0) (2022-08-08)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.0.1...7.1.0)
