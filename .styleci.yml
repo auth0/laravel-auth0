@@ -208,6 +208,7 @@ enabled:
   - short_scalar_cast
   - simple_to_complex_string_variable
   - simplified_if_return
+  - single_blank_line_at_eof
 
 finder:
   exclude:
