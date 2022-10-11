@@ -208,7 +208,43 @@ enabled:
   - short_scalar_cast
   - simple_to_complex_string_variable
   - simplified_if_return
-
+  - single_blank_line_at_eof
+  - single_blank_line_before_namespace
+  - single_class_element_per_statement
+  - single_import_per_statement
+  - single_line_after_imports
+  - single_line_comment_spacing
+  - single_line_throw
+  - single_quote
+  - single_space_after_construct
+  - single_trait_insert_per_statement
+  - space_after_semicolon
+  - standardize_increment
+  - standardize_not_equals
+  - static_lambda
+  - strict_comparison
+  - strict_param
+  - string_length_to_empty
+  - string_line_ending
+  - switch_case_semicolon_to_colon
+  - switch_case_space
+  - switch_continue_to_break
+  - symfony_class_definition
+  - ternary_operator_spaces
+  - ternary_to_elvis_operator
+  - ternary_to_null_coalescing
+  - trailing_comma_in_multiline_array
+  - trailing_comma_in_multiline_call
+  - trailing_comma_in_multiline_definition
+  - trim_array_spaces
+  - unalign_equals
+  - unary_operator_spaces
+  - union_type_without_spaces
+  - unix_line_endings
+  - use_arrow_functions
+  - void_return
+  - whitespace_after_comma_in_array
+  - yoda_style
 finder:
   exclude:
     - "modules"
