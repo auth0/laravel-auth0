@@ -195,6 +195,19 @@ enabled:
   - property_visibility_required
   - protected_to_private
   - psr4
+  - random_api_migration
+  - regular_callable_call
+  - return_assignment
+  - return_type_declaration
+  - self_accessor
+  - self_static_accessor
+  - semicolon_after_instruction
+  - set_type_to_cast
+  - short_array_syntax
+  - short_list_syntax
+  - short_scalar_cast
+  - simple_to_complex_string_variable
+  - simplified_if_return
 
 finder:
   exclude:
