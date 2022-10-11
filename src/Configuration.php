@@ -14,11 +14,13 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
      */
     public static function stringToArrayOrNull(?string $config, string $delimiter = ' '): ?array
     {
-        if (\is_string($config) && '' !== $config && '' !== $delimiter) {
+        if (\is_string($config) && '' !== $config && '' !== $delimiter)
+        {
             $response = explode($delimiter, $config);
 
             // @phpstan-ignore-next-line
-            if (\is_array($response) && \count($response) >= 1 && '' !== trim($response[0])) {
+            if (\is_array($response) && \count($response) >= 1 && '' !== trim($response[0]))
+            {
                 return $response;
             }
         }
@@ -31,8 +33,9 @@ final class Configuration implements \Auth0\Laravel\Contract\Configuration
      */
     public static function stringToBoolOrNull(?string $config, ?bool $default = null): ?bool
     {
-        if (\is_string($config) && '' !== $config) {
-            $config = strtolower(trim($config));
+        if (\is_string($config) && '' !== $config)
+        {
+            $config = mb_strtolower(trim($config));
 
             return 'true' === $config;
         }

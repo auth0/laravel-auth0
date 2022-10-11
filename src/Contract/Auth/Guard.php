@@ -11,7 +11,7 @@ interface Guard
      */
     public function __construct(
         \Illuminate\Contracts\Auth\UserProvider $provider,
-        \Illuminate\Http\Request $request
+        \Illuminate\Http\Request $request,
     );
 
     /**

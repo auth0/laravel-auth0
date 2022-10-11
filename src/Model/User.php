@@ -38,9 +38,10 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function fill(array $attributes): self
+    final public function fill(array $attributes): self
     {
-        foreach ($attributes as $key => $value) {
+        foreach ($attributes as $key => $value)
+        {
             $this->setAttribute($key, $value);
         }
 
@@ -50,7 +51,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function setAttribute(string $key, $value): self
+    final public function setAttribute(string $key, $value): self
     {
         $this->attributes[$key] = $value;
 
@@ -60,7 +61,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function getAttribute(string $key, $default = null)
+    final public function getAttribute(string $key, $default = null)
     {
         return $this->attributes[$key] ?? $default;
     }
@@ -68,7 +69,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function getAuthIdentifier()
+    final public function getAuthIdentifier()
     {
         return $this->attributes['sub'] ?? $this->attributes['user_id'] ?? $this->attributes['email'] ?? null;
     }
@@ -76,7 +77,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function getAuthIdentifierName()
+    final public function getAuthIdentifierName()
     {
         return 'id';
     }
@@ -84,7 +85,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function getAuthPassword(): string
+    final public function getAuthPassword(): string
     {
         return '';
     }
@@ -92,7 +93,7 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     /**
      * {@inheritdoc}
      */
-    public function getRememberToken(): string
+    final public function getRememberToken(): string
     {
         return '';
     }
@@ -102,14 +103,14 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function setRememberToken($value): void
+    final public function setRememberToken($value): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRememberTokenName(): string
+    final public function getRememberTokenName(): string
     {
         return '';
     }

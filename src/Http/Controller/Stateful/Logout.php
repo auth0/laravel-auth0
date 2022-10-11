@@ -11,19 +11,20 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
-        if (auth()->guard('auth0')->check()) {
-            auth()->guard('auth0')
-                ->logout();
+        if (auth()->guard('auth0')->check())
+        {
+            auth()->guard('auth0')->
+                logout();
 
-            $request->session()
-                ->invalidate();
-            $request->session()
-                ->regenerateToken();
+            $request->session()->
+                invalidate();
+            $request->session()->
+                regenerateToken();
 
             return redirect()->away(
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->authentication()->getLogoutLink(url(
-                    app()->make('config')->get('auth0.routes.home', '/')
-                ))
+                    app()->make('config')->get('auth0.routes.home', '/'),
+                )),
             );
         }
 

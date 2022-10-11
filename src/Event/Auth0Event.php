@@ -17,7 +17,7 @@ abstract class Auth0Event implements \Auth0\Laravel\Contract\Event\Auth0Event
     /**
      * Returns whether an event payload has been overwritten.
      */
-    public function wasMutated(): bool
+    final public function wasMutated(): bool
     {
         return $this->mutated;
     }
