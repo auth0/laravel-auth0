@@ -221,8 +221,6 @@ enabled:
   - space_after_semicolon
   - standardize_increment
   - standardize_not_equals
-  - static_lambda
-  - strict_comparison
 
 finder:
   exclude:
