@@ -147,7 +147,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     private function getStore(): \Illuminate\Contracts\Cache\Store
     {
-        return app()->make(\Illuminate\Cache\CacheManager::class)->getStore();
+        return app(\Illuminate\Cache\CacheManager::class)->getStore();
     }
 
     private function createItem(string $key, mixed $value): CacheItemInterface

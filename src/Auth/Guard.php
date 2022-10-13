@@ -149,6 +149,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         // Retrieve an available bearer token from the request.
         $request = request();
 
+        // @phpstan-ignore-next-line
         if (! $request instanceof \Illuminate\Http\Request) {
             return null;
         }
@@ -176,6 +177,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         /**
          * @var Provider $provider
+         * @var array{scope: string|null, exp: int|null} $decoded
          */
         $user = $provider->
             getRepository()->
@@ -221,7 +223,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         // Query the UserProvider to retrieve tue user for the session.
         $user = $provider->
             getRepository()->
-            fromSession($session->user);
+            fromSession($session->user); // @phpstan-ignore-line
 
         // Was a user retrieved successfully?
         if (null !== $user) {
@@ -231,12 +233,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
             $this->getState()->
                 clear()->
-                setDecoded($session->user)->
-                setIdToken($session->idToken)->
-                setAccessToken($session->accessToken)->
-                setAccessTokenScope($session->accessTokenScope)->
-                setAccessTokenExpiration($session->accessTokenExpiration)->
-                setRefreshToken($session->refreshToken);
+                setDecoded($session->user)-> // @phpstan-ignore-line
+                setIdToken($session->idToken)-> // @phpstan-ignore-line
+                setAccessToken($session->accessToken)-> // @phpstan-ignore-line
+                setAccessTokenScope($session->accessTokenScope)-> // @phpstan-ignore-line
+                setAccessTokenExpiration($session->accessTokenExpiration)-> // @phpstan-ignore-line
+                setRefreshToken($session->refreshToken); // @phpstan-ignore-line
 
             $user = $this->handleSessionExpiration($user);
         }
@@ -270,6 +272,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             // Retrieve updated state data
             $refreshed = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
 
+            // @phpstan-ignore-next-line
             if (null !== $refreshed && false === $refreshed->accessTokenExpired) {
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshSucceeded());
 
@@ -293,7 +296,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     private function getState(): \Auth0\Laravel\StateInstance
     {
-        return app()->make(\Auth0\Laravel\StateInstance::class);
+        return app(\Auth0\Laravel\StateInstance::class);
     }
 
     /**
@@ -305,7 +308,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         if (null === $provider) {
             $configured = config('auth.guards.auth0.provider') ?? \Auth0\Laravel\Auth\User\Provider::class;
-            $provider = app()->make('auth')->createUserProvider($configured);
+
+            /**
+             * @var string|null $configured
+             */
+
+            $provider = app('auth')->createUserProvider($configured);
 
             if (! $provider instanceof \Illuminate\Contracts\Auth\UserProvider) {
                 throw new RuntimeException('Auth0: Unable to invoke UserProvider from application configuration.');

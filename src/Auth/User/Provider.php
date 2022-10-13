@@ -66,7 +66,12 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
 
         if (null === $repository) {
             $configured = config('auth.providers.auth0.repository') ?? \Auth0\Laravel\Auth\User\Repository::class;
-            $repository = app()->make($configured);
+
+            /**
+             * @var string|null $configured
+             */
+
+            $repository = app($configured);
         }
 
         return $repository;

@@ -39,7 +39,7 @@ final class ServiceProvider extends \Illuminate\Support\ServiceProvider implemen
         app()->singleton(Logout::class, static fn (): Logout => new Logout());
         app()->singleton(Callback::class, static fn (): Callback => new Callback());
 
-        app()->singleton('auth0', static fn (): Auth0 => app()->make(Auth0::class));
+        app()->singleton('auth0', static fn (): Auth0 => app(Auth0::class));
 
         app()->terminating(static function (): void {
             app()->instance(StateInstance::class, null);

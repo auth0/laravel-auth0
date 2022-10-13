@@ -26,7 +26,7 @@ final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Lo
          * @var Guard $guard
          */
         if ($guard->check()) {
-            return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
+            return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
         }
 
         return redirect()->away(app(\Auth0\Laravel\Auth0::class)->getSdk()->login());

@@ -122,10 +122,12 @@ final class LaravelSession implements StoreInterface
     {
         $request = request();
 
+        // @phpstan-ignore-next-line
         if ($request instanceof \Illuminate\Http\Request) {
             return $request->session();
         }
 
+        // @phpstan-ignore-next-line
         throw new Exception('A cache must be configured.');
     }
 

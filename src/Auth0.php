@@ -120,7 +120,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
      */
     public function getState(): Contract\StateInstance
     {
-        return app()->make(\Auth0\Laravel\StateInstance::class);
+        return app(\Auth0\Laravel\StateInstance::class);
     }
 
     /**

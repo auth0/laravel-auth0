@@ -27,7 +27,7 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
         // Check if the user already has a session:
         if ($guard->check()) {
             // They do; redirect to homepage.
-            return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
+            return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
         }
 
         $code = $request->query('code');
@@ -103,6 +103,6 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
             $guard->setUser($event->getUser());
         }
 
-        return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
+        return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
     }
 }

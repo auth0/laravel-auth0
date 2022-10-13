@@ -32,12 +32,10 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
                 regenerateToken();
 
             return redirect()->away(
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->authentication()->getLogoutLink(url(
-                    app()->make('config')->get('auth0.routes.home', '/'),
-                )),
+                app(\Auth0\Laravel\Auth0::class)->getSdk()->authentication()->getLogoutLink(url(config('auth0.routes.home', '/'))), // @phpstan-ignore-line
             );
         }
 
-        return redirect()->intended(app()->make('config')->get('auth0.routes.home', '/'));
+        return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
     }
 }
