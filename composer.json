@@ -40,6 +40,7 @@
         "illuminate/support": "^8.0 || ^9.0"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "dev-main",
         "laravel/laravel": "^8.4.4 || ^9.0",
         "laravel/pint": "^1.2",
         "nunomaduro/larastan": "^1.0",
@@ -55,6 +56,7 @@
         "vimeo/psalm": "^4.28",
         "wikimedia/composer-merge-plugin": "^2.0"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Auth0\\Laravel\\": "src"
@@ -68,12 +70,17 @@
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "wikimedia/composer-merge-plugin": true
+            "wikimedia/composer-merge-plugin": true,
+            "ergebnis/composer-normalize": true
         },
         "optimize-autoloader": true,
         "sort-packages": true
     },
     "extra": {
+        "composer-normalize": {
+            "indent-size": 4,
+            "indent-style": "space"
+        },
         "laravel": {
             "aliases": {
                 "Auth0": "Auth0\\Laravel\\Facade\\Auth0"
@@ -94,5 +101,15 @@
             "recurse": true,
             "replace": true
         }
+    },
+    "scripts": {
+        "phpstan": "@php vendor/bin/phpstan analyse",
+        "phpstan:pro": "@php vendor/bin/phpstan analyse --pro",
+        "pint": "@php vendor/bin/pint --test",
+        "pint:fix": "@php vendor/bin/pint",
+        "psalm": "@php vendor/bin/psalm",
+        "rector": "@php vendor/bin/rector process src --dry-run",
+        "rector:fix": "@php vendor/bin/rector process src",
+        "test": "@php vendor/bin/pest --order-by random"
     }
 }
