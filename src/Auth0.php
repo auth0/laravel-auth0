@@ -118,7 +118,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * {@inheritdoc}
      */
-    public function getState(): \Auth0\Laravel\Contract\StateInstance
+    public function getState(): Contract\StateInstance
     {
         return app(StateInstance::class);
     }
