@@ -13,18 +13,10 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 final class LaravelCachePool implements CacheItemPoolInterface
 {
-    private \Illuminate\Cache\CacheManager $manager;
-
     /**
      * @var array<array{item: CacheItemInterface, expiration: int|null}>
      */
     private array $deferred = [];
-
-    public function __construct()
-    {
-        $this->manager = app()->
-            make(\Illuminate\Cache\CacheManager::class);
-    }
 
     public function getItem(string $key): CacheItemInterface
     {
@@ -155,7 +147,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
     private function getStore(): \Illuminate\Contracts\Cache\Store
     {
-        return $this->manager->getStore();
+        return app()->make(\Illuminate\Cache\CacheManager::class)->getStore();
     }
 
     private function createItem(string $key, mixed $value): CacheItemInterface

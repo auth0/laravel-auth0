@@ -6,6 +6,8 @@ namespace Auth0\Laravel;
 
 use Auth0\Laravel\Cache\LaravelCachePool;
 use Auth0\Laravel\Store\LaravelSession;
+use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
+use Auth0\SDK\Contract\Auth0Interface as SDK;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -20,32 +22,32 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * An instance of the Auth0-PHP SDK.
      */
-    private ?\Auth0\SDK\Contract\Auth0Interface $sdk = null;
+    private static ?SDK $sdk = null;
 
     /**
      * An instance of the Auth0-PHP SDK's SdkConfiguration, which handles configuration state.
      */
-    private ?\Auth0\SDK\Configuration\SdkConfiguration $configuration = null;
+    private static ?Configuration $configuration = null;
 
     /**
      * {@inheritdoc}
      */
-    public function getSdk(): \Auth0\SDK\Contract\Auth0Interface
+    public function getSdk(): SDK
     {
-        if (null === $this->sdk) {
-            $this->sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
-            $this->setSdkTelemetry();
+        if (null === self::$sdk) {
+            self::$sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
         }
 
-        return $this->sdk;
+        $this->setSdkTelemetry();
+        return self::$sdk;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setSdk(\Auth0\SDK\Contract\Auth0Interface $sdk): self
+    public function setSdk(SDK $sdk): self
     {
-        $this->sdk = $sdk;
+        self::$sdk = $sdk;
         $this->setSdkTelemetry();
 
         return $this;
@@ -54,12 +56,10 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(): \Auth0\SDK\Configuration\SdkConfiguration
+    public function getConfiguration(): Configuration
     {
-        if (null === $this->configuration) {
-            $config = app()->
-                make('config')->
-                get('auth0');
+        if (null === self::$configuration) {
+            $config = config('auth0');
 
             /**
              * @var array<mixed> $config
@@ -76,38 +76,40 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 }
             }
 
-            $configuration = new \Auth0\SDK\Configuration\SdkConfiguration($config);
+            $configuration = new Configuration($config);
 
-            // If no sessionStorage is defined, use an LaravelSession store instance.
-            if (! isset($config['sessionStorage'])) {
-                $configuration->setSessionStorage(
-                    new LaravelSession($configuration, $configuration->getSessionStorageId()),
-                );
-            }
+            if (! in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
+                // If no sessionStorage is defined, use an LaravelSession store instance.
+                if (! isset($config['sessionStorage'])) {
+                    $configuration->setSessionStorage(
+                        new LaravelSession($configuration->getSessionStorageId()),
+                    );
+                }
 
-            // If no transientStorage is defined, use an LaravelSession store instance.
-            if (! isset($config['transientStorage'])) {
-                $configuration->setTransientStorage(
-                    new LaravelSession($configuration, $configuration->getSessionStorageId()),
-                );
+                // If no transientStorage is defined, use an LaravelSession store instance.
+                if (! isset($config['transientStorage'])) {
+                    $configuration->setTransientStorage(
+                        new LaravelSession($configuration->getTransientStorageId()),
+                    );
+                }
             }
 
             // Give apps an opportunity to mutate the configuration before applying it.
             $event = new \Auth0\Laravel\Event\Configuration\Built($configuration);
             event($event);
 
-            $this->configuration = $event->getConfiguration();
+            self::$configuration = $event->getConfiguration();
         }
 
-        return $this->configuration;
+        return self::$configuration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setConfiguration(\Auth0\SDK\Configuration\SdkConfiguration $configuration): self
+    public function setConfiguration(Configuration $configuration): self
     {
-        $this->configuration = $configuration;
+        self::$configuration = $configuration;
 
         return $this;
     }

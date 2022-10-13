@@ -12,7 +12,7 @@ test('the service instantiates it\'s own configuration if none is assigned', fun
 
     expect($service->getConfiguration())->
         toBeInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class);
-}, )->throws(\Auth0\SDK\Exception\ConfigurationException::class);
+}, );
 
 test('the service\'s getSdk() method returns an Auth0 SDK instance', function (): void {
     expect($this->service->getSdk())->
@@ -26,7 +26,7 @@ test('the service\'s getConfiguration method returns an SdkConfiguration instanc
 
 test('the service\'s getState method returns a StateInstance instance', function (): void {
     expect($this->service->getState())->
-        toBeInstanceOf(\Auth0\Laravel\StateInstance::class);
+        toBeInstanceOf(\Auth0\Laravel\Contract\StateInstance::class);
 }, );
 
 test('the service\'s setSdk() method allows overwriting the Auth0 instance', function (): void {

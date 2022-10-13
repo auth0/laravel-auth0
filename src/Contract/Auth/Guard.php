@@ -9,14 +9,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 interface Guard
 {
     /**
-     * Create a new authentication guard.
-     */
-    public function __construct(
-        \Illuminate\Contracts\Auth\UserProvider $provider,
-        \Illuminate\Http\Request $request,
-    );
-
-    /**
      * Set the current user.
      */
     public function login(Authenticatable $user): self;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Store;
 
-use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
 use Exception;
 
@@ -14,12 +13,6 @@ use Exception;
  */
 final class LaravelSession implements StoreInterface
 {
-    /**
-     * Instance of SdkConfiguration, for shared configuration across classes.
-     */
-    /** @phpstan-ignore-next-line */
-    private SdkConfiguration $configuration;
-
     /**
      * Session base name, configurable on instantiation.
      */
@@ -33,12 +26,10 @@ final class LaravelSession implements StoreInterface
     /**
      * Psr14Store constructor.
      *
-     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      * @param  string  $sessionPrefix  a string to prefix session keys with
      */
-    public function __construct(SdkConfiguration $configuration, string $sessionPrefix = 'auth0')
+    public function __construct(string $sessionPrefix = 'auth0')
     {
-        $this->configuration = $configuration;
         $this->sessionPrefix = $sessionPrefix;
     }
 

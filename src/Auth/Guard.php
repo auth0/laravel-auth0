@@ -5,30 +5,11 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Auth;
 
 use Auth0\Laravel\Contract\Auth\User\Provider;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use RuntimeException;
 
 final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Contracts\Auth\Guard
 {
-    /**
-     * The user provider implementation.
-     */
-    private \Illuminate\Contracts\Auth\UserProvider $provider;
-
-    /**
-     * The request instance.
-     */
-    private \Illuminate\Http\Request $request;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(
-        \Illuminate\Contracts\Auth\UserProvider $provider,
-        \Illuminate\Http\Request $request,
-    ) {
-        $this->provider = $provider;
-        $this->request = $request;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -73,8 +54,23 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
-        return $this->getState()->
-            getUser() ?? $this->getUserFromToken() ?? $this->getUserFromSession() ?? null;
+        $user = $this->getState()->getUser();
+
+        if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
+            $configuration = app(\Auth0\Laravel\Auth0::class)->getConfiguration();
+
+            $apiOnly = in_array($configuration->getStrategy(), [SdkConfiguration::STRATEGY_API, SdkConfiguration::STRATEGY_MANAGEMENT_API], true);
+
+            if ($apiOnly) {
+                $user = $this->getUserFromToken();
+            }
+
+            if (! $apiOnly) {
+                $user = $this->getUserFromSession();
+            }
+        }
+
+        return $user;
     }
 
     /**
@@ -151,10 +147,18 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     private function getUserFromToken(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
         // Retrieve an available bearer token from the request.
-        $token = $this->request->bearerToken();
+        $request = request();
+
+        if (! $request instanceof \Illuminate\Http\Request) {
+            return null;
+        }
+
+        $token = $request->bearerToken();
+
+        $token = $token ?? $_GET['token'] ?? null;
 
         // If a session is not available, return null.
-        if (null === $token) {
+        if (! is_string($token)) {
             return null;
         }
 
@@ -299,6 +303,17 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     private function getProvider(): \Illuminate\Contracts\Auth\UserProvider
     {
-        return $this->provider;
+        static $provider = null;
+
+        if (null === $provider) {
+            $configured = config('auth.guards.auth0.provider') ?? \Auth0\Laravel\Auth\User\Provider::class;
+            $provider = app()->make('auth')->createUserProvider($configured);
+
+            if (! $provider instanceof \Illuminate\Contracts\Auth\UserProvider) {
+                throw new RuntimeException('Auth0: Unable to invoke UserProvider from application configuration.');
+            }
+        }
+
+        return $provider;
     }
 }

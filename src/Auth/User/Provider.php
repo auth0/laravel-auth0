@@ -7,19 +7,6 @@ namespace Auth0\Laravel\Auth\User;
 final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Illuminate\Contracts\Auth\UserProvider
 {
     /**
-     * A repository instance.
-     */
-    private \Auth0\Laravel\Contract\Auth\User\Repository $repository;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(\Auth0\Laravel\Contract\Auth\User\Repository $repository)
-    {
-        $this->repository = $repository;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
@@ -75,6 +62,13 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      */
     public function getRepository(): \Auth0\Laravel\Contract\Auth\User\Repository
     {
-        return $this->repository;
+        static $repository = null;
+
+        if (null === $repository) {
+            $configured = config('auth.providers.auth0.repository') ?? \Auth0\Laravel\Auth\User\Repository::class;
+            $repository = app()->make($configured);
+        }
+
+        return $repository;
     }
 }
