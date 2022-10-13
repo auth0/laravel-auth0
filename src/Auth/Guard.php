@@ -238,7 +238,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
                 setAccessToken($session->accessToken)-> // @phpstan-ignore-line
                 setAccessTokenScope($session->accessTokenScope)-> // @phpstan-ignore-line
                 setAccessTokenExpiration($session->accessTokenExpiration)-> // @phpstan-ignore-line
-                setRefreshToken($session->refreshToken); // @phpstan-ignore-line
+                setRefreshToken($session->refreshToken); /** @phpstan-ignore-line */
 
             $user = $this->handleSessionExpiration($user);
         }
@@ -307,12 +307,10 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         static $provider = null;
 
         if (null === $provider) {
-            $configured = config('auth.guards.auth0.provider') ?? \Auth0\Laravel\Auth\User\Provider::class;
-
             /**
              * @var string|null $configured
              */
-
+            $configured = config('auth.guards.auth0.provider') ?? \Auth0\Laravel\Auth\User\Provider::class;
             $provider = app('auth')->createUserProvider($configured);
 
             if (! $provider instanceof \Illuminate\Contracts\Auth\UserProvider) {
