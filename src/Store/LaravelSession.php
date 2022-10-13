@@ -13,11 +13,6 @@ use Exception;
  */
 final class LaravelSession implements StoreInterface
 {
-    /**
-     * Psr14Store constructor.
-     *
-     * @param  string  $sessionPrefix  a string to prefix session keys with
-     */
     public function __construct(
         private string $prefix = 'auth0',
         private bool $booted = false
