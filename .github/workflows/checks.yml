@@ -43,7 +43,7 @@ jobs:
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
 
-  phpstan:
+  normalize:
     name: Normalize
     runs-on: ubuntu-latest
     needs: ["dependencies"]
