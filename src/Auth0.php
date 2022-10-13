@@ -39,6 +39,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
         }
 
         $this->setSdkTelemetry();
+
         return self::$sdk;
     }
 
@@ -78,7 +79,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
 
             $configuration = new Configuration($config);
 
-            if (! in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
+            if (! \in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
                 // If no sessionStorage is defined, use an LaravelSession store instance.
                 if (! isset($config['sessionStorage'])) {
                     $configuration->setSessionStorage(

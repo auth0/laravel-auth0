@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Auth\User\Repository;
-use Auth0\Laravel\Auth\User\Provider;
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Auth\User\Provider;
+use Auth0\Laravel\Auth\User\Repository;
 use Auth0\Laravel\Http\Controller\Stateful\Callback;
 use Auth0\Laravel\Http\Controller\Stateful\Login;
 use Auth0\Laravel\Http\Controller\Stateful\Logout;
@@ -26,7 +26,7 @@ final class ServiceProvider extends \Illuminate\Support\ServiceProvider implemen
     {
         $this->mergeConfigFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']), 'auth0');
 
-        app()->singleton(Auth0::class, fn (): Auth0 => new Auth0());
+        app()->singleton(Auth0::class, static fn (): Auth0 => new Auth0());
         app()->singleton(StateInstance::class, static fn (): StateInstance => new StateInstance());
         app()->singleton(Repository::class, static fn (): Repository => new Repository());
         app()->singleton(Guard::class, static fn (): Guard => new Guard());
@@ -41,7 +41,7 @@ final class ServiceProvider extends \Illuminate\Support\ServiceProvider implemen
 
         app()->singleton('auth0', static fn (): Auth0 => app()->make(Auth0::class));
 
-        app()->terminating(function () {
+        app()->terminating(static function (): void {
             app()->instance(StateInstance::class, null);
         });
 

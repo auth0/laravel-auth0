@@ -59,7 +59,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
             $configuration = app(\Auth0\Laravel\Auth0::class)->getConfiguration();
 
-            $apiOnly = in_array($configuration->getStrategy(), [SdkConfiguration::STRATEGY_API, SdkConfiguration::STRATEGY_MANAGEMENT_API], true);
+            $apiOnly = \in_array($configuration->getStrategy(), [SdkConfiguration::STRATEGY_API, SdkConfiguration::STRATEGY_MANAGEMENT_API], true);
 
             if ($apiOnly) {
                 $user = $this->getUserFromToken();
@@ -155,10 +155,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         $token = $request->bearerToken();
 
-        $token = $token ?? $_GET['token'] ?? null;
-
         // If a session is not available, return null.
-        if (! is_string($token)) {
+        if (! \is_string($token)) {
             return null;
         }
 
