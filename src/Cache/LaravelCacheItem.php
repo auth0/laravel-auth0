@@ -13,8 +13,7 @@ final class LaravelCacheItem implements CacheItemInterface
         private mixed $value,
         private bool $hit,
         private ?\DateTimeInterface $expiration = null
-    )
-    {
+    ) {
     }
 
     /**
