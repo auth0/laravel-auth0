@@ -9,16 +9,10 @@ use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Configuration\Built
 {
     /**
-     * Whether or not $exception will be thrown.
-     */
-    private Configuration $configuration;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(private Configuration $configuration)
     {
-        $this->configuration = $configuration;
     }
 
     /**

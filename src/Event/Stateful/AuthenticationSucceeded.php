@@ -9,14 +9,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 final class AuthenticationSucceeded extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Stateful\AuthenticationSucceeded
 {
     /**
-     * An instance of \Illuminate\Contracts\Auth\Authenticatable representing the authenticated user.
-     */
-    private Authenticatable $user;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(Authenticatable $user)
+    public function __construct(private Authenticatable $user)
     {
         $this->user = $user;
     }

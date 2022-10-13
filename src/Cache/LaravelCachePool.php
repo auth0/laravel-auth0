@@ -100,7 +100,6 @@ final class LaravelCachePool implements CacheItemPoolInterface
         $value = serialize($item->get());
         $key = $item->getKey();
         $expires = $item->getExpiration();
-        $ttl = 0;
 
         if ($expires->getTimestamp() <= time()) {
             return $this->deleteItem($key);
@@ -108,8 +107,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
         $ttl = $expires->getTimestamp() - time();
 
-        return $this->getStore()->
-            put($key, $value, $ttl);
+        return $this->getStore()->put($key, $value, $ttl);
     }
 
     public function saveDeferred(CacheItemInterface $item): bool

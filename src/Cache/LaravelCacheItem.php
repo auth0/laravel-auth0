@@ -8,19 +8,13 @@ use Psr\Cache\CacheItemInterface;
 
 final class LaravelCacheItem implements CacheItemInterface
 {
-    private string $key;
 
-    private mixed $value;
-
-    private bool $hit;
-
-    private ?\DateTimeInterface $expiration;
-
-    public function __construct(string $key, mixed $value, bool $hit)
+    public function __construct(
+        private string $key,
+        private mixed $value,
+        private bool $hit,
+        private ?\DateTimeInterface $expiration = null)
     {
-        $this->key = $key;
-        $this->value = $value;
-        $this->hit = $hit;
     }
 
     /**
@@ -100,6 +94,10 @@ final class LaravelCacheItem implements CacheItemInterface
      */
     public static function miss(string $key): self
     {
-        return new self($key, null, false);
+        return new self(
+            key: $key,
+            value: null,
+            hit: false
+        );
     }
 }

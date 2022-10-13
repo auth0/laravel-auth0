@@ -7,14 +7,9 @@ namespace Auth0\Laravel\Model;
 abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth0\Laravel\Contract\Model\User
 {
     /**
-     * The model's attributes.
-     */
-    private array $attributes = [];
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(array $attributes = [])
+    public function __construct(private array $attributes = [])
     {
         $this->fill($attributes);
     }

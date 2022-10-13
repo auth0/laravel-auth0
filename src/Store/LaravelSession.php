@@ -14,23 +14,15 @@ use Exception;
 final class LaravelSession implements StoreInterface
 {
     /**
-     * Session base name, configurable on instantiation.
-     */
-    private string $sessionPrefix;
-
-    /**
-     * Track if a bootup event has been sent out yet.
-     */
-    private bool $booted = false;
-
-    /**
      * Psr14Store constructor.
      *
      * @param  string  $sessionPrefix  a string to prefix session keys with
      */
-    public function __construct(string $sessionPrefix = 'auth0')
+    public function __construct(
+        private string $prefix = 'auth0',
+        private bool $booted = false
+    )
     {
-        $this->sessionPrefix = $sessionPrefix;
     }
 
     /**
@@ -82,7 +74,7 @@ final class LaravelSession implements StoreInterface
 
         $pairs = $this->getStore()->
             all();
-        $prefix = $this->sessionPrefix . '_';
+        $prefix = $this->prefix . '_';
 
         foreach (array_keys($pairs) as $key) {
             if (mb_substr($key, 0, mb_strlen($prefix)) === $prefix) {
@@ -133,8 +125,8 @@ final class LaravelSession implements StoreInterface
 
     private function getPrefixedKey(string $key): string
     {
-        if ('' !== $this->sessionPrefix) {
-            return $this->sessionPrefix . '_' . $key;
+        if ('' !== $this->prefix) {
+            return $this->prefix . '_' . $key;
         }
 
         return $key;
