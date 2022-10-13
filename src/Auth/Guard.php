@@ -239,7 +239,6 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
                 setAccessTokenScope($session->accessTokenScope)-> // @phpstan-ignore-line
                 setAccessTokenExpiration($session->accessTokenExpiration)-> // @phpstan-ignore-line
                 setRefreshToken($session->refreshToken); /** @phpstan-ignore-line */
-
             $user = $this->handleSessionExpiration($user);
         }
 
