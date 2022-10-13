@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 interface StateInstance
 {
     /**
@@ -14,14 +16,14 @@ interface StateInstance
     /**
      * Return the authenticated user context for the current request.
      */
-    public function getUser(): ?\Illuminate\Contracts\Auth\Authenticatable;
+    public function getUser(): ?Authenticatable;
 
     /**
      * Set the authenticated user context for the current request.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user  an authenticated user context
+     * @param  Authenticatable|null  $user  an authenticated user context
      */
-    public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self;
+    public function setUser(?Authenticatable $user): self;
 
     /**
      * Retrieve the decoded token data for the request context, if available.

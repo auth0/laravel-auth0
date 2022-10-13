@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Event\Stateful;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 interface AuthenticationSucceeded
 {
     /**
      * AuthenticationSucceeded constructor.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  an instance of \Illuminate\Contracts\Auth\Authenticatable representing the authenticated user
+     * @param  Authenticatable  $user  an instance of Authenticatable representing the authenticated user
      */
-    public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user);
+    public function __construct(Authenticatable $user);
 
     /**
      * Overwrite the authenticated user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  an instance of \Illuminate\Contracts\Auth\Authenticatable representing the authenticated user
+     * @param  Authenticatable  $user  an instance of Authenticatable representing the authenticated user
      */
-    public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self;
+    public function setUser(Authenticatable $user): self;
 
     /**
      * Return the authenticated user.
      */
-    public function getUser(): \Illuminate\Contracts\Auth\Authenticatable;
+    public function getUser(): Authenticatable;
 }

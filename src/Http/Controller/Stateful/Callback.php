@@ -13,16 +13,15 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
      */
     public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
     {
-        $auth = auth();
-
         /**
          * @var \Illuminate\Contracts\Auth\Factory $auth
          */
-        $guard = $auth->guard('auth0');
+        $auth = auth();
 
         /**
          * @var Guard $guard
          */
+        $guard = $auth->guard('auth0');
 
         // Check if the user already has a session:
         if ($guard->check()) {

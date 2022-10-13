@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Event\Configuration;
 
-use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 
 final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Configuration\Built
 {
     /**
      * Whether or not $exception will be thrown.
      */
-    private SdkConfiguration $configuration;
+    private Configuration $configuration;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(SdkConfiguration $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -24,7 +24,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     /**
      * {@inheritdoc}
      */
-    public function setConfiguration(SdkConfiguration $configuration): self
+    public function setConfiguration(Configuration $configuration): self
     {
         $this->configuration = $configuration;
 
@@ -34,7 +34,7 @@ final class Built extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Lara
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(): SdkConfiguration
+    public function getConfiguration(): Configuration
     {
         return $this->configuration;
     }

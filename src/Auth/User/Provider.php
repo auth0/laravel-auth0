@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth\User;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Illuminate\Contracts\Auth\UserProvider
 {
     /**
@@ -11,7 +13,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveById($identifier): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function retrieveById($identifier): ?Authenticatable
     {
         return null;
     }
@@ -21,7 +23,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveByToken($identifier, $token): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function retrieveByToken($identifier, $token): ?Authenticatable
     {
         return null;
     }
@@ -31,7 +33,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function retrieveByCredentials(array $credentials): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         return null;
     }
@@ -42,7 +44,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
     public function validateCredentials(
-        \Illuminate\Contracts\Auth\Authenticatable $user,
+        Authenticatable $user,
         array $credentials,
     ): bool {
         return false;
@@ -53,7 +55,7 @@ final class Provider implements \Auth0\Laravel\Contract\Auth\User\Provider, \Ill
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token): void
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
     }
 

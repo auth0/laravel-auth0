@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
 {
     /**
      * An authenticated user context for the current request.
      */
-    private ?\Illuminate\Contracts\Auth\Authenticatable $user = null;
+    private ?Authenticatable $user = null;
 
     /**
      * Decoded token data from the request context.
@@ -60,7 +62,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     /**
      * {@inheritdoc}
      */
-    public function getUser(): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function getUser(): ?Authenticatable
     {
         return $this->user;
     }
@@ -68,7 +70,7 @@ final class StateInstance implements \Auth0\Laravel\Contract\StateInstance
     /**
      * {@inheritdoc}
      */
-    public function setUser(?\Illuminate\Contracts\Auth\Authenticatable $user): self
+    public function setUser(?Authenticatable $user): self
     {
         $this->user = $user;
 

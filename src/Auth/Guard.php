@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth;
 
+use Auth0\Laravel\Auth0;
 use Auth0\Laravel\Contract\Auth\User\Provider;
+use Auth0\Laravel\Contract\StateInstance;
+use Auth0\Laravel\StateInstance as ConcreteStateInstance;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\UserProvider;
 use RuntimeException;
 
 final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Contracts\Auth\Guard
@@ -13,7 +18,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * {@inheritdoc}
      */
-    public function login(\Illuminate\Contracts\Auth\Authenticatable $user): self
+    public function login(Authenticatable $user): self
     {
         $this->getState()->
             setUser($user);
@@ -28,7 +33,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     {
         $this->getState()->
             setUser(null);
-        app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
+        app(Auth0::class)->getSdk()->clear();
 
         return $this;
     }
@@ -52,12 +57,12 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * {@inheritdoc}
      */
-    public function user(): ?\Illuminate\Contracts\Auth\Authenticatable
+    public function user(): ?Authenticatable
     {
         $user = $this->getState()->getUser();
 
-        if (! $user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
-            $configuration = app(\Auth0\Laravel\Auth0::class)->getConfiguration();
+        if (! $user instanceof Authenticatable) {
+            $configuration = app(Auth0::class)->getConfiguration();
 
             $apiOnly = \in_array($configuration->getStrategy(), [SdkConfiguration::STRATEGY_API, SdkConfiguration::STRATEGY_MANAGEMENT_API], true);
 
@@ -107,7 +112,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      *
      * @psalm-suppress UnusedVariable
      */
-    public function setUser(\Illuminate\Contracts\Auth\Authenticatable $user): self
+    public function setUser(Authenticatable $user): self
     {
         $user = $this->getState()->
             setUser($user);
@@ -144,7 +149,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * Get the user context from a provided access token.
      */
-    private function getUserFromToken(): ?\Illuminate\Contracts\Auth\Authenticatable
+    private function getUserFromToken(): ?Authenticatable
     {
         // Retrieve an available bearer token from the request.
         $request = request();
@@ -163,7 +168,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
 
         try {
             // Attempt to decode the bearer token.
-            $decoded = app(\Auth0\Laravel\Auth0::class)->getSdk()->decode(
+            $decoded = app(Auth0::class)->getSdk()->decode(
                 token: $token,
                 tokenType: \Auth0\SDK\Token::TYPE_TOKEN,
             )->toArray();
@@ -203,10 +208,10 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * Get the user context from an Auth0-PHP SDK session..
      */
-    private function getUserFromSession(): ?\Illuminate\Contracts\Auth\Authenticatable
+    private function getUserFromSession(): ?Authenticatable
     {
         // Retrieve an available session from the Auth0-PHP SDK.
-        $session = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
+        $session = app(Auth0::class)->getSdk()->getCredentials();
 
         // If a session is not available, return null.
         if (null === $session) {
@@ -249,8 +254,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      * Handle instances of session token expiration.
      */
     private function handleSessionExpiration(
-        ?\Illuminate\Contracts\Auth\Authenticatable $user,
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
+        ?Authenticatable $user,
+    ): ?Authenticatable {
         $state = $this->getState();
 
         // Unless our token expired, we have nothing to do here.
@@ -262,14 +267,14 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         if (null !== $state->getRefreshToken()) {
             try {
                 // Try to renew our token.
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->renew();
+                app(Auth0::class)->getSdk()->renew();
             } catch (\Auth0\SDK\Exception\StateException $tokenRefreshFailed) {
                 // Renew failed. Inform application.
                 event(new \Auth0\Laravel\Event\Stateful\TokenRefreshFailed());
             }
 
             // Retrieve updated state data
-            $refreshed = app(\Auth0\Laravel\Auth0::class)->getSdk()->getCredentials();
+            $refreshed = app(Auth0::class)->getSdk()->getCredentials();
 
             // @phpstan-ignore-next-line
             if (null !== $refreshed && false === $refreshed->accessTokenExpired) {
@@ -282,7 +287,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
         // We didn't have a refresh token, or the refresh failed.
         // Clear session.
         $state->clear();
-        app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
+        app(Auth0::class)->getSdk()->clear();
 
         // Inform host application.
         event(new \Auth0\Laravel\Event\Stateful\TokenExpired());
@@ -293,15 +298,15 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
     /**
      * Return the current request's StateInstance singleton.
      */
-    private function getState(): \Auth0\Laravel\StateInstance
+    private function getState(): StateInstance
     {
-        return app(\Auth0\Laravel\StateInstance::class);
+        return app(ConcreteStateInstance::class);
     }
 
     /**
      * Return the current request's StateInstance singleton.
      */
-    private function getProvider(): \Illuminate\Contracts\Auth\UserProvider
+    private function getProvider(): UserProvider
     {
         static $provider = null;
 
@@ -312,7 +317,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             $configured = config('auth.guards.auth0.provider') ?? \Auth0\Laravel\Auth\User\Provider::class;
             $provider = app('auth')->createUserProvider($configured);
 
-            if (! $provider instanceof \Illuminate\Contracts\Auth\UserProvider) {
+            if (! $provider instanceof UserProvider) {
                 throw new RuntimeException('Auth0: Unable to invoke UserProvider from application configuration.');
             }
         }
