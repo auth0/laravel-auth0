@@ -14,7 +14,7 @@ use Psr\Cache\CacheItemPoolInterface;
 final class LaravelCachePool implements CacheItemPoolInterface
 {
     /**
-     * @var array<array{item: CacheItemInterface, expiration: int|null}>
+     * @var array<array{item: CacheItemInterface, expiration: \DateTimeInterface|int|null}>
      */
     private array $deferred = [];
 
@@ -99,16 +99,14 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
         $value = serialize($item->get());
         $key = $item->getKey();
-        $expires = $item->expirationTimestamp();
+        $expires = $item->getExpiration();
         $ttl = 0;
 
-        if (null !== $expires) {
-            if ($expires <= time()) {
-                return $this->deleteItem($key);
-            }
-
-            $ttl = $expires - time();
+        if ($expires->getTimestamp() <= time()) {
+            return $this->deleteItem($key);
         }
+
+        $ttl = $expires->getTimestamp() - time();
 
         return $this->getStore()->
             put($key, $value, $ttl);
@@ -122,7 +120,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
         $this->deferred[$item->getKey()] = [
             'item'       => $item,
-            'expiration' => $item->expirationTimestamp(),
+            'expiration' => $item->getExpiration(),
         ];
 
         return true;
