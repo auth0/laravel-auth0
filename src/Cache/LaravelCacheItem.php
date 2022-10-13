@@ -38,6 +38,7 @@ final class LaravelCacheItem implements CacheItemInterface
     public function set($value = null): static
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -69,6 +70,7 @@ final class LaravelCacheItem implements CacheItemInterface
             \is_int($time)                 => new \DateTimeImmutable('now +' . $time . ' seconds'),
             $time instanceof \DateInterval => (new \DateTimeImmutable())->add($time), /* @phpstan-ignore-line */
         };
+
         return $this;
     }
 
