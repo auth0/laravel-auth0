@@ -8,12 +8,12 @@ use Psr\Cache\CacheItemInterface;
 
 final class LaravelCacheItem implements CacheItemInterface
 {
-
     public function __construct(
         private string $key,
         private mixed $value,
         private bool $hit,
-        private ?\DateTimeInterface $expiration = null)
+        private ?\DateTimeInterface $expiration = null
+    )
     {
     }
 

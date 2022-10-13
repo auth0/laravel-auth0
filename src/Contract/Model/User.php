@@ -11,7 +11,7 @@ interface User
      *
      * @param  array  $attributes  attributes representing the user data
      */
-    public function __construct(private array $attributes = []);
+    public function __construct(array $attributes = []);
 
     /**
      * Dynamically retrieve attributes on the model.

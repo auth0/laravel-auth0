@@ -21,8 +21,7 @@ final class LaravelSession implements StoreInterface
     public function __construct(
         private string $prefix = 'auth0',
         private bool $booted = false
-    )
-    {
+    ) {
     }
 
     /**
