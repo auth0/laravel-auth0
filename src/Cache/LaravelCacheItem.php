@@ -12,7 +12,7 @@ final class LaravelCacheItem implements CacheItemInterface
         private string $key,
         private mixed $value,
         private bool $hit,
-        private ?\DateTimeInterface $expiration = null
+        private ?\DateTimeInterface $expiration = null,
     ) {
     }
 
@@ -65,9 +65,9 @@ final class LaravelCacheItem implements CacheItemInterface
     public function expiresAfter(int|\DateInterval|null $time): static
     {
         $this->expiration = match (true) {
-            is_null($time) => new \DateTimeImmutable('now +1 year'),
-            is_int($time) => new \DateTimeImmutable('now +' . $time . ' seconds'),
-            $time instanceof \DateInterval => (new \DateTimeImmutable())->add($time), /** @phpstan-ignore-line */
+            null === $time                 => new \DateTimeImmutable('now +1 year'),
+            \is_int($time)                 => new \DateTimeImmutable('now +' . $time . ' seconds'),
+            $time instanceof \DateInterval => (new \DateTimeImmutable())->add($time), /* @phpstan-ignore-line */
         };
         return $this;
     }
@@ -96,7 +96,7 @@ final class LaravelCacheItem implements CacheItemInterface
         return new self(
             key: $key,
             value: null,
-            hit: false
+            hit: false,
         );
     }
 }

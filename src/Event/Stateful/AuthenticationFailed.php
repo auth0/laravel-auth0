@@ -11,7 +11,7 @@ final class AuthenticationFailed extends \Auth0\Laravel\Event\Auth0Event impleme
      */
     public function __construct(
         private \Throwable $exception,
-        private bool $throwException = true
+        private bool $throwException = true,
     ) {
     }
 
