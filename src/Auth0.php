@@ -84,7 +84,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 if (! isset($config['sessionStorage'])) {
                     $configuration->setSessionStorage(
                         sessionStorage: new LaravelSession(
-                            prefix: $configuration->getSessionStorageId()
+                            prefix: $configuration->getSessionStorageId(),
                         )
                     );
                 }
@@ -93,7 +93,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 if (! isset($config['transientStorage'])) {
                     $configuration->setTransientStorage(
                         transientStorage: new LaravelSession(
-                            prefix: $configuration->getTransientStorageId()
+                            prefix: $configuration->getTransientStorageId(),
                         )
                     );
                 }
