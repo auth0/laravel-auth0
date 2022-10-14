@@ -79,18 +79,24 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
 
             $configuration = new Configuration($config);
 
-            // If no sessionStorage is defined, use an LaravelSession store instance.
-            if (! isset($config['sessionStorage'])) {
-                $configuration->setSessionStorage(
-                    new LaravelSession($configuration->getSessionStorageId()),
-                );
-            }
+            if (! \in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
+                // If no sessionStorage is defined, use an LaravelSession store instance.
+                if (! isset($config['sessionStorage'])) {
+                    $configuration->setSessionStorage(
+                        sessionStorage: new LaravelSession(
+                            prefix: $configuration->getSessionStorageId()
+                        )
+                    );
+                }
 
-            // If no transientStorage is defined, use an LaravelSession store instance.
-            if (! isset($config['transientStorage'])) {
-                $configuration->setTransientStorage(
-                    new LaravelSession($configuration->getTransientStorageId()),
-                );
+                // If no transientStorage is defined, use an LaravelSession store instance.
+                if (! isset($config['transientStorage'])) {
+                    $configuration->setTransientStorage(
+                        transientStorage: new LaravelSession(
+                            prefix: $configuration->getTransientStorageId()
+                        )
+                    );
+                }
             }
 
             // Give apps an opportunity to mutate the configuration before applying it.
