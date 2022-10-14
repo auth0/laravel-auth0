@@ -83,7 +83,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 // If no sessionStorage is defined, use an LaravelSession store instance.
                 if (! isset($config['sessionStorage'])) {
                     $configuration->setSessionStorage(
-                        transientStorage: new LaravelSession(
+                        sessionStorage: new LaravelSession(
                             prefix: $configuration->getSessionStorageId()
                         )
                     );
