@@ -1,5 +1,12 @@
 # Change Log
 
+## [7.2.1](https://github.com/auth0/laravel-auth0/tree/7.2.1) (2022-10-13)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.0...7.2.1)
+
+**Fixed**
+- `Auth0\Laravel\Auth0` no longer requires a session configuration for stateless strategies, restoring previous behavior. [\#317](https://github.com/auth0/laravel-auth0/pull/317) ([evansims](https://github.com/evansims))
+- The SDK now requires `^3.0` of the `psr/cache` dependency, to accomodate breaking changes made in the upstream interface (typed parameters and return types) for PHP 8.0+. [\#316](https://github.com/auth0/laravel-auth0/pull/316) ([evansims](https://github.com/evansims))
+
 ## [7.2.0](https://github.com/auth0/laravel-auth0/tree/7.2.0) (2022-10-10)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.1.0...7.2.0)
 
