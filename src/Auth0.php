@@ -85,7 +85,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                     $configuration->setSessionStorage(
                         sessionStorage: new LaravelSession(
                             prefix: $configuration->getSessionStorageId(),
-                        )
+                        ),
                     );
                 }
 
@@ -94,7 +94,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                     $configuration->setTransientStorage(
                         transientStorage: new LaravelSession(
                             prefix: $configuration->getTransientStorageId(),
-                        )
+                        ),
                     );
                 }
             }
