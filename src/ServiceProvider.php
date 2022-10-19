@@ -50,6 +50,8 @@ final class ServiceProvider extends \Illuminate\Support\ServiceProvider implemen
 
     public function boot(\Illuminate\Routing\Router $router, \Illuminate\Auth\AuthManager $auth): self
     {
+        $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0-config');
+
         $auth->extend('auth0', static fn (): Guard => new Guard());
         $auth->provider('auth0', static fn (): Provider => new Provider());
 
