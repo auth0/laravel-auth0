@@ -1,5 +1,12 @@
 # Change Log
 
+## [7.2.2](https://github.com/auth0/laravel-auth0/tree/7.2.2) (2022-10-19)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.1...7.2.2)
+
+**Fixed**
+- [SDK-3720] Restore `php artisan vendor:publish` command [\#321](https://github.com/auth0/laravel-auth0/pull/321) ([evansims](https://github.com/evansims))
+- [SDK-3721] Bump minimum `auth0/auth0-php` version to `^8.3.4` [\#322](https://github.com/auth0/laravel-auth0/pull/322) ([evansims](https://github.com/evansims))
+
 ## [7.2.1](https://github.com/auth0/laravel-auth0/tree/7.2.1) (2022-10-13)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.0...7.2.1)
 
