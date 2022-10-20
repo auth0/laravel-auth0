@@ -46,7 +46,7 @@ return [
     'cookieDomain' => env('AUTH0_COOKIE_DOMAIN'),
 
     // Specifies path on the domain where the cookies will work. Defaults to '/'. Use a single slash ('/') for all paths on the domain.
-    'cookiePath' => env('AUTH0_COOKIE_PATH'),
+    'cookiePath' => env('AUTH0_COOKIE_PATH', '/'),
 
     // Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
     'cookieSecure' => \Auth0\Laravel\Configuration::stringToBoolOrNull(env('AUTH0_COOKIE_SECURE'), false),
