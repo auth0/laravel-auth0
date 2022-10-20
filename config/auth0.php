@@ -9,7 +9,7 @@ declare(strict_types=1);
 return [
     // Should be assigned either 'api', 'management', or 'webapp' to indicate your application's use case for the SDK.
     // Determines what configuration options will be required.
-    'strategy' => env('AUTH0_STRATEGY', 'webapp'),
+    'strategy' => env('AUTH0_STRATEGY', \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR),
 
     // Auth0 domain for your tenant, found in your Auth0 Application settings.
     'domain' => env('AUTH0_DOMAIN'),
@@ -30,7 +30,7 @@ return [
     'audience' => \Auth0\Laravel\Configuration::stringToArrayOrNull(env('AUTH0_AUDIENCE')),
 
     // One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
-    'scope' => \Auth0\Laravel\Configuration::stringToArrayOrNull(env('AUTH0_SCOPE')),
+    'scope' => \Auth0\Laravel\Configuration::stringToArray(env('AUTH0_SCOPE')),
 
     // One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
     'organization' => \Auth0\Laravel\Configuration::stringToArrayOrNull(env('AUTH0_ORGANIZATION')),
