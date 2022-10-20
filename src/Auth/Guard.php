@@ -11,6 +11,7 @@ use Auth0\Laravel\StateInstance as ConcreteStateInstance;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Facades\Session;
 use RuntimeException;
 
 final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Contracts\Auth\Guard
@@ -31,8 +32,9 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function logout(): self
     {
-        $this->getState()->
-            setUser(null);
+        app()->instance(StateInstance::class, null);
+        Session::flush();
+
         app(Auth0::class)->getSdk()->clear();
 
         return $this;

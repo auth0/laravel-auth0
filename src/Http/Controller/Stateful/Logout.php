@@ -24,12 +24,9 @@ final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\L
          * @var Guard $guard
          */
         if ($guard->check()) {
-            $guard->logout();
+            $request->session()->invalidate();
 
-            $request->session()->
-                invalidate();
-            $request->session()->
-                regenerateToken();
+            $guard->logout();
 
             return redirect()->away(
                 app(\Auth0\Laravel\Auth0::class)->getSdk()->authentication()->getLogoutLink(url(config('auth0.routes.home', '/'))), // @phpstan-ignore-line
