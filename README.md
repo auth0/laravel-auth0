@@ -28,7 +28,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
->  [Octane support](#octane-support) is experimental advised for use in production at this time.
+>  [Octane support](#octane-support) is experimental and not advisable for use in production at this time.
 
 ### Installation
 
