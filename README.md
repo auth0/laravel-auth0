@@ -26,7 +26,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 - PHP 8.0+
 - Laravel 8 / Laravel 9
 
-> Please review our [support policy](#support-policy) to learn when language and framework versions will exit suuport in the future.
+> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
 >  [Octane support](#octane-support) is experimental advised for use in production at this time.
 
