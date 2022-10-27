@@ -1,12 +1,12 @@
 ![laravel-auth0](.github/header.png?sanitize=true&raw=true)
 
-Authentication with Auth0 for your PHP applications.
+Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
 [![Build](https://img.shields.io/github/workflow/status/auth0/laravel-auth0/Checks)](https://github.com/auth0/laravel-auth0/actions/workflows/checks.yml?query=branch%3Amain)
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://doge.mit-license.org/)
 
-Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
+:books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
 
 ## Documentation
 
