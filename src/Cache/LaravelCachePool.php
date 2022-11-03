@@ -154,7 +154,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
         $value = unserialize($value);
 
-        if (false === $value || 'b:0;' !== $value) {
+        if (false === $value) {
             return LaravelCacheItem::miss($key);
         }
 
