@@ -21,8 +21,7 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function login(Authenticatable $user): self
     {
-        $this->getState()->
-            setUser($user);
+        $this->getState()->setUser($user);
 
         return $this;
     }
@@ -32,6 +31,11 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
      */
     public function logout(): self
     {
+        // Although user() should never return null in this instance, default to an empty dummy user in such an event to avoid throwing an exception.
+        $user = $this->user() ?? new \Auth0\Laravel\Model\Stateful\User([]);
+
+        event(new \Illuminate\Auth\Events\Logout(Guard::class, $user));
+
         app()->instance(StateInstance::class, null);
         Session::flush();
 
@@ -168,6 +172,10 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             return null;
         }
 
+        $event = new \Auth0\Laravel\Event\Stateless\TokenVerificationAttempting($token);
+        event($event);
+        $token = $event->getToken();
+
         try {
             // Attempt to decode the bearer token.
             $decoded = app(Auth0::class)->getSdk()->decode(
@@ -175,6 +183,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
                 tokenType: \Auth0\SDK\Token::TYPE_TOKEN,
             )->toArray();
         } catch (\Auth0\SDK\Exception\InvalidTokenException $invalidToken) {
+            event(new \Auth0\Laravel\Event\Stateless\TokenVerificationFailed($token, $invalidToken));
+
             // Invalid bearer token.
             return null;
         }
@@ -195,6 +205,8 @@ final class Guard implements \Auth0\Laravel\Contract\Auth\Guard, \Illuminate\Con
             if (! $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
                 exit('User model returned fromAccessToken must implement \Auth0\Laravel\Contract\Model\Stateless\User.');
             }
+
+            event(new \Auth0\Laravel\Event\Stateless\TokenVerificationSucceeded($token, $decoded));
 
             $this->getState()->
                 clear()->

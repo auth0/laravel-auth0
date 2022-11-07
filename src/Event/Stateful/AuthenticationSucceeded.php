@@ -13,7 +13,6 @@ final class AuthenticationSucceeded extends \Auth0\Laravel\Event\Auth0Event impl
      */
     public function __construct(private Authenticatable $user)
     {
-        $this->user = $user;
     }
 
     /**
