@@ -1,5 +1,15 @@
 # Change Log
 
+## [7.3.0](https://github.com/auth0/laravel-auth0/tree/7.3.0) (2022-11-07)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.2...7.3.0)
+
+**Added**
+- add: Raise additional Laravel Auth Events [\#331](https://github.com/auth0/laravel-auth0/pull/331) ([evansims](https://github.com/evansims))
+
+**Fixed**
+- fix: `env()` incorrectly assigns `cookieExpires` to a `string` value [\#332](https://github.com/auth0/laravel-auth0/pull/332) ([evansims](https://github.com/evansims))
+- fix: Auth0\Laravel\Cache\LaravelCachePool::createItem returning a cache miss [\#329](https://github.com/auth0/laravel-auth0/pull/329) ([pkivits-litebit](https://github.com/pkivits-litebit))
+
 ## [7.2.2](https://github.com/auth0/laravel-auth0/tree/7.2.2) (2022-10-19)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.1...7.2.2)
 
