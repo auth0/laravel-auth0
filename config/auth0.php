@@ -39,7 +39,7 @@ return [
     'cookieSecret' => env('AUTH0_COOKIE_SECRET', env('APP_KEY')),
 
     // How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
-    'cookieExpires' => env('COOKIE_EXPIRES', 0),
+    'cookieExpires' => (int) env('AUTH0_COOKIE_EXPIRES', 0),
 
     // Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. Defaults to value of HTTP_HOST server environment information.
     // Note: To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
