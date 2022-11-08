@@ -54,7 +54,7 @@ Note the **Domain**, **Client ID**, and **Client Secret**. These values will be 
 Use Laravel's CLI to generate an Auth0 configuration file within your project:
 
 ```
-php artisan vendor:publish --tag auto0-config
+php artisan vendor:publish --tag auth0-config
 ```
 
 A new file will appear within your project, `app/config/auth0.php`. You should avoid making changes to this file directly.
