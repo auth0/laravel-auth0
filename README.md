@@ -220,7 +220,7 @@ Our support windows are determined by the [Laravel release support](https://lara
 |             |                  | 8.0          | Nov 2023      |
 |             | 8                | 8.1          | Jan 2023      |
 |             |                  | 8.0          | Jan 2023      |
-| 6⁴          | 8                | 8.1          | Jan 2023      |
+| 6           | 8                | 8.1          | Jan 2023      |
 |             |                  | 8.0          | Jan 2023      |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment and Laravel framework dependencies always remain up to date.
