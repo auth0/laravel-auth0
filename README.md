@@ -214,7 +214,7 @@ Route::get('/api/public', function () {
 
 Our support windows are determined by the [Laravel release support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Laravel framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
 
-| SDK Version | Laravel Version¹ | PHP Version² | Support Ends³ |
+| SDK Version | Laravel Version  | PHP Version  | Support Ends  |
 |-------------|------------------|--------------|---------------|
 | 7           | 9                | 8.1          | Feb 2024      |
 |             |                  | 8.0          | Nov 2023      |
@@ -223,7 +223,7 @@ Our support windows are determined by the [Laravel release support](https://lara
 | 6⁴          | 8                | 8.1          | Jan 2023      |
 |             |                  | 8.0          | Jan 2023      |
 
-Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
+Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment and Laravel framework dependencies always remain up to date.
 
 ## Octane Support
 
