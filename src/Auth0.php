@@ -17,7 +17,7 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
     /**
      * The Laravel-Auth0 SDK version:.
      */
-    public const VERSION = '7.3.0';
+    public const VERSION = '7.4.0';
 
     /**
      * An instance of the Auth0-PHP SDK.
