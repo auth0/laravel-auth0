@@ -77,6 +77,9 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 }
             }
 
+            $event = new \Auth0\Laravel\Event\Configuration\Building($config);
+            event($event);
+
             $configuration = new Configuration($config);
 
             if (! \in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
