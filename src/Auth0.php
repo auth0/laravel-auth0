@@ -77,7 +77,10 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 }
             }
 
-            $configuration = new Configuration($config);
+            $event = new \Auth0\Laravel\Event\Configuration\Building($config);
+            event($event);
+
+            $configuration = new Configuration($event->getConfiguration());
 
             if (! \in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
                 // If no sessionStorage is defined, use an LaravelSession store instance.

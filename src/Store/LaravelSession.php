@@ -104,6 +104,11 @@ final class LaravelSession implements StoreInterface
         }
     }
 
+    /**
+     *  {@inheritdoc}
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
+     */
     private function getStore(): \Illuminate\Session\Store
     {
         $request = request();
