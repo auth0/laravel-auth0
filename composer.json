@@ -110,7 +110,6 @@
     },
     "scripts": {
         "phpstan": "@php vendor/bin/phpstan analyse",
-        "phpstan:pro": "@php vendor/bin/phpstan analyse --pro",
         "pint": "@php vendor/bin/pint --test",
         "pint:fix": "@php vendor/bin/pint",
         "psalm": "@php vendor/bin/psalm",
