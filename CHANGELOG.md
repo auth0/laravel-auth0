@@ -1,5 +1,12 @@
 # Change Log
 
+## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.3.0...7.4.0)
+
+**Added**
+- feat: Add `Auth0\Laravel\Event\Middleware\...` event hooks [\#340](https://github.com/auth0/laravel-auth0/pull/340) ([evansims](https://github.com/evansims))
+- feat: Add `Auth0\Laravel\Event\Configuration\Building` event hook [\#339](https://github.com/auth0/laravel-auth0/pull/339) ([evansims](https://github.com/evansims))
+
 ## [7.3.0](https://github.com/auth0/laravel-auth0/tree/7.3.0) (2022-11-07)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.2.2...7.3.0)
 
