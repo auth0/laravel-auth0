@@ -25,6 +25,8 @@ final class Authenticate implements \Auth0\Laravel\Contract\Http\Middleware\Stat
          */
         $guard = $auth->guard('auth0');
 
+        event(new \Auth0\Laravel\Event\Middleware\StatefulRequest($request, $guard));
+
         /**
          * @var Guard $guard
          */

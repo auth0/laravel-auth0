@@ -24,6 +24,8 @@ final class Authorize implements \Auth0\Laravel\Contract\Http\Middleware\Statele
          */
         $guard = $auth->guard('auth0');
 
+        event(new \Auth0\Laravel\Event\Middleware\StatelessRequest($request, $guard));
+
         /**
          * @var Guard $guard
          */
