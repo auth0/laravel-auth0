@@ -1,4 +1,4 @@
-![laravel-auth0](https://cdn.auth0.com/website/sdks/banners/auth0-php-banner.png)
+![laravel-auth0](https://cdn.auth0.com/website/sdks/banners/laravel-auth0-banner.png)
 
 Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
