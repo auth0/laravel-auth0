@@ -25,10 +25,11 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 - PHP 8.0+
 - Laravel 8 / Laravel 9
+- `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
->  [Octane support](#octane-support) is experimental and not advisable for use in production at this time.
+> [Octane support](#octane-support) is experimental and not advisable for use in production at this time.
 
 ### Installation
 
@@ -114,7 +115,7 @@ Next, find the `guards` section, and add `auth0` there:
 ],
 ```
 
-Finally, find the `providers` section, and add `auth0` there as well:
+Next, find the `providers` section, and add `auth0` there as well:
 ```php
 // 👆 Continued from above, in config/auth.php
 'providers' => [
@@ -124,6 +125,17 @@ Finally, find the `providers` section, and add `auth0` there as well:
         'repository' => \Auth0\Laravel\Auth\User\Repository::class
     ],
 ],
+```
+
+Although it is enabled by default, now is a good time to ensure the `StartSession` middleware is enabled in your `app/Http/Kernel.php` file:
+```php
+protected $middlewareGroups = [
+    'web' => [
+        // ...
+        \Illuminate\Session\Middleware\StartSession::class,
+        // ...
+    ],
+];
 ```
 
 ## Add login to stateful web applications
