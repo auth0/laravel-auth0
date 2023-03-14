@@ -2,17 +2,37 @@
 
 ## [Unreleased]
 
+Most of these changes rely on upstream changes in the Auth0-PHP SDK that are waiting for release.
+These changes will not function correctly until that release is made.
+
 **Added**
 
 -   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
--   New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing.
+-   New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
+-   New Exception types have been added for more precise error catching.
 
 **Changed**
 The following changes have no effect on the external API of this package, but may affect internal usage.
 
+-   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
+-   `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
+-   `Guard` now inherits the `DeferrableProvider` interface to better support Laravel's deferred provider loading.
 -   `StateInstance` concept has been replaced by new `Credentials` entity.
 -   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
 -   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
+-   The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
+-   The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
+
+**Fixed**
+
+-   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
+-   An issue wherein the `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
+-   `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
+
+**Maintenance**
+
+-   Reworked test suite to use PEST framework.
+-   Restored test coverage to 100%.
 
 Thanks to our contributors for this release: [taida957789](https://github.com/taida957789)
 
