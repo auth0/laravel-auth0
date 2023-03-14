@@ -241,7 +241,8 @@ Our support lifecycle mirrors the [Laravel release support](https://laravel.com/
 
 | SDK Version | Laravel Version | PHP Version | Support Ends |
 | ----------- | --------------- | ----------- | ------------ |
-| 7.5+        | 10              | 8.2         | Feb 2024     |
+| 7.5+        | 10              | 8.2         | Feb 2025     |
+|             |                 | 8.1         | Nov 2024     |
 | 7.0+        | 9               | 8.2         | Feb 2024     |
 |             |                 | 8.1         | Feb 2024     |
 |             |                 | 8.0         | Nov 2023     |
