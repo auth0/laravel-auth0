@@ -23,16 +23,23 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 ### Requirements
 
 -   PHP 8.0+
--   Laravel 8 / Laravel 9
--   `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
+-   [Composer](https://getcomposer.org/)
+-   Laravel 9.x/10.x
+    -   `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
+-   PHP Extensions:
+    -   [mbstring](https://www.php.net/manual/en/book.mbstring.php)
+-   Dependencies:
+    -   [PSR-18 HTTP Client implementation](./FAQ.md#what-is-psr-18)
+    -   [PSR-17 HTTP Factory implementation](./FAQ.md#what-is-psr-17)
+    -   [PSR-7 HTTP Messages implementation](./FAQ.md#what-is-psr-7)
 
-> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
+> Please review our [support policy](#support-policy) for details on our PHP and Laravel version support.
 
 > [Octane support](#octane-support) is experimental and not advisable for use in production at this time.
 
 ### Installation
 
-Add the dependency to your application with [Composer](https://getcomposer.org/):
+Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
 composer require auth0/login
