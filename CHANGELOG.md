@@ -6,6 +6,13 @@
 
 -   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
 
+**Changed**
+The following changes have no effect on the external API of this package, but may affect internal usage.
+
+-   `StateInstance` concept has been replaced by new `Credentials` entity.
+-   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
+-
+
 Thanks to our contributors for this release: [taida957789](https://github.com/taida957789)
 
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
