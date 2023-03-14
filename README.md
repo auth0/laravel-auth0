@@ -24,7 +24,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 -   PHP 8.0+
 -   [Composer](https://getcomposer.org/)
--   Laravel 9.x/10.x
+-   Laravel 9.0+, 10.0+
     -   `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
 -   PHP Extensions:
     -   [mbstring](https://www.php.net/manual/en/book.mbstring.php)
