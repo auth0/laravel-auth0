@@ -1,39 +1,68 @@
 <?php
 
-declare(strict_types=1);
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Artisan;
 
-uses(\Auth0\Laravel\Tests\TestCase::class)->
-    beforeEach(function (): void {
-        $this->service = createService();
-    }, )->
-    in(__DIR__);
+// Flag to indicate that we are running tests.
+define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
 
-function createServiceConfiguration(
-    array $configuration = [],
-): Auth0\SDK\Configuration\SdkConfiguration {
-    $defaults = [
-        'strategy' => 'none',
-    ];
+/*
+|--------------------------------------------------------------------------
+| Test Case
+|--------------------------------------------------------------------------
+|
+| The closure you provide to your test functions is always bound to a specific PHPUnit test
+| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
+| need to change it using the "uses()" function to bind a different classes or traits.
+|
+*/
 
-    return new \Auth0\SDK\Configuration\SdkConfiguration(array_merge($defaults, $configuration));
-}
+uses(\Auth0\Laravel\Tests\TestCase::class)->in(__DIR__);
 
-function createService(
-    ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null,
-): Auth0\Laravel\Auth0 {
-    if (null === $configuration) {
-        $configuration = createServiceConfiguration();
+uses()->afterEach(function (): void {
+    $commands = ['optimize:clear'];
+
+    foreach ($commands as $command) {
+        Artisan::call($command);
     }
+})->in(__DIR__);
 
-    return (new \Auth0\Laravel\Auth0())->setConfiguration($configuration);
-}
+uses()->beforeEach(function (): void {
+    $this->events = [];
 
-function createSdk(
-    ?Auth0\SDK\Configuration\SdkConfiguration $configuration = null,
-): Auth0\SDK\Auth0 {
-    if (null === $configuration) {
-        $configuration = createServiceConfiguration();
-    }
+    Event::listen('*', function ($event) {
+        $this->events[] = $event;
+    });
+})->in(__DIR__);
 
-    return new \Auth0\SDK\Auth0($configuration);
-}
+/*
+|--------------------------------------------------------------------------
+| Expectations
+|--------------------------------------------------------------------------
+|
+| When you're writing tests, you often need to check that values meet certain conditions. The
+| "expect()" function gives you access to a set of "expectations" methods that you can use
+| to assert different things. Of course, you may extend the Expectation API at any time.
+|
+*/
+
+// expect()->extend('toBeOne', function () {
+//     return $this->toBe(1);
+// });
+
+/*
+|--------------------------------------------------------------------------
+| Functions
+|--------------------------------------------------------------------------
+|
+| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
+| project that you don't want to repeat in every file. Here you can also expose helpers as
+| global functions to help you to reduce the number of lines of code in your test files.
+|
+*/
+
+// function something()
+// {
+//     // ..
+// }
+

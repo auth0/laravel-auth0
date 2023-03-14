@@ -1,6 +1,6 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-    - vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ./vendor/nunomaduro/larastan/extension.neon
 
 parameters:
     level: max
@@ -13,8 +13,6 @@ parameters:
 
     ignoreErrors:
         - '#Method (.*) has parameter (.*) with no value type specified in iterable type array.#'
-        - '#Cannot call method (.*) on mixed#'
         - '#no value type specified in iterable type array.#'
-        - '#Call to an undefined method Illuminate\\(.*).#'
 
     reportUnmatchedIgnoredErrors: false

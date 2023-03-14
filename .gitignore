@@ -1,5 +1,7 @@
 build/
 vendor/
+coverage/
+tmp/
 .idea/
 .env
 .DS_Store
@@ -7,4 +9,5 @@ composer.lock
 composer.phar
 .phpunit.result.cache
 composer.local.json
-
+composer.local.json_
+.php-cs-fixer.cache

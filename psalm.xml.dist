@@ -5,6 +5,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src"/>
@@ -13,14 +15,12 @@
     <issueHandlers>
         <MixedArgument errorLevel="suppress"/>
         <MixedArgumentTypeCoercion errorLevel="suppress"/>
-        <MixedArrayAccess errorLevel="suppress"/>
         <MixedAssignment errorLevel="suppress"/>
         <MixedInferredReturnType errorLevel="suppress"/>
-        <MixedPropertyTypeCoercion errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>
-        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin" />
     </plugins>
 </psalm>

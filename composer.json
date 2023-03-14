@@ -39,26 +39,29 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "auth0/auth0-php": "^8.3.4",
-        "illuminate/contracts": "^8.0 || ^9.0",
-        "illuminate/http": "^8.0 || ^9.0",
-        "illuminate/support": "^8.0 || ^9.0",
-        "psr/cache": "^3.0"
+        "illuminate/contracts": "^9.0 || ^10.0",
+        "illuminate/http": "^9.0 || ^10.0",
+        "illuminate/support": "^9.0 || ^10.0",
+        "psr/cache": "^2.0 || ^3.0"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "dev-main",
-        "laravel/laravel": "^8.4.4 || ^9.0",
-        "laravel/pint": "^1.2",
-        "nunomaduro/larastan": "^1.0",
-        "nyholm/psr7": "^1.4",
-        "orchestra/testbench": "6.25.1",
-        "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.2",
-        "phpstan/phpstan": "^1.7",
-        "phpstan/phpstan-strict-rules": "1.4.3",
-        "phpunit/phpunit": "^9.5",
-        "psalm/plugin-laravel": "^2.0",
-        "rector/rector": "^0.13.6",
-        "vimeo/psalm": "^4.28",
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "infection/infection": "^0.26",
+        "nunomaduro/collision": "^6.1",
+        "nunomaduro/larastan": "^2.5",
+        "orchestra/testbench": "^7.19 || ^8.0",
+        "pestphp/pest": "^1.22",
+        "pestphp/pest-plugin-laravel": "^1.4",
+        "pestphp/pest-plugin-mock": "^1.0",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "phpunit/phpunit": "^9.6",
+        "psalm/plugin-laravel": "^2.8",
+        "psr-mock/http-client-implementation": "1.x-dev",
+        "psr-mock/http-factory-implementation": "1.x-dev",
+        "psr-mock/http-message-implementation": "1.x-dev",
+        "rector/rector": "^0.15",
+        "vimeo/psalm": "^5.8",
         "wikimedia/composer-merge-plugin": "^2.0"
     },
     "minimum-stability": "dev",
@@ -77,16 +80,15 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "wikimedia/composer-merge-plugin": true,
-            "ergebnis/composer-normalize": true
+            "infection/extension-installer": true,
+            "php-http/discovery": false
         },
         "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "process-timeout": 0,
         "sort-packages": true
     },
     "extra": {
-        "composer-normalize": {
-            "indent-size": 4,
-            "indent-style": "space"
-        },
         "laravel": {
             "aliases": {
                 "Auth0": "Auth0\\Laravel\\Facade\\Auth0"
@@ -109,13 +111,17 @@
         }
     },
     "scripts": {
-        "phpstan": "@php vendor/bin/phpstan analyse",
-        "pint": "@php vendor/bin/pint --test",
+        "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
+        "phpcs:fix": "@php vendor/bin/php-cs-fixer fix src",
+        "phpcs": "@php vendor/bin/php-cs-fixer fix src --dry-run --diff",
+        "phpstan": "@php vendor/bin/phpstan analyse --debug",
         "pint:fix": "@php vendor/bin/pint",
-        "psalm": "@php vendor/bin/psalm",
+        "pint": "@php vendor/bin/pint --test",
         "psalm:fix": "@php vendor/bin/psalter --issues=all",
-        "rector": "@php vendor/bin/rector process src --dry-run",
+        "psalm": "@php vendor/bin/psalm --no-cache",
         "rector:fix": "@php vendor/bin/rector process src",
+        "rector": "@php vendor/bin/rector process src --dry-run",
+        "test:coverage": "@php vendor/bin/pest --order-by random --coverage",
         "test": "@php vendor/bin/pest --order-by random"
     }
 }

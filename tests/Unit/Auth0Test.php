@@ -2,53 +2,92 @@
 
 declare(strict_types=1);
 
-test('the service is created successfully', function (): void {
-    expect($this->service)->
-        toBeInstanceOf(\Auth0\Laravel\Auth0::class);
-}, );
+use Auth0\SDK\Contract\Auth0Interface as SdkContract;
+use Auth0\Laravel\Auth0;
+use Auth0\SDK\Auth0 as SDKAuth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
 
-test('the service instantiates it\'s own configuration if none is assigned', function (): void {
-    $service = new \Auth0\Laravel\Auth0();
+uses()->group('auth0');
 
-    expect($service->getConfiguration())->
-        toBeInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class);
-}, );
+it('can get/set the configuration', function (): void {
+    $laravel = app('auth0');
+    expect($laravel->getConfiguration())->toBeInstanceOf(SdkConfiguration::class);
 
-test('the service\'s getSdk() method returns an Auth0 SDK instance', function (): void {
-    expect($this->service->getSdk())->
-        toBeInstanceOf(\Auth0\SDK\Auth0::class);
-}, );
+    $configuration = new SdkConfiguration(['strategy' => 'none', 'domain' => uniqid() . '.auth0.test']);
+    $laravel->setConfiguration($configuration);
+    expect($laravel->getConfiguration())->toBe($configuration);
 
-test('the service\'s getConfiguration method returns an SdkConfiguration instance', function (): void {
-    expect($this->service->getConfiguration())->
-        toBeInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class);
-}, );
+    $domain = uniqid() . '.auth0.test';
+    $configuration->setDomain($domain);
+    expect($laravel->getConfiguration()->getDomain())->toBe($domain);
 
-test('the service\'s getState method returns a StateInstance instance', function (): void {
-    expect($this->service->getState())->
-        toBeInstanceOf(\Auth0\Laravel\Contract\StateInstance::class);
-}, );
+    $configuration = new SdkConfiguration(['strategy' => 'none', 'domain' => uniqid() . '.auth0.test']);
+    $laravel->setConfiguration($configuration);
+    expect($laravel->getConfiguration())->toBe($configuration);
 
-test('the service\'s setSdk() method allows overwriting the Auth0 instance', function (): void {
-    $oldSdk = $this->service->getSdk();
-    $newSdk = createSdk();
+    $sdk = $laravel->getSdk();
+    $configuration = new SdkConfiguration(['strategy' => 'none', 'domain' => uniqid() . '.auth0.test']);
+    $laravel->setConfiguration($configuration);
+    expect($laravel->getConfiguration())->toBe($configuration);
+    expect($sdk->configuration())->toBe($configuration);
+});
 
-    $this->service->setSdk($newSdk);
+it('can get the sdk credentials', function (): void {
+    $laravel = app('auth0');
 
-    expect($this->service->getSdk())->
-        toBe($newSdk)->
-        not()->
-        toBe($oldSdk);
-}, );
+    expect($laravel->getCredentials())
+        ->toBeNull();
 
-test('the service\'s setConfiguration() method allows overwriting the SdkConfiguration instance', function (): void {
-    $oldConfiguration = $this->service->getConfiguration();
-    $newConfiguration = createServiceConfiguration();
+    $sdk = $laravel->getSdk();
+    $config = $sdk->configuration();
+    $session = $config->getSessionStorage();
 
-    $this->service->setConfiguration($newConfiguration);
+    $config->setDomain('my-domain.auth0.com');
+    $config->setClientId('my_client_id');
+    $config->setClientSecret('my_client_secret');
+    $config->setCookieSecret('my_cookie_secret');
+    $config->setStrategy(SdkConfiguration::STRATEGY_REGULAR);
 
-    expect($this->service->getConfiguration())->
-        toBe($newConfiguration)->
-        not()->
-        toBe($oldConfiguration);
-}, );
+    $session->set('user', ['sub' => 'hello|world']);
+    $session->set('idToken', uniqid());
+    $session->set('accessToken', uniqid());
+    $session->set('accessTokenScope', [uniqid()]);
+    $session->set('accessTokenExpiration', time() - 1000);
+
+    // As we manually set the session values, we need to refresh the SDK state to ensure it's in sync.
+    $sdk->refreshState();
+
+    expect($laravel->getCredentials())
+        ->toBeObject()
+        ->toHaveProperty('accessToken', $session->get('accessToken'))
+        ->toHaveProperty('accessTokenScope', $session->get('accessTokenScope'))
+        ->toHaveProperty('accessTokenExpiration', $session->get('accessTokenExpiration'))
+        ->toHaveProperty('idToken', $session->get('idToken'))
+        ->toHaveProperty('user', $session->get('user'));
+});
+
+it('can get/set the SDK', function (): void {
+    $laravel = app('auth0');
+    expect($laravel->getSdk())->toBeInstanceOf(SdkContract::class);
+
+    $sdk = new SDKAuth0(['strategy' => 'none']);
+    $laravel->setSdk($sdk);
+    expect($laravel->getSdk())->toBeInstanceOf(SdkContract::class);
+});
+
+it('can reset the internal static state', function (): void {
+    $laravel = app('auth0');
+    $cache = spl_object_id($laravel->getSdk());
+
+    unset($laravel); // Force the object to be destroyed. Static state will remain.
+
+    $laravel = app('auth0');
+    $updated = spl_object_id($laravel->getSdk());
+    expect($cache)->toBe($updated);
+
+    $laravel->reset(); // Reset the static state.
+
+    $laravel = app('auth0');
+    $updated = spl_object_id($laravel->getSdk());
+    expect($cache)->not->toBe($updated);
+});
