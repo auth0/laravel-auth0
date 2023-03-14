@@ -11,7 +11,7 @@ interface Built
     /**
      * AuthenticationFailed constructor.
      *
-     * @param  SdkConfiguration  $configuration  an instance of Auth0\SDK\Configuration\SdkConfiguration for use with the Auth0-PHP SDK
+     * @param SdkConfiguration $configuration an instance of SdkConfiguration for use with the Auth0-PHP SDK
      */
     public function __construct(SdkConfiguration $configuration);
 
@@ -23,7 +23,7 @@ interface Built
     /**
      * Determine whether the provided exception will be thrown by the SDK.
      *
-     * @param  SdkConfiguration  $configuration  an instance of Auth0\SDK\Configuration\SdkConfiguration for use with the Auth0-PHP SDK
+     * @param SdkConfiguration $configuration an instance of SdkConfiguration for use with the Auth0-PHP SDK
      */
     public function setConfiguration(SdkConfiguration $configuration): self;
 }

@@ -5,61 +5,45 @@ declare(strict_types=1);
 namespace Auth0\Laravel;
 
 use Auth0\Laravel\Cache\LaravelCachePool;
+use Auth0\Laravel\Contract\Auth0 as ServiceContract;
+use Auth0\Laravel\Event\Configuration\{Building, Built};
 use Auth0\Laravel\Store\LaravelSession;
+use Auth0\SDK\Auth0 as SDK;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
-use Auth0\SDK\Contract\Auth0Interface as SDK;
+use Auth0\SDK\Contract\Auth0Interface as SDKContract;
+use Auth0\SDK\Utility\HttpTelemetry;
+use function in_array;
 
 /**
  * Service that provides access to the Auth0 SDK.
  */
-final class Auth0 implements \Auth0\Laravel\Contract\Auth0
+final class Auth0 implements ServiceContract
 {
     /**
      * The Laravel-Auth0 SDK version:.
      */
     public const VERSION = '7.4.0';
 
-    /**
-     * An instance of the Auth0-PHP SDK.
-     */
-    private static ?SDK $sdk = null;
-
-    /**
-     * An instance of the Auth0-PHP SDK's SdkConfiguration, which handles configuration state.
-     */
-    private static ?Configuration $configuration = null;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSdk(): SDK
-    {
-        if (null === self::$sdk) {
-            self::$sdk = new \Auth0\SDK\Auth0($this->getConfiguration());
-        }
-
-        $this->setSdkTelemetry();
-
-        return self::$sdk;
+    public function __construct(
+        private ?SDKContract $sdk = null,
+        private ?Configuration $configuration = null,
+    ) {
     }
 
     /**
-     * {@inheritdoc}
+     * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
      */
-    public function setSdk(SDK $sdk): self
+    private function setSdkTelemetry(): self
     {
-        self::$sdk = $sdk;
-        $this->setSdkTelemetry();
+        HttpTelemetry::setEnvProperty('Laravel', app()->version());
+        HttpTelemetry::setPackage('laravel-auth0', self::VERSION);
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(): Configuration
     {
-        if (null === self::$configuration) {
+        if (null === $this->configuration) {
             $config = config('auth0');
 
             /**
@@ -77,67 +61,85 @@ final class Auth0 implements \Auth0\Laravel\Contract\Auth0
                 }
             }
 
-            $event = new \Auth0\Laravel\Event\Configuration\Building($config);
+            $event = new Building($config);
             event($event);
 
             $configuration = new Configuration($event->getConfiguration());
 
-            if (! \in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
+            if (! in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
                 // If no sessionStorage is defined, use an LaravelSession store instance.
                 if (! isset($config['sessionStorage'])) {
-                    $configuration->setSessionStorage(
-                        sessionStorage: new LaravelSession(
-                            prefix: $configuration->getSessionStorageId(),
-                        ),
-                    );
+                    $sessionStore = app(LaravelSession::class, [
+                        'prefix' => $configuration->getSessionStorageId(),
+                    ]);
+
+                    $configuration->setSessionStorage(sessionStorage: $sessionStore);
                 }
 
                 // If no transientStorage is defined, use an LaravelSession store instance.
                 if (! isset($config['transientStorage'])) {
-                    $configuration->setTransientStorage(
-                        transientStorage: new LaravelSession(
-                            prefix: $configuration->getTransientStorageId(),
-                        ),
-                    );
+                    $transientStore = app(LaravelSession::class, [
+                        'prefix' => $configuration->getTransientStorageId(),
+                    ]);
+
+                    $configuration->setTransientStorage(transientStorage: $transientStore);
                 }
             }
 
+            $this->configuration = $configuration;
+
             // Give apps an opportunity to mutate the configuration before applying it.
-            $event = new \Auth0\Laravel\Event\Configuration\Built($configuration);
+            $event = new Built($configuration);
             event($event);
 
-            self::$configuration = $event->getConfiguration();
+            $this->configuration = $event->getConfiguration();
         }
 
-        return self::$configuration;
+        return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getCredentials(): ?object
+    {
+        return $this->getSdk()->getCredentials();
+    }
+
+    public function getSdk(): SDKContract
+    {
+        if (null !== $this->sdk) {
+            return $this->sdk;
+        }
+
+        return $this->setSdk(new SDK($this->getConfiguration()));
+    }
+
+    public function reset(): self
+    {
+        unset($this->sdk, $this->configuration);
+
+        $this->sdk           = null;
+        $this->configuration = null;
+
+        return $this;
+    }
+
     public function setConfiguration(Configuration $configuration): self
     {
-        self::$configuration = $configuration;
+        $this->configuration = $configuration;
+
+        if (null !== $this->sdk) {
+            $this->sdk->setConfiguration($configuration);
+        }
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getState(): Contract\StateInstance
+    public function setSdk(SDKContract $sdk): SDKContract
     {
-        return app(StateInstance::class);
-    }
+        $this->configuration = $sdk->configuration();
+        $this->sdk           = $sdk;
 
-    /**
-     * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
-     */
-    private function setSdkTelemetry(): self
-    {
-        \Auth0\SDK\Utility\HttpTelemetry::setEnvProperty('Laravel', app()->version());
-        \Auth0\SDK\Utility\HttpTelemetry::setPackage('laravel-auth0', self::VERSION);
+        $this->setSdkTelemetry();
 
-        return $this;
+        return $this->sdk;
     }
 }

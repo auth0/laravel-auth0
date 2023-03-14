@@ -4,31 +4,36 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
-use Auth0\Laravel\Contract\Auth\Guard;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
+use Auth0\Laravel\Http\Controller\ControllerAbstract;
+use Illuminate\Http\{RedirectResponse, Request};
 
-final class Login implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Login
+final class Login extends ControllerAbstract implements LoginContract
 {
     /**
-     * {@inheritdoc}
-     *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
+     *
+     * @param Request $request
      */
-    public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $auth = auth();
+    public function __invoke(
+        Request $request,
+    ): RedirectResponse {
+        $guard = auth()->guard();
 
-        /**
-         * @var \Illuminate\Contracts\Auth\Factory $auth
-         */
-        $guard = $auth->guard('auth0');
-
-        /**
-         * @var Guard $guard
-         */
-        if ($guard->check()) {
-            return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
+        if (! $guard instanceof GuardContract) {
+            return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        return redirect()->away(app(\Auth0\Laravel\Auth0::class)->getSdk()->login());
+        $loggedIn = $guard->check() ? true : null !== $guard->find(Guard::SOURCE_SESSION);
+
+        if ($loggedIn) {
+            return redirect()->intended(config('auth0.routes.home', '/'));
+        }
+
+        $url = $this->getSdk()->login();
+
+        return redirect()->away($url);
     }
 }

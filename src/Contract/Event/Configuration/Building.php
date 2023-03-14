@@ -9,7 +9,7 @@ interface Building
     /**
      * AuthenticationFailed constructor.
      *
-     * @param  array  $configuration  a configuration array for use with the Auth0-PHP SDK
+     * @param array $configuration a configuration array for use with the Auth0-PHP SDK
      */
     public function __construct(array $configuration);
 
@@ -21,7 +21,7 @@ interface Building
     /**
      * Determine whether the provided exception will be thrown by the SDK.
      *
-     * @param  array  $configuration  an configuration array for use with the Auth0-PHP SDK
+     * @param array $configuration an configuration array for use with the Auth0-PHP SDK
      */
     public function setConfiguration(array $configuration): self;
 }

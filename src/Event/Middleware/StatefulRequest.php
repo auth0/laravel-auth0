@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Event\Middleware;
 
-final class StatefulRequest extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Middleware\StatefulRequest
+use Auth0\Laravel\Contract\Event\Middleware\StatefulRequest as StatefulRequestContract;
+use Auth0\Laravel\Event\Auth0Event;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
+
+final class StatefulRequest extends Auth0Event implements StatefulRequestContract
 {
-    public function __construct(public \Illuminate\Http\Request $request, public \Illuminate\Contracts\Auth\Guard $guard)
+    public function __construct(public Request $request, public Guard $guard)
     {
     }
 }

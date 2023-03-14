@@ -4,39 +4,41 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
-use Auth0\Laravel\Contract\Auth\Guard;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Http\Controller\Stateful\Callback as CallbackContract;
+use Auth0\Laravel\Event\Stateful\{AuthenticationFailed, AuthenticationSucceeded};
+use Auth0\Laravel\Exception\Stateful\CallbackException;
+use Auth0\Laravel\Http\Controller\ControllerAbstract;
+use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\{RedirectResponse, Request};
+use Throwable;
+use function is_string;
 
-final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Callback
+final class Callback extends ControllerAbstract implements CallbackContract
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
-    {
-        /**
-         * @var \Illuminate\Contracts\Auth\Factory $auth
-         */
-        $auth = auth();
+    public function __invoke(
+        Request $request,
+    ): RedirectResponse {
+        $guard = auth()->guard();
 
-        /**
-         * @var Guard $guard
-         */
-        $guard = $auth->guard('auth0');
-
-        // Check if the user already has a session:
-        if ($guard->check()) {
-            // They do; redirect to homepage.
-            return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
+        if (! $guard instanceof GuardContract || $guard->check()) {
+            return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        $code = $request->query('code');
-        $state = $request->query('state');
+        /** @var Guard $guard */
+        $code    = $request->query('code');
+        $state   = $request->query('state');
+        $code    = is_string($code) ? trim($code) : '';
+        $state   = is_string($state) ? trim($state) : '';
+        $success = false;
 
-        if (! \is_string($code) || '' === $code) {
+        if ('' === $code) {
             $code = null;
         }
 
-        if (! \is_string($state) || '' === $state) {
+        if ('' === $state) {
             $state = null;
         }
 
@@ -47,28 +49,28 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
 
         try {
             if (null !== $code && null !== $state) {
-                event(new \Illuminate\Auth\Events\Attempting($guard::class, ['code' => $code, 'state' => $state], true));
+                event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
 
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->exchange(
+                $success = $this->getSdk()->exchange(
                     code: $code,
                     state: $state,
                 );
             }
-        } catch (\Throwable $exception) {
-            $credentials = app(\Auth0\Laravel\Auth0::class)->getSdk()->getUser() ?? [];
-            $credentials['code'] = $code;
+        } catch (Throwable $exception) {
+            $credentials          = $this->getSdk()->getUser() ?? [];
+            $credentials['code']  = $code;
             $credentials['state'] = $state;
             $credentials['error'] = ['description' => $exception->getMessage()];
 
-            event(new \Illuminate\Auth\Events\Failed($guard::class, $guard->user(), $credentials));
+            event(new Failed($guard::class, $guard->user(), $credentials));
 
-            app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
+            $this->getSdk()->clear();
 
             // Throw hookable $event to allow custom error handling scenarios.
-            $event = new \Auth0\Laravel\Event\Stateful\AuthenticationFailed($exception, true);
+            $event = new AuthenticationFailed($exception, true);
             event($event);
 
-            // If the event was not hooked by the host application, throw an exception:
+            // If the event was not hooked by the application, throw an exception:
             if ($event->getThrowException()) {
                 throw $exception;
             }
@@ -76,55 +78,62 @@ final class Callback implements \Auth0\Laravel\Contract\Http\Controller\Stateful
 
         if (null !== $request->query('error') && null !== $request->query('error_description')) {
             // Workaround to aid static analysis, due to the mixed formatting of the query() response:
-            $error = $request->query('error', '');
+            $error            = $request->query('error', '');
             $errorDescription = $request->query('error_description', '');
-            $error = \is_string($error) ? $error : '';
-            $errorDescription = \is_string($errorDescription) ? $errorDescription : '';
+            $error            = is_string($error) ? $error : '';
+            $errorDescription = is_string($errorDescription) ? $errorDescription : '';
 
-            $credentials = [
-                'code' => $code,
+            event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
+
+            event(new Failed($guard::class, $guard->user(), [
+                'code'  => $code,
                 'state' => $state,
                 'error' => ['error' => $error, 'description' => $errorDescription]
-            ];
-
-            event(new \Illuminate\Auth\Events\Failed($guard::class, $guard->user(), $credentials));
+            ]));
 
             // Clear the local session via the Auth0-PHP SDK:
-            app(\Auth0\Laravel\Auth0::class)->getSdk()->clear();
+            $this->getSdk()->clear();
 
-            // Create a dynamic exception to report the API error response:
-            $exception = \Auth0\Laravel\Exception\Stateful\CallbackException::apiException($error, $errorDescription);
+            // Create a dynamic exception to report the API error response
+            $exception = new CallbackException(sprintf(CallbackException::MSG_API_RESPONSE, $error, $errorDescription));
+
+            // Store the API exception in the session as a flash variable, in case the application wants to access it.
+            session()->flash('auth0.callback.error', sprintf(CallbackException::MSG_API_RESPONSE, $error, $errorDescription));
 
             // Throw hookable $event to allow custom error handling scenarios:
-            $event = new \Auth0\Laravel\Event\Stateful\AuthenticationFailed($exception, true);
+            $event = new AuthenticationFailed($exception, true);
             event($event);
 
-            // If the event was not hooked by the host application, throw an exception:
+            // If the event was not hooked by the application, throw an exception:
             if ($event->getThrowException()) {
                 throw $exception;
             }
         }
 
-        // Ensure we have a valid user:
-        $user = $guard->user();
+        if (! $success) {
+            return redirect()->intended(config('auth0.routes.login', '/'));
+        }
 
-        if (null !== $user) {
-            event(new \Illuminate\Auth\Events\Validated($guard::class, $user));
+        $credential = $guard->find(Guard::SOURCE_SESSION);
+        $user       = $credential?->getUser();
+
+        if (null !== $credential && $user instanceof Authenticatable) {
+            event(new Validated($guard::class, $user));
+            $guard->login($credential, Guard::SOURCE_SESSION);
 
             $request->session()->regenerate();
 
-            // Throw hookable event to allow custom application logic for successful logins:
-            $event = new \Auth0\Laravel\Event\Stateful\AuthenticationSucceeded($user);
+            $event = new AuthenticationSucceeded($user);
             event($event);
             $user = $event->getUser();
-
-            // Apply any mutations to the user object:
             $guard->setUser($user);
 
-            event(new \Illuminate\Auth\Events\Login($guard::class, $user, true));
-            event(new \Illuminate\Auth\Events\Authenticated($guard::class, $user));
+            // @phpstan-ignore-next-line
+            if ($user instanceof Authenticatable) {
+                event(new Authenticated($guard::class, $user));
+            }
         }
 
-        return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
+        return redirect()->intended(config('auth0.routes.home', '/'));
     }
 }

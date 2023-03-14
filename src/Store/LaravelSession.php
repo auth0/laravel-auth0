@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Store;
 
+use Auth0\Laravel\Exception\SessionException;
 use Auth0\SDK\Contract\StoreInterface;
-use Exception;
+use Illuminate\Session\Store;
+use InvalidArgumentException;
 
 /**
  * Class LaravelSession
@@ -14,120 +16,153 @@ use Exception;
 final class LaravelSession implements StoreInterface
 {
     public function __construct(
-        private string $prefix = 'auth0',
-        private bool $booted = false,
+        string $prefix = 'auth0',
     ) {
+        $this->setPrefix($prefix);
     }
 
     /**
-     * Dispatch event to toggle state deferrance.
+     * Prefixes a key with the SDK's configured namespace.
      *
-     * @param  bool  $deferring  whether to defer persisting the storage state
+     * @param string $key
+     */
+    private function getPrefixedKey(string $key): string
+    {
+        return $this->getPrefix() . '_' . trim($key);
+    }
+
+    /**
+     * Retrieves the Laravel session store.
+     *
+     * @throws SessionException If a Laravel session store is not available.
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
+     */
+    private function getStore(): Store
+    {
+        $store = app('session.store');
+
+        if (! request()->hasSession(true)) {
+            request()->setLaravelSession($store);
+        }
+
+        if (! $store->isStarted()) {
+            $store->start();
+        }
+
+        return $store;
+    }
+
+    /**
+     * This method is required by the interface but is not used by this SDK.
+     *
+     * @param bool $deferring whether to defer persisting the storage state
      */
     public function defer(bool $deferring): void
     {
     }
 
     /**
-     * Dispatch event to set the value of a key-value pair.
+     * Delete a value from the Laravel session by key. (Key will be automatically prefixed with the SDK's configured namespace.).
      *
-     * @param  string  $key  session key to set
-     * @param  mixed  $value  value to use
-     */
-    public function set(string $key, $value): void
-    {
-        $this->boot();
-        $this->getStore()->
-            put($this->getPrefixedKey($key), $value);
-    }
-
-    /**
-     * Dispatch event to retrieve the value of a key-value pair.
+     * @param string $key session key to delete
      *
-     * @param  string  $key  session key to query
-     * @param  mixed  $default  default to return if nothing was found
-     * @return mixed
-     */
-    public function get(string $key, $default = null)
-    {
-        $this->boot();
-
-        return $this->getStore()->
-            get($this->getPrefixedKey($key), $default);
-    }
-
-    /**
-     * Dispatch event to clear all key-value pairs.
-     */
-    public function purge(): void
-    {
-        $this->boot();
-
-        // It would be unwise for us to simply flush() a session here, as it is shared with the app ecosystem.
-        // Instead, iterate through the session data, and if they key is prefixed with our assigned string, delete it.
-
-        $pairs = $this->getStore()->
-            all();
-        $prefix = $this->prefix . '_';
-
-        foreach (array_keys($pairs) as $key) {
-            if (mb_substr($key, 0, mb_strlen($prefix)) === $prefix) {
-                $this->delete($key);
-            }
-        }
-    }
-
-    /**
-     * Dispatch event to delete key-value pair.
-     *
-     * @param  string  $key  session key to delete
+     * @throws SessionException If a Laravel session store is not available.
      */
     public function delete(string $key): void
     {
-        $this->boot();
-        $this->getStore()->
-            forget($this->getPrefixedKey($key));
+        $this->getStore()->forget($this->getPrefixedKey($key));
     }
 
     /**
-     * Dispatch event to alert that a session should be prepared for an incoming request.
-     */
-    private function boot(): void
-    {
-        if (! $this->booted) {
-            if (! $this->getStore()->isStarted()) {
-                $this->getStore()->
-                    start();
-            }
-
-            $this->booted = true;
-        }
-    }
-
-    /**
-     *  {@inheritdoc}
+     * Retrieve a value from the Laravel session by key. (Key will be automatically prefixed with the SDK's configured namespace.).
      *
-     * @psalm-suppress RedundantConditionGivenDocblockType
+     * @param string $key     session key to query
+     * @param mixed  $default default to return if nothing was found
+     *
+     * @throws SessionException If a Laravel session store is not available.
      */
-    private function getStore(): \Illuminate\Session\Store
+    public function get(string $key, $default = null)
     {
-        $request = request();
-
-        // @phpstan-ignore-next-line
-        if ($request instanceof \Illuminate\Http\Request) {
-            return $request->session();
-        }
-
-        // @phpstan-ignore-next-line
-        throw new Exception('A cache must be configured.');
+        return $this->getStore()->get($this->getPrefixedKey($key), $default);
     }
 
-    private function getPrefixedKey(string $key): string
+    /**
+     * Get all values from the Laravel session that are prefixed with the SDK's configured namespace.
+     *
+     * @throws SessionException If a Laravel session store is not available.
+     */
+    public function getAll(): array
     {
-        if ('' !== $this->prefix) {
-            return $this->prefix . '_' . $key;
+        $pairs    = $this->getStore()->all();
+        $prefix   = $this->prefix . '_';
+        $response = [];
+
+        foreach (array_keys($pairs) as $key) {
+            if (mb_substr($key, 0, mb_strlen($prefix)) === $prefix) {
+                $response[$key] = $pairs[$key];
+            }
         }
 
-        return $key;
+        return $response;
     }
+
+    /**
+     * Get the prefix used for all session keys.
+     *
+     * @return string Prefix used for all session keys.
+     */
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * Delete all values from the Laravel session that are prefixed with the SDK's configured namespace.
+     *
+     * @throws SessionException If a Laravel session store is not available.
+     */
+    public function purge(): void
+    {
+        $entities = $this->getAll();
+
+        foreach (array_keys($entities) as $entity) {
+            $this->getStore()->forget($entity);
+        }
+    }
+
+    /**
+     * Store a value in the Laravel session. (Key will be automatically prefixed with the SDK's configured namespace.).
+     *
+     * @param string $key   session key to set
+     * @param mixed  $value value to use
+     *
+     * @throws SessionException If a Laravel session store is not available.
+     */
+    public function set(string $key, $value): void
+    {
+        $this->getStore()->put($this->getPrefixedKey($key), $value);
+    }
+
+    /**
+     * Set the prefix used for all session keys.
+     *
+     * @param string $prefix Prefix to use for all session keys.
+     *
+     * @return $this
+     */
+    public function setPrefix(
+        string $prefix = 'auth0',
+    ): self {
+        $prefix = trim($prefix);
+
+        if ('' === $prefix) {
+            throw new InvalidArgumentException('Prefix cannot be empty.');
+        }
+
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+    private string $prefix = 'auth0';
 }

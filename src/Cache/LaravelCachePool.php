@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Cache;
 
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
+use DateTimeInterface;
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Store;
+use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
+use function is_string;
 
 /**
  * Class LaravelCachePool
@@ -13,69 +16,88 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 final class LaravelCachePool implements CacheItemPoolInterface
 {
-    /**
-     * @var array<array{item: CacheItemInterface, expiration: \DateTimeInterface|int|null}>
-     */
-    private array $deferred = [];
-
-    public function getItem(string $key): CacheItemInterface
+    private function createItem(string $key, mixed $value): CacheItemInterface
     {
-        $value = $this->getStore()->
-            get($key);
+        if (! is_string($value)) {
+            return LaravelCacheItem::miss($key);
+        }
+
+        $value = unserialize($value);
 
         if (false === $value) {
             return LaravelCacheItem::miss($key);
         }
 
-        return $this->createItem($key, $value);
+        return new LaravelCacheItem($key, $value, true);
     }
 
     /**
-     * @param  string[]  $keys
-     * @return CacheItemInterface[]
+     * @param string $key the key for which to return the corresponding Cache Item
+     *
+     * @codeCoverageIgnore
      */
-    public function getItems(array $keys = []): iterable
+    private function getDeferred(string $key): ?CacheItemInterface
     {
-        if ([] === $keys) {
-            return [];
+        if (! isset($this->deferred[$key])) {
+            return null;
         }
 
-        $results = $this->getStore()->
-            many($keys);
-        $items = [];
+        $deferred = $this->deferred[$key];
+        $item     = clone $deferred['item'];
+        $expires  = $deferred['expiration'];
 
-        foreach ($results as $key => $value) {
-            $key = (string) $key;
-            $items[$key] = $this->createItem($key, $value);
+        if ($expires instanceof DateTimeInterface) {
+            $expires = $expires->getTimestamp();
         }
 
-        return $items;
+        if (null !== $expires && $expires <= time()) {
+            unset($this->deferred[$key]);
+
+            return null;
+        }
+
+        return $item;
     }
 
-    /**
-     * @param  string  $key  the key for which to return the corresponding Cache Item
-     */
-    public function hasItem(mixed $key): bool
+    private function getStore(): Store
     {
-        return $this->getItem($key)->
-            isHit();
+        return app(CacheManager::class)->getStore();
     }
 
     public function clear(): bool
     {
         $this->deferred = [];
 
-        return $this->getStore()->
-            flush();
+        return $this->getStore()
+            ->flush();
+    }
+
+    public function commit(): bool
+    {
+        $success = true;
+
+        foreach (array_keys($this->deferred) as $singleDeferred) {
+            $item = $this->getDeferred((string) $singleDeferred);
+
+            // @codeCoverageIgnoreStart
+            if (null !== $item && ! $this->save($item)) {
+                $success = false;
+            }
+            // @codeCoverageIgnoreEnd
+        }
+
+        $this->deferred = [];
+
+        return $success;
     }
 
     /**
-     * @param  string  $key  the key for which to return the corresponding Cache Item
+     * @param string $key the key for which to return the corresponding Cache Item
      */
-    public function deleteItem(mixed $key): bool
+    public function deleteItem(string $key): bool
     {
-        return $this->getStore()->
-            forget($key);
+        return $this->getStore()
+            ->forget($key);
     }
 
     public function deleteItems(array $keys): bool
@@ -91,14 +113,58 @@ final class LaravelCachePool implements CacheItemPoolInterface
         return $deleted;
     }
 
+    public function getItem(string $key): CacheItemInterface
+    {
+        $value = $this->getStore()
+            ->get($key);
+
+        if (false === $value) {
+            return LaravelCacheItem::miss($key);
+        }
+
+        return $this->createItem($key, $value);
+    }
+
+    /**
+     * @param string[] $keys
+     *
+     * @return CacheItemInterface[]
+     */
+    public function getItems(array $keys = []): iterable
+    {
+        if ([] === $keys) {
+            return [];
+        }
+
+        $results = $this->getStore()
+            ->many($keys);
+        $items = [];
+
+        foreach ($results as $key => $value) {
+            $key         = (string) $key;
+            $items[$key] = $this->createItem($key, $value);
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param string $key the key for which to return the corresponding Cache Item
+     */
+    public function hasItem(string $key): bool
+    {
+        return $this->getItem($key)
+            ->isHit();
+    }
+
     public function save(CacheItemInterface $item): bool
     {
         if (! $item instanceof LaravelCacheItem) {
             return false;
         }
 
-        $value = serialize($item->get());
-        $key = $item->getKey();
+        $value   = serialize($item->get());
+        $key     = $item->getKey();
         $expires = $item->getExpiration();
 
         if ($expires->getTimestamp() <= time()) {
@@ -124,59 +190,8 @@ final class LaravelCachePool implements CacheItemPoolInterface
         return true;
     }
 
-    public function commit(): bool
-    {
-        $success = true;
-
-        foreach (array_keys($this->deferred) as $singleDeferred) {
-            $item = $this->getDeferred((string) $singleDeferred);
-
-            if (null !== $item && ! $this->save($item)) {
-                $success = false;
-            }
-        }
-
-        $this->deferred = [];
-
-        return $success;
-    }
-
-    private function getStore(): \Illuminate\Contracts\Cache\Store
-    {
-        return app(\Illuminate\Cache\CacheManager::class)->getStore();
-    }
-
-    private function createItem(string $key, mixed $value): CacheItemInterface
-    {
-        if (! \is_string($value)) {
-            return LaravelCacheItem::miss($key);
-        }
-
-        $value = unserialize($value);
-
-        if (false === $value) {
-            return LaravelCacheItem::miss($key);
-        }
-
-        return new LaravelCacheItem($key, $value, true);
-    }
-
-    private function getDeferred(string $key): ?CacheItemInterface
-    {
-        if (! isset($this->deferred[$key])) {
-            return null;
-        }
-
-        $deferred = $this->deferred[$key];
-        $item = clone $deferred['item'];
-        $expires = $deferred['expiration'];
-
-        if (null !== $expires && $expires <= time()) {
-            unset($this->deferred[$key]);
-
-            return null;
-        }
-
-        return $item;
-    }
+    /**
+     * @var array<array{item: CacheItemInterface, expiration: null|DateTimeInterface|int}>
+     */
+    private array $deferred = [];
 }

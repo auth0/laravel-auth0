@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Exception\Stateful;
 
-interface CallbackException
+use Auth0\SDK\Exception\Auth0Exception;
+
+interface CallbackException extends Auth0Exception
 {
-    /**
-     * Thrown when an API exception is encountered in an underlying network request.
-     *
-     * @param  string  $error  the error message to return
-     * @param  string  $errorDescription  the error description to return
-     */
-    public static function apiException(string $error, string $errorDescription): self;
 }

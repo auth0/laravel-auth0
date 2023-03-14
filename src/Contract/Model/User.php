@@ -4,46 +4,50 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Model;
 
-interface User
+use JsonSerializable;
+
+interface User extends JsonSerializable
 {
     /**
-     * \Auth0\Laravel\Model\User constructor.
-     *
-     * @param  array  $attributes  attributes representing the user data
+     * @param array $attributes attributes representing the user data
      */
     public function __construct(array $attributes = []);
 
     /**
      * Dynamically retrieve attributes on the model.
      *
-     * @return mixed
+     * @param string $key
      */
-    public function __get(string $key);
+    public function __get(string $key): mixed;
 
     /**
      * Dynamically set attributes on the model.
      *
-     * @param  mixed  $value
+     * @param mixed  $value
+     * @param string $key
      */
     public function __set(string $key, $value): void;
 
     /**
      * Fill the model with an array of attributes.
+     *
+     * @param array $attributes
      */
     public function fill(array $attributes): self;
 
     /**
-     * Set a given attribute on the model.
-     *
-     * @param  mixed  $value
-     */
-    public function setAttribute(string $key, $value): self;
-
-    /**
      * Get an attribute from the model.
      *
-     * @param  mixed  $default
-     * @return mixed
+     * @param null|mixed $default
+     * @param string     $key
      */
-    public function getAttribute(string $key, $default = null);
+    public function getAttribute(string $key, $default = null): mixed;
+
+    /**
+     * Set a given attribute on the model.
+     *
+     * @param mixed  $value
+     * @param string $key
+     */
+    public function setAttribute(string $key, mixed $value): self;
 }

@@ -4,36 +4,40 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Middleware\Stateful;
 
-use Auth0\Laravel\Contract\Auth\Guard;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Http\Middleware\Stateful\AuthenticateOptional as AuthenticateOptionalContract;
+use Auth0\Laravel\Event\Middleware\StatefulRequest;
+use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
+use Closure;
+use Illuminate\Http\{JsonResponse, Request, Response};
+use Illuminate\Routing\Redirector;
 
 /**
  * This middleware will configure the authenticated user for the session using a
  * previously established Auth0-PHP SDK session. If a session is not available,
  * the authenticated user will be set as null.
  */
-final class AuthenticateOptional implements \Auth0\Laravel\Contract\Http\Middleware\Stateful\AuthenticateOptional
+final class AuthenticateOptional extends MiddlewareAbstract implements AuthenticateOptionalContract
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(\Illuminate\Http\Request $request, \Closure $next)
-    {
-        $auth = auth();
+    public function handle(
+        Request $request,
+        Closure $next,
+        string $scope = '',
+    ): Response | Redirector | JsonResponse {
+        $guard = auth()->guard();
 
-        /**
-         * @var \Illuminate\Contracts\Auth\Factory $auth
-         */
-        $guard = $auth->guard('auth0');
+        if (! $guard instanceof GuardContract) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal Server Error');
+        }
 
-        event(new \Auth0\Laravel\Event\Middleware\StatefulRequest($request, $guard));
+        /** @var Guard $guard */
+        event(new StatefulRequest($request, $guard));
 
-        /**
-         * @var Guard $guard
-         */
-        $user = $guard->user();
+        $credential = $guard->find(Guard::SOURCE_SESSION);
 
-        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateful\User) {
-            $guard->login($user);
+        if (null !== $credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
+            $guard->login($credential, Guard::SOURCE_SESSION);
         }
 
         return $next($request);

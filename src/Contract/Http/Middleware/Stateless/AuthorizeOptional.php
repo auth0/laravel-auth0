@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Http\Middleware\Stateless;
 
+use Closure;
+use Illuminate\Http\{JsonResponse, Request, Response};
+
 interface AuthorizeOptional
 {
     /**
      * Handle an incoming request.
      *
-     * @return mixed
+     * @param Request $request
+     * @param Closure $next
      */
-    public function handle(\Illuminate\Http\Request $request, \Closure $next);
+    public function handle(Request $request, Closure $next): Response | JsonResponse;
 }

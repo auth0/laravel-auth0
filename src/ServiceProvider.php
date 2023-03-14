@@ -5,60 +5,72 @@ declare(strict_types=1);
 namespace Auth0\Laravel;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Auth\User\Provider;
-use Auth0\Laravel\Auth\User\Repository;
-use Auth0\Laravel\Http\Controller\Stateful\Callback;
-use Auth0\Laravel\Http\Controller\Stateful\Login;
-use Auth0\Laravel\Http\Controller\Stateful\Logout;
-use Auth0\Laravel\Http\Middleware\Stateful\Authenticate;
-use Auth0\Laravel\Http\Middleware\Stateful\AuthenticateOptional;
-use Auth0\Laravel\Http\Middleware\Stateless\Authorize;
-use Auth0\Laravel\Http\Middleware\Stateless\AuthorizeOptional;
+use Auth0\Laravel\Auth\User\{Provider, Repository};
+use Auth0\Laravel\Contract\ServiceProvider as ServiceProviderContract;
+use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
+use Auth0\Laravel\Http\Middleware\Stateful\{Authenticate, AuthenticateOptional};
+use Auth0\Laravel\Http\Middleware\Stateless\{Authorize, AuthorizeOptional};
+use Auth0\Laravel\Store\LaravelSession;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-final class ServiceProvider extends \Illuminate\Support\ServiceProvider implements \Auth0\Laravel\Contract\ServiceProvider
+final class ServiceProvider extends LaravelServiceProvider implements ServiceProviderContract
 {
-    public function provides()
-    {
-        return [Auth0::class, StateInstance::class, Repository::class, Guard::class, Provider::class, Authenticate::class, AuthenticateOptional::class, Authorize::class, AuthorizeOptional::class, Login::class, Logout::class, Callback::class];
-    }
-
-    public function register(): self
-    {
+    public function boot(
+        Router $router,
+        AuthManager $auth,
+    ): self {
         $this->mergeConfigFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']), 'auth0');
+        $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0-config');
 
-        app()->singleton(Auth0::class, static fn (): Auth0 => new Auth0());
-        app()->singleton(StateInstance::class, static fn (): StateInstance => new StateInstance());
-        app()->singleton(Repository::class, static fn (): Repository => new Repository());
-        app()->singleton(Guard::class, static fn (): Guard => new Guard());
-        app()->singleton(Provider::class, static fn (): Provider => new Provider());
-        app()->singleton(Authenticate::class, static fn (): Authenticate => new Authenticate());
-        app()->singleton(AuthenticateOptional::class, static fn (): AuthenticateOptional => new AuthenticateOptional());
-        app()->singleton(Authorize::class, static fn (): Authorize => new Authorize());
-        app()->singleton(AuthorizeOptional::class, static fn (): AuthorizeOptional => new AuthorizeOptional());
-        app()->singleton(Login::class, static fn (): Login => new Login());
-        app()->singleton(Logout::class, static fn (): Logout => new Logout());
-        app()->singleton(Callback::class, static fn (): Callback => new Callback());
+        $auth->extend('auth0.guard', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
+        $auth->provider('auth0.provider', static fn (Application $app, array $config): Provider => new Provider($config));
 
-        app()->singleton('auth0', static fn (): Auth0 => app(Auth0::class));
-
-        app()->terminating(static function (): void {
-            app()->instance(StateInstance::class, null);
-        });
+        $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptional::class);
+        $router->aliasMiddleware('auth0.authenticate', Authenticate::class);
+        $router->aliasMiddleware('auth0.authorize.optional', AuthorizeOptional::class);
+        $router->aliasMiddleware('auth0.authorize', Authorize::class);
 
         return $this;
     }
 
-    public function boot(\Illuminate\Routing\Router $router, \Illuminate\Auth\AuthManager $auth): self
+    public function provides()
     {
-        $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0-config');
+        return [
+            Auth0::class,
+            Authenticate::class,
+            AuthenticateOptional::class,
+            Authorize::class,
+            AuthorizeOptional::class,
+            Callback::class,
+            Guard::class,
+            LaravelSession::class,
+            Login::class,
+            Logout::class,
+            Provider::class,
+            Repository::class
+        ];
+    }
 
-        $auth->extend('auth0', static fn (): Guard => new Guard());
-        $auth->provider('auth0', static fn (): Provider => new Provider());
+    public function register(): self
+    {
+        $this->app->singleton(Auth0::class, static fn (): Auth0 => new Auth0());
+        $this->app->singleton(Authenticate::class, static fn (): Authenticate => new Authenticate());
+        $this->app->singleton(AuthenticateOptional::class, static fn (): AuthenticateOptional => new AuthenticateOptional());
+        $this->app->singleton(Authorize::class, static fn (): Authorize => new Authorize());
+        $this->app->singleton(AuthorizeOptional::class, static fn (): AuthorizeOptional => new AuthorizeOptional());
+        $this->app->singleton(Callback::class, static fn (): Callback => new Callback());
+        $this->app->singleton(Login::class, static fn (): Login => new Login());
+        $this->app->singleton(Logout::class, static fn (): Logout => new Logout());
+        $this->app->singleton(Provider::class, static fn (): Provider => new Provider());
+        $this->app->singleton(Repository::class, static fn (): Repository => new Repository());
 
-        $router->aliasMiddleware('auth0.authenticate', Authenticate::class);
-        $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptional::class);
-        $router->aliasMiddleware('auth0.authorize', Authorize::class);
-        $router->aliasMiddleware('auth0.authorize.optional', AuthorizeOptional::class);
+        $this->app->singleton('auth0', static fn (): Auth0 => app(Auth0::class));
+        $this->app->singleton('auth0.guard', static fn (): Guard => app(Guard::class));
+        $this->app->singleton('auth0.provider', static fn (): Provider => app(Provider::class));
+        $this->app->singleton('auth0.repository', static fn (): Repository => app(Repository::class));
 
         return $this;
     }

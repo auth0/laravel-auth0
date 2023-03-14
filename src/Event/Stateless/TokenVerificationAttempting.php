@@ -4,32 +4,26 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Event\Stateless;
 
-final class TokenVerificationAttempting extends \Auth0\Laravel\Event\Auth0Event implements \Auth0\Laravel\Contract\Event\Stateless\TokenVerificationAttempting
+use Auth0\Laravel\Contract\Event\Stateless\TokenVerificationAttempting as TokenVerificationAttemptingContract;
+use Auth0\Laravel\Event\Auth0Event;
+
+final class TokenVerificationAttempting extends Auth0Event implements TokenVerificationAttemptingContract
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(
-        private string $token
+        private string $token,
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
-        $this->mutated = true;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token   = $token;
+        $this->mutated = true;
+
+        return $this;
     }
 }

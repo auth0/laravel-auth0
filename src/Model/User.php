@@ -4,35 +4,26 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Model;
 
-abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth0\Laravel\Contract\Model\User
+use Auth0\Laravel\Contract\Model\User as UserContract;
+use Illuminate\Contracts\Auth\Authenticatable;
+
+abstract class User implements Authenticatable, UserContract
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(private array $attributes = [])
     {
         $this->fill($attributes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __get(string $key)
+    public function __get(string $key): mixed
     {
         return $this->getAttribute($key);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __set(string $key, $value): void
     {
         $this->setAttribute($key, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     final public function fill(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
@@ -42,10 +33,47 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    final public function setAttribute(string $key, $value): self
+    final public function getAttribute(string $key, $default = null): mixed
+    {
+        return $this->attributes[$key] ?? $default;
+    }
+
+    final public function getAttributes(): mixed
+    {
+        return $this->attributes;
+    }
+
+    final public function getAuthIdentifier(): int | string | null
+    {
+        return $this->attributes['sub'] ?? $this->attributes['user_id'] ?? $this->attributes['email'] ?? null;
+    }
+
+    final public function getAuthIdentifierName(): string
+    {
+        return 'id';
+    }
+
+    final public function getAuthPassword(): string
+    {
+        return '';
+    }
+
+    final public function getRememberToken(): string
+    {
+        return '';
+    }
+
+    final public function getRememberTokenName(): string
+    {
+        return '';
+    }
+
+    final public function jsonSerialize(): mixed
+    {
+        return $this->attributes;
+    }
+
+    final public function setAttribute(string $key, mixed $value): self
     {
         $this->attributes[$key] = $value;
 
@@ -53,59 +81,11 @@ abstract class User implements \Illuminate\Contracts\Auth\Authenticatable, \Auth
     }
 
     /**
-     * {@inheritdoc}
-     */
-    final public function getAttribute(string $key, $default = null)
-    {
-        return $this->attributes[$key] ?? $default;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getAuthIdentifier()
-    {
-        return $this->attributes['sub'] ?? $this->attributes['user_id'] ?? $this->attributes['email'] ?? null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getAuthIdentifierName()
-    {
-        return 'id';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getAuthPassword(): string
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getRememberToken(): string
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
     final public function setRememberToken($value): void
     {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getRememberTokenName(): string
-    {
-        return '';
     }
 }

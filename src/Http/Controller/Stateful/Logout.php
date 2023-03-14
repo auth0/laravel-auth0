@@ -4,35 +4,43 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
-use Auth0\Laravel\Contract\Auth\Guard;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Http\Controller\Stateful\Logout as LogoutContract;
+use Auth0\Laravel\Http\Controller\ControllerAbstract;
+use Illuminate\Http\{RedirectResponse, Request};
+use function is_string;
 
-final class Logout implements \Auth0\Laravel\Contract\Http\Controller\Stateful\Logout
+final class Logout extends ControllerAbstract implements LogoutContract
 {
     /**
-     * {@inheritdoc}
+     * @psalm-suppress RedundantCastGivenDocblockType
+     *
+     * @param Request $request
      */
-    public function __invoke(\Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $auth = auth();
+    public function __invoke(
+        Request $request,
+    ): RedirectResponse {
+        $guard = auth()->guard();
 
-        /**
-         * @var \Illuminate\Contracts\Auth\Factory $auth
-         */
-        $guard = $auth->guard('auth0');
-
-        /**
-         * @var Guard $guard
-         */
-        if ($guard->check()) {
-            $request->session()->invalidate();
-
-            $guard->logout();
-
-            return redirect()->away(
-                app(\Auth0\Laravel\Auth0::class)->getSdk()->authentication()->getLogoutLink(url(config('auth0.routes.home', '/'))), // @phpstan-ignore-line
-            );
+        if (! $guard instanceof GuardContract) {
+            return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        return redirect()->intended(config('auth0.routes.home', '/')); // @phpstan-ignore-line
+        $loggedIn = $guard->check() ? true : null !== $guard->find(Guard::SOURCE_SESSION);
+
+        if ($loggedIn) {
+            session()->invalidate();
+            $guard->logout();
+
+            $route = config('auth0.routes.home');
+            $route = is_string($route) ? $route : '/';
+            $route = (string) url($route); /** @phpstan-ignore-line */
+            $url   = $this->getSdk()->authentication()->getLogoutLink($route);
+
+            return redirect()->away($url);
+        }
+
+        return redirect()->intended(config('auth0.routes.home', '/'));
     }
 }

@@ -4,34 +4,39 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Middleware\Stateless;
 
-use Auth0\Laravel\Contract\Auth\Guard;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Http\Middleware\Stateless\AuthorizeOptional as AuthorizeOptionalContract;
+use Auth0\Laravel\Event\Middleware\StatelessRequest;
+use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
+use Closure;
+use Illuminate\Http\{JsonResponse, Request, Response};
 
 /**
  * This middleware will configure the authenticated user using an available access token.
  */
-final class AuthorizeOptional implements \Auth0\Laravel\Contract\Http\Middleware\Stateless\AuthorizeOptional
+final class AuthorizeOptional extends MiddlewareAbstract implements AuthorizeOptionalContract
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(\Illuminate\Http\Request $request, \Closure $next)
-    {
-        $auth = auth();
+    public function handle(
+        Request $request,
+        Closure $next,
+        string $scope = '',
+    ): Response | JsonResponse {
+        $guard = auth()->guard();
 
-        /**
-         * @var \Illuminate\Contracts\Auth\Factory $auth
-         */
-        $guard = $auth->guard('auth0');
+        if (! $guard instanceof GuardContract) {
+            return $next($request);
+        }
 
-        event(new \Auth0\Laravel\Event\Middleware\StatelessRequest($request, $guard));
+        /** @var Guard $guard */
+        event(new StatelessRequest($request, $guard));
 
-        /**
-         * @var Guard $guard
-         */
-        $user = $guard->user();
+        $credential = $guard->find(Guard::SOURCE_TOKEN);
 
-        if (null !== $user && $user instanceof \Auth0\Laravel\Contract\Model\Stateless\User) {
-            $guard->login($user);
+        if (null !== $credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
+            $guard->login($credential, Guard::SOURCE_TOKEN);
+
+            return $next($request);
         }
 
         return $next($request);

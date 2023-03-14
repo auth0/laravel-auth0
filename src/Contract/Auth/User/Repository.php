@@ -9,16 +9,16 @@ use Illuminate\Contracts\Auth\Authenticatable;
 interface Repository
 {
     /**
-     * Generate a \Auth0\Laravel\Model\Stateful\User instance from an available Auth0-PHP user session.
+     * Generate a stateless User instance from a parsed Access Token.
      *
-     * @param  array  $user  an array containing the raw Auth0 user data
-     */
-    public function fromSession(array $user): ?Authenticatable;
-
-    /**
-     * Generate a \Auth0\Laravel\Model\Stateful\User instance from a parsed Access Token.
-     *
-     * @param  array  $user  an array containing the raw Auth0 user data
+     * @param array $user an array containing the raw Auth0 user data
      */
     public function fromAccessToken(array $user): ?Authenticatable;
+
+    /**
+     * Generate a stateful User instance from an available Auth0-PHP user session.
+     *
+     * @param array $user an array containing the raw Auth0 user data
+     */
+    public function fromSession(array $user): ?Authenticatable;
 }

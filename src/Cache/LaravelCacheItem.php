@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Cache;
 
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
+use function is_int;
 
 final class LaravelCacheItem implements CacheItemInterface
 {
@@ -12,74 +17,44 @@ final class LaravelCacheItem implements CacheItemInterface
         private string $key,
         private mixed $value,
         private bool $hit,
-        private ?\DateTimeInterface $expiration = null,
+        private ?DateTimeInterface $expiration = null,
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getKey(): string
+    public function expiresAfter(int | DateInterval | null $time): static
     {
-        return $this->key;
+        $this->expiration = match (true) {
+            null === $time                => new DateTimeImmutable('now +1 year'),
+            is_int($time)                 => new DateTimeImmutable('now +' . (string) $time . ' seconds'),
+            $time instanceof DateInterval => (new DateTimeImmutable())->add($time),
+        };
+
+        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function expiresAt(?DateTimeInterface $expiration): static
+    {
+        $this->expiration = $expiration ?? new DateTimeImmutable('now +1 year');
+
+        return $this;
+    }
+
     public function get(): mixed
     {
         return $this->isHit() ? $this->value : null;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function set($value = null): static
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHit(): bool
-    {
-        return $this->hit;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function expiresAt(?\DateTimeInterface $expiration): static
-    {
-        $this->expiration = $expiration ?? new \DateTimeImmutable('now +1 year');
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function expiresAfter(int|\DateInterval|null $time): static
-    {
-        $this->expiration = match (true) {
-            null === $time                 => new \DateTimeImmutable('now +1 year'),
-            \is_int($time)                 => new \DateTimeImmutable('now +' . $time . ' seconds'),
-            $time instanceof \DateInterval => (new \DateTimeImmutable())->add($time), /* @phpstan-ignore-line */
-        };
-
-        return $this;
-    }
-
-    /**
      * Returns the expiration timestamp.
      */
-    public function getExpiration(): \DateTimeInterface
+    public function getExpiration(): DateTimeInterface
     {
-        return $this->expiration ?? new \DateTime('now +1 year');
+        return $this->expiration ?? new DateTime('now +1 year');
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
     }
 
     /**
@@ -90,8 +65,22 @@ final class LaravelCacheItem implements CacheItemInterface
         return $this->value;
     }
 
+    public function isHit(): bool
+    {
+        return $this->hit;
+    }
+
+    public function set(mixed $value): static
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
     /**
      * Return a LaravelCacheItem instance flagged as missed.
+     *
+     * @param string $key
      */
     public static function miss(string $key): self
     {
