@@ -10,7 +10,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 ## Documentation
 
 -   Stateful Applications
-    -   [Quickstart](https://auth0.com/docs/quickstart/webapp/laravel) — add login, logout and user information to a Laravel application using Auth0.
+    -   [Quickstart](https://auth0.com/docs/quickstart/webapp/laravel) — add login, logout, and user information to a Laravel application using Auth0.
     -   [Sample Application](https://github.com/auth0-samples/auth0-laravel-php-web-app) — a sample Laravel web application integrated with Auth0.
 -   Stateless Applications
     -   [Quickstart](https://auth0.com/docs/quickstart/backend/php) — add access token handling and route authorization to a backend Laravel application using Auth0.
@@ -22,10 +22,8 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ### Requirements
 
--   PHP 8.0+
+-   Laravel 10 (PHP 8.1+) or Laravel 9 (PHP 8.0+)
 -   [Composer](https://getcomposer.org/)
--   Laravel 9.0+, 10.0+
-    -   `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
 -   PHP Extensions:
     -   [mbstring](https://www.php.net/manual/en/book.mbstring.php)
 -   Dependencies:
