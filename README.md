@@ -3,29 +3,28 @@
 Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
-[![Build](https://img.shields.io/github/workflow/status/auth0/laravel-auth0/Checks)](https://github.com/auth0/laravel-auth0/actions/workflows/checks.yml?query=branch%3Amain)
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
 
 ## Documentation
 
-- Stateful Applications
-  - [Quickstart](https://auth0.com/docs/quickstart/webapp/laravel) — add login, logout and user information to a Laravel application using Auth0.
-  - [Sample Application](https://github.com/auth0-samples/auth0-laravel-php-web-app) — a sample Laravel web application integrated with Auth0.
-- Stateless Applications
-  - [Quickstart](https://auth0.com/docs/quickstart/backend/php) — add access token handling and route authorization to a backend Laravel application using Auth0.
-  - [Sample Application](https://github.com/auth0-samples/auth0-laravel-api-samples) — a sample Laravel backend application integrated with Auth0.
-- [Examples](./EXAMPLES.md) — code samples for common scenarios.
-- [Docs site](https://www.auth0.com/docs) — explore our docs site and learn more about Auth0.
+-   Stateful Applications
+    -   [Quickstart](https://auth0.com/docs/quickstart/webapp/laravel) — add login, logout and user information to a Laravel application using Auth0.
+    -   [Sample Application](https://github.com/auth0-samples/auth0-laravel-php-web-app) — a sample Laravel web application integrated with Auth0.
+-   Stateless Applications
+    -   [Quickstart](https://auth0.com/docs/quickstart/backend/php) — add access token handling and route authorization to a backend Laravel application using Auth0.
+    -   [Sample Application](https://github.com/auth0-samples/auth0-laravel-api-samples) — a sample Laravel backend application integrated with Auth0.
+-   [Examples](./EXAMPLES.md) — code samples for common scenarios.
+-   [Docs site](https://www.auth0.com/docs) — explore our docs site and learn more about Auth0.
 
 ## Getting Started
 
 ### Requirements
 
-- PHP 8.0+
-- Laravel 8 / Laravel 9
-- `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
+-   PHP 8.0+
+-   Laravel 8 / Laravel 9
+-   `Illuminate\Session\Middleware\StartSession` enabled in `app/Http/Kernel.php`
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
@@ -45,8 +44,8 @@ Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.aut
 
 Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
 
-- **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
-- **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after user logout, e.g., `http://localhost:3000/login`.
+-   **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
+-   **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after user logout, e.g., `http://localhost:3000/login`.
 
 Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used during configuration later.
 
@@ -75,6 +74,7 @@ AUTH0_COOKIE_SECRET="A randomly generated string"
 ```
 
 Provide a sufficiently long, random string for your `AUTH0_COOKIE_SECRET` using `openssl rand -hex 32`.
+
 </details>
 
 <details>
@@ -87,6 +87,7 @@ AUTH0_CLIENT_ID="Your Auth0 application client ID"
 AUTH0_CLIENT_SECRET="Your Auth0 application client secret"
 AUTH0_AUDIENCE="Your Auth0 API identifier"
 ```
+
 </details>
 
 ### Setup your Laravel application
@@ -104,6 +105,7 @@ To begin, find the `defaults` section. Set the default `guard` to `auth0`, like 
 ```
 
 Next, find the `guards` section, and add `auth0` there:
+
 ```php
 // 👆 Continued from above, in config/auth.php
 'guards' => [
@@ -116,6 +118,7 @@ Next, find the `guards` section, and add `auth0` there:
 ```
 
 Next, find the `providers` section, and add `auth0` there as well:
+
 ```php
 // 👆 Continued from above, in config/auth.php
 'providers' => [
@@ -128,6 +131,7 @@ Next, find the `providers` section, and add `auth0` there as well:
 ```
 
 Although it is enabled by default, now is a good time to ensure the `StartSession` middleware is enabled in your `app/Http/Kernel.php` file:
+
 ```php
 protected $middlewareGroups = [
     'web' => [
@@ -178,6 +182,7 @@ Route::get('/', function () {
 ```
 
 > Note that the `example.user.template` and `example.guest.templates` views are just examples and are not part of the SDK; replace these as appropriate for your application.
+
 </details>
 
 <details>
@@ -220,20 +225,21 @@ Route::get('/api/public', function () {
     ], 200, [], JSON_PRETTY_PRINT);
 })->middleware(['auth0.authorize.optional']);
 ```
+
 </details>
 
 ## Support Policy
 
 Our support windows are determined by the [Laravel release support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Laravel framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
 
-| SDK Version | Laravel Version  | PHP Version  | Support Ends  |
-|-------------|------------------|--------------|---------------|
-| 7           | 9                | 8.1          | Feb 2024      |
-|             |                  | 8.0          | Nov 2023      |
-|             | 8                | 8.1          | Jan 2023      |
-|             |                  | 8.0          | Jan 2023      |
-| 6           | 8                | 8.1          | Jan 2023      |
-|             |                  | 8.0          | Jan 2023      |
+| SDK Version | Laravel Version | PHP Version | Support Ends |
+| ----------- | --------------- | ----------- | ------------ |
+| 7           | 9               | 8.1         | Feb 2024     |
+|             |                 | 8.0         | Nov 2023     |
+|             | 8               | 8.1         | Jan 2023     |
+|             |                 | 8.0         | Jan 2023     |
+| 6           | 8               | 8.1         | Jan 2023     |
+|             |                 | 8.0         | Jan 2023     |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment and Laravel framework dependencies always remain up to date.
 
@@ -251,13 +257,15 @@ Feedback and bug fix contributions are greatly appreciated as we work toward ful
 
 We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
-- [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+-   [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
+-   [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
 ### Raise an issue
+
 To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/laravel-auth0/issues).
 
 ### Vulnerability Reporting
+
 Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---
