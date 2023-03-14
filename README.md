@@ -29,9 +29,9 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 -   PHP Extensions:
     -   [mbstring](https://www.php.net/manual/en/book.mbstring.php)
 -   Dependencies:
-    -   [PSR-18 HTTP Client implementation](https://github.com/auth0/laravel-auth0/FAQ.md#what-is-psr-18)
-    -   [PSR-17 HTTP Factory implementation](https://github.com/auth0/laravel-auth0/FAQ.md#what-is-psr-17)
-    -   [PSR-7 HTTP Messages implementation](https://github.com/auth0/laravel-auth0/FAQ.md#what-is-psr-7)
+    -   [PSR-18 HTTP Client implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-18)
+    -   [PSR-17 HTTP Factory implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-17)
+    -   [PSR-7 HTTP Messages implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-7)
 
 > Please review our [support policy](#support-policy) for details on our PHP and Laravel version support.
 
