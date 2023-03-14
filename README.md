@@ -241,12 +241,10 @@ Our support windows are determined by the [Laravel release support](https://lara
 
 | SDK Version | Laravel Version | PHP Version | Support Ends |
 | ----------- | --------------- | ----------- | ------------ |
-| 7           | 9               | 8.1         | Feb 2024     |
+| 7.5+        | 10              | 8.2         | Feb 2024     |
+| 7.0+        | 9               | 8.2         | Feb 2024     |
+|             |                 | 8.1         | Feb 2024     |
 |             |                 | 8.0         | Nov 2023     |
-|             | 8               | 8.1         | Jan 2023     |
-|             |                 | 8.0         | Jan 2023     |
-| 6           | 8               | 8.1         | Jan 2023     |
-|             |                 | 8.0         | Jan 2023     |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment and Laravel framework dependencies always remain up to date.
 
@@ -254,7 +252,7 @@ Deprecations of EOL'd language or framework versions are not considered a breaki
 
 Octane compatibility is currently considered experimental and unsupported.
 
-Although we are working toward ensuring the SDK is fully compatible with this feature, we do not recommend using this with our SDK in production until we have full confidence and announced support. Due to the aggressive changes Octane makes to Laravel's core behavior, there is opportunity for problems we haven't fully identified or resolved yet.
+Although we are working toward ensuring the SDK is fully compatible with this feature, we do not recommend using this with our SDK in production until we have full confidence and announced support. Due to the aggressive changes Octane makes to Laravel's core behavior, there is an opportunity for problems we haven't fully identified or resolved yet.
 
 Feedback and bug fix contributions are greatly appreciated as we work toward full. Octane support.
 
@@ -273,7 +271,7 @@ To provide feedback or report a bug, [please raise an issue on our issue tracker
 
 ### Vulnerability Reporting
 
-Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---
 
@@ -285,6 +283,6 @@ Please do not report security vulnerabilities on the public Github issue tracker
   </picture>
 </p>
 
-<p align="center">Auth0 is an easy to implement, adaptable authentication and authorization platform. To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
+<p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform.<br />To learn more, check out <a href="https://auth0.com/why-auth0">"Why Auth0?"</a></p>
 
 <p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE"> LICENSE</a> file for more info.</p>
