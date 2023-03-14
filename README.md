@@ -50,13 +50,13 @@ Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.aut
 Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
 
 -   **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
--   **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after user logout, e.g., `http://localhost:3000/login`.
+-   **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after logout, e.g., `http://localhost:3000/login`.
 
 Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used during configuration later.
 
 ### Publish SDK configuration
 
-Use Laravel's CLI to generate an Auth0 configuration file within your project:
+Use Laravels CLI to generate an Auth0 configuration file within your project:
 
 ```
 php artisan vendor:publish --tag auth0-config
@@ -64,7 +64,7 @@ php artisan vendor:publish --tag auth0-config
 
 A new file will appear within your project, `app/config/auth0.php`. You should avoid making changes to this file directly.
 
-### Configure your `.env` file
+### Configure `.env` file
 
 Open the `.env` file within your application's directory, and add the following lines appropriate for your application type:
 
@@ -193,9 +193,9 @@ Route::get('/', function () {
 <details>
 <summary>Stateless Backend Applications</summary>
 
-These are applications that accept an a Access Token through the 'Authorization' header of a request.
+These are applications that accept an Access Token through the 'Authorization' header of a request.
 
-The `auth0.authorize` middleware will resolve a Access Token and reject any request with an invalid token.
+The `auth0.authorize` middleware will resolve an Access Token and reject any request with an invalid token.
 
 ```php
 Route::get('/api/private', function () {
