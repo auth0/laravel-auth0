@@ -246,7 +246,7 @@ Our support lifecycle mirrors the [Laravel release support](https://laravel.com/
 |             |                 | 8.1         | Feb 2024     |
 |             |                 | 8.0         | Nov 2023     |
 
-We drop support for Laravel and PHP versions when they reach end-of-life and cease receiving security fixes from Laravel and the PHP Foundation, whichever comes first. Please ensure your environment remains up to date so you can continue receiving updates for PHP and this SDK.
+We drop support for Laravel and PHP versions when they reach end-of-life and cease receiving security fixes from Laravel and the PHP Foundation, whichever comes first. Please ensure your environment remains up to date so you can continue receiving updates for Laravel, PHP, and this SDK.
 
 ## Octane Support
 
