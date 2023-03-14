@@ -1,13 +1,13 @@
 # Examples using laravel-auth0
 
-- [Custom user models and repositories](#custom-user-models-and-repositories)
-- [Authorizing HTTP tests](#authorizing-http-tests)
+-   [Custom user models and repositories](#custom-user-models-and-repositories)
+-   [Authorizing HTTP tests](#authorizing-http-tests)
 
 ## Custom user models and repositories
 
 In Laravel, a User Repository is an interface that sits between your authentication source (Auth0) and core Laravel authentication services. It allows you to shape and manipulate the user model and it's data as you need to.
 
-For example, Auth0's unique identifier is a `string` in the format `auth0|123456abcdef`. If you were to attempt to persist a user to many traditional databases you'd likely encounter an error as, by default, a unique identifier is often exected to be an `integer` rather than a `string` type. A custom user model and repository is a great way to address integration challenges like this.
+For example, Auth0's unique identifier is a `string` in the format `auth0|123456abcdef`. If you were to attempt to persist a user to many traditional databases you'd likely encounter an error as, by default, a unique identifier is often expected to be an `integer` rather than a `string` type. A custom user model and repository is a great way to address integration challenges like this.
 
 ### Creating a custom user model
 
@@ -66,7 +66,7 @@ class User extends \Illuminate\Database\Eloquent\Model implements StatefulUser, 
 
 ### Creating a Custom User Repository
 
-Now let's create a custom user repository for your application which will return the new new custom model. To do this, create the file `app/Auth/CustomUserRepository.php`. This new class must implment the `Auth0\Laravel\Contract\Auth\User\Repository` interface. This new repository takes in user data returned from Auth0's API, applies it to the `App\Models\User` custom user model created in the previous step, and returns it for use throughout your application.
+Now let's create a custom user repository for your application which will return the new new custom model. To do this, create the file `app/Auth/CustomUserRepository.php`. This new class must implement the `Auth0\Laravel\Contract\Auth\User\Repository` interface. This new repository takes in user data returned from Auth0's API, applies it to the `App\Models\User` custom user model created in the previous step, and returns it for use throughout your application.
 
 ```php
 <?php
@@ -90,7 +90,7 @@ class CustomUserRepository implements \Auth0\Laravel\Contract\Auth\User\Reposito
     public function fromAccessToken(
         array $user
     ): ?\Illuminate\Contracts\Auth\Authenticatable {
-        // Simliar to above. Used for stateless application types.
+        // Similar to above. Used for stateless application types.
         return null;
     }
 }
@@ -113,13 +113,14 @@ Finally, update your application's `config/auth.php` file. Within the Auth0 prov
 
 ## Authorizing HTTP tests
 
-If your application does contain HTTP tests which access routes that are protected by the `auth0.authorize` middleware, you can use the trait `Auth0\Laravel\Traits\ActingAsAuth0User` in your tests, which will give you a helper method `actingAsAuth0User(array $attributes=[])` simmilar to Laravels `actingAs` method, that allows you to fake beeing authenticated as a Auth0 user.
+If your application does contain HTTP tests which access routes that are protected by the `auth0.authorize` middleware, you can use the trait `Auth0\Laravel\Traits\ActingAsAuth0User` in your tests, which will give you a helper method `actingAsAuth0User(array $attributes=[])` similar to Laravel's `actingAs` method, that allows you to impersonate an authenticated state suitable for the middleware.
 
 The argument `attributes` is optional and you can use it to set any auth0 specific user attributes like scope, sub, azp, iap and so on. If no attributes are set, some default values are used.
 
 ### Example with a scope protected route
 
 Let's assume you have a route like the following, that is protected by the scope `read:messages`:
+
 ```php
 Route::get('/api/private-scoped', function () {
     return response()->json([
@@ -131,14 +132,24 @@ Route::get('/api/private-scoped', function () {
 ```
 
 To be able to test the route from above, the implementation of your test would have to look like this:
+
 ```php
-use Auth0\Laravel\Traits\ActingAsAuth0User;
+use Auth0\Laravel\Contract\StateInstance;
+use Auth0\Laravel\Model\Credential;
+use Auth0\Laravel\Model\Stateless\User;
+use Auth0\Laravel\Trait\Impersonate;
+use Illuminate\Http\Response;
 
-public function test_readMessages(){
-    $response = $this->actingAsAuth0User([
-        "scope"=>"read:messages"
-    ])->getJson("/api/private-scoped");
+it('can access a private scoped endpoint', function () {
+    $impersonating = Credential::create(
+        user: new User(['sub' => 'auth0|123456abcdef']),
+        accessTokenScope: ['read:messages'],
+        source: StateInstance::CONST_SOURCE_TOKEN,
+    );
 
-    $response->assertStatus(200);
-}
+    $this->impersonate($impersonating)
+         ->getJson('/api/private-scoped')
+         ->assertStatus(Response::HTTP_OK)
+         ->assertJson(['message' => 'Hello from a private endpoint!']);
+});
 ```
