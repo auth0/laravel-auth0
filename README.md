@@ -237,7 +237,7 @@ Route::get('/api/public', function () {
 
 ## Support Policy
 
-Our support lifecycle mirrors the [Laravel release support](https://laravel.com/docs/releases#support-policy) and [PHP release support schedule](https://www.php.net/supported-versions.php).
+Our support lifecycle mirrors the [Laravel release support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules.
 
 | SDK Version | Laravel Version | PHP Version | Support Ends |
 | ----------- | --------------- | ----------- | ------------ |
