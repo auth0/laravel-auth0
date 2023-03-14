@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+**Added**
+
+-   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
+
+Thanks to our contributors for this release: [taida957789](https://github.com/taida957789)
+
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.3.0...7.4.0)
