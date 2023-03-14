@@ -4,36 +4,54 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Traits;
 
-use Auth0\Laravel\Model\Stateless\User;
-use Auth0\Laravel\StateInstance;
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Entities\Credential;
+use Auth0\Laravel\Model\Imposter;
+use Illuminate\Contracts\Auth\Authenticatable;
 
+/**
+ * @deprecated 7.5.0 Use of this trait is longer recommended. Use the Impersonate trait instead. This trait will be removed in the next major release.
+ */
 trait ActingAsAuth0User
 {
-    abstract public function actingAs(UserContract $user, $guard = null);
-
     /**
-     * use this method to impersonate a specific auth0 user
-     * if you pass an attributes array, it will be merged with a set of default values.
+     * Set the currently logged in user for the application.
      *
-     * @return mixed
+     * @param array<mixed> $attributes The attributes to use for the user.
+     * @param null|string  $guard      The guard to impersonate with.
+     *
+     * @return $this The current test case instance.
      */
-    public function actingAsAuth0User(array $attributes = [])
-    {
-        $defaults = [
-            'sub'   => 'some-auth0-user-id',
-            'azp'   => 'some-auth0-appplication-client-id',
-            'iat'   => time(),
-            'exp'   => time() + 60 * 60,
-            'scope' => '',
-        ];
+    public function actingAsAuth0User(
+        array $attributes = [],
+        ?string $guard = 'auth0',
+    ) {
+        $issued     = time();
+        $expires    = $issued + 60 * 60;
+        $timestamps = ['iat' => $issued, 'exp' => $expires];
+        $attributes = array_merge($this->defaultActingAsAttributes, $timestamps, $attributes);
 
-        $auth0user = new User(array_merge($defaults, $attributes));
+        $instance = auth()->guard($guard);
+        $user     = new Imposter($attributes);
 
-        if ($auth0user->getAttribute('scope')) {
-            app(StateInstance::class)->setAccessTokenScope(explode(' ', $auth0user->getAttribute('scope')));
+        if ($instance instanceof GuardContract) {
+            $credential = Credential::create(
+                user: $user,
+                accessTokenScope: $attributes['scope'] ? explode(' ', $attributes['scope']) : [],
+            );
+
+            $instance->setCredential($credential, Guard::SOURCE_IMPERSONATE);
+            $instance->setImpersonating(true);
         }
 
-        return $this->actingAs($auth0user, 'auth0');
+        return $this->actingAs($user, $guard);
     }
+
+    abstract public function actingAs(Authenticatable $user, $guard = null);
+    public array $defaultActingAsAttributes = [
+        'sub'   => 'some-auth0-user-id',
+        'azp'   => 'some-auth0-application-client-id',
+        'scope' => '',
+    ];
 }
