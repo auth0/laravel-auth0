@@ -1,4 +1,4 @@
-name: PHPStan
+name: Analysis
 
 on:
   pull_request_target:
@@ -10,6 +10,7 @@ on:
 
 jobs:
   phpstan:
+    name: PHPStan
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 

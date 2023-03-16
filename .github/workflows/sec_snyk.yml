@@ -1,4 +1,4 @@
-name: Snyk
+name: Security
 
 on:
   pull_request_target:
@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   snyk:
+    name: Snyk
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 

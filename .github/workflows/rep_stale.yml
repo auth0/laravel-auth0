@@ -1,4 +1,4 @@
-name: Issue/PR Maintenance
+name: Repository
 
 on:
   schedule:
@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   rep-stale:
+    name: Maintenance
     runs-on: ubuntu-latest
 
     steps:

@@ -1,4 +1,4 @@
-name: Issue/PR Cleanup
+name: Repository
 
 on:
   pull_request_target:
@@ -12,6 +12,7 @@ on:
 
 jobs:
   rep-cleanup:
+    name: Cleanup
     runs-on: ubuntu-latest
 
     permissions:

@@ -1,4 +1,4 @@
-name: Composer Normalize
+name: Composer
 
 on:
   pull_request_target:
@@ -10,6 +10,7 @@ on:
 
 jobs:
   normalize:
+    name: Normalize
     runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
