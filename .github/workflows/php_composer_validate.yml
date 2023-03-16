@@ -1,3 +1,5 @@
+name: Composer Validate
+
 on:
   pull_request_target:
     types:
@@ -8,7 +10,6 @@ on:
 
 jobs:
   validate:
-    name: Composer Validate
     runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 

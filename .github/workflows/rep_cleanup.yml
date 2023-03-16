@@ -1,3 +1,5 @@
+name: Issue/PR Cleanup
+
 on:
   pull_request_target:
     types:
@@ -10,7 +12,6 @@ on:
 
 jobs:
   rep-cleanup:
-    name: Issue/PR Cleanup
     runs-on: ubuntu-latest
 
     permissions:

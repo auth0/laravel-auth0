@@ -1,3 +1,5 @@
+name: Psalm
+
 on:
   pull_request_target:
     types:
@@ -8,7 +10,6 @@ on:
 
 jobs:
   psalm:
-    name: Psalm
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 

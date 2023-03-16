@@ -1,3 +1,5 @@
+name: PR/Issue Setup
+
 on:
   pull_request_target:
     types:
@@ -9,7 +11,6 @@ permissions:
 
 jobs:
   rep-opened:
-    name: PR/Issue Setup
     runs-on: ubuntu-latest
 
     steps:

@@ -1,3 +1,5 @@
+name: PHPCSF
+
 on:
   pull_request_target:
     types:
@@ -7,8 +9,7 @@ on:
       - main
 
 jobs:
-  pint:
-    name: Pint
+  phpcs:
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
