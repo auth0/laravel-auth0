@@ -234,18 +234,18 @@ it('successfully continues a session when an access token succeeds is renewed', 
     $streamFactory = $this->config->getHttpStreamFactory();
     $responseFactory = $this->config->getHttpResponseFactory();
 
-    $http->queueResponse(
-        $responseFactory::create(
-            body: $streamFactory->createStream(
-                json_encode([
-                    'access_token' => uniqid(),
-                    'expires_in' => 60,
-                    'scope' => 'openid profile',
-                    'token_type' => 'Bearer',
-                ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
-            )
-        )
-    );
+    $response = $responseFactory->createResponse();
+
+    $response = $response->withBody($streamFactory->createStream(
+        json_encode([
+            'access_token' => uniqid(),
+            'expires_in' => 60,
+            'scope' => 'openid profile',
+            'token_type' => 'Bearer',
+        ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
+    ));
+
+    $http->addResponseWildcard($response);
 
     $found = $this->guard->find(Guard::SOURCE_SESSION);
     $this->guard->login($found, Guard::SOURCE_SESSION);
