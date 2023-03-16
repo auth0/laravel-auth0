@@ -1,0 +1,44 @@
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+jobs:
+  pint:
+    name: Pint
+    runs-on: ${{ matrix.operating-systems }}
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-systems:
+          - ubuntu-latest
+        php-versions:
+          - 8.0
+          - 8.1
+          - 8.2
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: pcov
+
+      - id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      # - run: vendor/bin/php-cs-fixer fix src --dry-run --diff
