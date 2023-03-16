@@ -1,4 +1,4 @@
-name: Code Style
+name: Standards
 
 on:
   pull_request_target:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   phpcs:
-    name: PHPCSF
+    name: PHP CS Fixer
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
