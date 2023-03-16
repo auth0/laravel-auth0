@@ -112,14 +112,21 @@
     },
     "scripts": {
         "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
+        "pest:coverage": "@php vendor/bin/pest --order-by random --coverage",
+        "pest": "@php vendor/bin/pest --order-by random",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix src",
         "phpcs": "@php vendor/bin/php-cs-fixer fix src --dry-run --diff",
-        "phpstan": "@php vendor/bin/phpstan analyse --debug",
+        "phpstan": "@php vendor/bin/phpstan analyze",
         "psalm:fix": "@php vendor/bin/psalter --issues=all",
-        "psalm": "@php vendor/bin/psalm --no-cache",
+        "psalm": "@php vendor/bin/psalm",
         "rector:fix": "@php vendor/bin/rector process src",
         "rector": "@php vendor/bin/rector process src --dry-run",
-        "test:coverage": "@php vendor/bin/pest --order-by random --coverage",
-        "test": "@php vendor/bin/pest --order-by random"
+        "test": [
+            "@pest",
+            "@phpstan",
+            "@psalm",
+            "@rector",
+            "@phpcs"
+        ]
     }
 }

@@ -15,6 +15,8 @@ use InvalidArgumentException;
  */
 final class LaravelSession implements StoreInterface
 {
+    private string $prefix = 'auth0';
+
     public function __construct(
         string $prefix = 'auth0',
     ) {
@@ -164,5 +166,4 @@ final class LaravelSession implements StoreInterface
 
         return $this;
     }
-    private string $prefix = 'auth0';
 }

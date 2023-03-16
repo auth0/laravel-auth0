@@ -15,6 +15,12 @@ use Illuminate\Contracts\Auth\Authenticatable;
  */
 trait ActingAsAuth0User
 {
+    public array $defaultActingAsAttributes = [
+        'sub'   => 'some-auth0-user-id',
+        'azp'   => 'some-auth0-application-client-id',
+        'scope' => '',
+    ];
+
     /**
      * Set the currently logged in user for the application.
      *
@@ -49,9 +55,4 @@ trait ActingAsAuth0User
     }
 
     abstract public function actingAs(Authenticatable $user, $guard = null);
-    public array $defaultActingAsAttributes = [
-        'sub'   => 'some-auth0-user-id',
-        'azp'   => 'some-auth0-application-client-id',
-        'scope' => '',
-    ];
 }

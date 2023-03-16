@@ -16,6 +16,11 @@ use function is_string;
  */
 final class LaravelCachePool implements CacheItemPoolInterface
 {
+    /**
+     * @var array<array{item: CacheItemInterface, expiration: null|DateTimeInterface|int}>
+     */
+    private array $deferred = [];
+
     private function createItem(string $key, mixed $value): CacheItemInterface
     {
         if (! is_string($value)) {
@@ -189,9 +194,4 @@ final class LaravelCachePool implements CacheItemPoolInterface
 
         return true;
     }
-
-    /**
-     * @var array<array{item: CacheItemInterface, expiration: null|DateTimeInterface|int}>
-     */
-    private array $deferred = [];
 }

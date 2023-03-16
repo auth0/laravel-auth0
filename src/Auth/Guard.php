@@ -33,6 +33,11 @@ final class Guard implements GuardContract
     public const SOURCE_IMPERSONATE = 0; // Manually set, presumably through a test case's impersonate() method.
     public const SOURCE_SESSION     = 2; // Assigned from a session.
     public const SOURCE_TOKEN       = 1; // Assigned from a decoded token.
+    private ?Credential $credential = null;
+    private ?int $credentialSource  = null;
+    private bool $impersonating     = false;
+    private ?UserProvider $provider = null;
+    private ?string $pushHash       = null;
 
     public function __construct(
         private string $name = '',
@@ -560,9 +565,4 @@ final class Guard implements GuardContract
     {
         return false;
     }
-    private ?Credential $credential = null;
-    private ?int $credentialSource  = null;
-    private bool $impersonating     = false;
-    private ?UserProvider $provider = null;
-    private ?string $pushHash       = null;
 }
