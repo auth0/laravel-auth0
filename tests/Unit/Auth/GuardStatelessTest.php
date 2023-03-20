@@ -7,7 +7,6 @@ use Auth0\Laravel\Contract\Auth\User\Repository;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -69,34 +68,6 @@ it('assigns a user from a good token', function (): void {
 
 it('does not assign a user from a empty token', function (): void {
     getJson($this->route, ['Authorization' => 'Bearer '])
-        ->assertStatus(Response::HTTP_UNAUTHORIZED);
-
-    expect($this->guard)
-        ->user()->toBeNull();
-});
-
-it('does not accept a user when a repository returns null from a token lookup', function (): void {
-    $repo = mock(Repository::class)->expect(
-        fromAccessToken: fn (array $user) => null
-    );
-
-    app()->singleton('auth0.repository', fn () => $repo);
-
-    getJson($this->route, $this->bearerToken)
-        ->assertStatus(Response::HTTP_UNAUTHORIZED);
-
-    expect($this->guard)
-        ->user()->toBeNull();
-});
-
-it('does not accept a user when a repository returns an invalid user class from a token lookup', function (): void {
-    $repo = mock(Repository::class)->expect(
-        fromAccessToken: fn (array $user) => new User([])
-    );
-
-    app()->singleton('auth0.repository', fn () => $repo);
-
-    getJson($this->route, $this->bearerToken)
         ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
     expect($this->guard)

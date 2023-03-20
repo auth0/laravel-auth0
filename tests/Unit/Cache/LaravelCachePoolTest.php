@@ -67,7 +67,7 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
         ->get()->toBeNull()
         ->isHit()->toBeFalse();
 
-    $cacheMock = $this->mock(CacheItemInterface::class);
+    $cacheMock = Mockery::mock(CacheItemInterface::class);
 
     expect($pool)
         ->save($cacheMock)->toBeFalse();

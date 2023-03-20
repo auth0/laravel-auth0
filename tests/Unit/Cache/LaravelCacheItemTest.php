@@ -60,29 +60,29 @@ test('set() alters the stored value as expected', function (): void {
 test('expiresAt() defaults to +1 year and accepts changes to its value', function (): void {
     $cacheItem = new LaravelCacheItem('testing', 42, true);
 
-    expect($cacheItem->getExpiration())
-        ->toBeGreaterThan(new DateTime('now +1 year -1 minute'))
-        ->toBeLessThan(new DateTime('now +1 year +1 minute'));
+    expect($cacheItem->getExpiration()->getTimestamp())
+        ->toBeGreaterThan((new DateTime('now +1 year -1 minute'))->getTimestamp())
+        ->toBeLessThan((new DateTime('now +1 year +1 minute'))->getTimestamp());
 
     $cacheItem->expiresAt(new DateTime('now +1 day'));
 
-    expect($cacheItem->getExpiration())
-        ->toBeGreaterThan(new DateTime('now +1 day -1 minute'))
-        ->toBeLessThan(new DateTime('now +1 day +1 minute'));
+    expect($cacheItem->getExpiration()->getTimestamp())
+        ->toBeGreaterThan((new DateTime('now +1 day -1 minute'))->getTimestamp())
+        ->toBeLessThan((new DateTime('now +1 day +1 minute'))->getTimestamp());
 });
 
 test('expiresAfter() defaults to +1 year and accepts changes to its value', function (): void {
     $cacheItem = new LaravelCacheItem('testing', 42, true);
 
-    expect($cacheItem->getExpiration())
-        ->toBeGreaterThan(new DateTime('now +1 year -1 minute'))
-        ->toBeLessThan(new DateTime('now +1 year +1 minute'));
+    expect($cacheItem->getExpiration()->getTimestamp())
+    ->toBeGreaterThan((new DateTime('now +1 year -1 minute'))->getTimestamp())
+    ->toBeLessThan((new DateTime('now +1 year +1 minute'))->getTimestamp());
 
     $cacheItem->expiresAfter(300);
 
-    expect($cacheItem->getExpiration())
-        ->toBeGreaterThan(new DateTime('now +250 seconds'))
-        ->toBeLessThan(new DateTime('now +350 seconds'));
+    expect($cacheItem->getExpiration()->getTimestamp())
+        ->toBeGreaterThan((new DateTime('now +250 seconds'))->getTimestamp())
+        ->toBeLessThan((new DateTime('now +350 seconds'))->getTimestamp());
 });
 
 test('miss() returns a configured instance', function (): void {
