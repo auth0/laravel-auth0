@@ -18,6 +18,9 @@ use function is_string;
 
 final class Callback extends ControllerAbstract implements CallbackContract
 {
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function __invoke(
         Request $request,
     ): RedirectResponse {
@@ -27,7 +30,6 @@ final class Callback extends ControllerAbstract implements CallbackContract
             return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        /** @var Guard $guard */
         $code    = $request->query('code');
         $state   = $request->query('state');
         $code    = is_string($code) ? trim($code) : '';
@@ -56,23 +58,23 @@ final class Callback extends ControllerAbstract implements CallbackContract
                     state: $state,
                 );
             }
-        } catch (Throwable $exception) {
+        } catch (Throwable $throwable) {
             $credentials          = $this->getSdk()->getUser() ?? [];
             $credentials['code']  = $code;
             $credentials['state'] = $state;
-            $credentials['error'] = ['description' => $exception->getMessage()];
+            $credentials['error'] = ['description' => $throwable->getMessage()];
 
             event(new Failed($guard::class, $guard->user(), $credentials));
 
             $this->getSdk()->clear();
 
             // Throw hookable $event to allow custom error handling scenarios.
-            $event = new AuthenticationFailed($exception, true);
+            $event = new AuthenticationFailed($throwable, true);
             event($event);
 
             // If the event was not hooked by the application, throw an exception:
             if ($event->getThrowException()) {
-                throw $exception;
+                throw $throwable;
             }
         }
 

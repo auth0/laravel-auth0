@@ -30,8 +30,19 @@ use function is_string;
 
 final class Guard implements GuardContract
 {
+    /**
+     * @var int
+     */
     public const SOURCE_IMPERSONATE = 0; // Manually set, presumably through a test case's impersonate() method.
+
+    /**
+     * @var int
+     */
     public const SOURCE_SESSION     = 2; // Assigned from a session.
+
+    /**
+     * @var int
+     */
     public const SOURCE_TOKEN       = 1; // Assigned from a decoded token.
     private ?Credential $credential = null;
     private ?int $credentialSource  = null;
@@ -192,6 +203,7 @@ final class Guard implements GuardContract
     {
         $sdk = $this->getSdk();
         $sdk->refreshState();
+
         $credentials = $sdk->getCredentials();
 
         /** @var mixed $credentials */
@@ -510,8 +522,8 @@ final class Guard implements GuardContract
             event(new TokenVerificationSucceeded($token, $data));
 
             return $data;
-        } catch (InvalidTokenException $invalidToken) {
-            event(new TokenVerificationFailed($token, $invalidToken));
+        } catch (InvalidTokenException $invalidTokenException) {
+            event(new TokenVerificationFailed($token, $invalidTokenException));
 
             return null;
         }

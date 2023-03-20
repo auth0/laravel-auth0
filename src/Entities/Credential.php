@@ -83,6 +83,9 @@ final class Credential implements CredentialContract
         return $this->user;
     }
 
+    /**
+     * @return array{user: false|string, idToken: null|string, accessToken: null|string, accessTokenScope: null|string[], accessTokenExpiration: null|int, accessTokenExpired: null|bool, refreshToken: null|string}
+     */
     public function jsonSerialize(): mixed
     {
         return [

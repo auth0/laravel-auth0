@@ -21,6 +21,8 @@ final class Auth0 implements ServiceContract
 {
     /**
      * The Laravel-Auth0 SDK version:.
+     *
+     * @var string
      */
     public const VERSION = '7.4.0';
 
