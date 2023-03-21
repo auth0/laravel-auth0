@@ -59,4 +59,9 @@ return [
         'home'  => env('AUTH0_ROUTE_HOME', '/'),
         'login' => env('AUTH0_ROUTE_LOGIN', 'login'),
     ],
+
+    'behavior' => [
+        // Defaults to false. If true, the SDK will attempt to automatically log in a user when Guard::user() is called.
+        'autoLogin' => Configuration::stringToBoolOrNull(env('AUTH0_BEHAVIOR_AUTO_LOGIN'), false),
+    ]
 ];

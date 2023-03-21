@@ -22,6 +22,7 @@ use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Session\Session;
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
+
 use function in_array;
 use function is_array;
 use function is_int;
@@ -559,7 +560,32 @@ final class Guard implements GuardContract
 
     public function user(): ?Authenticatable
     {
-        return $this->getCredential()?->getUser();
+        $autoLogin   = config('auth0.behavior.autoLogin', true);
+        $currentUser = $this->getCredential()?->getUser();
+
+        if (null !== $currentUser) {
+            return $currentUser;
+        }
+
+        if (true === $autoLogin) {
+            $token = $this->find(self::SOURCE_TOKEN);
+
+            if (null !== $token) {
+                $this->login($token, self::SOURCE_TOKEN);
+
+                return $this->getCredential()?->getUser();
+            }
+
+            $session = $this->find(self::SOURCE_SESSION);
+
+            if (null !== $session) {
+                $this->login($token, self::SOURCE_SESSION);
+
+                return $this->getCredential()?->getUser();
+            }
+        }
+
+        return null;
     }
 
     /**
