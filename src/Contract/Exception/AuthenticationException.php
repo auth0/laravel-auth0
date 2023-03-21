@@ -8,5 +8,8 @@ use Auth0\SDK\Exception\Auth0Exception;
 
 interface AuthenticationException extends Auth0Exception
 {
+    /**
+     * @var string
+     */
     public const UNAUTHENTICATED = 'Unauthenticated.';
 }

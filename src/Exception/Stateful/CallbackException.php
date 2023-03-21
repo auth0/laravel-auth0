@@ -13,5 +13,8 @@ use Exception;
  */
 final class CallbackException extends Exception implements Auth0Exception, CallbackExceptionContract
 {
+    /**
+     * @var string
+     */
     public const MSG_API_RESPONSE = '%s: %s';
 }

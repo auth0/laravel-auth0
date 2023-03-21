@@ -13,5 +13,8 @@ use Exception;
  */
 final class SessionException extends Exception implements Auth0Exception, SessionExceptionContract
 {
+    /**
+     * @var string
+     */
     public const LARAVEL_SESSION_INACCESSIBLE = 'The Laravel session store is inaccessible.';
 }

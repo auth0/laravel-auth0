@@ -8,7 +8,18 @@ use Auth0\SDK\Exception\Auth0Exception;
 
 interface GuardException extends Auth0Exception
 {
+    /**
+     * @var string
+     */
     public const USER_MODEL_NORMALIZATION_FAILURE = 'Unable to convert user to array. Class should implement JsonSerializable, Arrayable or Jsonable.';
+
+    /**
+     * @var string
+     */
     public const USER_PROVIDER_UNAVAILABLE        = 'Unable to create User Provider %s from configuration.';
+
+    /**
+     * @var string
+     */
     public const USER_PROVIDER_UNCONFIGURED       = 'There is no User Provider configured. Please ensure the `provider` key is set in the Guard configuration, and points to a valid entry in the `providers` configuration.';
 }
