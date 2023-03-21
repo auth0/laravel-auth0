@@ -110,7 +110,7 @@
     },
     "scripts": {
         "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
-        "pest:coverage": "@php vendor/bin/pest --order-by random --coverage",
+        "pest:coverage": "@php vendor/bin/pest --order-by random --compact --coverage",
         "pest": "@php vendor/bin/pest --order-by random --compact",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix src",
         "phpcs": "@php vendor/bin/php-cs-fixer fix src --dry-run --diff",
