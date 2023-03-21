@@ -14,6 +14,7 @@ use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\{RedirectResponse, Request};
 use Throwable;
+
 use function is_string;
 
 final class Callback extends ControllerAbstract implements CallbackContract

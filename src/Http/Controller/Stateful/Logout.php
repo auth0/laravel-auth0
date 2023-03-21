@@ -9,6 +9,7 @@ use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Logout as LogoutContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Http\{RedirectResponse, Request};
+
 use function is_string;
 
 final class Logout extends ControllerAbstract implements LogoutContract
