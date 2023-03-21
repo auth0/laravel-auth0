@@ -16,3 +16,4 @@ parameters:
         - '#no value type specified in iterable type array.#'
 
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
