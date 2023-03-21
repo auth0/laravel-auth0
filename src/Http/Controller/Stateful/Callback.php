@@ -20,6 +20,8 @@ final class Callback extends ControllerAbstract implements CallbackContract
 {
     /**
      * @psalm-suppress InvalidArgument
+     *
+     * @param Request $request
      */
     public function __invoke(
         Request $request,
