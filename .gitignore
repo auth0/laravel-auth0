@@ -11,3 +11,4 @@ composer.phar
 composer.local.json
 composer.local.json_
 .php-cs-fixer.cache
+composer.local.old
