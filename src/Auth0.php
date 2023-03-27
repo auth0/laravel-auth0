@@ -53,14 +53,12 @@ final class Auth0 implements ServiceContract
              * @var array<mixed> $config
              */
             if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
-                $cache = new LaravelCachePool();
-
                 if (! isset($config['tokenCache'])) {
-                    $config['tokenCache'] = $cache;
+                    $config['tokenCache'] = app('cache.psr6');
                 }
 
                 if (! isset($config['managementTokenCache'])) {
-                    $config['managementTokenCache'] = $cache;
+                    $config['managementTokenCache'] = app('cache.psr6');
                 }
             }
 
