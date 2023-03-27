@@ -9,7 +9,6 @@ docs/                 export-ignore
 EXAMPLES.md           export-ignore
 examples/             export-ignore
 opslevel.yml          export-ignore
-phpdoc.dist.xml       export-ignore
 phpstan.neon.dist     export-ignore
 phpunit.xml.dist      export-ignore
 psalm.xml.dist        export-ignore
