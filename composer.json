@@ -55,9 +55,7 @@
         "phpstan/phpstan-strict-rules": "^1.5",
         "phpstan/phpstan": "^1.10",
         "psalm/plugin-laravel": "^2.8",
-        "psr-mock/http-client-implementation": "1.x-dev",
-        "psr-mock/http-factory-implementation": "1.x-dev",
-        "psr-mock/http-message-implementation": "1.x-dev",
+        "psr-mock/http": "^1.0",
         "rector/rector": "^0.15",
         "vimeo/psalm": "^5.8",
         "wikimedia/composer-merge-plugin": "^2.0"
