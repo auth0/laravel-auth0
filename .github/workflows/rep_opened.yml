@@ -24,13 +24,14 @@ jobs:
             const pattern = /^(\w*)(?:\(([\w]*)\))?: (.*)$/;
             const title = context.payload.pull_request.title;
             
+            let type = null;
+            let scope = null;
+            let subject = null;
+            
             try {
-              const [type, scope, subject] = title.match(pattern).slice(1);
+              [type, scope, subject] = title.match(pattern).slice(1);
               console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
             } catch (error) {
-              const type = null;
-              const scope = null;
-              const subject = null;
               console.error(error);
             }
 
