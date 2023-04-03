@@ -560,14 +560,14 @@ final class Guard implements GuardContract
 
     public function user(): ?Authenticatable
     {
-        $autoLogin   = config('auth0.behavior.autoLogin', true);
-        $currentUser = $this->getCredential()?->getUser();
+        $legacyBehavior = config('auth0.behavior.legacyGuardUserMethod', true);
+        $currentUser    = $this->getCredential()?->getUser();
 
         if (null !== $currentUser) {
             return $currentUser;
         }
 
-        if (true === $autoLogin) {
+        if (true === $legacyBehavior) {
             $token = $this->find(self::SOURCE_TOKEN);
 
             if (null !== $token) {

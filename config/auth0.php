@@ -61,7 +61,9 @@ return [
     ],
 
     'behavior' => [
-        // Defaults to false. If true, the SDK will attempt to automatically log in a user when Guard::user() is called.
-        'autoLogin' => Configuration::stringToBoolOrNull(env('AUTH0_BEHAVIOR_AUTO_LOGIN'), false),
+        // If TRUE, the Guard will follow < 7.5 behavior in which calling Guard::user() will automatically login a user using discovered credentials, if they are not already.
+        // Note that if this property is missing from the configuration, the SDK will default to true as a fallback for previous behavior.
+        // You must explicitly set it to FALSE to disable this behavior.
+        'legacyGuardUserMethod' => Configuration::stringToBoolOrNull(env('AUTH0_BEHAVIOR_LEGACY_GUARD_USER_METHOD'), false),
     ]
 ];
