@@ -4,6 +4,9 @@ on:
   pull_request_target:
     types:
       - opened
+      - edited
+      - ready_for_review
+      - converted_to_draft
 
 permissions:
   issues: write
@@ -19,10 +22,14 @@ jobs:
         with:
           script: |
             const pattern = /^(\w*)(?:\(([\w]*)\))?: (.*)$/;
-            const title = context.payload.pull_request.title
-            const [type, scope, subject] = title.match(pattern).slice(1);
-
-            console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
+            const title = context.payload.pull_request.title;
+            
+            try {
+              const [type, scope, subject] = title.match(pattern).slice(1);
+              console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
+            } catch (error) {
+              console.error(error);
+            }
 
             if (type !== undefined) {
               const labels = {
