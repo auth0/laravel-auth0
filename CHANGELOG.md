@@ -2,8 +2,7 @@
 
 ## [Unreleased]
 
-Most of these changes rely on upstream changes in the Auth0-PHP SDK that are waiting for release.
-These changes will not function correctly until that release is made.
+## [7.5.0](https://github.com/auth0/laravel-auth0/tree/7.5.0) (2023-04-03)
 
 **Added**
 

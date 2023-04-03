@@ -25,7 +25,7 @@ final class Auth0 implements ServiceContract
      *
      * @var string
      */
-    public const VERSION = '7.4.0';
+    public const VERSION = '7.5.0';
 
     public function __construct(
         private ?SDKContract $sdk = null,
