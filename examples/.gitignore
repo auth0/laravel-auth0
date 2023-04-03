@@ -1,0 +1,9 @@
+.cache/^10.0
+.cache/^9.0
+.env
+auth0
+composer
+laravel-10/api/
+laravel-10/web/
+laravel-9/api/
+laravel-9/web/
