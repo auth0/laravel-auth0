@@ -28,10 +28,13 @@ jobs:
               const [type, scope, subject] = title.match(pattern).slice(1);
               console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
             } catch (error) {
+              const type = null;
+              const scope = null;
+              const subject = null;
               console.error(error);
             }
 
-            if (type !== undefined) {
+            if (type !== undefined && type !== null) {
               const labels = {
                 'feat': 'type-improvement',
                 'refactor': 'type-improvement',
