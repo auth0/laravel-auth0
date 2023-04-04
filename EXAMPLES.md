@@ -110,7 +110,7 @@ Finally, update your application's `config/auth.php` file. Within the Auth0 prov
 
         'auth0' => [
             'driver' => 'auth0.provider',
-            'repository' => App\Auth\CustomUserRepository::class
+            'repository' => \App\Auth\CustomUserRepository::class
         ],
     ],
 ```
