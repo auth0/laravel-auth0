@@ -69,13 +69,11 @@ As we continue, we'll use these terms to help guide you to the correct configura
 
 ### Creating an Auth0 Application
 
-First, [install the Auth0 CLI](https://github.com/auth0/auth0-cli#installation) and [authenticate to your tenant](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
-
-Next, create a new Auth0 application using the CLI:
+Create a new Auth0 application using [the Auth0 CLI](https://github.com/auth0/):
 
 ```bash
 auth0 apps create \
-  --name "My Auth0 Laravel App" \
+  --name "My Laravel Application" \
   --type "regular" \
   --auth-method "post" \
   --callbacks "http://localhost:8000/callback" \
@@ -84,57 +82,70 @@ auth0 apps create \
   --no-input
 ```
 
-Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
+You will receive a response with details about your new application.
 
-### Optional: Creating an Auth0 API
+Please make a note of your tenant's **domain** (e.g. `tenant.region.auth0.com`), **client ID**, and **client secret**. These will be required later during configuration.
 
-First, [install the Auth0 CLI](https://github.com/auth0/auth0-cli#installation) and [authenticate to your tenant](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
+### Creating an Auth0 API
 
-Next, create a new Auth0 application using the CLI:
+**This is only required if you are building a stateless application.** You can create a new Auth0 API using [the Auth0 CLI](https://github.com/auth0/):
 
 ```bash
-auth0 apps create \
-  --name "My Auth0 Laravel App" \
-  --type "regular" \
-  --auth-method "post" \
-  --callbacks "http://localhost:8000/callback" \
-  --logout-urls "http://localhost:8000/login" \
-  --reveal-secrets \
+auth0 apis create \
+  --name "My Laravel Application's API" \
+  --identifier "https://github.com/auth0/laravel-auth0" \
+  --offline-access \
   --no-input
 ```
 
-Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
+You will receive a response with details about your new API.
+
+You can choose any `--name` and `--identifier` values you like. The `--identifier` value must be a valid URL, but it does not need to be publicly accessible. The identifier value cannot be changed once it is set.
+
+Note that the identifier value will be used as the audience claim in your Access Tokens, so it is important to choose a value that will not conflict with other APIs you may be using.
+
+The identifier value will used to configure the `audience` parameter in your application's configuration later.
 
 ### Configuring the SDK
 
-Open the `.env` file within your application's directory, and add the following lines appropriate for your application type:
+Open the `.env` file within your application's directory, append the lines below as identified for your application type to that file, and fill in the values as appropriate:
 
-<details>
-    <summary>Stateful Applications</summary>
+#### Stateful Applications
 
-```
-AUTH0_DOMAIN="Your Auth0 domain"
-AUTH0_CLIENT_ID="Your Auth0 application client ID"
-AUTH0_CLIENT_SECRET="Your Auth0 application client secret"
-AUTH0_COOKIE_SECRET="A randomly generated string"
-```
+```ini
+# This should be the `domain` value from your Auth0 application.
+AUTH0_DOMAIN=
 
-Provide a sufficiently long, random string for your `AUTH0_COOKIE_SECRET` using `openssl rand -hex 32`.
+# This should be the `client_id` value from your Auth0 application.
+AUTH0_CLIENT_ID=
 
-</details>
+# This should be the `client_secret` value from your Auth0 application.
+AUTH0_CLIENT_SECRET=
 
-<details>
-    <summary>Stateless Services</summary>
-
-```
-AUTH0_STRATEGY="api"
-AUTH0_DOMAIN="Your Auth0 domain"
-AUTH0_CLIENT_ID="Your Auth0 application client ID"
-AUTH0_CLIENT_SECRET="Your Auth0 application client secret"
-AUTH0_AUDIENCE="Your Auth0 API identifier"
+# This should be a sufficiently long, random string.
+AUTH0_COOKIE_SECRET=
 ```
 
-</details>
+You can use `openssl rand -hex 32` to generate an adequate string for the cookie secret.
+
+#### Stateless Services
+
+```ini
+# This should be left as "api".
+AUTH0_STRATEGY=api
+
+# This should be the `domain` value from your Auth0 application.
+AUTH0_DOMAIN=
+
+# This should be the `client_id` value from your Auth0 application.
+AUTH0_CLIENT_ID=
+
+# This should be the `client_secret` value from your Auth0 application.
+AUTH0_CLIENT_SECRET=
+
+# This should be the `identifier` value from your Auth0 API.
+AUTH0_AUDIENCE=
+```
 
 ### Configuring Your Application
 
@@ -183,8 +194,7 @@ Please ensure requests for these routes are managed by an Auth0 guard configured
 
 The SDK provides a series of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
 
-<details>
-<summary>Stateful Applications</summary>
+#### Stateful Applications
 
 **`auth0.authenticate` requires a user to be logged in to access a route.** Other requests will be redirected to the `login` route.
 
@@ -206,10 +216,7 @@ Route::get('/', function () {
 })->middleware(['auth0.authenticate.optional']);
 ```
 
-</details>
-
-<details>
-<summary>Stateless Services</summary>
+#### Stateless Services
 
 **`auth0.authorize` requires a valid access token for a request.** Otherwise, it will return a `401 Unauthorized` response.
 
