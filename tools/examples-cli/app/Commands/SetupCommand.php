@@ -19,7 +19,7 @@ class SetupCommand extends Command
     private function checkComposer(): void
     {
         $this->task('Composer', function () {
-            $version = new Process(['composer', '--version']);
+            $version = new Process(['./composer', '--version']);
             $version->disableOutput();
             $version->run();
 

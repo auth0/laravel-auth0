@@ -1,0 +1,57 @@
+// Checks are run from the `examples check` command.
+
+{
+    // Checks can be grouped to differentiate the purpose of individual steps.
+    "checks": [
+        {
+            "id": "dependencies",
+            "title": "Dependencies", // Human-readable descriptive title for the series of checks to follow.
+
+            "steps": [
+                {
+                    "id": "composer-check",
+                    "title": "Composer", // Human-readable descriptive title for the step.
+                    "check": "semver:gte", // The type of check to run against the `expect` and `assert` conditions.
+                    "expect": "./composer --version",
+                    "assert": "2.0.0",
+                    "fix": [
+                        "curl -sSfL https://getcomposer.org/installer | php",
+                        "mv composer.phar composer"
+                    ]
+                },
+                {
+                    "id": "cli-check",
+                    "title": "Auth0 CLI",
+                    "check": "semver:gte", // Semver checks can be used to compare versions. Here, the value returned from 'expect' must be greater than or equal to the assert value.
+                    "expect": "./auth0 --version",
+                    "assert": "1.0.0-beta.3",
+                    "fix": [
+                        "curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b . v1.0.0-beta.3"
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "state",
+            "title": "State",
+
+            "steps": [
+                {
+                    "id": "dotenv-exists",
+                    "title": "Configuration (.env)",
+                    "check": "filesystem:exists", // The `filesystem:exists` check can be used to ensure that a file exists.
+                    "expect": "./env",
+                    "fix": ["touch ./env"]
+                },
+                {
+                    "id": "cli-authenticated",
+                    "title": "Authenticated",
+                    "check": "stderror:none", // The `stderror:none` check can be used to ensure that the command does not output to stderr.
+                    "expect": "./auth0 test token %ENV_AUTH0_CLIENT_ID% --audience %ENV_AUTH0_AUDIENCE% --scopes 'example:scope' --no-input --json",
+                    "fix": ["./auth0 login --no-input"]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sdk": "laravel",
+    "title": "Auth0 Laravel SDK Examples",
+
+    "meta": {
+        "cli": {
+            "app": {
+                "title": "Auth0 Laravel SDK Examples",
+                "callbacks": "http://localhost:8000/callback",
+                "logout_urls": "http://localhost:8000"
+            },
+            "api": {
+                "title": "Auth0 Laravel SDK Examples API",
+                "audience": "https://github.com/auth0/laravel-auth0"
+            }
+        }
+    }
+}

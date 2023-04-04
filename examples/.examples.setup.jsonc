@@ -1,0 +1,99 @@
+// Setup steps are run from the `examples setup` command.
+
+{
+    // You can use groups to logically differentiate types of setup steps.
+    "setup": [
+        {
+            "id": "app-conditional-configured",
+            "hidden": "true",
+
+            "steps": [
+                {
+                    "id": "app-configured",
+                    "type": "conditional:env:defined",
+                    "expect": "AUTH0_CLIENT_ID",
+                    "success": "app-validate",
+                    "failure": "app-create"
+                }
+            ]
+        },
+        {
+            "id": "app-create",
+            "title": "Create Auth0 Application",
+
+            "steps": [
+                {
+                    "id": "cli-create-app",
+                    "type": "run",
+                    "run": "./auth0 apps create --name %META.CLI.APP.TITLE% --auth-method post --type regular --callbacks '%META.CLI.APP.CALLBACKS%' --logout-urls '%META.CLI.APP.LOGOUT.URLS%' --reveal-secrets"
+                },
+                {
+                    "id": "cli-tenant-list",
+                    "type": "run",
+                    "run": "./auth0 tenants list"
+                },
+                {
+                    "id": "get-client-id",
+                    "type": "json:get",
+                    "source": "cli-create-app",
+                    "get": "client_id"
+                },
+                {
+                    "id": "get-client-secret",
+                    "type": "json:get",
+                    "from": "@cli-create-app",
+                    "get": "client_secret"
+                },
+                {
+                    "id": "generate-cookie-secret",
+                    "type": "random:string:32"
+                },
+                {
+                    "id": "update-dotenv",
+                    "type": "dotenv:write",
+                    "data": {
+                        "AUTH0_CLIENT_ID": "@get-client-id",
+                        "AUTH0_CLIENT_SECRET": "@get-client-secret",
+                        "AUTH0_COOKIE_SECRET": "@generate-cookie-secret"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "app-validate",
+            "title": "Validate Auth0 Application",
+
+            "steps": [
+                {
+                    "id": "cli-get-app",
+                    "type": "run",
+                    "run": "./auth0 apps show %ENV.AUTH0_CLIENT_ID% --json --reveal-secrets"
+                },
+                {
+                    "id": "get-client-secret",
+                    "type": "json:get",
+                    "from": "@cli-get-app",
+                    "get": "client_secret"
+                },
+                {
+                    "id": "app-secret-matches",
+                    "type": "string:match",
+                    "expect": "@get-client-secret",
+                    "assert": "%ENV.AUTH0_CLIENT_SECRET%"
+                },
+                {
+                    "id": "get-app-type",
+                    "type": "json:get",
+                    "from": "@cli-get-app",
+                    "get": "app_type"
+                },
+                {
+                    "id": "app-type-matches",
+                    "type": "string:match",
+                    "expect": "@get-app-type",
+                    "assert": "regular_web"
+                }
+            ]
+        }
+    ]
+}
