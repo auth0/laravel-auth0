@@ -2,7 +2,7 @@
 
 Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
-[![Package](https://img.shields.io/packagist/dt/auth0/login)](https://packagist.org/packages/auth0/laravel-auth0)
+[![Package](https://img.shields.io/packagist/dt/auth0/login)](https://packagist.org/packages/auth0/login)
 ![Build Status](https://img.shields.io/github/checks-status/auth0/laravel-auth0/main)
 [![Coverage](https://img.shields.io/codecov/c/github/auth0/laravel-auth0/main)](https://codecov.io/gh/auth0/laravel-auth0)
 [![License](https://img.shields.io/packagist/l/auth0/login)](https://doge.mit-license.org/)
