@@ -117,7 +117,7 @@ AUTH0_AUDIENCE="Your Auth0 API identifier"
 
 </details>
 
-### Setup Your Application
+### Configuring Your Application
 
 Open your `app/config/auth.php` file.
 
