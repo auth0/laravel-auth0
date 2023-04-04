@@ -161,7 +161,8 @@ Find the `providers` section, and add a new provider to the `providers` array th
 ],
 ```
 
-> **Note** > `someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
+> **Note**
+> Please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
 
 ### Adding Login
 
