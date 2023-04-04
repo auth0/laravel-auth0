@@ -2,37 +2,43 @@
 
 ## [Unreleased]
 
+## [7.5.1](https://github.com/auth0/laravel-auth0/tree/7.5.1) (2023-04-04)
+
+**Fixed**
+
+-   Resolved an issue wherein custom user repositories could fail to be instantiated under certain circumstances.
+
 ## [7.5.0](https://github.com/auth0/laravel-auth0/tree/7.5.0) (2023-04-03)
 
 This release includes support for Laravel 10, and major improvements to the internal state handling mechanisms of the SDK.
 
 **Added**
 
-— Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
-— New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
-— New Exception types have been added for more precise error catching.
+-   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
+-   New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
+-   New Exception types have been added for more precise error catching.
 
 **Changed**
 The following changes have no effect on the external API of this package, but may affect internal usage.
 
-— `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
-— `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
-— `StateInstance` concept has been replaced by new `Credentials` entity.
-— `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
-— `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
-— The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
-— The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
+-   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
+-   `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
+-   `StateInstance` concept has been replaced by new `Credentials` entity.
+-   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
+-   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
+-   The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
+-   The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
 
 **Fixed**
 
-— A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
-— `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
-— `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
+-   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
+-   `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
+-   `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
 
 **Maintenance**
 
-— Upgraded test suite to use PEST 2.0 framework.
-— Updated test coverage to 100%.
+-   Upgraded test suite to use PEST 2.0 framework.
+-   Updated test coverage to 100%.
 
 **Important Notes**
 
