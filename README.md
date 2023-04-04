@@ -26,52 +26,70 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 -   Laravel 10 (PHP 8.1+) or Laravel 9 (PHP 8.0+)
 -   [Composer](https://getcomposer.org/)
--   PHP Extensions:
-    -   [mbstring](https://www.php.net/manual/en/book.mbstring.php)
--   Dependencies:
-    -   [PSR-18 HTTP Client implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-18)
-    -   [PSR-17 HTTP Factory implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-17)
-    -   [PSR-7 HTTP Messages implementation](https://github.com/auth0/auth0-PHP/FAQ.md#what-is-psr-7)
+-   [Auth0 account](https://auth0.com/signup)
 
 > Please review our [support policy](#support-policy) for details on our PHP and Laravel version support.
 
-> [Octane support](#octane-support) is experimental and not advisable for use in production at this time.
-
 ### Installation
 
-Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
+Open a shell to the root of your Laravel application directory, and import the SDK using [Composer](https://getcomposer.org/):
 
-```
+```bash
 composer require auth0/login
 ```
 
-### Configure Auth0
+Next, generate the `config/auth0.php` configuration file for your application:
 
-Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.auth0.com/#/applications). Verify that the "Token Endpoint Authentication Method" is set to `POST`.
-
-Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
-
--   **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
--   **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after logout, e.g., `http://localhost:3000/login`.
-
-Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used during configuration later.
-
-### Publish SDK configuration
-
-Use Artisan to generate an Auth0 configuration file within your project:
-
-```
+```bash
 php artisan vendor:publish --tag=auth0-config
 ```
 
-A new file will appear within your project, `app/config/auth0.php`. You should avoid making changes to this file directly.
+### Create an Auth0 Application
 
-### Configure `.env` file
+First, [install the Auth0 CLI](https://github.com/auth0/auth0-cli#installation) and [authenticate to your tenant](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
+
+Next, create a new Auth0 application using the CLI:
+
+```bash
+auth0 apps create \
+  --name "My Auth0 Laravel App" \
+  --type "regular" \
+  --auth-method "post" \
+  --callbacks "http://localhost:8000/callback" \
+  --logout-urls "http://localhost:8000/login" \
+  --reveal-secrets \
+  --no-input
+```
+
+Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
+
+### Determine Your Application Type
+
+This SDK supports two application types: **stateful** and **stateless**.
+
+-   **Stateful** applications use a session to store user information (their state).
+    -   These provide a login/logout experience.
+    -   These are **authenticating** users.
+    -   These often need to know the **identity** of the requestor.
+    -   These are often considered traditional web applications.
+-   **Stateless** applications authorize requests to routes.
+    -   These use Access Tokens to firewall requests.
+    -   These are **authorizing** requests.
+    -   These are agnostic to the identity of the requestor.
+    -   These are typically considered backend services.
+    -   These are often used to provide data to single-page applications.
+
+It's important to understand the differences between these two application types, and which one is appropriate for your application.
+
+> _Note_
+> At this time, the SDK does not support simultaneously using stateless and stateful guards within the same application. If you need to support both, you will need to create two separate application instances. Support for this is planned for a future release.
+
+### Configure the SDK
 
 Open the `.env` file within your application's directory, and add the following lines appropriate for your application type:
 
 <details>
-    <summary>For Stateful Web Applications</summary>
+    <summary>Stateful Applications</summary>
 
 ```
 AUTH0_DOMAIN="Your Auth0 domain"
@@ -85,7 +103,7 @@ Provide a sufficiently long, random string for your `AUTH0_COOKIE_SECRET` using 
 </details>
 
 <details>
-    <summary>For Stateless Backend Applications</summary>
+    <summary>Stateless Services</summary>
 
 ```
 AUTH0_STRATEGY="api"
@@ -97,107 +115,85 @@ AUTH0_AUDIENCE="Your Auth0 API identifier"
 
 </details>
 
-### Setup your Laravel application
+### Setup Your Application
 
-Integrating the SDK's Guard requires changes to your `config\auth.php` file.
+Open your `app/config/auth.php` file.
 
-To begin, find the `defaults` section. Set the default `guard` to `auth0`, like this:
-
-```php
-// 📂 config/auth.php
-'defaults' => [
-    'guard' => 'auth0',
-    // 📝 Leave any other settings in this section alone.
-],
-```
-
-Next, find the `guards` section, and add `auth0` there:
+Find the `guards` section, and add a new guard using the `auth0.guard` driver:
 
 ```php
 // 👆 Continued from above, in config/auth.php
 'guards' => [
     // 📝 Any additional guards you use should stay here, too.
-    'auth0' => [
-        'driver' => 'auth0',
-        'provider' => 'auth0',
+    'yourGuard' => [
+        'driver' => 'auth0.guard',
+        'provider' => 'yourProvider',
     ],
 ],
 ```
 
-Next, find the `providers` section, and add `auth0` there as well:
+Next, find the `providers` section, and add an entry matching the name of the `provider` you configured in the guard, using `auth0.provider` as the `driver`:
 
 ```php
 // 👆 Continued from above, in config/auth.php
 'providers' => [
     // 📝 Any additional providers you use should stay here, too.
-    'auth0' => [
-        'driver' => 'auth0',
+    'yourProvider' => [
+        'driver' => 'auth0.provider',
         'repository' => \Auth0\Laravel\Auth\User\Repository::class
     ],
 ],
 ```
 
-Although it is enabled by default, now is a good time to ensure the `StartSession` middleware is enabled in your `app/Http/Kernel.php` file:
+## Authentication
+
+For stateful applications that want to provide a login/logout experience, the SDK provides a series of routing controllers to handle the essential elements of the authentication flow with Auth0.
+
+You should add these controllers to the route most appropriate for your application. For example, `app/routes/web.php` is a common location for most applications.
 
 ```php
-protected $middlewareGroups = [
-    'web' => [
-        // ...
-        \Illuminate\Session\Middleware\StartSession::class,
-        // ...
-    ],
-];
+use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
+
+Route::get('/login', Login::class)->name('login');
+Route::get('/logout', Logout::class)->name('logout');
+Route::get('/callback', Callback::class)->name('callback');
 ```
 
-## Add login to stateful web applications
+Wherever you decide to add these routes, please ensure requests handled by them are managed through a configured Auth0 guard.
 
-For regular web applications that provide login and logout, we provide prebuilt route controllers to add to your `app/routes/web.php` file that will automatically handle your application's authentication flow with Auth0 for you:
+## Routing Protection
 
-```php
-Route::get('/login', \Auth0\Laravel\Http\Controller\Stateful\Login::class)->name('login');
-Route::get('/logout', \Auth0\Laravel\Http\Controller\Stateful\Logout::class)->name('logout');
-Route::get('/auth0/callback', \Auth0\Laravel\Http\Controller\Stateful\Callback::class)->name('auth0.callback');
-```
-
-## Protect routes with middleware
-
-This SDK includes middleware to simplify either authenticating (regular web applications) or authorizing (backend api applications) your Laravel routes, depending on your application type.
+The SDK provides a series of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
 
 <details>
-<summary>Stateful Web Applications</summary>
+<summary>Stateful Applications</summary>
 
-These are for traditional applications that handle logging in and out.
-
-The `auth0.authenticate` middleware will check for an available user session and redirect any requests without one to the login route:
+**`auth0.authenticate` requires a user to be logged in to access a route.** Other requests will be redirected to the `login` route.
 
 ```php
 Route::get('/required', function () {
-    return view('example.user.template');
+    return view(/* Authenticated */);
 })->middleware(['auth0.authenticate']);
 ```
 
-The `auth0.authenticate.optional` middleware will check for an available user session, but won't reject or redirect requests without one, allowing you to treat such requests as "guest" requests:
+**`auth0.authenticate.optional` allows anyone to access a route.** It will check if a user is logged in, and if so, will make sure `Auth::user()` is available to the route. This is useful when you wish to display different content to logged-in users and guests.
 
 ```php
 Route::get('/', function () {
     if (Auth::check()) {
-        return view('example.user.template');
+        return view(/* Authenticated */)
     }
 
-    return view('example.guest.template');
+    return view(/* Guest */)
 })->middleware(['auth0.authenticate.optional']);
 ```
-
-> Note that the `example.user.template` and `example.guest.templates` views are just examples and are not part of the SDK; replace these as appropriate for your application.
 
 </details>
 
 <details>
-<summary>Stateless Backend Applications</summary>
+<summary>Stateless Services</summary>
 
-These are applications that accept an Access Token through the 'Authorization' header of a request.
-
-The `auth0.authorize` middleware will resolve an Access Token and reject any request with an invalid token.
+**`auth0.authorize` requires a valid access token for a request.** Otherwise, it will return a `401 Unauthorized` response.
 
 ```php
 Route::get('/api/private', function () {
@@ -209,7 +205,7 @@ Route::get('/api/private', function () {
 })->middleware(['auth0.authorize']);
 ```
 
-The `auth0.authorize` middleware also allows you to optionally filter requests for access tokens based on scopes:
+**`auth0.authorize` can further require access tokens to have a specific scope.** If the scope is not present for the token, it will return a `403 Forbidden` response.
 
 ```php
 Route::get('/api/private-scoped', function () {
@@ -221,7 +217,7 @@ Route::get('/api/private-scoped', function () {
 })->middleware(['auth0.authorize:read:messages']);
 ```
 
-The `auth0.authorize.optional` middleware will resolve an available Access Token, but won't block requests without one. This is useful when you want to treat tokenless requests as "guests":
+**`auth0.authorize.optional` allows anyone to access a route.** It will check if a valid access token is present, and if so, will make sure `Auth::user()` is available to the route. This is useful when you wish to return different responses to authenticated and unauthenticated requests.
 
 ```php
 Route::get('/api/public', function () {
