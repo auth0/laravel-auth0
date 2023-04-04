@@ -118,10 +118,10 @@ AUTH0_DOMAIN=
 # Use the `client id` you noted earlier during application creation.
 AUTH0_CLIENT_ID=
 
-# Use the `client_secret id` you noted earlier during application creation.
+# Use the `client_secret` you noted earlier during application creation.
 AUTH0_CLIENT_SECRET=
 
-# Use the `identifier id` you noted earlier during API creation.
+# Use the `identifier` you noted earlier during API creation.
 AUTH0_AUDIENCE=
 
 # This should be any sufficiently long, random string.
