@@ -44,7 +44,7 @@ Next, generate the `config/auth0.php` configuration file for your application:
 php artisan vendor:publish --tag=auth0-config
 ```
 
-### Create an Auth0 Application
+### Creating an Auth0 Application
 
 First, [install the Auth0 CLI](https://github.com/auth0/auth0-cli#installation) and [authenticate to your tenant](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
 
@@ -63,7 +63,7 @@ auth0 apps create \
 
 Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
 
-### Determine Your Application Type
+### Determining Your Application Type
 
 This SDK supports two application types: **stateful** and **stateless**.
 
@@ -84,7 +84,7 @@ It's important to understand the differences between these two application types
 > **Note**
 > The SDK does not support simultaneously using stateless and stateful guards within the same application at this time. If you need to support both, you will need to create two separate application instances. Support for this is planned for a future release.
 
-### Configure the SDK
+### Configuring the SDK
 
 Open the `.env` file within your application's directory, and add the following lines appropriate for your application type:
 
@@ -158,7 +158,7 @@ Route::get('/callback', Callback::class)->name('callback');
 
 Please ensure requests for these routes are managed by an Auth0 guard configured by your application.
 
-## Routing Protection
+## Protecting Routes
 
 The SDK provides a series of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
 
