@@ -25,8 +25,8 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         $this->mergeConfigFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']), 'auth0');
         $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0-config');
 
-        $auth->extend('auth0.guard', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
-        $auth->provider('auth0.provider', static fn (Application $app, array $config): Provider => new Provider($config));
+        $auth->extend('auth0', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
+        $auth->provider('auth0', static fn (Application $app, array $config): Provider => new Provider($config));
 
         $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptional::class);
         $router->aliasMiddleware('auth0.authenticate', Authenticate::class);
