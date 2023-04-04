@@ -79,7 +79,9 @@ This SDK supports two application types: **stateful** and **stateless**.
     -   These are typically considered backend services.
     -   These are often used to provide data to single-page applications.
 
-It's important to understand the differences between these two application types, and which one is appropriate for your application.
+It's important to understand the differences between these two application types, and which one is appropriate for your use case.
+
+As we continue, we'll use these terms to help guide you to the correct configuration paths for your application type.
 
 > **Note**
 > The SDK does not support simultaneously using stateless and stateful guards within the same application at this time. If you need to support both, you will need to create two separate application instances. Support for this is planned for a future release.
