@@ -11,14 +11,11 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
--   Stateful Applications
-    -   [Quickstart](https://auth0.com/docs/quickstart/webapp/laravel) — add login, logout, and user information to a Laravel application using Auth0.
-    -   [Sample Application](https://github.com/auth0-samples/auth0-laravel-php-web-app) — a sample Laravel web application integrated with Auth0.
--   Stateless Applications
-    -   [Quickstart](https://auth0.com/docs/quickstart/backend/php) — add access token handling and route authorization to a backend Laravel application using Auth0.
-    -   [Sample Application](https://github.com/auth0-samples/auth0-laravel-api-samples) — a sample Laravel backend application integrated with Auth0.
--   [Examples](./EXAMPLES.md) — code samples for common scenarios.
--   [Docs site](https://www.auth0.com/docs) — explore our docs site and learn more about Auth0.
+-   Quickstart Demonstrations
+    -   [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/laravel/php) — Traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The complete source code is also available.](https://github.com/auth0-samples/auth0-laravel-php-web-app)
+    -   [API using Access Tokens (Stateless)](https://auth0.com/docs/quickstart/backend/laravel) — Backend service that authorizes endpoints using access tokens provided by a frontend client and returns JSON responses. [The complete source code is also available.](https://github.com/auth0-samples/auth0-laravel-api-samples)
+-   [Laravel Examples](./EXAMPLES.md) — Code samples for common scenarios.
+-   [Documentation Hub](https://www.auth0.com/docs) — Learn more about integrating Auth0.
 
 ## Getting Started
 
