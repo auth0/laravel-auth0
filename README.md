@@ -140,7 +140,7 @@ Find the `providers` section, and add a new provider to the `providers` array th
 ],
 ```
 
-`someGuardName` and `someProviderName` can be any names you choose, but please ensure the `provider` name matches the `provider` value in the guard definition.
+`someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
 
 ## Authentication
 
