@@ -1,15 +1,19 @@
-# Examples using laravel-auth0
+# Auth0 Laravel SDK Examples
 
--   [Custom user models and repositories](#custom-user-models-and-repositories)
--   [Authorizing HTTP tests](#authorizing-http-tests)
+-   [Extending the SDK with Custom User Models and Repositories](#extending-the-sdk-with-custom-user-models-and-repositories)
+    -   [Creating a Custom User Model](#creating-a-custom-user-model)
+    -   [Creating a Custom User Repository](#creating-a-custom-user-repository)
+    -   [Using a Custom User Repository](#using-a-custom-user-repository)
+-   [Authorizing HTTP Tests](#authorizing-http-tests)
+-   [Protecting Routes with Scope Filtering](#protecting-routes-with-scope-filtering)
 
-## Custom user models and repositories
+## Extending the SDK with Custom User Models and Repositories
 
 In Laravel, a User Repository is an interface that sits between your authentication source (Auth0) and core Laravel authentication services. It allows you to shape and manipulate the user model and it's data as you need to.
 
 For example, Auth0's unique identifier is a `string` in the format `auth0|123456abcdef`. If you were to attempt to persist a user to many traditional databases you'd likely encounter an error as, by default, a unique identifier is often expected to be an `integer` rather than a `string` type. A custom user model and repository is a great way to address integration challenges like this.
 
-### Creating a custom user model
+### Creating a Custom User Model
 
 Let's setup a custom user model for our application. To do this, let's create a file at `app/Auth/Models/User.php` within our Laravel project. This new class needs to implement the `Illuminate\Contracts\Auth\Authenticatable` interface to be compatible with Laravel's Guard API and this SDK. It must also implement either `Auth0\Laravel\Contract\Model\Stateful\User` or `Auth0\Laravel\Contract\Model\Stateless\User` depending on your application's needs. For example:
 
@@ -111,13 +115,13 @@ Finally, update your application's `config/auth.php` file. Within the Auth0 prov
     ],
 ```
 
-## Authorizing HTTP tests
+## Authorizing HTTP Tests
 
 If your application does contain HTTP tests which access routes that are protected by the `auth0.authorize` middleware, you can use the trait `Auth0\Laravel\Traits\ActingAsAuth0User` in your tests, which will give you a helper method `actingAsAuth0User(array $attributes=[])` similar to Laravel's `actingAs` method, that allows you to impersonate an authenticated state suitable for the middleware.
 
 The argument `attributes` is optional and you can use it to set any auth0 specific user attributes like scope, sub, azp, iap and so on. If no attributes are set, some default values are used.
 
-### Example with a scope protected route
+### Protecting Routes with Scope Filtering
 
 Let's assume you have a route like the following, that is protected by the scope `read:messages`:
 
