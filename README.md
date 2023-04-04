@@ -246,7 +246,7 @@ We drop support for Laravel and PHP versions when they reach end-of-life and cea
 
 Octane compatibility is currently considered experimental and unsupported.
 
-Although we are working toward ensuring the SDK is fully compatible with this feature, we do not recommend using this with our SDK in production until we have full confidence and announced support. Due to the aggressive changes Octane makes to Laravel's core behavior, there is an opportunity for problems we haven't fully identified or resolved yet.
+Although we are working toward ensuring the SDK is fully compatible with this feature, we do not recommend using this with our SDK in production until we have full confidence and announced support. Due to the caching behavior of Octane, there is an opportunity for problems we have not fully identified or resolved yet.
 
 Feedback and bug fix contributions are greatly appreciated as we work toward full. Octane support.
 
