@@ -119,37 +119,34 @@ AUTH0_AUDIENCE="Your Auth0 API identifier"
 
 Open your `app/config/auth.php` file.
 
-Find the `guards` section, and add a new guard using the `auth0.guard` driver:
+Find the `guards` section, and add a new guard to the `guards` array that uses the `auth0.guard` driver.
 
 ```php
-// 👆 Continued from above, in config/auth.php
 'guards' => [
-    // 📝 Any additional guards you use should stay here, too.
-    'yourGuard' => [
+    'someGuardName' => [
         'driver' => 'auth0.guard',
-        'provider' => 'yourProvider',
+        'provider' => 'someProviderName',
     ],
 ],
 ```
 
-Next, find the `providers` section, and add an entry matching the name of the `provider` you configured in the guard, using `auth0.provider` as the `driver`:
+Find the `providers` section, and add a new provider to the `providers` array that uses `auth0.provider` as the driver.
 
 ```php
-// 👆 Continued from above, in config/auth.php
-'providers' => [
-    // 📝 Any additional providers you use should stay here, too.
-    'yourProvider' => [
+    'someProviderName' => [
         'driver' => 'auth0.provider',
         'repository' => \Auth0\Laravel\Auth\User\Repository::class
     ],
 ],
 ```
 
+`someGuardName` and `someProviderName` can be any names you choose, but please ensure the `provider` name matches the `provider` value in the guard definition.
+
 ## Authentication
 
-For stateful applications that want to provide a login/logout experience, the SDK provides a series of routing controllers to handle the essential elements of the authentication flow with Auth0.
+**For stateful applications** that use a login/logout experience, the SDK provides a series of routing controllers to handle the authentication flow.
 
-You should add these controllers to the route most appropriate for your application. For example, `app/routes/web.php` is a common location for most applications.
+Add these routes where most appropriate for your configuration; `app/routes/web.php` is a common location for most applications.
 
 ```php
 use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
@@ -159,7 +156,7 @@ Route::get('/logout', Logout::class)->name('logout');
 Route::get('/callback', Callback::class)->name('callback');
 ```
 
-Wherever you decide to add these routes, please ensure requests handled by them are managed through a configured Auth0 guard.
+Please ensure requests for these routes are managed by an Auth0 guard configured by your application.
 
 ## Routing Protection
 
