@@ -195,7 +195,7 @@ Route::get('/required', function () {
 })->middleware(['auth0.authenticate']);
 ```
 
-**`auth0.authenticate.optional` allows anyone to access a route.** It will check if a user is logged in, and if so, will make sure `Auth::user()` is available to the route. This is useful when you wish to display different content to logged-in users and guests.
+**`auth0.authenticate.optional` allows anyone to access a route.** It will check if a user is logged in, and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to display different content to logged-in users and guests.
 
 ```php
 Route::get('/', function () {
@@ -233,7 +233,7 @@ Route::get('/api/private-scoped', function () {
 })->middleware(['auth0.authorize:read:messages']);
 ```
 
-**`auth0.authorize.optional` allows anyone to access a route.** It will check if a valid access token is present, and if so, will make sure `Auth::user()` is available to the route. This is useful when you wish to return different responses to authenticated and unauthenticated requests.
+**`auth0.authorize.optional` allows anyone to access a route.** It will check if a valid access token is present, and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to return different responses to authenticated and unauthenticated requests.
 
 ```php
 Route::get('/api/public', function () {
