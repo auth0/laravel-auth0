@@ -28,6 +28,8 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 -   [Composer](https://getcomposer.org/)
 -   [Auth0 account](https://auth0.com/signup)
 
+We will be using the [Auth0 CLI](https://github.com/auth0/auth0-cli) in our examples to expedite getting started If you're planning on following along, you should have the CLI [installed](https://github.com/auth0/auth0-cli#installation) and [authenticated](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
+
 > Please review our [support policy](#support-policy) for details on our PHP and Laravel version support.
 
 ### Installation
@@ -43,6 +45,27 @@ Next, generate the `config/auth0.php` configuration file for your application:
 ```bash
 php artisan vendor:publish --tag=auth0-config
 ```
+
+### Determine Your Application Type
+
+Before we begin configuring your application, it's important to understand the difference between "stateful" and "stateless" applications, and which one is appropriate for your use case.
+
+-   **Stateful** applications use a session to store user information (their state).
+    -   These provide a login/logout experience.
+    -   These are **authenticating** users.
+    -   These often need to know the **identity** of the requestor.
+    -   These are often considered traditional web applications.
+-   **Stateless** applications authorize requests to routes.
+    -   These use Access Tokens to firewall requests.
+    -   These are **authorizing** requests.
+    -   These are agnostic to the identity of the requestor.
+    -   These are typically considered backend services.
+    -   These are often used to provide data to single-page applications.
+
+As we continue, we'll use these terms to help guide you to the correct configuration paths for your application type.
+
+> **Note**
+> The SDK does not support simultaneously using stateless and stateful guards within the same application at this time. If you need to support both, you will need to create two separate application instances. Support for this is planned for a future release.
 
 ### Creating an Auth0 Application
 
@@ -63,28 +86,24 @@ auth0 apps create \
 
 Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
 
-### Determining Your Application Type
+### Optional: Creating an Auth0 API
 
-This SDK supports two application types: **stateful** and **stateless**.
+First, [install the Auth0 CLI](https://github.com/auth0/auth0-cli#installation) and [authenticate to your tenant](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
 
--   **Stateful** applications use a session to store user information (their state).
-    -   These provide a login/logout experience.
-    -   These are **authenticating** users.
-    -   These often need to know the **identity** of the requestor.
-    -   These are often considered traditional web applications.
--   **Stateless** applications authorize requests to routes.
-    -   These use Access Tokens to firewall requests.
-    -   These are **authorizing** requests.
-    -   These are agnostic to the identity of the requestor.
-    -   These are typically considered backend services.
-    -   These are often used to provide data to single-page applications.
+Next, create a new Auth0 application using the CLI:
 
-It's important to understand the differences between these two application types, and which one is appropriate for your use case.
+```bash
+auth0 apps create \
+  --name "My Auth0 Laravel App" \
+  --type "regular" \
+  --auth-method "post" \
+  --callbacks "http://localhost:8000/callback" \
+  --logout-urls "http://localhost:8000/login" \
+  --reveal-secrets \
+  --no-input
+```
 
-As we continue, we'll use these terms to help guide you to the correct configuration paths for your application type.
-
-> **Note**
-> The SDK does not support simultaneously using stateless and stateful guards within the same application at this time. If you need to support both, you will need to create two separate application instances. Support for this is planned for a future release.
+Make note of your tenant's **Domain** (e.g. `tenant.region.auth0.com`), **Client ID**, and **Client Secret** returned. These will be required later during configuration.
 
 ### Configuring the SDK
 
