@@ -28,7 +28,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 -   [Composer](https://getcomposer.org/)
 -   [Auth0 account](https://auth0.com/signup)
 
-We will be using the [Auth0 CLI](https://github.com/auth0/auth0-cli) in our examples to expedite getting started If you're planning on following along, you should have the CLI [installed](https://github.com/auth0/auth0-cli#installation) and [authenticated](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
+Our examples use the [Auth0 CLI](https://github.com/auth0/auth0-cli) to help get you kickstarted quickly. You should have the CLI [installed](https://github.com/auth0/auth0-cli#installation) and [authenticated](https://github.com/auth0/auth0-cli#authenticating-to-your-tenant).
 
 > Please review our [support policy](#support-policy) for details on our PHP and Laravel version support.
 
@@ -88,7 +88,7 @@ Please make a note of your tenant's **domain** (e.g. `tenant.region.auth0.com`),
 
 ### Creating an Auth0 API
 
-**This is only required if you are building a stateless application.** You can create a new Auth0 API using [the Auth0 CLI](https://github.com/auth0/):
+You can create a new Auth0 API using [the Auth0 CLI](https://github.com/auth0/):
 
 ```bash
 auth0 apis create \
@@ -108,9 +108,7 @@ The identifier value will used to configure the `audience` parameter in your app
 
 ### Configuring the SDK
 
-Open the `.env` file within your application's directory, append the lines below as identified for your application type to that file, and fill in the values as appropriate:
-
-#### Stateful Applications
+Open the `.env` file within your application's directory, append the lines below, and fill in the values:
 
 ```ini
 # This should be the `domain` value from your Auth0 application.
@@ -124,27 +122,17 @@ AUTH0_CLIENT_SECRET=
 
 # This should be a sufficiently long, random string.
 AUTH0_COOKIE_SECRET=
+
+# This should be the `identifier` value from your Auth0 API.
+AUTH0_AUDIENCE=
 ```
 
 You can use `openssl rand -hex 32` to generate an adequate string for the cookie secret.
 
-#### Stateless Services
+If you are building a stateless application, you should also configure the `AUTH0_STRATEGY` environment variable as `api`:
 
 ```ini
-# This should be left as "api".
 AUTH0_STRATEGY=api
-
-# This should be the `domain` value from your Auth0 application.
-AUTH0_DOMAIN=
-
-# This should be the `client_id` value from your Auth0 application.
-AUTH0_CLIENT_ID=
-
-# This should be the `client_secret` value from your Auth0 application.
-AUTH0_CLIENT_SECRET=
-
-# This should be the `identifier` value from your Auth0 API.
-AUTH0_AUDIENCE=
 ```
 
 ### Configuring Your Application
