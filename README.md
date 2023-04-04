@@ -34,7 +34,7 @@ Our examples use the [Auth0 CLI](https://github.com/auth0/auth0-cli) to help get
 
 ### Installation
 
-Open a shell to the root of your Laravel application directory, and import the SDK using [Composer](https://getcomposer.org/):
+Open a shell to the root of your Laravel application's root directory, and import the SDK using [Composer](https://getcomposer.org/):
 
 ```bash
 composer require auth0/login
@@ -108,7 +108,7 @@ The identifier value will used to configure the `audience` parameter in your app
 
 ### Configuring the SDK
 
-Open the `.env` file within your application's directory, append the lines below, and fill in the values:
+Open the `.env` file within your Laravel application's root directory, append the lines below, and fill in the values:
 
 ```ini
 # This should be the `domain` value from your Auth0 application.
