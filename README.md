@@ -168,7 +168,7 @@ Find the `providers` section, and add a new provider to the `providers` array th
 
 For stateful applications that use a login/logout experience, the SDK provides routing controllers that handle the authentication flow for your application.
 
-Add these routes where most appropriate for your configuration; `routes/web.php` is a common location for most applications.
+Add these routes where most appropriate for your configuration. `routes/web.php` is a common location for many Laravel applications.
 
 ```php
 use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
