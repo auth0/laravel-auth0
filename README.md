@@ -152,6 +152,7 @@ Find the `guards` section, and add a new guard to the `guards` array that uses t
 Find the `providers` section, and add a new provider to the `providers` array that uses `auth0.provider` as the driver.
 
 ```php
+'providers' => [
     'someProviderName' => [
         'driver' => 'auth0.provider',
         'repository' => \Auth0\Laravel\Auth\User\Repository::class
