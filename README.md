@@ -84,11 +84,16 @@ auth0 apps create \
 
 You will receive a response with details about your new application.
 
-Please make a note of your tenant's **domain** (e.g. `tenant.region.auth0.com`), **client ID**, and **client secret**. These will be required later during configuration.
+Please make a note of your tenant's **domain** (e.g. `tenant.region.auth0.com`), **client ID**, and **client secret**. These will be required in the configuration step below.
 
 ### Creating an Auth0 API
 
-You can create a new Auth0 API using [the Auth0 CLI](https://github.com/auth0/):
+You can create a new Auth0 API using [the Auth0 CLI](https://github.com/auth0/).
+
+In the following command, you can choose any `--name` and `--identifier` values you like. However, the `--identifier` value must be a valid URL, although it does not need to be publicly accessible. Note that the identifier value cannot be changed later.
+
+> **Note**
+> The identifier value will be used as the audience claim in your Access Tokens, so it is important to choose a value that will not conflict with other APIs you may be using.
 
 ```bash
 auth0 apis create \
@@ -100,11 +105,7 @@ auth0 apis create \
 
 You will receive a response with details about your new API.
 
-You can choose any `--name` and `--identifier` values you like. The `--identifier` value must be a valid URL, but it does not need to be publicly accessible. The identifier value cannot be changed once it is set.
-
-Note that the identifier value will be used as the audience claim in your Access Tokens, so it is important to choose a value that will not conflict with other APIs you may be using.
-
-The identifier value will used to configure the `audience` parameter in your application's configuration later.
+Please make a note of your new API's **identifier**. This will be required in the configuration step, and will be referred to as the `audience`.
 
 ### Configuring the SDK
 
@@ -160,7 +161,7 @@ Find the `providers` section, and add a new provider to the `providers` array th
 ],
 ```
 
-`someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
+> **Note** > `someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
 
 ### Adding Login
 
