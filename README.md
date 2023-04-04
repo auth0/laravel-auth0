@@ -142,7 +142,7 @@ Find the `providers` section, and add a new provider to the `providers` array th
 
 `someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
 
-## Adding Login
+### Adding Login
 
 For stateful applications that use a login/logout experience, the SDK provides routing controllers that handle the authentication flow for your application.
 
@@ -158,7 +158,7 @@ Route::get('/callback', Callback::class)->name('callback');
 
 Please ensure requests for these routes are managed by an Auth0 guard configured by your application.
 
-## Protecting Routes
+### Protecting Routes
 
 The SDK provides a series of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
 
