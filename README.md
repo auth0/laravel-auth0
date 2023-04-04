@@ -108,28 +108,27 @@ The identifier value will used to configure the `audience` parameter in your app
 
 ### Configuring the SDK
 
-Open the `.env` file within your Laravel application's root directory, append the lines below, and fill in the values:
+Open the `.env` file within your Laravel application's root directory, append the lines below to it, and fill in the missing values:
 
 ```ini
-# This should be the `domain` value from your Auth0 application.
+# Use the `domain` you noted earlier during application creation.
 AUTH0_DOMAIN=
 
-# This should be the `client_id` value from your Auth0 application.
+# Use the `client id` you noted earlier during application creation.
 AUTH0_CLIENT_ID=
 
-# This should be the `client_secret` value from your Auth0 application.
+# Use the `client_secret id` you noted earlier during application creation.
 AUTH0_CLIENT_SECRET=
 
-# This should be a sufficiently long, random string.
-AUTH0_COOKIE_SECRET=
-
-# This should be the `identifier` value from your Auth0 API.
+# Use the `identifier id` you noted earlier during API creation.
 AUTH0_AUDIENCE=
+
+# This should be any sufficiently long, random string.
+# You can use `openssl rand -hex 32` to generate an adequate string.
+AUTH0_COOKIE_SECRET=
 ```
 
-You can use `openssl rand -hex 32` to generate an adequate string for the cookie secret.
-
-If you are building a stateless application, you should also configure the `AUTH0_STRATEGY` environment variable as `api`:
+If you are building a stateless application, you should also configure the `AUTH0_STRATEGY` environment variable:
 
 ```ini
 AUTH0_STRATEGY=api
@@ -137,7 +136,7 @@ AUTH0_STRATEGY=api
 
 ### Configuring Your Application
 
-Open your `app/config/auth.php` file.
+Open your `config/auth.php` file.
 
 Find the `guards` section, and add a new guard to the `guards` array that uses the `auth0.guard` driver.
 
@@ -166,7 +165,7 @@ Find the `providers` section, and add a new provider to the `providers` array th
 
 For stateful applications that use a login/logout experience, the SDK provides routing controllers that handle the authentication flow for your application.
 
-Add these routes where most appropriate for your configuration; `app/routes/web.php` is a common location for most applications.
+Add these routes where most appropriate for your configuration; `routes/web.php` is a common location for most applications.
 
 ```php
 use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
