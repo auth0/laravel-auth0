@@ -121,7 +121,7 @@ If your application does contain HTTP tests which access routes that are protect
 
 The argument `attributes` is optional and you can use it to set any auth0 specific user attributes like scope, sub, azp, iap and so on. If no attributes are set, some default values are used.
 
-### Protecting Routes with Scope Filtering
+## Protecting Routes with Scope Filtering
 
 Let's assume you have a route like the following, that is protected by the scope `read:messages`:
 
