@@ -8,31 +8,31 @@ This release includes support for Laravel 10, and major improvements to the inte
 
 **Added**
 
--   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
--   New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
--   New Exception types have been added for more precise error catching.
+— Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
+— New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
+— New Exception types have been added for more precise error catching.
 
 **Changed**
 The following changes have no effect on the external API of this package, but may affect internal usage.
 
--   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
--   `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
--   `StateInstance` concept has been replaced by new `Credentials` entity.
--   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
--   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
--   The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
--   The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
+— `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
+— `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
+— `StateInstance` concept has been replaced by new `Credentials` entity.
+— `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
+— `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
+— The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
+— The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
 
 **Fixed**
 
--   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
--   `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
--   `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
+— A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
+— `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
+— `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
 
 **Maintenance**
 
--   Upgraded test suite to use PEST 2.0 framework.
--   Updated test coverage to 100%.
+— Upgraded test suite to use PEST 2.0 framework.
+— Updated test coverage to 100%.
 
 **Important Notes**
 
@@ -42,7 +42,7 @@ This release includes a significant behavior change around the `user()` method o
 A new property has been added to the `config/auth0.php` configuration file: `behavior`. This is an array. At this time, there is a single option: `legacyGuardUserMethod`, a bool. If this value is set to true, or if the key is missing, the previously expected behavior will be applied, and `user()` will behave as it did before this release. The property defaults to `false`.
 
 **2. Changes to Guard and Provider driver aliases**
-We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had bee to instantiate these using their class names, this should not be a breaking change in most cases, but if you had used `auth0` as the driver name for either the Guard or the Provider entries, please note that these have changed. Please use `auth0.guard` for the Guard driver, and `auth0.provider` for the Provider driver. This is a regrettable change, but was necessary for adequate Laravel 10 support.
+We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver, and `auth0.provider` for the Provider driver. This is a regrettable change, but was necessary for adequate Laravel 10 support.
 
 Thanks to our contributors for this release: [taida957789](https://github.com/taida957789)
 
