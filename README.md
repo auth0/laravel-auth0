@@ -142,9 +142,9 @@ Find the `providers` section, and add a new provider to the `providers` array th
 
 `someGuardName` and `someProviderName` can be any names you choose, but please ensure the provider's name (in this case, `someProviderName`) matches the `provider` value in the guard definition.
 
-## Authentication
+## Adding Login
 
-**For stateful applications** that use a login/logout experience, the SDK provides a series of routing controllers to handle the authentication flow.
+For stateful applications that use a login/logout experience, the SDK provides routing controllers that handle the authentication flow for your application.
 
 Add these routes where most appropriate for your configuration; `app/routes/web.php` is a common location for most applications.
 
