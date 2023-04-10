@@ -10,7 +10,9 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateful\Authenticate as Authenticate
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Symfony\Component\HttpFoundation\{Response, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Contract\Entities\Credential;
 
 /**
  * This middleware will configure the authenticated user for the session using a
@@ -35,7 +37,7 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
 
         $credential = $guard->find(Guard::SOURCE_SESSION);
 
-        if (null !== $credential) {
+        if ($credential instanceof Credential) {
             if ('' === $scope || $guard->hasScope($scope, $credential)) {
                 $guard->login($credential, Guard::SOURCE_SESSION);
 

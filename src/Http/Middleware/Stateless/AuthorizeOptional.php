@@ -10,7 +10,9 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateless\AuthorizeOptional as Author
 use Auth0\Laravel\Event\Middleware\StatelessRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Symfony\Component\HttpFoundation\{Response, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Contract\Entities\Credential;
 
 /**
  * This middleware will configure the authenticated user using an available access token.
@@ -33,7 +35,7 @@ final class AuthorizeOptional extends MiddlewareAbstract implements AuthorizeOpt
 
         $credential = $guard->find(Guard::SOURCE_TOKEN);
 
-        if (null !== $credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
+        if ($credential instanceof Credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
             $guard->login($credential, Guard::SOURCE_TOKEN);
 
             return $next($request);

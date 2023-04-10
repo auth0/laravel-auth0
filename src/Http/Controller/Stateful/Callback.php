@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Callback as CallbackContract;
 use Auth0\Laravel\Event\Stateful\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exception\Stateful\CallbackException;
@@ -123,7 +124,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
         $credential = $guard->find(Guard::SOURCE_SESSION);
         $user       = $credential?->getUser();
 
-        if (null !== $credential && $user instanceof Authenticatable) {
+        if ($credential instanceof Credential && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
             $guard->login($credential, Guard::SOURCE_SESSION);
 

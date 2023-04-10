@@ -13,7 +13,7 @@ final class StatefulRequest extends Auth0Event implements StatefulRequestContrac
 {
     public function __construct(
         public Request $request,
-        public Guard $guard
+        public Guard $guard,
     ) {
     }
 }

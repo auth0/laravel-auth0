@@ -20,6 +20,6 @@ interface AuthorizeOptional
     public function handle(
         Request $request,
         Closure $next,
-        string $scope = ''
+        string $scope = '',
     ): Response;
 }

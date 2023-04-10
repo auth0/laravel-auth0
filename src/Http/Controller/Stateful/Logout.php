@@ -10,6 +10,7 @@ use Auth0\Laravel\Contract\Http\Controller\Stateful\Logout as LogoutContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Contract\Entities\Credential;
 
 use function is_string;
 
@@ -29,7 +30,7 @@ final class Logout extends ControllerAbstract implements LogoutContract
             return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        $loggedIn = $guard->check() ? true : null !== $guard->find(Guard::SOURCE_SESSION);
+        $loggedIn = $guard->check() ? true : $guard->find(Guard::SOURCE_SESSION) instanceof Credential;
 
         if ($loggedIn) {
             session()->invalidate();

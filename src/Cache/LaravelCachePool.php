@@ -86,7 +86,7 @@ final class LaravelCachePool implements CacheItemPoolInterface
             $item = $this->getDeferred((string) $singleDeferred);
 
             // @codeCoverageIgnoreStart
-            if (null !== $item && ! $this->save($item)) {
+            if ($item instanceof CacheItemInterface && ! $this->save($item)) {
                 $success = false;
             }
             // @codeCoverageIgnoreEnd

@@ -10,6 +10,7 @@ use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Contract\Entities\Credential;
 
 final class Login extends ControllerAbstract implements LoginContract
 {
@@ -27,7 +28,7 @@ final class Login extends ControllerAbstract implements LoginContract
             return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        $loggedIn = $guard->check() ? true : null !== $guard->find(Guard::SOURCE_SESSION);
+        $loggedIn = $guard->check() ? true : $guard->find(Guard::SOURCE_SESSION) instanceof Credential;
 
         if ($loggedIn) {
             return redirect()->intended(config('auth0.routes.home', '/'));

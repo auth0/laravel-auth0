@@ -10,8 +10,9 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateless\Authorize as AuthorizeContr
 use Auth0\Laravel\Event\Middleware\StatelessRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Symfony\Component\HttpFoundation\{Response, Request};
-
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Contract\Entities\Credential;
 /**
  * This middleware will configure the authenticated user using an available access token.
  * If a token is not available, it will raise an exception.
@@ -34,7 +35,7 @@ final class Authorize extends MiddlewareAbstract implements AuthorizeContract
 
         $credential = $guard->find(Guard::SOURCE_TOKEN);
 
-        if (null !== $credential) {
+        if ($credential instanceof Credential) {
             if ('' === $scope || $guard->hasScope($scope, $credential)) {
                 $guard->login($credential, Guard::SOURCE_TOKEN);
 
