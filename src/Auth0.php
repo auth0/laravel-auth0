@@ -46,7 +46,7 @@ final class Auth0 implements ServiceContract
 
     public function getConfiguration(): Configuration
     {
-        if (null === $this->configuration) {
+        if (! $this->configuration instanceof Configuration) {
             $config = config('auth0');
 
             /**
@@ -108,7 +108,7 @@ final class Auth0 implements ServiceContract
 
     public function getSdk(): SDKContract
     {
-        if (null !== $this->sdk) {
+        if ($this->sdk instanceof SDKContract) {
             return $this->sdk;
         }
 
@@ -129,7 +129,7 @@ final class Auth0 implements ServiceContract
     {
         $this->configuration = $configuration;
 
-        if (null !== $this->sdk) {
+        if ($this->sdk instanceof SDKContract) {
             $this->sdk->setConfiguration($configuration);
         }
 

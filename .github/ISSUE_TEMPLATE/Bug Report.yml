@@ -6,19 +6,28 @@ body:
     attributes:
       value: Thanks for taking the time to help us improve this project!
   - type: dropdown
+    id: laravel
+    attributes:
+      label: Laravel Version
+      description: What version of Laravel are you running?
+      options:
+        - Laravel 10.x
+        - Laravel 9.x
+        - Other (specify in 'additional context')
+    validations:
+      required: true
+  - type: dropdown
     id: sdk
     attributes:
       label: SDK Version
       description: What version of our Laravel plugin are you running? (`composer show | grep auth0/login`)
       options:
-        - 7.5
-        - 7.4
-        - 7.3
-        - 7.2
-        - 7.1
-        - 7.0
-        - 6.5
-        - 6.4
+        - SDK 7.5
+        - SDK 7.4
+        - SDK 7.3
+        - SDK 7.2
+        - SDK 7.1
+        - SDK 7.0
         - Other (specify in 'additional context')
     validations:
       required: true
@@ -33,16 +42,6 @@ body:
         - PHP 8.1
         - PHP 8.0
         - Other (specify in 'additional context')
-    validations:
-      required: true
-  - type: dropdown
-    id: composer
-    attributes:
-      label: Composer Version
-      description: What version of Composer are you running? (`composer -v`)
-      options:
-        - 2.x
-        - 1.x
     validations:
       required: true
   - type: textarea

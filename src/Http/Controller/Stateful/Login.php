@@ -6,9 +6,11 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class Login extends ControllerAbstract implements LoginContract
 {
@@ -19,14 +21,14 @@ final class Login extends ControllerAbstract implements LoginContract
      */
     public function __invoke(
         Request $request,
-    ): RedirectResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {
             return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        $loggedIn = $guard->check() ? true : null !== $guard->find(Guard::SOURCE_SESSION);
+        $loggedIn = $guard->check() ? true : $guard->find(Guard::SOURCE_SESSION) instanceof Credential;
 
         if ($loggedIn) {
             return redirect()->intended(config('auth0.routes.home', '/'));

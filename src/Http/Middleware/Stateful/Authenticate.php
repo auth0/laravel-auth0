@@ -6,12 +6,13 @@ namespace Auth0\Laravel\Http\Middleware\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Middleware\Stateful\Authenticate as AuthenticateContract;
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Illuminate\Http\{JsonResponse, RedirectResponse, Request, Response};
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This middleware will configure the authenticated user for the session using a
@@ -24,7 +25,7 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
         Request $request,
         Closure $next,
         string $scope = '',
-    ): Response | RedirectResponse | JsonResponse | Redirector {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {
@@ -36,7 +37,7 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
 
         $credential = $guard->find(Guard::SOURCE_SESSION);
 
-        if (null !== $credential) {
+        if ($credential instanceof Credential) {
             if ('' === $scope || $guard->hasScope($scope, $credential)) {
                 $guard->login($credential, Guard::SOURCE_SESSION);
 
@@ -46,6 +47,6 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
-        return redirect(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
+        return redirect()->to(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
     }
 }

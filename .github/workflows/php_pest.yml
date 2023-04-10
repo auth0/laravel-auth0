@@ -1,41 +1,40 @@
-name: Unit Tests
+name: "PEST"
 
 on:
-  pull_request_target:
-    types:
-      - labeled
+  pull_request_target: {}
   push:
     branches:
       - main
 
 jobs:
   pest:
-    name: PEST
-    runs-on: ${{ matrix.operating-systems }}
-    if: github.event.label.name == 'run' || github.ref_name == 'main'
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
-      matrix:
-        operating-systems:
-          - ubuntu-latest
-        php-versions:
-          - 8.1
-          - 8.2
 
     steps:
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: pcov
-          extensions: mbstring, openssl
-
       - uses: actions/checkout@v3
 
-      - run: composer install --prefer-dist
-      - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --order-by random
-
-      - if: (matrix.php-versions == '8.1')
-        uses: codecov/codecov-action@v2
+      - uses: shivammathur/setup-php@v2
         with:
-          directory: coverage
+          php-version: 8.1
+          coverage: pcov
+
+      - id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - run: vendor/bin/pest --order-by random --compact --parallel
+
+      - uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage/
+          flags: unittests

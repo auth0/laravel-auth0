@@ -6,13 +6,15 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Callback as CallbackContract;
 use Auth0\Laravel\Event\Stateful\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exception\Stateful\CallbackException;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 use function is_string;
@@ -26,7 +28,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
      */
     public function __invoke(
         Request $request,
-    ): RedirectResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract || $guard->check()) {
@@ -122,7 +124,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
         $credential = $guard->find(Guard::SOURCE_SESSION);
         $user       = $credential?->getUser();
 
-        if (null !== $credential && $user instanceof Authenticatable) {
+        if ($credential instanceof Credential && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
             $guard->login($credential, Guard::SOURCE_SESSION);
 

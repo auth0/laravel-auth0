@@ -6,12 +6,13 @@ namespace Auth0\Laravel\Http\Middleware\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Middleware\Stateful\AuthenticateOptional as AuthenticateOptionalContract;
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Illuminate\Http\{JsonResponse, Request, Response};
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This middleware will configure the authenticated user for the session using a
@@ -24,7 +25,7 @@ final class AuthenticateOptional extends MiddlewareAbstract implements Authentic
         Request $request,
         Closure $next,
         string $scope = '',
-    ): Response | Redirector | JsonResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {
@@ -36,7 +37,7 @@ final class AuthenticateOptional extends MiddlewareAbstract implements Authentic
 
         $credential = $guard->find(Guard::SOURCE_SESSION);
 
-        if (null !== $credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
+        if ($credential instanceof Credential && ('' === $scope || $guard->hasScope($scope, $credential))) {
             $guard->login($credential, Guard::SOURCE_SESSION);
         }
 

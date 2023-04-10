@@ -1,9 +1,7 @@
-name: Security
+name: "Semgrep"
 
 on:
-  pull_request_target:
-    types:
-      - labeled
+  pull_request_target: {}
   push:
     branches:
       - main
@@ -13,9 +11,10 @@ permissions:
 
 jobs:
   semgrep:
-    name: Semgrep
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: false
 
     container:
       image: returntocorp/semgrep

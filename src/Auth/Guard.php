@@ -68,7 +68,7 @@ final class Guard implements GuardContract
         $session = $this->pullState();
         $user    = $session?->getUser();
 
-        if (null !== $session && $user instanceof Authenticatable) {
+        if ($session instanceof Credential && $user instanceof Authenticatable) {
             $user = $this->getProvider()->retrieveByCredentials($this->normalizeUserArray($user));
 
             if ($user instanceof Authenticatable) {
@@ -232,7 +232,7 @@ final class Guard implements GuardContract
         $sdk = $this->getSdk();
         $credential ??= $this->getCredential();
 
-        if (null === $credential) {
+        if (! $credential instanceof Credential) {
             $sdk->clear(true);
 
             return $this;
@@ -245,6 +245,7 @@ final class Guard implements GuardContract
             $pushHash = '';
         }
         // @codeCoverageIgnoreEnd
+
         $pushHash = md5($pushHash);
 
         if ($pushHash === $this->pushHash) {
@@ -290,7 +291,7 @@ final class Guard implements GuardContract
     private function refreshSession(
         ?Credential $credential,
     ): ?Credential {
-        if (null === $credential || true !== $credential->getAccessTokenExpired()) {
+        if (! $credential instanceof Credential || true !== $credential->getAccessTokenExpired()) {
             return $credential;
         }
 
@@ -306,7 +307,7 @@ final class Guard implements GuardContract
             $session = null;
         }
 
-        if (null !== $session) {
+        if ($session instanceof Credential) {
             event(new TokenRefreshSucceeded());
 
             $user = $this->getProvider()->retrieveByCredentials((array) $session->getUser());
@@ -331,7 +332,7 @@ final class Guard implements GuardContract
 
     public function authenticate(): Authenticatable
     {
-        if (null !== ($user = $this->user())) {
+        if (($user = $this->user()) instanceof Authenticatable) {
             return $user;
         }
 
@@ -353,7 +354,7 @@ final class Guard implements GuardContract
         if (self::SOURCE_TOKEN === $source) {
             $candidate = $this->findToken();
 
-            if (null !== $candidate) {
+            if ($candidate instanceof Credential) {
                 return $candidate;
             }
         }
@@ -361,7 +362,7 @@ final class Guard implements GuardContract
         if (self::SOURCE_SESSION === $source) {
             $candidate = $this->findSession();
 
-            if (null !== $candidate) {
+            if ($candidate instanceof Credential) {
                 return $candidate;
             }
         }
@@ -378,9 +379,9 @@ final class Guard implements GuardContract
 
     public function getCredential(): ?Credential
     {
-        if (! $this->impersonating && self::SOURCE_SESSION === $this->getCredentialSource() && null !== $this->credential) {
+        if (! $this->impersonating && self::SOURCE_SESSION === $this->getCredentialSource() && $this->credential instanceof Credential) {
             $updated = $this->findSession();
-            $source  = null !== $updated ? self::SOURCE_SESSION : null;
+            $source  = $updated instanceof Credential ? self::SOURCE_SESSION : null;
             $this->setCredential($updated, $source);
             $this->pushState($updated);
         }
@@ -466,7 +467,7 @@ final class Guard implements GuardContract
 
     public function hasUser(): bool
     {
-        return null !== $this->getCredential()?->getUser();
+        return $this->getCredential()?->getUser() instanceof Authenticatable;
     }
 
     public function id(): int | string | null
@@ -488,7 +489,7 @@ final class Guard implements GuardContract
         $this->pushState($credential);
         $user = $credential?->getUser();
 
-        if (null !== $credential && $user instanceof Authenticatable) {
+        if ($credential instanceof Credential && $user instanceof Authenticatable) {
             event(new Login(self::class, $user, true));
         }
 
@@ -500,7 +501,7 @@ final class Guard implements GuardContract
         $this->impersonating = false;
         $user                = $this->user();
 
-        if (null !== $user) {
+        if ($user instanceof Authenticatable) {
             event(new Logout(self::class, $user));
         }
 
@@ -563,14 +564,15 @@ final class Guard implements GuardContract
         $legacyBehavior = config('auth0.behavior.legacyGuardUserMethod', true);
         $currentUser    = $this->getCredential()?->getUser();
 
-        if (null !== $currentUser) {
+        if ($currentUser instanceof Authenticatable) {
             return $currentUser;
         }
 
+        // @codeCoverageIgnoreStart
         if (true === $legacyBehavior) {
             $token = $this->find(self::SOURCE_TOKEN);
 
-            if (null !== $token) {
+            if ($token instanceof Credential) {
                 $this->login($token, self::SOURCE_TOKEN);
 
                 return $this->getCredential()?->getUser();
@@ -578,12 +580,13 @@ final class Guard implements GuardContract
 
             $session = $this->find(self::SOURCE_SESSION);
 
-            if (null !== $session) {
+            if ($session instanceof Credential) {
                 $this->login($token, self::SOURCE_SESSION);
 
                 return $this->getCredential()?->getUser();
             }
         }
+        // @codeCoverageIgnoreFalse
 
         return null;
     }
