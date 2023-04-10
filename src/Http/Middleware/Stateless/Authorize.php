@@ -10,7 +10,7 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateless\Authorize as AuthorizeContr
 use Auth0\Laravel\Event\Middleware\StatelessRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Illuminate\Http\{JsonResponse, Request, Response};
+use Symfony\Component\HttpFoundation\{Response, Request};
 
 /**
  * This middleware will configure the authenticated user using an available access token.
@@ -22,7 +22,7 @@ final class Authorize extends MiddlewareAbstract implements AuthorizeContract
         Request $request,
         Closure $next,
         string $scope = '',
-    ): Response | JsonResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {

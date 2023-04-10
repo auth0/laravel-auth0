@@ -10,8 +10,7 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateful\Authenticate as Authenticate
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Illuminate\Http\{JsonResponse, RedirectResponse, Request, Response};
-use Illuminate\Routing\Redirector;
+use Symfony\Component\HttpFoundation\{Response, Request};
 
 /**
  * This middleware will configure the authenticated user for the session using a
@@ -24,7 +23,7 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
         Request $request,
         Closure $next,
         string $scope = '',
-    ): Response | RedirectResponse | JsonResponse | Redirector {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {
@@ -46,6 +45,6 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
-        return redirect(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
+        return redirect()->to(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
     }
 }

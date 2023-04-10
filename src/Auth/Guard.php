@@ -245,6 +245,7 @@ final class Guard implements GuardContract
             $pushHash = '';
         }
         // @codeCoverageIgnoreEnd
+
         $pushHash = md5($pushHash);
 
         if ($pushHash === $this->pushHash) {
@@ -567,6 +568,7 @@ final class Guard implements GuardContract
             return $currentUser;
         }
 
+        // @codeCoverageIgnoreStart
         if (true === $legacyBehavior) {
             $token = $this->find(self::SOURCE_TOKEN);
 
@@ -584,6 +586,7 @@ final class Guard implements GuardContract
                 return $this->getCredential()?->getUser();
             }
         }
+        // @codeCoverageIgnoreFalse
 
         return null;
     }

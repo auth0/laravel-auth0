@@ -10,8 +10,7 @@ use Auth0\Laravel\Contract\Http\Middleware\Stateful\AuthenticateOptional as Auth
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
-use Illuminate\Http\{JsonResponse, Request, Response};
-use Illuminate\Routing\Redirector;
+use Symfony\Component\HttpFoundation\{Response, Request};
 
 /**
  * This middleware will configure the authenticated user for the session using a
@@ -24,7 +23,7 @@ final class AuthenticateOptional extends MiddlewareAbstract implements Authentic
         Request $request,
         Closure $next,
         string $scope = '',
-    ): Response | Redirector | JsonResponse {
+        ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {

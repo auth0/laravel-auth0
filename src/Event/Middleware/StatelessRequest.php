@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 
 final class StatelessRequest extends Auth0Event implements StatelessRequestContract
 {
-    public function __construct(public Request $request, public Guard $guard)
-    {
+    public function __construct(
+        public Request $request,
+        public Guard $guard
+    ) {
     }
 }

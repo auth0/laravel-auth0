@@ -12,7 +12,8 @@ use Auth0\Laravel\Exception\Stateful\CallbackException;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 use function is_string;
@@ -26,7 +27,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
      */
     public function __invoke(
         Request $request,
-    ): RedirectResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract || $guard->check()) {

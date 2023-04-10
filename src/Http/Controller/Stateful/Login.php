@@ -8,7 +8,8 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class Login extends ControllerAbstract implements LoginContract
 {
@@ -19,7 +20,7 @@ final class Login extends ControllerAbstract implements LoginContract
      */
     public function __invoke(
         Request $request,
-    ): RedirectResponse {
+    ): Response {
         $guard = auth()->guard();
 
         if (! $guard instanceof GuardContract) {
