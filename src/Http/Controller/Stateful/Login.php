@@ -6,11 +6,11 @@ namespace Auth0\Laravel\Http\Controller\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Auth0\Laravel\Contract\Entities\Credential;
 
 final class Login extends ControllerAbstract implements LoginContract
 {

@@ -6,13 +6,14 @@ namespace Auth0\Laravel\Http\Middleware\Stateless;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Middleware\Stateless\Authorize as AuthorizeContract;
 use Auth0\Laravel\Event\Middleware\StatelessRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Auth0\Laravel\Contract\Entities\Credential;
+
 /**
  * This middleware will configure the authenticated user using an available access token.
  * If a token is not available, it will raise an exception.

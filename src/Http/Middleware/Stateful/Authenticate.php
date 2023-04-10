@@ -6,13 +6,13 @@ namespace Auth0\Laravel\Http\Middleware\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
+use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Middleware\Stateful\Authenticate as AuthenticateContract;
 use Auth0\Laravel\Event\Middleware\StatefulRequest;
 use Auth0\Laravel\Http\Middleware\MiddlewareAbstract;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Auth0\Laravel\Contract\Entities\Credential;
 
 /**
  * This middleware will configure the authenticated user for the session using a
