@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  security-events: write
+
 jobs:
   semgrep:
     runs-on: ubuntu-latest
