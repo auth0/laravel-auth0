@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [7.5.2](https://github.com/auth0/laravel-auth0/tree/7.5.2) (2023-04-10)
+
+**Fixed**
+
 -   Relaxed response types from middleware to use low-level `Symfony\Component\HttpFoundation\Response` class, allowing for broader and custom response types.
 
 ## [7.5.1](https://github.com/auth0/laravel-auth0/tree/7.5.1) (2023-04-04)
