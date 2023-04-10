@@ -2,8 +2,15 @@
 
 ## [Unreleased]
 
-Most of these changes rely on upstream changes in the Auth0-PHP SDK that are waiting for release.
-These changes will not function correctly until that release is made.
+## [7.5.1](https://github.com/auth0/laravel-auth0/tree/7.5.1) (2023-04-04)
+
+**Fixed**
+
+-   Resolved an issue wherein custom user repositories could fail to be instantiated under certain circumstances.
+
+## [7.5.0](https://github.com/auth0/laravel-auth0/tree/7.5.0) (2023-04-03)
+
+This release includes support for Laravel 10, and major improvements to the internal state handling mechanisms of the SDK.
 
 **Added**
 
@@ -16,7 +23,6 @@ The following changes have no effect on the external API of this package, but ma
 
 -   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
 -   `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
--   `Guard` now inherits the `DeferrableProvider` interface to better support Laravel's deferred provider loading.
 -   `StateInstance` concept has been replaced by new `Credentials` entity.
 -   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
 -   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
@@ -26,13 +32,23 @@ The following changes have no effect on the external API of this package, but ma
 **Fixed**
 
 -   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
--   An issue wherein the `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
+-   `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
 -   `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
 
 **Maintenance**
 
--   Reworked test suite to use PEST framework.
--   Restored test coverage to 100%.
+-   Upgraded test suite to use PEST 2.0 framework.
+-   Updated test coverage to 100%.
+
+**Important Notes**
+
+**1. Changes to `user()` behavior**
+This release includes a significant behavior change around the `user()` method of the Guard. Previously, by simply invoking the method, the SDK would search for any available credential (access token, device session, etc.) and automatically assign the user within the Guard. The HTTP middleware have been upgraded to handle the user assignment step, and `user()` now only returns the current state of user assignment without altering it.
+
+A new property has been added to the `config/auth0.php` configuration file: `behavior`. This is an array. At this time, there is a single option: `legacyGuardUserMethod`, a bool. If this value is set to true, or if the key is missing, the previously expected behavior will be applied, and `user()` will behave as it did before this release. The property defaults to `false`.
+
+**2. Changes to Guard and Provider driver aliases**
+We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver, and `auth0.provider` for the Provider driver. This is a regrettable change, but was necessary for adequate Laravel 10 support.
 
 Thanks to our contributors for this release: [taida957789](https://github.com/taida957789)
 

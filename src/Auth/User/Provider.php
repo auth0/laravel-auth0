@@ -49,7 +49,11 @@ final class Provider implements ProviderContract
         }
 
         if (! app()->bound($model)) {
-            throw new BindingResolutionException(sprintf('The configured Repository %s could not be loaded.', $model));
+            try {
+                app()->make($model);
+            } catch (BindingResolutionException) {
+                throw new BindingResolutionException(sprintf('The configured Repository %s could not be loaded.', $model));
+            }
         }
 
         $this->setRepositoryName($model);
