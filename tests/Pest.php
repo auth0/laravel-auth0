@@ -19,13 +19,13 @@ define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
 
 uses(\Auth0\Laravel\Tests\TestCase::class)->in(__DIR__);
 
-uses()->afterEach(function (): void {
-    $commands = ['optimize:clear'];
+// uses()->afterEach(function (): void {
+//     $commands = ['optimize:clear'];
 
-    foreach ($commands as $command) {
-        Artisan::call($command);
-    }
-})->in(__DIR__);
+//     foreach ($commands as $command) {
+//         Artisan::call($command);
+//     }
+// })->in(__DIR__);
 
 uses()->beforeEach(function (): void {
     $this->events = [];

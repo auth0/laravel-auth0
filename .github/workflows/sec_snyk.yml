@@ -1,9 +1,7 @@
-name: Security
+name: "Snyk"
 
 on:
-  pull_request_target:
-    types:
-      - labeled
+  pull_request_target: {}
   push:
     branches:
       - main
@@ -13,17 +11,10 @@ permissions:
 
 jobs:
   snyk:
-    name: Snyk
-    runs-on: ${{ matrix.operating-systems }}
-    if: github.event.label.name == 'run' || github.ref_name == 'main'
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
-      matrix:
-        operating-systems:
-          - ubuntu-latest
-        php-versions:
-          - 8.1
 
     steps:
       - uses: shivammathur/setup-php@v2

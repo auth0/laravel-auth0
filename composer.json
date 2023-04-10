@@ -108,8 +108,8 @@
     },
     "scripts": {
         "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
-        "pest:coverage": "@php vendor/bin/pest --order-by random --compact --coverage",
-        "pest": "@php vendor/bin/pest --order-by random --compact",
+        "pest:coverage": "@php vendor/bin/pest --order-by random --compact --coverage --parallel",
+        "pest": "@php vendor/bin/pest --order-by random --compact --parallel",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
         "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpstan": "@php vendor/bin/phpstan analyze",
