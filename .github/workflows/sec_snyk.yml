@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: 8.1
           coverage: none
           extensions: mbstring
         env:
