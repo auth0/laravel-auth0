@@ -583,7 +583,7 @@ final class Guard implements GuardContract
             $session = $this->find(self::SOURCE_SESSION);
 
             if ($session instanceof Credential) {
-                $this->login($token, self::SOURCE_SESSION);
+                $this->login($session, self::SOURCE_SESSION);
 
                 return $this->getCredential()?->getUser();
             }
