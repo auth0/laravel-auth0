@@ -102,7 +102,7 @@ auth0 apis create \
 
 You will receive a response with details about your new API.
 
-Please make a note of your new API's **identifier**. This will be required in the configuration step, and will be referred to as the `audience`.
+Please make a note of your new API's **identifier**. This will be required in the configuration step and will be referred to as the `audience`.
 
 ### Configuring the SDK
 
@@ -169,18 +169,22 @@ Find the `providers` section, and add a new provider to the `providers` array th
 The SDK provides routing controllers that handle the authentication flow for your application. Add these routes where most appropriate for your configuration. `routes/web.php` is a common location for many Laravel applications.
 
 ```php
+<?php
+
 use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
 
-Route::get('/login', Login::class)->name('login');
-Route::get('/logout', Logout::class)->name('logout');
-Route::get('/callback', Callback::class)->name('callback');
+Route::middleware('guard:someGuardName')->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/logout', Logout::class)->name('logout');
+    Route::get('/callback', Callback::class)->name('callback');
+});
+
+// Other routes...
 ```
 
-Please ensure requests for these routes are managed by an Auth0 guard configured by your application.
+### Routing Middleware
 
-### Protecting Routes
-
-The SDK provides a series of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
+The SDK provides a collection of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
 
 #### Stateful Applications
 
@@ -189,10 +193,10 @@ The SDK provides a series of routing middleware to help you secure your applicat
 ```php
 Route::get('/required', function () {
     return view(/* Authenticated */);
-})->middleware(['auth0.authenticate']);
+})->middleware('auth0.authenticate');
 ```
 
-**`auth0.authenticate.optional` allows anyone to access a route.** It will check if a user is logged in, and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to display different content to logged-in users and guests.
+**`auth0.authenticate.optional` allows anyone to access a route.** It will check if a user is logged in and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to display different content to logged-in users and guests.
 
 ```php
 Route::get('/', function () {
@@ -201,7 +205,7 @@ Route::get('/', function () {
     }
 
     return view(/* Guest */)
-})->middleware(['auth0.authenticate.optional']);
+})->middleware('auth0.authenticate.optional');
 ```
 
 #### Stateless Services
@@ -211,11 +215,11 @@ Route::get('/', function () {
 ```php
 Route::get('/api/private', function () {
     return response()->json([
-        'message' => 'Hello from a private endpoint! You need to be authenticated to see this.',
+        'message' => 'Hello from a private endpoint! You need to be authorized to see this.',
         'authorized' => Auth::check(),
         'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware(['auth0.authorize']);
+})->middleware(['auth0.authorize');
 ```
 
 **`auth0.authorize` can further require access tokens to have a specific scope.** If the scope is not present for the token, it will return a `403 Forbidden` response.
@@ -223,26 +227,74 @@ Route::get('/api/private', function () {
 ```php
 Route::get('/api/private-scoped', function () {
     return response()->json([
-        'message' => 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.',
+        'message' => 'Hello from a private endpoint! You need to be authorized and have a scope of read:messages to see this.',
         'authorized' => Auth::check(),
         'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware(['auth0.authorize:read:messages']);
+})->middleware('auth0.authorize:read:messages');
 ```
 
-**`auth0.authorize.optional` allows anyone to access a route.** It will check if a valid access token is present, and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to return different responses to authenticated and unauthenticated requests.
+**`auth0.authorize.optional` allows anyone to access a route.** It will check if a valid access token is present and will make sure `Auth::user()` is available to the route if so. This is useful when you wish to return different responses to authenticated and unauthenticated requests.
 
 ```php
 Route::get('/api/public', function () {
     return response()->json([
-        'message' => 'Hello from a public endpoint! You don\'t need to be authenticated to see this.',
+        'message' => 'Hello from a public endpoint! You don\'t need to be authorized to see this.',
         'authorized' => Auth::check(),
         'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware(['auth0.authorize.optional']);
+})->middleware('auth0.authorize.optional');
 ```
 
 </details>
+
+### Guard Assignment
+
+For the SDK to function, requests must be routed through a guard configured with the `auth0.guard` driver. This can be done in several ways.
+
+#### Default Guard
+
+You can set the `default` guard in your `config/auth.php` file to the guard you have configured for the SDK.
+
+```php
+<?php
+
+return [
+    'defaults' => [
+        'guard' => 'someGuardName'
+    ],
+
+    // ...
+];
+```
+
+#### Route Middleware
+
+As a convenience, the SDK provides a `guard` middleware that can be used to assign a specific guard to handle a route group.
+
+```php
+<?php
+
+Route::middleware('guard:someGuardName')->group(function () {
+    Route::get('/example', \App\HtpController\Example::class)->name('example');
+    // Other routes...
+});
+```
+
+#### AuthManager `shouldUse()` Method
+
+You can also use the `shouldUse()` method on the `AuthManager` to assign a specific guard.
+
+This is the equivalent of setting the `default` guard in your `config/auth.php` file, but can be done at runtime.
+
+```php
+<?php
+
+auth()->shouldUse('someGuardName');
+
+Route::get('/example', \App\HttpController\Example::class)->name('example');
+// Other routes..
+```
 
 ## Support Policy
 

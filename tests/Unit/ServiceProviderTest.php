@@ -6,13 +6,10 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Auth\User\Provider;
 use Auth0\Laravel\Auth\User\Repository;
 use Auth0\Laravel\Auth0;
-use Auth0\Laravel\Http\Controller\Stateful\Callback;
-use Auth0\Laravel\Http\Controller\Stateful\Login;
-use Auth0\Laravel\Http\Controller\Stateful\Logout;
-use Auth0\Laravel\Http\Middleware\Stateful\Authenticate;
-use Auth0\Laravel\Http\Middleware\Stateful\AuthenticateOptional;
-use Auth0\Laravel\Http\Middleware\Stateless\Authorize;
-use Auth0\Laravel\Http\Middleware\Stateless\AuthorizeOptional;
+use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
+use Auth0\Laravel\Http\Middleware\Stateful\{Authenticate, AuthenticateOptional};
+use Auth0\Laravel\Http\Middleware\Stateless\{Authorize, AuthorizeOptional};
+use Auth0\Laravel\Http\Middleware\Guard as ShouldUseMiddleware;
 use Auth0\Laravel\Store\LaravelSession;
 
 uses()->group('service-provider');
@@ -33,7 +30,8 @@ it('provides the expected classes', function (): void {
             Login::class,
             Logout::class,
             Provider::class,
-            Repository::class
+            Repository::class,
+            ShouldUseMiddleware::class
         ]);
 });
 
