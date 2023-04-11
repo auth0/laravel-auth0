@@ -182,8 +182,6 @@ Route::middleware('guard:someGuardName')->group(function () {
 // Other routes...
 ```
 
-Please ensure requests for these routes are managed by an Auth0 guard configured by your application.
-
 ### Routing Middleware
 
 The SDK provides a collection of routing middleware to help you secure your application's routes. Any routes you wish to protect should be wrapped in the appropriate middleware.
