@@ -10,6 +10,7 @@ use Auth0\Laravel\Contract\ServiceProvider as ServiceProviderContract;
 use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
 use Auth0\Laravel\Http\Middleware\Stateful\{Authenticate, AuthenticateOptional};
 use Auth0\Laravel\Http\Middleware\Stateless\{Authorize, AuthorizeOptional};
+use Auth0\Laravel\Http\Middleware\Guard as ShouldUseMiddleware;
 use Auth0\Laravel\Store\LaravelSession;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Foundation\Application;
@@ -32,6 +33,7 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         $router->aliasMiddleware('auth0.authenticate', Authenticate::class);
         $router->aliasMiddleware('auth0.authorize.optional', AuthorizeOptional::class);
         $router->aliasMiddleware('auth0.authorize', Authorize::class);
+        $router->aliasMiddleware('guard', ShouldUseMiddleware::class);
 
         return $this;
     }
@@ -50,7 +52,8 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
             Login::class,
             Logout::class,
             Provider::class,
-            Repository::class
+            Repository::class,
+            ShouldUseMiddleware::class
         ];
     }
 
@@ -66,6 +69,7 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         $this->app->singleton(Logout::class, static fn (): Logout => new Logout());
         $this->app->singleton(Provider::class, static fn (): Provider => new Provider());
         $this->app->singleton(Repository::class, static fn (): Repository => new Repository());
+        $this->app->singleton(ShouldUseMiddleware::class, static fn (): ShouldUseMiddleware => new ShouldUseMiddleware());
 
         $this->app->singleton('auth0', static fn (): Auth0 => app(Auth0::class));
         $this->app->singleton('auth0.guard', static fn (): Guard => app(Guard::class));
