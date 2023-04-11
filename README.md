@@ -292,7 +292,7 @@ This is the equivalent of setting the `default` guard in your `config/auth.php` 
 
 auth()->shouldUse('someGuardName');
 
-Route::get('/example', \App\HtpController\Example::class)->name('example');
+Route::get('/example', \App\HttpController\Example::class)->name('example');
 // Other routes..
 ```
 
