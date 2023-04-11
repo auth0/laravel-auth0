@@ -67,6 +67,9 @@ it('redirects to login route if a visitor does not have a session', function ():
     $this->get($route)
          ->assertRedirect($config['auth0.routes.login']);
 
+    expect(redirect()->getIntendedUrl())
+        ->toEqual('http://localhost' . $route);
+
     expect($this->guard)
          ->user()->toBeNull();
 });

@@ -47,6 +47,8 @@ final class Authenticate extends MiddlewareAbstract implements AuthenticateContr
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
-        return redirect()->to(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
+        return redirect()
+            ->setIntendedUrl($request->fullUrl())
+            ->to(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
     }
 }
