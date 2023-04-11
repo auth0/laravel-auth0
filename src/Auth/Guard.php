@@ -559,6 +559,9 @@ final class Guard implements GuardContract
         $this->pushState($credential);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function user(): ?Authenticatable
     {
         $legacyBehavior = config('auth0.behavior.legacyGuardUserMethod', true);
@@ -568,7 +571,6 @@ final class Guard implements GuardContract
             return $currentUser;
         }
 
-        // @codeCoverageIgnoreStart
         if (true === $legacyBehavior) {
             $token = $this->find(self::SOURCE_TOKEN);
 
@@ -586,7 +588,6 @@ final class Guard implements GuardContract
                 return $this->getCredential()?->getUser();
             }
         }
-        // @codeCoverageIgnoreFalse
 
         return null;
     }
