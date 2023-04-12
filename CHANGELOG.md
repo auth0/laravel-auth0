@@ -14,14 +14,6 @@
 
 -   legacyGuardUserMethod behavior should use `$session`, not `$token` ([\#353](https://github.com/auth0/laravel-auth0/pull/365))
 
-## [7.6.0](https://github.com/auth0/laravel-auth0/tree/7.6.0) (2023-04-10)
-
-### Added
-
-### Fixed
-
--   legacyGuardUserMethod behavior should use `$session`, not `$token` ([\#353](https://github.com/auth0/laravel-auth0/pull/365))
-
 ## [7.5.2](https://github.com/auth0/laravel-auth0/tree/7.5.2) (2023-04-10)
 
 ### Fixed
