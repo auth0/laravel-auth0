@@ -171,6 +171,7 @@ The changelog for the latest changes is [CHANGELOG.md](./CHANGELOG.md).
 ## [5.0.1](https://github.com/auth0/laravel-auth0/tree/5.0.1) (2017-02-23)
 
 ### Fixed
+
 -   Fixed `supported_algs` configuration name
 
 ## [5.0.0](https://github.com/auth0/laravel-auth0/tree/5.0.0) (2017-02-22)
@@ -229,7 +230,7 @@ The changelog for the latest changes is [CHANGELOG.md](./CHANGELOG.md).
 ### Improved
 
 -   Better support for Laravel 5.3: Support for Laravel Passport for token verification
-Support of auth0 PHP sdk v4 with JWKs cache
+    Support of auth0 PHP sdk v4 with JWKs cache
 
 ### Fixed
 

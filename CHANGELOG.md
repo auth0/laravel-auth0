@@ -45,6 +45,7 @@ This release includes support for Laravel 10, and major improvements to the inte
 -   New Exception types have been added for more precise error catching.
 
 ### Improved
+
 The following changes have no effect on the external API of this package, but may affect internal usage.
 
 -   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
@@ -67,11 +68,13 @@ The following changes have no effect on the external API of this package, but ma
 ### Notes
 
 #### Changes to `user()` behavior
+
 This release includes a significant behavior change around the `user()` method of the Guard. Previously, by simply invoking the method, the SDK would search for any available credential (access token, device session, etc.) and automatically assign the user within the Guard. The HTTP middleware have been upgraded to handle the user assignment step, and `user()` now only returns the current state of user assignment without altering it.
 
 A new property has been added to the `config/auth0.php` configuration file: `behavior`. This is an array. At this time, there is a single option: `legacyGuardUserMethod`, a bool. If this value is set to true, or if the key is missing, the previously expected behavior will be applied, and `user()` will behave as it did before this release. The property defaults to `false`.
 
 #### Changes to Guard and Provider driver aliases
+
 We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver, and `auth0.provider` for the Provider driver. This is a regrettable change, but was necessary for adequate Laravel 10 support.
 
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
