@@ -1,6 +1,6 @@
 # Changelog
 
-## [7.6.0](https://github.com/auth0/laravel-auth0/tree/7.6.0) (2023-04-10)
+## [7.6.0](https://github.com/auth0/laravel-auth0/tree/7.6.0) (2023-04-12)
 
 ### Added
 
