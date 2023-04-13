@@ -219,7 +219,7 @@ Route::get('/api/private', function () {
         'authorized' => Auth::check(),
         'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware(['auth0.authorize');
+})->middleware('auth0.authorize');
 ```
 
 **`auth0.authorize` can further require access tokens to have a specific scope.** If the scope is not present for the token, it will return a `403 Forbidden` response.
