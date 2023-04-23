@@ -16,6 +16,7 @@ use Auth0\Laravel\Model\Stateful\User as StatefulUser;
 use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
+use Auth0\SDK\Utility\HttpResponse;
 use Exception;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
@@ -557,6 +558,19 @@ final class Guard implements GuardContract
 
         $this->setCredential($credential);
         $this->pushState($credential);
+    }
+
+    public function refreshUser(): void {
+        if ($this->check()) {
+            $response = $this->getSdk()->authentication()->userInfo($this->getCredential()->getAccessToken());
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+                $response = $this->getProvider()->retrieveByCredentials($this->normalizeUserArray($response));
+                $this->getCredential()->setUser($response);
+                $this->pushState();
+            }
+        }
     }
 
     /**
