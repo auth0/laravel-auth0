@@ -23,7 +23,7 @@ Note the `repository` property — this tells the SDK what class to use for stor
 
 Creating a repository is simple: it must implement the `Auth0\Laravel\Contract\Auth\User\Repository` interface, and include two methods:
 
-- `fromSession()` is used to retrieve a user from the application's session
+- `fromSession()` is used to retrieve a user from the application's session.
 - `fromAccessToken` is used to retrieve a user from an access token.
 
 The default implementation looks like this:
