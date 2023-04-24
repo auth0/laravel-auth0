@@ -9,7 +9,7 @@ This document provides example solutions for common integration questions.
      -   [Scope Filtering](#scope-filtering)
 -   [Events](#events)
 -   [Testing](#testing)
-    -   [Authorizing HTTP Tests](#authorizing-http-tests)
+    -   [Impersonation](#impersonation)
 
 ## Users
 
@@ -37,36 +37,13 @@ Route::get('/api/private-scoped', function () {
 })->middleware(['auth0.authorize:read:messages']);
 ```
 
-To be able to test the route from above, the implementation of your test would have to look like this:
-
-```php
-use Auth0\Laravel\Contract\StateInstance;
-use Auth0\Laravel\Model\Credential;
-use Auth0\Laravel\Model\Stateless\User;
-use Auth0\Laravel\Trait\Impersonate;
-use Illuminate\Http\Response;
-
-it('can access a private scoped endpoint', function () {
-    $impersonating = Credential::create(
-        user: new User(['sub' => 'auth0|123456abcdef']),
-        accessTokenScope: ['read:messages'],
-        source: StateInstance::CONST_SOURCE_TOKEN,
-    );
-
-    $this->impersonate($impersonating)
-         ->getJson('/api/private-scoped')
-         ->assertStatus(Response::HTTP_OK)
-         ->assertJson(['message' => 'Hello from a private endpoint!']);
-});
-```
-
 ## Events
 
 [docs/Events](./docs/Events.md) covers hooking into [events](https://laravel.com/docs/10.x/events) raised by the SDK to customize behavior.
 
 ## Testing
 
-### Authorizing HTTP Tests
+### Impersonation
 
 When writing unit tests for your application that include HTTP requests to routes protected by the SDK's middleware, you can use the "Imposter" trait to simplify fulfilling the request by mocking a user session. The following example is writen in [PEST syntax](https://pestphp.com), but the trait can be used in an identical manner with test-case classes in PHPUnit:
 
