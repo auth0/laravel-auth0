@@ -1,127 +1,29 @@
-# Auth0 Laravel SDK Examples
+# Examples Cookbook
 
--   [Extending the SDK with Custom User Models and Repositories](#extending-the-sdk-with-custom-user-models-and-repositories)
-    -   [Creating a Custom User Model](#creating-a-custom-user-model)
-    -   [Creating a Custom User Repository](#creating-a-custom-user-repository)
-    -   [Using a Custom User Repository](#using-a-custom-user-repository)
--   [Authorizing HTTP Tests](#authorizing-http-tests)
--   [Protecting Routes with Scope Filtering](#protecting-routes-with-scope-filtering)
+This document provides example solutions for common integration questions.
 
-## Extending the SDK with Custom User Models and Repositories
+-   [Users](#users)
+    -   [Custom Models and Repositories](#custom-user-models-and-repositories)
+-   [Management API](#management-api)
+-   [Middleware](#middleware)
+     -   [Scope Filtering](#scope-filtering)
+-   [Events](#events)
+-   [Testing](#testing)
+    -   [Authorizing HTTP Tests](#authorizing-http-tests)
 
-In Laravel, a User Repository is an interface that sits between your authentication source (Auth0) and core Laravel authentication services. It allows you to shape and manipulate the user model and it's data as you need to.
+## Users
 
-For example, Auth0's unique identifier is a `string` in the format `auth0|123456abcdef`. If you were to attempt to persist a user to many traditional databases you'd likely encounter an error as, by default, a unique identifier is often expected to be an `integer` rather than a `string` type. A custom user model and repository is a great way to address integration challenges like this.
+### Custom User Models and Repositories
 
-### Creating a Custom User Model
+[docs/User Models and Repositories](./docs/User%20Models%20and%20Repositories.md) covers extending the SDK to support database storage, [Eloquent](https://laravel.com/docs/10.x/eloquent), and other scenarios.
 
-Let's setup a custom user model for our application. To do this, let's create a file at `app/Auth/Models/User.php` within our Laravel project. This new class needs to implement the `Illuminate\Contracts\Auth\Authenticatable` interface to be compatible with Laravel's Guard API and this SDK. It must also implement either `Auth0\Laravel\Contract\Model\Stateful\User` or `Auth0\Laravel\Contract\Model\Stateless\User` depending on your application's needs. For example:
+## Management API
 
-```php
-<?php
+[docs/Management API](./docs/Management%20API.md) covers making API calls to [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2).
 
-declare(strict_types=1);
+## Middleware
 
-namespace App\Models;
-
-use Auth0\Laravel\Contract\Model\Stateful\User as StatefulUser;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableUser;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-
-class User extends \Illuminate\Database\Eloquent\Model implements StatefulUser, AuthenticatableUser
-{
-    use HasFactory, Notifiable, Authenticatable;
-
-    /**
-     * The primary identifier for the user.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'id',
-        'name',
-        'email',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [];
-}
-```
-
-### Creating a Custom User Repository
-
-Now let's create a custom user repository for your application which will return the new new custom model. To do this, create the file `app/Auth/CustomUserRepository.php`. This new class must implement the `Auth0\Laravel\Contract\Auth\User\Repository` interface. This new repository takes in user data returned from Auth0's API, applies it to the `App\Models\User` custom user model created in the previous step, and returns it for use throughout your application.
-
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace App\Auth;
-
-class CustomUserRepository implements \Auth0\Laravel\Contract\Auth\User\Repository
-{
-    public function fromSession(
-        array $user
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
-        return new \App\Models\User([
-            'id' => 'just_a_random_example|' . $user['sub'] ?? $user['user_id'] ?? null,
-            'name' => $user['name'],
-            'email' => $user['email']
-        ]);
-    }
-
-    public function fromAccessToken(
-        array $user
-    ): ?\Illuminate\Contracts\Auth\Authenticatable {
-        // Similar to above. Used for stateless application types.
-        return null;
-    }
-}
-```
-
-### Using a Custom User Repository
-
-Finally, update your application's `config/auth.php` file. Within the Auth0 provider, assign a custom `repository` value pointing to your new custom user provider class. For example:
-
-```php
-    'providers' => [
-        //...
-
-        'auth0' => [
-            'driver' => 'auth0.provider',
-            'repository' => \App\Auth\CustomUserRepository::class
-        ],
-    ],
-```
-
-## Authorizing HTTP Tests
-
-If your application does contain HTTP tests which access routes that are protected by the `auth0.authorize` middleware, you can use the trait `Auth0\Laravel\Traits\ActingAsAuth0User` in your tests, which will give you a helper method `actingAsAuth0User(array $attributes=[])` similar to Laravel's `actingAs` method, that allows you to impersonate an authenticated state suitable for the middleware.
-
-The argument `attributes` is optional and you can use it to set any auth0 specific user attributes like scope, sub, azp, iap and so on. If no attributes are set, some default values are used.
-
-## Protecting Routes with Scope Filtering
+### Scope Filtering
 
 Let's assume you have a route like the following, that is protected by the scope `read:messages`:
 
@@ -155,5 +57,49 @@ it('can access a private scoped endpoint', function () {
          ->getJson('/api/private-scoped')
          ->assertStatus(Response::HTTP_OK)
          ->assertJson(['message' => 'Hello from a private endpoint!']);
+});
+```
+
+## Events
+
+[docs/Events](./docs/Events.md) covers hooking into [events](https://laravel.com/docs/10.x/events) raised by the SDK to customize behavior.
+
+## Testing
+
+### Authorizing HTTP Tests
+
+When writing unit tests for your application that include HTTP requests to routes protected by the SDK's middleware, you can use the "Imposter" trait to simplify fulfilling the request by mocking a user session. The following example is writen in [PEST syntax](https://pestphp.com), but the trait can be used in an identical manner with test-case classes in PHPUnit:
+
+> **Note**
+> If you're using custom user repositories or models, you may need to adjust how `$imposter` is shaping the `user` property to match your integration.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Auth0\Laravel\Entities\Credential;
+use Auth0\Laravel\Model\Stateless\User;
+use Auth0\Laravel\Traits\Impersonate;
+use Illuminate\Support\Facades\Route;
+
+uses(Impersonate::class);
+
+it('impersonates a user for the request', function (): void {
+    Route::middleware('auth0.authorize')->get('/example', function () use ($route): string {
+        return response()->json('Hello World');
+    });
+    
+    $imposter = Credential::create(
+        user: new User(['sub' => uniqid()]),
+        idToken: uniqid(),
+        accessToken: uniqid(),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->impersonate($imposter)
+         ->getJson('./example')
+         ->assertStatus(Response::HTTP_OK);
 });
 ```
