@@ -120,7 +120,7 @@ Open the `.env` file within your Laravel application's root directory, append th
 
 ```ini
 # In previous steps we configured our application callbacks use to port 8000,
-# which is consistent running the app using `php artisan serve`.
+# which is consistent for running your app using `php artisan serve`.
 APP_URL=http://localhost:8000
 
 # Use the `domain` you noted earlier during application creation.
