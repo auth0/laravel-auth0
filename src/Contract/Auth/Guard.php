@@ -140,6 +140,11 @@ interface Guard extends GuardContract
     ): void;
 
     /**
+     * Query the /userinfo endpoint and update the currently authenticated user for the guard.
+     */
+    public function refreshUser(): void;
+
+    /**
      * Returns the currently authenticated user for the guard, if available.
      */
     public function user(): ?Authenticatable;
