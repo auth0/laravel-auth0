@@ -136,6 +136,6 @@ Once you have created your repository and model, you can integrate them into you
 'providers' => [
   'my-example-provider' => [
     'driver' => 'auth0.provider',
-    'repository' => \App\Repositories\UserRepository::class
+    'repository' => \App\Repositories\UserRepository::class,
   ],
 ],
