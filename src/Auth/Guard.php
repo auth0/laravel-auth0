@@ -566,9 +566,16 @@ final class Guard implements GuardContract
 
             if (HttpResponse::wasSuccessful($response)) {
                 $response = HttpResponse::decodeContent($response);
-                $response = $this->getProvider()->retrieveByCredentials($this->normalizeUserArray($response));
-                $this->getCredential()->setUser($response);
-                $this->pushState();
+                $user = $this->getProvider()->retrieveByCredentials($response);
+
+                $this->pushState(CredentialConcrete::create(
+                    user: $user,
+                    idToken: $this->getCredential()->getIdToken(),
+                    accessToken: $this->getCredential()->getAccessToken(),
+                    accessTokenScope: $this->getCredential()->getAccessTokenScope(),
+                    accessTokenExpiration: $this->getCredential()->getAccessTokenExpiration(),
+                    refreshToken: $this->getCredential()->getRefreshToken(),
+                ));
             }
         }
     }

@@ -6,8 +6,13 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\Credential;
 use Auth0\Laravel\Model\Stateful\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\NetworkException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use PsrMock\Psr18\Client as MockHttpClient;
+use PsrMock\Psr17\RequestFactory as MockRequestFactory;
+use PsrMock\Psr17\ResponseFactory as MockResponseFactory;
+use PsrMock\Psr17\StreamFactory as MockStreamFactory;
 
 use function Pest\Laravel\getJson;
 
@@ -197,6 +202,59 @@ it('creates a session from login()', function (): void {
         ->get('accessTokenScope')->toBe($accessTokenScope)
         ->get('accessTokenExpiration')->toBe($accessTokenExpiration)
         ->get('refreshToken')->toBe($changedRefreshToken);
+});
+
+it('queries the /userinfo endpoint for refreshUser()', function (): void {
+    $identifier = uniqid('auth0|');
+    $idToken = uniqid('id-token-');
+    $accessToken = uniqid('access-token-');
+    $accessTokenScope = [uniqid('access-token-scope-')];
+    $accessTokenExpiration = time() + 60;
+
+    $this->session->set('user', ['sub' => $identifier]);
+    $this->session->set('idToken', $idToken);
+    $this->session->set('accessToken', $accessToken);
+    $this->session->set('accessTokenScope', $accessTokenScope);
+    $this->session->set('accessTokenExpiration', $accessTokenExpiration);
+
+    $found = $this->guard->find(Guard::SOURCE_SESSION);
+    $this->guard->login($found, Guard::SOURCE_SESSION);
+
+    expect($this->session)
+        ->get('user')->toBe(['sub' => $identifier]);
+
+    $requestFactory = new MockRequestFactory;
+    $responseFactory = new MockResponseFactory;
+    $streamFactory = new MockStreamFactory;
+
+    $response = $responseFactory->createResponse(200);
+    $response->getBody()->write(json_encode(
+        [
+            'sub' => $identifier,
+            'name' => 'John Doe',
+            'email' => '...',
+        ],
+        JSON_PRETTY_PRINT
+    ));
+
+    $client = new MockHttpClient(fallbackResponse: $response);
+
+    $this->config->setHttpRequestFactory($requestFactory);
+    $this->config->setHttpResponseFactory($responseFactory);
+    $this->config->setHttpStreamFactory($streamFactory);
+    $this->config->setHttpClient($client);
+
+    $this->guard->refreshUser();
+
+    $userAttributes = $this->guard->user()->getAttributes();
+
+    expect($userAttributes)
+        ->toBeArray()
+        ->toHaveKeys(['sub', 'name', 'email'])
+        ->toHaveCount(3)
+        ->sub->toEqual($identifier)
+        ->name->toEqual('John Doe')
+        ->email->toEqual('...');
 });
 
 it('immediately invalidates an expired session when a refresh token is not available', function (): void {
