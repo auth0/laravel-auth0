@@ -10,6 +10,7 @@ use Auth0\Laravel\Event\Configuration\{Building, Built};
 use Auth0\Laravel\Store\LaravelSession;
 use Auth0\SDK\Auth0 as SDK;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
+use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface as SDKContract;
 use Auth0\SDK\Utility\HttpTelemetry;
 
@@ -113,6 +114,11 @@ final class Auth0 implements ServiceContract
         }
 
         return $this->setSdk(new SDK($this->getConfiguration()));
+    }
+
+    public function management(): ManagementInterface
+    {
+        return $this->getSdk()->management();
     }
 
     public function reset(): self

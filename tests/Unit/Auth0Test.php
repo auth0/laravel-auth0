@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Contract\Auth0Interface as SdkContract;
-use Auth0\Laravel\Auth0;
 use Auth0\SDK\Auth0 as SDKAuth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\API\ManagementInterface;
 
 uses()->group('auth0');
+
+it('returns a Management API class', function (): void {
+    $laravel = app('auth0');
+    expect($laravel->management())->toBeInstanceOf(ManagementInterface::class);
+});
 
 it('can get/set the configuration', function (): void {
     $laravel = app('auth0');
