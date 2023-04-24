@@ -111,6 +111,11 @@ interface Guard extends GuardContract
     ): ?array;
 
     /**
+     * Query the /userinfo endpoint and update the currently authenticated user for the guard.
+     */
+    public function refreshUser(): void;
+
+    /**
      * Sets the Guard's currently configured Credential and source.
      *
      * @param null|Credential $credential The Credential to set.
@@ -138,11 +143,6 @@ interface Guard extends GuardContract
     public function setUser(
         Authenticatable $user,
     ): void;
-
-    /**
-     * Query the /userinfo endpoint and update the currently authenticated user for the guard.
-     */
-    public function refreshUser(): void;
 
     /**
      * Returns the currently authenticated user for the guard, if available.
