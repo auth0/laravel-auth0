@@ -532,6 +532,39 @@ final class Guard implements GuardContract
         }
     }
 
+    public function refreshUser(): void
+    {
+        if ($this->check()) {
+            $credential  = $this->getCredential();
+            $accessToken = $credential?->getAccessToken();
+
+            if (! $credential instanceof \Auth0\Laravel\Contract\Entities\Credential || null === $accessToken) {
+                return;
+            }
+
+            $response = $this->getSdk()->authentication()->userInfo($accessToken);
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+
+                if (! is_array($response)) {
+                    return;
+                }
+
+                $user = $this->getProvider()->retrieveByCredentials($response);
+
+                $this->pushState(CredentialConcrete::create(
+                    user: $user,
+                    idToken: $credential->getIdToken(),
+                    accessToken: $credential->getAccessToken(),
+                    accessTokenScope: $credential->getAccessTokenScope(),
+                    accessTokenExpiration: $credential->getAccessTokenExpiration(),
+                    refreshToken: $credential->getRefreshToken(),
+                ));
+            }
+        }
+    }
+
     public function setCredential(
         ?Credential $credential = null,
         ?int $source = null,
@@ -558,26 +591,6 @@ final class Guard implements GuardContract
 
         $this->setCredential($credential);
         $this->pushState($credential);
-    }
-
-    public function refreshUser(): void {
-        if ($this->check()) {
-            $response = $this->getSdk()->authentication()->userInfo($this->getCredential()->getAccessToken());
-
-            if (HttpResponse::wasSuccessful($response)) {
-                $response = HttpResponse::decodeContent($response);
-                $user = $this->getProvider()->retrieveByCredentials($response);
-
-                $this->pushState(CredentialConcrete::create(
-                    user: $user,
-                    idToken: $this->getCredential()->getIdToken(),
-                    accessToken: $this->getCredential()->getAccessToken(),
-                    accessTokenScope: $this->getCredential()->getAccessTokenScope(),
-                    accessTokenExpiration: $this->getCredential()->getAccessTokenExpiration(),
-                    refreshToken: $this->getCredential()->getRefreshToken(),
-                ));
-            }
-        }
     }
 
     /**
