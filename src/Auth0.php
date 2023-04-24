@@ -34,11 +34,6 @@ final class Auth0 implements ServiceContract
     ) {
     }
 
-    public function management(): ManagementInterface
-    {
-        return $this->getSdk()->management();
-    }
-
     /**
      * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
      */
@@ -119,6 +114,11 @@ final class Auth0 implements ServiceContract
         }
 
         return $this->setSdk(new SDK($this->getConfiguration()));
+    }
+
+    public function management(): ManagementInterface
+    {
+        return $this->getSdk()->management();
     }
 
     public function reset(): self
