@@ -11,10 +11,14 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
--   Quickstart Demonstrations
+-   Quickstarts
     -   [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/laravel/php) — Traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The complete source code is also available.](https://github.com/auth0-samples/auth0-laravel-php-web-app)
     -   [API using Access Tokens (Stateless)](https://auth0.com/docs/quickstart/backend/laravel) — Backend service that authorizes endpoints using access tokens provided by a frontend client and returns JSON responses. [The complete source code is also available.](https://github.com/auth0-samples/auth0-laravel-api-samples)
--   [Laravel Examples](./EXAMPLES.md) — Code samples for common scenarios.
+-   Documentation
+    -   [Examples](./EXAMPLES.md) — Cookbook offering example solutions for common scenarios and questions.
+    -   [Events](./docs/Events.md) — Hooking into [events](https://laravel.com/docs/10.x/events) raised by the SDK to customize behavior.
+    -   [Management API](./docs/Management%20API.md) — Making API calls to [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2).
+    -   [User Models and Repositories](./docs/User%20Models%20and%20Repositories.md) — Extending the SDK to support database storage, [Eloquent](https://laravel.com/docs/10.x/eloquent), and other scenarios.
 -   [Documentation Hub](https://www.auth0.com/docs) — Learn more about integrating Auth0.
 
 ## Getting Started
@@ -34,13 +38,19 @@ Our examples use the [Auth0 CLI](https://github.com/auth0/auth0-cli) to help get
 Open a shell to the root of your Laravel application's root directory, and import the SDK using [Composer](https://getcomposer.org/):
 
 ```bash
-composer require auth0/login
+composer require auth0/login:^7.0 --with-all-dependencies
 ```
 
 Next, generate the `config/auth0.php` configuration file for your application:
 
 ```bash
 php artisan vendor:publish --tag=auth0-config
+```
+
+Now is also a good time to clear your application caches:
+
+```bash
+php artisan optimize:clear
 ```
 
 ### Determine Your Application Type
@@ -74,7 +84,7 @@ auth0 apps create \
   --type "regular" \
   --auth-method "post" \
   --callbacks "http://localhost:8000/callback" \
-  --logout-urls "http://localhost:8000/login" \
+  --logout-urls "http://localhost:8000" \
   --reveal-secrets \
   --no-input
 ```
@@ -109,17 +119,21 @@ Please make a note of your new API's **identifier**. This will be required in th
 Open the `.env` file within your Laravel application's root directory, append the lines below to it, and fill in the missing values:
 
 ```ini
+# In previous steps we configured our application callbacks use to port 8000,
+# which is consistent running the app using `php artisan serve`.
+APP_URL=http://localhost:8000
+
 # Use the `domain` you noted earlier during application creation.
-AUTH0_DOMAIN=
+AUTH0_DOMAIN={yourDomain}
 
 # Use the `client id` you noted earlier during application creation.
-AUTH0_CLIENT_ID=
+AUTH0_CLIENT_ID={yourClientId}
 
 # Use the `client_secret` you noted earlier during application creation.
-AUTH0_CLIENT_SECRET=
+AUTH0_CLIENT_SECRET={yourClientSecret}
 
 # Use the `identifier` you noted earlier during API creation.
-AUTH0_AUDIENCE=
+AUTH0_AUDIENCE={yourApiIdentifier}
 
 # This should be any sufficiently long, random string.
 # You can use `openssl rand -hex 32` to generate an adequate string.
