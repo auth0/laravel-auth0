@@ -16,6 +16,7 @@ use Auth0\Laravel\Model\Stateful\User as StatefulUser;
 use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
+use Auth0\SDK\Utility\HttpResponse;
 use Exception;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
@@ -528,6 +529,39 @@ final class Guard implements GuardContract
             event(new TokenVerificationFailed($token, $invalidTokenException));
 
             return null;
+        }
+    }
+
+    public function refreshUser(): void
+    {
+        if ($this->check()) {
+            $credential  = $this->getCredential();
+            $accessToken = $credential?->getAccessToken();
+
+            if (! $credential instanceof \Auth0\Laravel\Contract\Entities\Credential || null === $accessToken) {
+                return;
+            }
+
+            $response = $this->getSdk()->authentication()->userInfo($accessToken);
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+
+                if (! is_array($response)) {
+                    return;
+                }
+
+                $user = $this->getProvider()->retrieveByCredentials($response);
+
+                $this->pushState(CredentialConcrete::create(
+                    user: $user,
+                    idToken: $credential->getIdToken(),
+                    accessToken: $credential->getAccessToken(),
+                    accessTokenScope: $credential->getAccessTokenScope(),
+                    accessTokenExpiration: $credential->getAccessTokenExpiration(),
+                    refreshToken: $credential->getRefreshToken(),
+                ));
+            }
         }
     }
 
