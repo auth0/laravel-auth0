@@ -11,6 +11,9 @@ This document provides example solutions for common integration questions.
 -   [Testing](#testing)
     -   [Impersonation](#impersonation)
 
+> **Note**
+> The [README](./README.md) also covers many integration questions. Please review that document if your question is not answered here.
+
 ## Users
 
 ### Custom User Models and Repositories
