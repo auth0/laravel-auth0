@@ -8,6 +8,7 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
 use Auth0\Laravel\Contract\Entities\Credential;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Login as LoginContract;
+use Auth0\Laravel\Event\Stateful\LoginAttempting;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,12 @@ final class Login extends ControllerAbstract implements LoginContract
             return redirect()->intended(config('auth0.routes.home', '/'));
         }
 
-        $url = $this->getSdk()->login();
+        $event = new LoginAttempting();
+        event($event);
+
+        $url = $this->getSdk()->login(
+            params: $event->getParameters(),
+        );
 
         return redirect()->away($url);
     }
