@@ -11,10 +11,12 @@ use Auth0\Laravel\Store\LaravelSession;
 use Auth0\SDK\Auth0 as SDK;
 use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
 use Auth0\SDK\Contract\API\ManagementInterface;
-use Auth0\SDK\Contract\Auth0Interface as SDKContract;
+use Auth0\SDK\Contract\{Auth0Interface as SDKContract, StoreInterface};
 use Auth0\SDK\Utility\HttpTelemetry;
+use Psr\Cache\CacheItemPoolInterface;
 
 use function in_array;
+use function is_string;
 
 /**
  * Service that provides access to the Auth0 SDK.
@@ -31,7 +33,150 @@ final class Auth0 implements ServiceContract
     public function __construct(
         private ?SDKContract $sdk = null,
         private ?Configuration $configuration = null,
+        private ?CacheItemPoolInterface $tokenCachePool = null,
+        private ?CacheItemPoolInterface $managementTokenCachePool = null,
     ) {
+    }
+
+    private function bootManagementTokenCache(array $config): array
+    {
+        $managementTokenCache = $config['managementTokenCache'] ?? null;
+
+        if (null === $managementTokenCache) {
+            $config['managementTokenCache'] = $this->getManagementTokenCachePool();
+        }
+
+        if (false === $managementTokenCache) {
+            $config['managementTokenCache'] = null;
+        }
+
+        if (is_string($managementTokenCache)) {
+            $config['managementTokenCache'] = null;
+
+            $managementTokenCache = app(trim($managementTokenCache));
+
+            if ($managementTokenCache instanceof CacheItemPoolInterface) {
+                $config['managementTokenCache'] = $managementTokenCache;
+            }
+        }
+
+        return $config;
+    }
+
+    private function bootSessionStorage(array $config): array
+    {
+        $sessionStorage   = $config['sessionStorage'] ?? null;
+        $sessionStorageId = $config['sessionStorageId'] ?? 'auth0_session';
+
+        if (null === $sessionStorage) {
+            $config['sessionStorage'] = app(LaravelSession::class, [
+                'prefix' => $sessionStorageId,
+            ]);
+        }
+
+        if (false === $sessionStorage) {
+            $config['sessionStorage'] = null;
+        }
+
+        if (is_string($sessionStorage)) {
+            $config['sessionStorage'] = null;
+
+            $sessionStorage = app(trim($sessionStorage), [
+                'prefix' => $sessionStorageId,
+            ]);
+
+            if ($sessionStorage instanceof StoreInterface) {
+                $config['sessionStorage'] = $sessionStorage;
+            }
+        }
+
+        return $config;
+    }
+
+    private function bootStrategy(array $config): array
+    {
+        $strategy = $config['strategy'] ?? Configuration::STRATEGY_REGULAR;
+
+        if (! is_string($strategy)) {
+            $strategy = Configuration::STRATEGY_REGULAR;
+        }
+
+        $config['strategy'] = $strategy;
+
+        return $config;
+    }
+
+    private function bootTokenCache(array $config): array
+    {
+        $tokenCache = $config['tokenCache'] ?? null;
+
+        if (null === $tokenCache) {
+            $config['tokenCache'] = $this->getTokenCachePool();
+        }
+
+        if (false === $tokenCache) {
+            $config['tokenCache'] = null;
+        }
+
+        if (is_string($tokenCache)) {
+            $config['tokenCache'] = null;
+
+            $tokenCache = app(trim($tokenCache));
+
+            if ($tokenCache instanceof CacheItemPoolInterface) {
+                $config['tokenCache'] = $tokenCache;
+            }
+        }
+
+        return $config;
+    }
+
+    private function bootTransientStorage(array $config): array
+    {
+        $transientStorage   = $config['transientStorage'] ?? null;
+        $transientStorageId = $config['transientStorageId'] ?? 'auth0_transient';
+
+        if (null === $transientStorage) {
+            $config['transientStorage'] = app(LaravelSession::class, [
+                'prefix' => $transientStorageId,
+            ]);
+        }
+
+        if (false === $transientStorage) {
+            $config['transientStorage'] = null;
+        }
+
+        if (is_string($transientStorage)) {
+            $config['transientStorage'] = null;
+
+            $transientStorage = app(trim($transientStorage), [
+                'prefix' => $transientStorageId,
+            ]);
+
+            if ($transientStorage instanceof StoreInterface) {
+                $config['transientStorage'] = $transientStorage;
+            }
+        }
+
+        return $config;
+    }
+
+    private function getManagementTokenCachePool(): CacheItemPoolInterface
+    {
+        if (! $this->managementTokenCachePool instanceof \Psr\Cache\CacheItemPoolInterface) {
+            $this->managementTokenCachePool = app(LaravelCachePool::class);
+        }
+
+        return $this->managementTokenCachePool;
+    }
+
+    private function getTokenCachePool(): CacheItemPoolInterface
+    {
+        if (! $this->tokenCachePool instanceof \Psr\Cache\CacheItemPoolInterface) {
+            $this->tokenCachePool = app(LaravelCachePool::class);
+        }
+
+        return $this->tokenCachePool;
     }
 
     /**
@@ -53,49 +198,26 @@ final class Auth0 implements ServiceContract
             /**
              * @var array<mixed> $config
              */
-            if (! isset($config['tokenCache']) || ! isset($config['managementTokenCache'])) {
-                $cache = new LaravelCachePool();
 
-                if (! isset($config['tokenCache'])) {
-                    $config['tokenCache'] = $cache;
-                }
-
-                if (! isset($config['managementTokenCache'])) {
-                    $config['managementTokenCache'] = $cache;
-                }
-            }
-
+            // Give host application an opportunity to update the configuration before assigning defaults.
             $event = new Building($config);
             event($event);
+            $config = $event->getConfiguration();
 
-            $configuration = new Configuration($event->getConfiguration());
+            $config = $this->bootStrategy($config);
+            $config = $this->bootTokenCache($config);
+            $config = $this->bootManagementTokenCache($config);
 
-            if (! in_array($configuration->getStrategy(), [Configuration::STRATEGY_API, Configuration::STRATEGY_MANAGEMENT_API], true)) {
-                // If no sessionStorage is defined, use an LaravelSession store instance.
-                if (! isset($config['sessionStorage'])) {
-                    $sessionStore = app(LaravelSession::class, [
-                        'prefix' => $configuration->getSessionStorageId(),
-                    ]);
-
-                    $configuration->setSessionStorage(sessionStorage: $sessionStore);
-                }
-
-                // If no transientStorage is defined, use an LaravelSession store instance.
-                if (! isset($config['transientStorage'])) {
-                    $transientStore = app(LaravelSession::class, [
-                        'prefix' => $configuration->getTransientStorageId(),
-                    ]);
-
-                    $configuration->setTransientStorage(transientStorage: $transientStore);
-                }
+            if (in_array($config['strategy'], Configuration::STRATEGIES_USING_SESSIONS, true)) {
+                $config = $this->bootSessionStorage($config);
+                $config = $this->bootTransientStorage($config);
             }
 
-            $this->configuration = $configuration;
+            $config = new Configuration($config);
 
-            // Give apps an opportunity to mutate the configuration before applying it.
-            $event = new Built($configuration);
+            // Give host application an opportunity to update the configuration before applying it.
+            $event = new Built($config);
             event($event);
-
             $this->configuration = $event->getConfiguration();
         }
 
@@ -110,7 +232,7 @@ final class Auth0 implements ServiceContract
     public function getSdk(): SDKContract
     {
         if (! $this->sdk instanceof SDKContract) {
-            $this->setSdk(new SDK($this->getConfiguration()));
+            return $this->setSdk(new SDK($this->getConfiguration()));
         }
 
         return $this->sdk;
