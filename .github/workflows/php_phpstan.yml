@@ -31,4 +31,4 @@ jobs:
 
       - run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - run: vendor/bin/phpstan analyze
+      - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug
