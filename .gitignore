@@ -13,3 +13,4 @@ composer.local.json_
 .php-cs-fixer.cache
 composer.local.old
 .vscode
+pest.log
