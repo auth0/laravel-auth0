@@ -104,3 +104,107 @@ it('can reset the internal static state', function (): void {
     $updated = spl_object_id($laravel->getSdk());
     expect($cache)->not->toBe($updated);
 });
+
+test('bootStrategy() rejects non-string values', function (): void {
+    $method = new ReflectionMethod(Auth0::class, 'bootStrategy');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, ['strategy' => 123]))
+        ->toMatchArray(['strategy' => SdkConfiguration::STRATEGY_REGULAR]);
+});
+
+test('bootSessionStorage() behaves as expected', function (): void {
+    $method = new ReflectionMethod(Auth0::class, 'bootSessionStorage');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, []))
+        ->sessionStorage->toBeInstanceOf(LaravelSession::class);
+
+    expect($method->invoke($this->laravel, ['sessionStorage' => null]))
+        ->sessionStorage->toBeInstanceOf(LaravelSession::class);
+
+    expect($method->invoke($this->laravel, ['sessionStorage' => false]))
+        ->sessionStorage->toBeNull();
+
+    expect($method->invoke($this->laravel, ['sessionStorage' => LaravelCachePool::class]))
+        ->sessionStorage->toBeNull();
+
+    expect($method->invoke($this->laravel, ['sessionStorage' => MemoryStore::class]))
+        ->sessionStorage->toBeInstanceOf(MemoryStore::class);
+
+    $this->app->singleton('testStore', static fn (): MemoryStore => app(MemoryStore::class));
+
+    expect($method->invoke($this->laravel, ['sessionStorage' => 'testStore']))
+        ->sessionStorage->toBeInstanceOf(MemoryStore::class);
+});
+
+test('bootTransientStorage() behaves as expected', function (): void {
+    $method = new ReflectionMethod(Auth0::class, 'bootTransientStorage');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, []))
+        ->transientStorage->toBeInstanceOf(LaravelSession::class);
+
+    expect($method->invoke($this->laravel, ['transientStorage' => null]))
+        ->transientStorage->toBeInstanceOf(LaravelSession::class);
+
+    expect($method->invoke($this->laravel, ['transientStorage' => false]))
+        ->transientStorage->toBeNull();
+
+    expect($method->invoke($this->laravel, ['transientStorage' => LaravelCachePool::class]))
+        ->transientStorage->toBeNull();
+
+    expect($method->invoke($this->laravel, ['transientStorage' => MemoryStore::class]))
+        ->transientStorage->toBeInstanceOf(MemoryStore::class);
+
+    $this->app->singleton('testStore', static fn (): MemoryStore => app(MemoryStore::class));
+
+    expect($method->invoke($this->laravel, ['transientStorage' => 'testStore']))
+        ->transientStorage->toBeInstanceOf(MemoryStore::class);
+});
+
+test('bootTokenCache() behaves as expected', function (): void {
+    $method = new ReflectionMethod(Auth0::class, 'bootTokenCache');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, []))
+        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['tokenCache' => null]))
+        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['tokenCache' => LaravelCachePool::class]))
+        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['tokenCache' => false]))
+        ->tokenCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['tokenCache' => MemoryStore::class]))
+        ->tokenCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['tokenCache' => 'cache.psr6']))
+        ->tokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
+});
+
+test('bootManagementTokenCache() behaves as expected', function (): void {
+    $method = new ReflectionMethod(Auth0::class, 'bootManagementTokenCache');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, []))
+        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['managementTokenCache' => null]))
+        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['managementTokenCache' => LaravelCachePool::class]))
+        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+
+    expect($method->invoke($this->laravel, ['managementTokenCache' => false]))
+        ->managementTokenCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['managementTokenCache' => MemoryStore::class]))
+        ->managementTokenCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['managementTokenCache' => 'cache.psr6']))
+        ->managementTokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
+});
