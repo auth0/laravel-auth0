@@ -15,27 +15,31 @@ use function Pest\Laravel\getJson;
 uses()->group('auth', 'auth.guard', 'auth.guard.stateless');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.audience' => ['https://example.com/health-api'],
+        'auth0.clientSecret' => $this->secret,
+        'auth0.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
     $this->laravel = app('auth0');
-    $this->guard = $guard = auth('testGuard');
+    $this->guard = auth('testGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
 
-    $this->secret = uniqid();
-
-    $this->config->setDomain('my-domain.auth0.com');
-    $this->config->setClientSecret($this->secret);
-    $this->config->setAudience(['https://example.com/health-api']);
-    $this->config->setTokenAlgorithm(Token::ALGO_HS256);
-    $this->config->setStrategy(SdkConfiguration::STRATEGY_API);
-
     $this->token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => "https://my-domain.auth0.com/",
+        "iss" => 'https://' . config('auth0.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
-          "https://example.com/health-api",
-          "https://my-domain.auth0.com/userinfo"
+            config('auth0.audience')[0],
+            "https://my-domain.auth0.com/userinfo"
         ],
-        "azp" => "my_client_id",
+        "azp" => config('auth0.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
@@ -43,6 +47,8 @@ beforeEach(function (): void {
     $this->bearerToken = ['Authorization' => 'Bearer ' . $this->token->toString()];
 
     $this->route = '/' . uniqid();
+    $guard = $this->guard;
+
     Route::get($this->route, function () use ($guard) {
         $credential = $guard->find(Guard::SOURCE_TOKEN);
 

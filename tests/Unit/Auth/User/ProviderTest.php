@@ -5,17 +5,34 @@ declare(strict_types=1);
 use Auth0\Laravel\Auth\User\Provider;
 use Auth0\Laravel\Auth\User\Repository;
 use Auth0\Laravel\Model\Stateful\User;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 uses()->group('auth', 'auth.user', 'auth.user.provider');
 
+beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.clientSecret' => $this->secret,
+        'auth0.cookieSecret' => uniqid(),
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
+    $this->laravel = app('auth0');
+    $this->guard = auth('testGuard');
+    $this->sdk = $this->laravel->getSdk();
+});
+
 test('retrieveByToken() returns null when an incompatible guard token is used', function (): void {
     config([
         'auth.defaults.guard' => 'web',
-        'auth.guards.testGuard' => null,
-        'auth0.routes.home' => '/testing'
+        'auth.guards.testGuard' => null
     ]);
 
     $route = '/' . uniqid();

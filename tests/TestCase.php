@@ -48,9 +48,6 @@ class TestCase extends BaseTestCase
             ],
         ]);
 
-        // Default to no strategy for testing
-        $app['config']->set('auth0.strategy', 'none');
-
         // Set a random key for testing
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
 

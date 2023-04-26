@@ -109,11 +109,11 @@ final class Auth0 implements ServiceContract
 
     public function getSdk(): SDKContract
     {
-        if ($this->sdk instanceof SDKContract) {
-            return $this->sdk;
+        if (! $this->sdk instanceof SDKContract) {
+            $this->setSdk(new SDK($this->getConfiguration()));
         }
 
-        return $this->setSdk(new SDK($this->getConfiguration()));
+        return $this->sdk;
     }
 
     public function management(): ManagementInterface

@@ -10,20 +10,21 @@ use Auth0\SDK\Token;
 uses()->group('stateful', 'model', 'model.credential');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.audience' => [uniqid()],
+        'auth0.clientSecret' => $this->secret,
+        'auth0.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
     $this->laravel = app('auth0');
     $this->guard = auth('testGuard');
     $this->sdk = $this->laravel->getSdk();
-    $this->config = $this->sdk->configuration();
-    $this->session = $this->config->getSessionStorage();
-    $this->transient = $this->config->getTransientStorage();
-    $this->secret = uniqid();
-
-    $this->config->setDomain('my-domain.auth0.com');
-    $this->config->setClientId('my_client_id');
-    $this->config->setClientSecret($this->secret);
-    $this->config->setCookieSecret('my_cookie_secret');
-    $this->config->setTokenAlgorithm(Token::ALGO_HS256);
-    $this->config->setStrategy(SdkConfiguration::STRATEGY_API);
 
     $this->user = new User(['sub' => uniqid('auth0|')]);
     $this->idToken = uniqid();

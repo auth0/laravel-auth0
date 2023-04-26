@@ -19,21 +19,24 @@ use function Pest\Laravel\getJson;
 uses()->group('auth', 'auth.guard', 'auth.guard.stateful');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.clientSecret' => $this->secret,
+        'auth0.cookieSecret' => uniqid(),
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
     $this->laravel = app('auth0');
     $this->guard = $guard = auth('testGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();
-    $this->transient = $this->config->getTransientStorage();
+
     $this->user = new User(['sub' => uniqid('auth0|')]);
-
-    $this->secret = uniqid();
-
-    $this->config->setDomain('my-domain.auth0.com');
-    $this->config->setClientId('my_client_id');
-    $this->config->setClientSecret($this->secret);
-    $this->config->setCookieSecret('my_cookie_secret');
-    $this->config->setStrategy(SdkConfiguration::STRATEGY_REGULAR);
 
     $this->session->set('user', ['sub' => 'hello|world']);
     $this->session->set('idToken', uniqid());
@@ -42,6 +45,7 @@ beforeEach(function (): void {
     $this->session->set('accessTokenExpiration', time() + 60);
 
     $this->route = '/' . uniqid();
+    $guard = $this->guard;
 
     Route::get($this->route, function () use ($guard) {
         $credential = $guard->find(Guard::SOURCE_SESSION);
@@ -250,11 +254,105 @@ it('queries the /userinfo endpoint for refreshUser()', function (): void {
 
     expect($userAttributes)
         ->toBeArray()
-        ->toHaveKeys(['sub', 'name', 'email'])
-        ->toHaveCount(3)
-        ->sub->toEqual($identifier)
-        ->name->toEqual('John Doe')
-        ->email->toEqual('...');
+        ->toMatchArray([
+            'sub' => $identifier,
+            'name' => 'John Doe',
+            'email' => '...',
+        ]);
+});
+
+it('does not query the /userinfo endpoint for refreshUser() if an access token is not available', function (): void {
+    $identifier = uniqid('auth0|');
+    $idToken = uniqid('id-token-');
+    $accessTokenScope = [uniqid('access-token-scope-')];
+    $accessTokenExpiration = time() + 60;
+
+    $this->session->set('user', ['sub' => $identifier]);
+    $this->session->set('idToken', $idToken);
+    $this->session->set('accessToken', null);
+    $this->session->set('accessTokenScope', $accessTokenScope);
+    $this->session->set('accessTokenExpiration', $accessTokenExpiration);
+
+    $found = $this->guard->find(Guard::SOURCE_SESSION);
+    $this->guard->login($found, Guard::SOURCE_SESSION);
+
+    expect($this->session)
+        ->get('user')->toBe(['sub' => $identifier]);
+
+    $requestFactory = new MockRequestFactory;
+    $responseFactory = new MockResponseFactory;
+    $streamFactory = new MockStreamFactory;
+
+    $response = $responseFactory->createResponse(200);
+    $response->getBody()->write(json_encode(
+        [
+            'sub' => $identifier,
+            'name' => 'John Doe',
+            'email' => '...',
+        ],
+        JSON_PRETTY_PRINT
+    ));
+
+    $client = new MockHttpClient(fallbackResponse: $response, requestLimit: 0);
+
+    $this->config->setHttpRequestFactory($requestFactory);
+    $this->config->setHttpResponseFactory($responseFactory);
+    $this->config->setHttpStreamFactory($streamFactory);
+    $this->config->setHttpClient($client);
+
+    $this->guard->refreshUser();
+
+    $userAttributes = $this->guard->user()->getAttributes();
+
+    expect($userAttributes)
+        ->toBeArray()
+        ->toMatchArray([
+            'sub' => $identifier,
+        ]);
+});
+
+it('rejects bad responses from the /userinfo endpoint for refreshUser()', function (): void {
+    $identifier = uniqid('auth0|');
+    $idToken = uniqid('id-token-');
+    $accessToken = uniqid('access-token-');
+    $accessTokenScope = [uniqid('access-token-scope-')];
+    $accessTokenExpiration = time() + 60;
+
+    $this->session->set('user', ['sub' => $identifier]);
+    $this->session->set('idToken', $idToken);
+    $this->session->set('accessToken', $accessToken);
+    $this->session->set('accessTokenScope', $accessTokenScope);
+    $this->session->set('accessTokenExpiration', $accessTokenExpiration);
+
+    $found = $this->guard->find(Guard::SOURCE_SESSION);
+    $this->guard->login($found, Guard::SOURCE_SESSION);
+
+    expect($this->session)
+        ->get('user')->toBe(['sub' => $identifier]);
+
+    $requestFactory = new MockRequestFactory;
+    $responseFactory = new MockResponseFactory;
+    $streamFactory = new MockStreamFactory;
+
+    $response = $responseFactory->createResponse(200);
+    $response->getBody()->write(json_encode('bad response', JSON_PRETTY_PRINT));
+
+    $client = new MockHttpClient(fallbackResponse: $response);
+
+    $this->config->setHttpRequestFactory($requestFactory);
+    $this->config->setHttpResponseFactory($responseFactory);
+    $this->config->setHttpStreamFactory($streamFactory);
+    $this->config->setHttpClient($client);
+
+    $this->guard->refreshUser();
+
+    $userAttributes = $this->guard->user()->getAttributes();
+
+    expect($userAttributes)
+        ->toBeArray()
+        ->toMatchArray([
+            'sub' => $identifier,
+        ]);
 });
 
 it('immediately invalidates an expired session when a refresh token is not available', function (): void {

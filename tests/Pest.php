@@ -35,6 +35,8 @@ uses()->beforeEach(function (): void {
     });
 })->in(__DIR__);
 
+uses()->compact();
+
 /*
 |--------------------------------------------------------------------------
 | Expectations

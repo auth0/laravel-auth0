@@ -23,21 +23,23 @@ use function Pest\Laravel\getJson;
 uses()->group('stateful', 'controller', 'controller.stateful', 'controller.stateful.callback');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.clientSecret' => $this->secret,
+        'auth0.cookieSecret' => uniqid(),
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
     $this->laravel = app('auth0');
     $this->guard = auth('testGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
-    $this->session = $this->config->getSessionStorage();
-    $this->transient = $this->config->getTransientStorage();
+
     $this->user = new User(['sub' => uniqid('auth0|')]);
-
-    $this->secret = uniqid();
-
-    $this->config->setDomain('my-domain.auth0.com');
-    $this->config->setClientId('my_client_id');
-    $this->config->setClientSecret($this->secret);
-    $this->config->setCookieSecret('my_cookie_secret');
-    $this->config->setStrategy(SdkConfiguration::STRATEGY_REGULAR);
 
     Route::get('/auth0/callback', Callback::class)->name('callback');
 });
@@ -46,12 +48,11 @@ it('redirects home if an incompatible guard is active', function (): void {
     config([
         'auth.defaults.guard' => 'web',
         'auth.guards.testGuard' => null,
-        'auth0.routes.home' => '/testing'
     ]);
 
     getJson('/auth0/callback')
         ->assertFound()
-        ->assertLocation('/testing');
+        ->assertLocation(config('auth0.routes.home'));
 });
 
 it('accepts code and state parameters', function (): void {
@@ -89,10 +90,6 @@ it('accepts error and error_description parameters', function (): void {
 });
 
 it('returns a user and sets up a session', function (): void {
-    config([
-        'auth0.routes.home' => '/testing'
-    ]);
-
     $this->config->setTokenAlgorithm(Token::ALGO_HS256);
 
     $state = uniqid();
@@ -101,21 +98,21 @@ it('returns a user and sets up a session', function (): void {
     $verifier = uniqid();
 
     $accessToken = Generator::create($this->secret, Token::ALGO_HS256, [
-        'iss' => 'https://my-domain.auth0.com/',
+        "iss" => 'https://' . config('auth0.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => 'my_client_id',
+        'aud' => config('auth0.clientId'),
         'exp' => time() + 60,
         'iat' => time(),
         'email' => 'john.doe@somewhere.teset'
     ], []);
 
     $idToken = Generator::create($this->secret, Token::ALGO_HS256, [
-        'iss' => 'https://my-domain.auth0.com/',
+        "iss" => 'https://' . config('auth0.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => 'my_client_id',
+        'aud' => config('auth0.clientId'),
         'iat' => time(),
         'exp' => time() + 60,
-        'azp' => 'my_client_id',
+        'azp' => config('auth0.clientId'),
         'scope' => 'openid profile email',
         'nonce' => $nonce,
     ], []);
@@ -130,7 +127,7 @@ it('returns a user and sets up a session', function (): void {
     ]));
 
     $client = $this->config->getHttpClient();
-    $client->addResponse('POST', 'https://my-domain.auth0.com/oauth/token', $response);
+    $client->addResponse('POST', 'https://' . config('auth0.domain') . '/oauth/token', $response);
 
     $this->withSession([
             'auth0_transient_state' => $state,
@@ -139,7 +136,7 @@ it('returns a user and sets up a session', function (): void {
             'auth0_transient_code_verifier' => $verifier
          ])->getJson('/auth0/callback?code=code&state=' . $state)
             ->assertFound()
-            ->assertLocation('/testing');
+            ->assertLocation(config('auth0.routes.home'));
 
     $this->assertDispatched(Attempting::class, 1);
     $this->assertDispatched(Validated::class, 1);

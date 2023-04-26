@@ -10,22 +10,21 @@ use Illuminate\Support\Facades\Route;
 uses()->group('stateful', 'middleware', 'middleware.stateful', 'middleware.stateful.authenticate_optional');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.clientSecret' => $this->secret,
+        'auth0.cookieSecret' => uniqid(),
+    ]);
+
     $this->laravel = app('auth0');
     $this->guard = auth('testGuard');
     $this->sdk = $this->laravel->getSdk();
-    $this->config = $this->sdk->configuration();
-    $this->session = $this->config->getSessionStorage();
-    $this->transient = $this->config->getTransientStorage();
 
-    $this->secret = uniqid();
-
-    $this->config->setDomain('my-domain.auth0.com');
-    $this->config->setClientId('my_client_id');
-    $this->config->setClientSecret($this->secret);
-    $this->config->setCookieSecret('my_cookie_secret');
-    $this->config->setStrategy(SdkConfiguration::STRATEGY_REGULAR);
-
-    $this->templates['validSession'] = [
+    $this->validSession = [
         'auth0_session_user' => ['sub' => 'hello|world'],
         'auth0_session_idToken' => uniqid(),
         'auth0_session_accessToken' => uniqid(),
@@ -75,7 +74,7 @@ it('assigns a user', function (): void {
         return $route;
     });
 
-    $this->withSession($this->templates['validSession'])
+    $this->withSession($this->validSession)
          ->get($route)
              ->assertStatus(Response::HTTP_OK)
              ->assertSee($route);
@@ -91,7 +90,7 @@ it('assigns a user when using a configured scope matches', function (): void {
         return $route;
     });
 
-    $this->withSession($this->templates['validSession'])
+    $this->withSession($this->validSession)
          ->get($route)
              ->assertStatus(Response::HTTP_OK)
              ->assertSee($route);
@@ -107,7 +106,7 @@ it('does not assign a user when a configured scope is not matched', function ():
         return $route;
     });
 
-    $this->withSession($this->templates['validSession'])
+    $this->withSession($this->validSession)
          ->get($route)
              ->assertStatus(Response::HTTP_OK)
              ->assertSee($route);
