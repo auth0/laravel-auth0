@@ -40,21 +40,22 @@ You can learn more about working with the Laravel event system in the [Laravel d
 
 During login with the `Auth0\Laravel\Http\Controller\Stateful\Login` controller, the following events may be raised:
 
-| Event                          | Description                                                                         |
-| ------------------------------ | ----------------------------------------------------------------------------------- |
-| `Illuminate\Auth\Events\Login` | Raised when a user is logging in. The model of the user is provided with the event. |
+| Event                                                   | Description                                                                                  |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `Illuminate\Auth\Events\Login`                          | Raised when a user is logging in. The model of the user is provided with the event.          |
+| `Auth0\Laravel\Contract\Event\Stateful\LoginAttempting` | Raised before the login redirect is issued, allowing an opportunity to customize parameters. |
 
 ## Callback Controller Events
 
 During callback with the `Auth0\Laravel\Http\Controller\Stateful\Callback` controller, the following events may be raised:
 
-| Event                                                     | Description                                                                                                                                                                                                                                                             |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Illuminate\Auth\Events\Attempting`                       | Raised when a user is returned to the application after authenticating with Auth0. This is raised before verification of the authentication process begins.                                                                                                             |
-| `Illuminate\Auth\Events\Failed`                           | Raised when authentication with Auth0 failed. The reason is provided with the event as an array.                                                                                                                                                                        |
+| Event                                                     | Description                                                                                                                                                                                                                                                               |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Illuminate\Auth\Events\Attempting`                       | Raised when a user is returned to the application after authenticating with Auth0. This is raised before verification of the authentication process begins.                                                                                                               |
+| `Illuminate\Auth\Events\Failed`                           | Raised when authentication with Auth0 failed. The reason is provided with the event as an array.                                                                                                                                                                          |
 | `Auth0\Laravel\Event\Stateful\AuthenticationFailed`       | Raised when authentication with Auth0 failed. This provides an opportunity to intercept the exception thrown by the middleware, by using the event's `setThrowException()` method to `false`. You can also customize the type of exception thrown using `setException()`. |
-| `Illuminate\Auth\Events\Illuminate\Auth\Events\Validated` | Raised when authentication was successful, but immediately before the user's session is established.                                                                                                                                                                           |
-| `Auth0\Laravel\Event\Stateful\AuthenticationSucceeded`    | Raised when authentication was successful. The model of the authenticated user is provided with the event.                                                                                                                                                              |
+| `Illuminate\Auth\Events\Illuminate\Auth\Events\Validated` | Raised when authentication was successful, but immediately before the user's session is established.                                                                                                                                                                      |
+| `Auth0\Laravel\Event\Stateful\AuthenticationSucceeded`    | Raised when authentication was successful. The model of the authenticated user is provided with the event.                                                                                                                                                                |
 
 ## Logout Controller Events
 
