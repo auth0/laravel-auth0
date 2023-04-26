@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.7.0](https://github.com/auth0/laravel-auth0/tree/7.7.0) (2023-04-26)
+
+### Added
+
+-   `Auth0\Laravel\Auth0` now has a `management()` shortcut method for issuing Management API calls. ([\#376](https://github.com/auth0/laravel-auth0/pull/376))
+
+-   `Auth0\Laravel\Auth0\Guard` now has a `refreshUser()` method for querying `/userinfo` endpoint and refreshing the authenticated user's cached profile data. ([\#375](https://github.com/auth0/laravel-auth0/pull/375))
+
+-   `Auth0\Laravel\Http\Controller\Stateful\Login` now raises a `LoginAttempting` event, offering an opportunity to customize the authorization parameters before the login redirect is issued. ([\#382](https://github.com/auth0/laravel-auth0/pull/382))
+
+### Improved
+
+-   The `tokenCache`, `managementTokenCache`, `sessionStorage` and `transientStorage` configuration values now support `false` or `string` values pointing to class names (e.g. `\Some\Cache::class`) or class aliases (e.g. `cache.psr6`) registered with Laravel. ([\#381](https://github.com/auth0/laravel-auth0/pull/381))
+
 ## [7.6.0](https://github.com/auth0/laravel-auth0/tree/7.6.0) (2023-04-12)
 
 ### Added
