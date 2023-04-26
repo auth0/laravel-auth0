@@ -42,23 +42,21 @@ final class Auth0 implements ServiceContract
     {
         $managementTokenCache = $config['managementTokenCache'] ?? null;
 
-        if (null === $managementTokenCache) {
-            $config['managementTokenCache'] = $this->getManagementTokenCachePool();
+        if (false === $managementTokenCache) {
+            unset($config['managementTokenCache']);
+
+            return $config;
         }
 
-        if (false === $managementTokenCache) {
-            $config['managementTokenCache'] = null;
+        if (null === $managementTokenCache) {
+            $managementTokenCache = $this->getManagementTokenCachePool();
         }
 
         if (is_string($managementTokenCache)) {
-            $config['managementTokenCache'] = null;
-
             $managementTokenCache = app(trim($managementTokenCache));
-
-            if ($managementTokenCache instanceof CacheItemPoolInterface) {
-                $config['managementTokenCache'] = $managementTokenCache;
-            }
         }
+
+        $config['managementTokenCache'] = $managementTokenCache instanceof CacheItemPoolInterface ? $managementTokenCache : null;
 
         return $config;
     }
@@ -68,27 +66,25 @@ final class Auth0 implements ServiceContract
         $sessionStorage   = $config['sessionStorage'] ?? null;
         $sessionStorageId = $config['sessionStorageId'] ?? 'auth0_session';
 
-        if (null === $sessionStorage) {
-            $config['sessionStorage'] = app(LaravelSession::class, [
-                'prefix' => $sessionStorageId,
-            ]);
+        if (false === $sessionStorage) {
+            unset($config['sessionStorage']);
+
+            return $config;
         }
 
-        if (false === $sessionStorage) {
-            $config['sessionStorage'] = null;
+        if (null === $sessionStorage) {
+            $sessionStorage = app(LaravelSession::class, [
+                'prefix' => $sessionStorageId,
+            ]);
         }
 
         if (is_string($sessionStorage)) {
-            $config['sessionStorage'] = null;
-
             $sessionStorage = app(trim($sessionStorage), [
                 'prefix' => $sessionStorageId,
             ]);
-
-            if ($sessionStorage instanceof StoreInterface) {
-                $config['sessionStorage'] = $sessionStorage;
-            }
         }
+
+        $config['sessionStorage'] = $sessionStorage instanceof StoreInterface ? $sessionStorage : null;
 
         return $config;
     }
@@ -110,23 +106,21 @@ final class Auth0 implements ServiceContract
     {
         $tokenCache = $config['tokenCache'] ?? null;
 
-        if (null === $tokenCache) {
-            $config['tokenCache'] = $this->getTokenCachePool();
+        if (false === $tokenCache) {
+            unset($config['tokenCache']);
+
+            return $config;
         }
 
-        if (false === $tokenCache) {
-            $config['tokenCache'] = null;
+        if (null === $tokenCache) {
+            $tokenCache = $this->getTokenCachePool();
         }
 
         if (is_string($tokenCache)) {
-            $config['tokenCache'] = null;
-
             $tokenCache = app(trim($tokenCache));
-
-            if ($tokenCache instanceof CacheItemPoolInterface) {
-                $config['tokenCache'] = $tokenCache;
-            }
         }
+
+        $config['tokenCache'] = $tokenCache instanceof CacheItemPoolInterface ? $tokenCache : null;
 
         return $config;
     }
@@ -136,34 +130,32 @@ final class Auth0 implements ServiceContract
         $transientStorage   = $config['transientStorage'] ?? null;
         $transientStorageId = $config['transientStorageId'] ?? 'auth0_transient';
 
-        if (null === $transientStorage) {
-            $config['transientStorage'] = app(LaravelSession::class, [
-                'prefix' => $transientStorageId,
-            ]);
+        if (false === $transientStorage) {
+            unset($config['transientStorage']);
+
+            return $config;
         }
 
-        if (false === $transientStorage) {
-            $config['transientStorage'] = null;
+        if (null === $transientStorage) {
+            $transientStorage = app(LaravelSession::class, [
+                'prefix' => $transientStorageId,
+            ]);
         }
 
         if (is_string($transientStorage)) {
-            $config['transientStorage'] = null;
-
             $transientStorage = app(trim($transientStorage), [
                 'prefix' => $transientStorageId,
             ]);
-
-            if ($transientStorage instanceof StoreInterface) {
-                $config['transientStorage'] = $transientStorage;
-            }
         }
+
+        $config['transientStorage'] = $transientStorage instanceof StoreInterface ? $transientStorage : null;
 
         return $config;
     }
 
     private function getManagementTokenCachePool(): CacheItemPoolInterface
     {
-        if (! $this->managementTokenCachePool instanceof \Psr\Cache\CacheItemPoolInterface) {
+        if (! $this->managementTokenCachePool instanceof CacheItemPoolInterface) {
             $this->managementTokenCachePool = app(LaravelCachePool::class);
         }
 
@@ -172,7 +164,7 @@ final class Auth0 implements ServiceContract
 
     private function getTokenCachePool(): CacheItemPoolInterface
     {
-        if (! $this->tokenCachePool instanceof \Psr\Cache\CacheItemPoolInterface) {
+        if (! $this->tokenCachePool instanceof CacheItemPoolInterface) {
             $this->tokenCachePool = app(LaravelCachePool::class);
         }
 
