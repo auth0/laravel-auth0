@@ -7,12 +7,29 @@ use Auth0\Laravel\Contract\Exception\AuthenticationException as AuthenticationEx
 use Auth0\Laravel\Exception\AuthenticationException;
 use Auth0\Laravel\Entities\Credential;
 use Auth0\Laravel\Model\Stateful\User;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Support\Facades\Route;
 
 uses()->group('auth', 'auth.guard', 'auth.guard.shared');
 
 beforeEach(function (): void {
+    $this->secret = uniqid();
+
+    config([
+        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.domain' => uniqid() . '.auth0.com',
+        'auth0.clientId' => uniqid(),
+        'auth0.clientSecret' => $this->secret,
+        'auth0.cookieSecret' => uniqid(),
+        'auth0.routes.home' => '/' . uniqid(),
+    ]);
+
+    $this->laravel = app('auth0');
     $this->guard = auth('testGuard');
+    $this->sdk = $this->laravel->getSdk();
+    $this->config = $this->sdk->configuration();
+    $this->session = $this->config->getSessionStorage();
+
     $this->user = new User(['sub' => uniqid('auth0|')]);
 
     Route::middleware('auth:auth0')->get('/test', function () {
