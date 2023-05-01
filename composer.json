@@ -39,14 +39,13 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "auth0/auth0-php": "^8.5",
-        "illuminate/contracts": "^9.0 || ^10.0",
-        "illuminate/http": "^9.0 || ^10.0",
-        "illuminate/support": "^9.0 || ^10.0",
-        "psr/cache": "^2.0 || ^3.0"
+        "illuminate/contracts": "^9 || ^10",
+        "illuminate/http": "^9 || ^10",
+        "illuminate/support": "^9 || ^10",
+        "psr/cache": "^2 || ^3"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.16",
-        "infection/infection": "^0.26.20",
         "mockery/mockery": "^1.5.1",
         "nunomaduro/larastan": "^2.6.0",
         "orchestra/testbench": "^7.19 || ^8.5.1",
@@ -108,9 +107,8 @@
         }
     },
     "scripts": {
-        "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
         "pest:coverage": "@php vendor/bin/pest --coverage --parallel --no-progress",
-        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --fail-on-risky --stop-on-error",
+        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --fail-on-risky --stop-on-failure",
         "pest:profile": "@php vendor/bin/pest --profile",
         "pest": "@php vendor/bin/pest --order-by random --fail-on-risky",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
