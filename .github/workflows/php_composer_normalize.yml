@@ -1,10 +1,12 @@
 name: "Composer Normalize"
 
 on:
-  pull_request_target: {}
+  pull_request: {}
   push:
     branches:
       - main
+
+permissions: {}
 
 jobs:
   normalize:
@@ -12,4 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
       - uses: docker://ergebnis/composer-normalize-action

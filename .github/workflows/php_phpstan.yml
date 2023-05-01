@@ -1,34 +1,26 @@
 name: "PHPStan"
 
 on:
-  pull_request_target: {}
+  pull_request: {}
   push:
     branches:
       - main
+
+permissions: {}
 
 jobs:
   phpstan:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: "8.1"
 
-      - id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - run: composer install --no-progress
 
       - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug
