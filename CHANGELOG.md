@@ -23,7 +23,7 @@
 
 -   The SDK now automatically registers the Authentication routes. Manual route setup in `routes/web.php` is no longer necessary.
 
--   2 new routing Middleware have been added: `Auth0\Laravel\Http\Middleware\Authenticator` and `Auth0\Laravel\Http\Middleware\Authorizer`. These are automatically registered with your Laravel application, and ensure the Auth0 Guards are used for authentication and authorization, respectively.
+-   2 new routing Middleware have been added: `Auth0\Laravel\Http\Middleware\Authenticator` and `Auth0\Laravel\Http\Middleware\Authorizer`. These are automatically registered with your Laravel application, and ensure the Auth0 Guards are used for authentication and authorization, respectively. This replaces the need for the `guard` middleware or otherwise manual Guard assignment in your routes.
 
 ### Improved
 
