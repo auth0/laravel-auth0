@@ -17,7 +17,7 @@
 
 -   These guards are compatible with Laravel's Authorization API and support the native `can` middleware, and the `Guard` facade, and work with the Policies API.
 
--   3 new pre-built Guards are available: `scope` and `permission`, as well as a dynamic `*:*`. This enables you to verify the user's access token has a particular scope, or if RBAC is enabled on the Auth0 API, if they have a particular permission. For example `Gate::check(`'scope', 'email')` or `Route::get(/*...*/)->can('read:messages')`.
+-   3 new pre-built Guards are available: `scope` and `permission`, as well as a dynamic `*:*`. This enables you to verify the user's access token has a particular scope, or if RBAC is enabled on the Auth0 API, if they have a particular permission. For example `Gate::check('scope', 'email')` or `Route::get(/*...*/)->can('read:messages')`.
 
 -   The SDK now automatically registers these guards to Laravel's standard `web` and `api` middleware groups, respectively. Manual Guard setup in `config/auth.php` is no longer necessary.
 
