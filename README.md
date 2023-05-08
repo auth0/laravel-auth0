@@ -36,22 +36,16 @@ You'll also need an [Auth0 account](https://auth0.com/signup), as well as [Compo
 
 ### SDK Installation
 
-Open a shell to the root of your Laravel application's root directory, and import the SDK using [Composer](https://getcomposer.org/):
+Run the following command within your project directory to install the [Auth0 Laravel SDK](https://github.com/auth0/laravel-auth0):
 
-```bash
+```shell
 composer require auth0/login:^7.8 --update-with-all-dependencies
 ```
 
-Next, generate the `config/auth0.php` configuration file for your application:
+Then generate an SDK configuration file for your application:
 
-```bash
-php artisan vendor:publish --tag=auth0
-```
-
-Now is also a good time to clear your application caches:
-
-```bash
-php artisan optimize:clear
+```shell
+php artisan vendor:publish --tag auth0
 ```
 
 ### SDK Configuration
