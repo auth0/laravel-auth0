@@ -33,12 +33,6 @@
 
 -   The previous `auth0.guard` Guard (`Auth0\Laravel\Auth\Guard`) has been **refactored** as a lightweight wrapper around the new `SessionGuard` and `TokenGuard` guards.
 
-### Deprecations
-
--   `Auth0\Laravel\Auth\Guard` has been deprecated in favor of the new `SessionGuard` and `TokenGuard` guards. This class will be removed in the next major release.
-
--   `Auth0\Laravel\Http\Middleware\Stateful\Authenticate`, `Auth0\Laravel\Http\Middleware\Stateful\AuthenticateOptional`, `Auth0\Laravel\Http\Middleware\Stateless\Authorize`, `Auth0\Laravel\Http\Middleware\Stateless\AuthorizeOptional` are no longer necessary with the new Guards and have therefore also been marked as deprecated. These classes will be removed in the next major release.
-
 ## [7.7.0](https://github.com/auth0/laravel-auth0/tree/7.7.0) (2023-04-26)
 
 ### Added
