@@ -31,7 +31,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = $guard = auth('testGuard');
+    $this->guard = $guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();
@@ -392,14 +392,19 @@ it('successfully continues a session when an access token succeeds is renewed', 
 
     $response = $responseFactory->createResponse();
 
-    $response = $response->withBody($streamFactory->createStream(
-        json_encode([
-            'access_token' => uniqid(),
-            'expires_in' => 60,
-            'scope' => 'openid profile',
-            'token_type' => 'Bearer',
-        ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
-    ));
+    $response = $response->withBody(
+        $streamFactory->createStream(
+            json_encode(
+                value: [
+                    'access_token' => uniqid(),
+                    'expires_in' => 60,
+                    'scope' => 'openid profile',
+                    'token_type' => 'Bearer',
+                ],
+                flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+            )
+        )
+    );
 
     $http->addResponseWildcard($response);
 

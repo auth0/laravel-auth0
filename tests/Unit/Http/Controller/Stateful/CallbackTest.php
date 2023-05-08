@@ -35,7 +35,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
 
@@ -47,7 +47,7 @@ beforeEach(function (): void {
 it('redirects home if an incompatible guard is active', function (): void {
     config([
         'auth.defaults.guard' => 'web',
-        'auth.guards.testGuard' => null,
+        'auth.guards.legacyGuard' => null,
     ]);
 
     getJson('/auth0/callback')

@@ -8,6 +8,7 @@ use Auth0\Laravel\Model\Stateful\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 uses()->group('auth', 'auth.user', 'auth.user.provider');
@@ -25,20 +26,20 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
 });
 
 test('retrieveByToken() returns null when an incompatible guard token is used', function (): void {
     config([
         'auth.defaults.guard' => 'web',
-        'auth.guards.testGuard' => null
+        'auth.guards.legacyGuard' => null
     ]);
 
     $route = '/' . uniqid();
 
     Route::get($route, function () {
-        $provider = app('auth0.provider');
+        $provider = Auth::createUserProvider('testProvider');
         $credential = $provider->retrieveByToken('token', '');
 
         if (null === $credential) {
@@ -53,7 +54,7 @@ test('retrieveByToken() returns null when an incompatible guard token is used', 
 });
 
 test('retrieveByToken() returns null when an invalid token is provided', function (): void {
-    $provider = app('auth0.provider');
+    $provider = Auth::createUserProvider('testProvider');
 
     expect($provider->retrieveByToken('token', ''))
         ->toBeNull();
@@ -63,7 +64,7 @@ test('retrieveByToken() returns null when an invalid token is provided', functio
 });
 
 test('validateCredentials() always returns false', function (): void {
-    $provider = app('auth0.provider');
+    $provider = Auth::createUserProvider('testProvider');
     $user = new User();
 
     expect($provider->validateCredentials($user, []))

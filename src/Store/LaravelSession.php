@@ -24,38 +24,6 @@ final class LaravelSession implements StoreInterface
     }
 
     /**
-     * Prefixes a key with the SDK's configured namespace.
-     *
-     * @param string $key
-     */
-    private function getPrefixedKey(string $key): string
-    {
-        return $this->getPrefix() . '_' . trim($key);
-    }
-
-    /**
-     * Retrieves the Laravel session store.
-     *
-     * @throws SessionException If a Laravel session store is not available.
-     *
-     * @psalm-suppress RedundantConditionGivenDocblockType
-     */
-    private function getStore(): Store
-    {
-        $store = app('session.store');
-
-        if (! request()->hasSession(true)) {
-            request()->setLaravelSession($store);
-        }
-
-        if (! $store->isStarted()) {
-            $store->start();
-        }
-
-        return $store;
-    }
-
-    /**
      * This method is required by the interface but is not used by this SDK.
      *
      * @param bool $deferring whether to defer persisting the storage state
@@ -96,8 +64,8 @@ final class LaravelSession implements StoreInterface
      */
     public function getAll(): array
     {
-        $pairs    = $this->getStore()->all();
-        $prefix   = $this->prefix . '_';
+        $pairs = $this->getStore()->all();
+        $prefix = $this->prefix . '_';
         $response = [];
 
         foreach (array_keys($pairs) as $key) {
@@ -165,5 +133,38 @@ final class LaravelSession implements StoreInterface
         $this->prefix = $prefix;
 
         return $this;
+    }
+
+    /**
+     * Prefixes a key with the SDK's configured namespace.
+     *
+     * @param string $key
+     */
+    private function getPrefixedKey(string $key): string
+    {
+        return $this->getPrefix() . '_' . trim($key);
+    }
+
+    /**
+     * Retrieves the Laravel session store.
+     *
+     * @throws SessionException If a Laravel session store is not available.
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
+     */
+    private function getStore(): Store
+    {
+        $store = app('session.store');
+        $request = app('request');
+
+        if (! $request->hasSession(true)) {
+            $request->setLaravelSession($store);
+        }
+
+        if (! $store->isStarted()) {
+            $store->start();
+        }
+
+        return $store;
     }
 }

@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Cache\LaravelCachePool;
 use Auth0\Laravel\Contract\Auth0 as ServiceContract;
-use Auth0\Laravel\Event\Configuration\{Building, Built};
-use Auth0\Laravel\Store\LaravelSession;
-use Auth0\SDK\Auth0 as SDK;
-use Auth0\SDK\Configuration\SdkConfiguration as Configuration;
-use Auth0\SDK\Contract\API\ManagementInterface;
-use Auth0\SDK\Contract\{Auth0Interface as SDKContract, StoreInterface};
-use Auth0\SDK\Utility\HttpTelemetry;
-use Psr\Cache\CacheItemPoolInterface;
-
-use function in_array;
-use function is_string;
+use Auth0\Laravel\Entities\Configuration;
+use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
+use Illuminate\Support\Facades\Route;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Service that provides access to the Auth0 SDK.
  */
-final class Auth0 implements ServiceContract
+final class Auth0 extends Configuration implements ServiceContract
 {
     /**
      * The Laravel-Auth0 SDK version:.
@@ -30,239 +22,38 @@ final class Auth0 implements ServiceContract
      */
     public const VERSION = '7.7.0';
 
-    public function __construct(
-        private ?SDKContract $sdk = null,
-        private ?Configuration $configuration = null,
-        private ?CacheItemPoolInterface $tokenCachePool = null,
-        private ?CacheItemPoolInterface $managementTokenCachePool = null,
-    ) {
-    }
-
-    private function bootManagementTokenCache(array $config): array
-    {
-        $managementTokenCache = $config['managementTokenCache'] ?? null;
-
-        if (false === $managementTokenCache) {
-            unset($config['managementTokenCache']);
-
-            return $config;
-        }
-
-        if (null === $managementTokenCache) {
-            $managementTokenCache = $this->getManagementTokenCachePool();
-        }
-
-        if (is_string($managementTokenCache)) {
-            $managementTokenCache = app(trim($managementTokenCache));
-        }
-
-        $config['managementTokenCache'] = $managementTokenCache instanceof CacheItemPoolInterface ? $managementTokenCache : null;
-
-        return $config;
-    }
-
-    private function bootSessionStorage(array $config): array
-    {
-        $sessionStorage   = $config['sessionStorage'] ?? null;
-        $sessionStorageId = $config['sessionStorageId'] ?? 'auth0_session';
-
-        if (false === $sessionStorage) {
-            unset($config['sessionStorage']);
-
-            return $config;
-        }
-
-        if (null === $sessionStorage) {
-            $sessionStorage = app(LaravelSession::class, [
-                'prefix' => $sessionStorageId,
-            ]);
-        }
-
-        if (is_string($sessionStorage)) {
-            $sessionStorage = app(trim($sessionStorage), [
-                'prefix' => $sessionStorageId,
-            ]);
-        }
-
-        $config['sessionStorage'] = $sessionStorage instanceof StoreInterface ? $sessionStorage : null;
-
-        return $config;
-    }
-
-    private function bootStrategy(array $config): array
-    {
-        $strategy = $config['strategy'] ?? Configuration::STRATEGY_REGULAR;
-
-        if (! is_string($strategy)) {
-            $strategy = Configuration::STRATEGY_REGULAR;
-        }
-
-        $config['strategy'] = $strategy;
-
-        return $config;
-    }
-
-    private function bootTokenCache(array $config): array
-    {
-        $tokenCache = $config['tokenCache'] ?? null;
-
-        if (false === $tokenCache) {
-            unset($config['tokenCache']);
-
-            return $config;
-        }
-
-        if (null === $tokenCache) {
-            $tokenCache = $this->getTokenCachePool();
-        }
-
-        if (is_string($tokenCache)) {
-            $tokenCache = app(trim($tokenCache));
-        }
-
-        $config['tokenCache'] = $tokenCache instanceof CacheItemPoolInterface ? $tokenCache : null;
-
-        return $config;
-    }
-
-    private function bootTransientStorage(array $config): array
-    {
-        $transientStorage   = $config['transientStorage'] ?? null;
-        $transientStorageId = $config['transientStorageId'] ?? 'auth0_transient';
-
-        if (false === $transientStorage) {
-            unset($config['transientStorage']);
-
-            return $config;
-        }
-
-        if (null === $transientStorage) {
-            $transientStorage = app(LaravelSession::class, [
-                'prefix' => $transientStorageId,
-            ]);
-        }
-
-        if (is_string($transientStorage)) {
-            $transientStorage = app(trim($transientStorage), [
-                'prefix' => $transientStorageId,
-            ]);
-        }
-
-        $config['transientStorage'] = $transientStorage instanceof StoreInterface ? $transientStorage : null;
-
-        return $config;
-    }
-
-    private function getManagementTokenCachePool(): CacheItemPoolInterface
-    {
-        if (! $this->managementTokenCachePool instanceof CacheItemPoolInterface) {
-            $this->managementTokenCachePool = app(LaravelCachePool::class);
-        }
-
-        return $this->managementTokenCachePool;
-    }
-
-    private function getTokenCachePool(): CacheItemPoolInterface
-    {
-        if (! $this->tokenCachePool instanceof CacheItemPoolInterface) {
-            $this->tokenCachePool = app(LaravelCachePool::class);
-        }
-
-        return $this->tokenCachePool;
+    /**
+     * Register the SDK's authentication routes and controllers.
+     *
+     * @param string $authenticationGuard The name of the authentication guard to use.
+     */
+    public static function routes(
+        string $authenticationGuard = 'auth0-session'
+    ): void {
+        Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], function () {
+            Route::get('/login', Login::class)->name('login');
+            Route::get('/logout', Logout::class)->name('logout');
+            Route::get('/callback', Callback::class)->name('callback');
+        });
     }
 
     /**
-     * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
+     * Decode a PSR-7 HTTP Response Message containing a JSON content body to a PHP array. Returns null if the response was not successful, or the response body was not JSON.
+     *
+     * @return null|array<mixed>
      */
-    private function setSdkTelemetry(): self
+    public static function json(ResponseInterface $response): ?array
     {
-        HttpTelemetry::setEnvProperty('Laravel', app()->version());
-        HttpTelemetry::setPackage('laravel-auth0', self::VERSION);
-
-        return $this;
-    }
-
-    public function getConfiguration(): Configuration
-    {
-        if (! $this->configuration instanceof Configuration) {
-            $config = config('auth0');
-
-            /**
-             * @var array<mixed> $config
-             */
-
-            // Give host application an opportunity to update the configuration before assigning defaults.
-            $event = new Building($config);
-            event($event);
-            $config = $event->getConfiguration();
-
-            $config = $this->bootStrategy($config);
-            $config = $this->bootTokenCache($config);
-            $config = $this->bootManagementTokenCache($config);
-
-            if (in_array($config['strategy'], Configuration::STRATEGIES_USING_SESSIONS, true)) {
-                $config = $this->bootSessionStorage($config);
-                $config = $this->bootTransientStorage($config);
-            }
-
-            $config = new Configuration($config);
-
-            // Give host application an opportunity to update the configuration before applying it.
-            $event = new Built($config);
-            event($event);
-            $this->configuration = $event->getConfiguration();
+        if (! in_array($response->getStatusCode(), [200, 201], true)) {
+            return null;
         }
 
-        return $this->configuration;
-    }
+        $json = json_decode((string) $response->getBody(), true);
 
-    public function getCredentials(): ?object
-    {
-        return $this->getSdk()->getCredentials();
-    }
-
-    public function getSdk(): SDKContract
-    {
-        if (! $this->sdk instanceof SDKContract) {
-            return $this->setSdk(new SDK($this->getConfiguration()));
+        if ( ! is_array($json)) {
+            return null;
         }
 
-        return $this->sdk;
-    }
-
-    public function management(): ManagementInterface
-    {
-        return $this->getSdk()->management();
-    }
-
-    public function reset(): self
-    {
-        unset($this->sdk, $this->configuration);
-
-        $this->sdk           = null;
-        $this->configuration = null;
-
-        return $this;
-    }
-
-    public function setConfiguration(Configuration $configuration): self
-    {
-        $this->configuration = $configuration;
-
-        if ($this->sdk instanceof SDKContract) {
-            $this->sdk->setConfiguration($configuration);
-        }
-
-        return $this;
-    }
-
-    public function setSdk(SDKContract $sdk): SDKContract
-    {
-        $this->configuration = $sdk->configuration();
-        $this->sdk           = $sdk;
-
-        $this->setSdkTelemetry();
-
-        return $this->sdk;
+        return $json;
     }
 }

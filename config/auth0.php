@@ -3,67 +3,53 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Configuration;
-use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Configuration\SdkConfiguration as Strategy;
+use Auth0\SDK\Token;
 
-/*
- * Please review available configuration options here:
- * https://github.com/auth0/auth0-PHP#configuration-options.
- */
-return [
-    // Should be assigned either 'api', 'management', or 'webapp' to indicate your application's use case for the SDK.
-    // Determines what configuration options will be required.
-    'strategy'      => env('AUTH0_STRATEGY', SdkConfiguration::STRATEGY_REGULAR),
+return Configuration::VERSION_2 + [
 
-    // Auth0 domain for your tenant, found in your Auth0 Application settings.
-    'domain'        => env('AUTH0_DOMAIN'),
-
-    // If you have configured Auth0 to use a custom domain, configure it here.
-    'customDomain'  => env('AUTH0_CUSTOM_DOMAIN'),
-
-    // Client ID, found in the Auth0 Application settings.
-    'clientId'      => env('AUTH0_CLIENT_ID'),
-
-    // Authentication callback URI, as defined in your Auth0 Application settings.
-    'redirectUri'   => env('AUTH0_REDIRECT_URI', env('APP_URL') . '/callback'),
-
-    // Client Secret, found in the Auth0 Application settings.
-    'clientSecret'  => env('AUTH0_CLIENT_SECRET'),
-
-    // One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
-    'audience'      => Configuration::stringToArrayOrNull(env('AUTH0_AUDIENCE')),
-
-    // One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
-    'scope'         => Configuration::stringToArray(env('AUTH0_SCOPE')),
-
-    // One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
-    'organization'  => Configuration::stringToArrayOrNull(env('AUTH0_ORGANIZATION')),
-
-    // The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
-    'cookieSecret'  => env('AUTH0_COOKIE_SECRET', env('APP_KEY')),
-
-    // How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
-    'cookieExpires' => (int) env('AUTH0_COOKIE_EXPIRES', 0),
-
-    // Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. Defaults to value of HTTP_HOST server environment information.
-    // Note: To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
-    'cookieDomain'  => env('AUTH0_COOKIE_DOMAIN'),
-
-    // Specifies path on the domain where the cookies will work. Defaults to '/'. Use a single slash ('/') for all paths on the domain.
-    'cookiePath'    => env('AUTH0_COOKIE_PATH', '/'),
-
-    // Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
-    'cookieSecure'  => Configuration::stringToBoolOrNull(env('AUTH0_COOKIE_SECURE'), false),
-
-    // Named routes within your Laravel application that the SDK may call during stateful requests for redirections.
-    'routes'        => [
-        'home'  => env('AUTH0_ROUTE_HOME', '/'),
-        'login' => env('AUTH0_ROUTE_LOGIN', 'login'),
+    'default' => [
+        Configuration::CONFIG_STRATEGY => Configuration::get(Configuration::CONFIG_STRATEGY, Strategy::STRATEGY_NONE),
+        Configuration::CONFIG_DOMAIN => Configuration::get(Configuration::CONFIG_DOMAIN),
+        Configuration::CONFIG_CUSTOM_DOMAIN => Configuration::get(Configuration::CONFIG_CUSTOM_DOMAIN),
+        Configuration::CONFIG_CLIENT_ID => Configuration::get(Configuration::CONFIG_CLIENT_ID),
+        Configuration::CONFIG_CLIENT_SECRET => Configuration::get(Configuration::CONFIG_CLIENT_SECRET),
+        Configuration::CONFIG_AUDIENCE => Configuration::get(Configuration::CONFIG_AUDIENCE),
+        Configuration::CONFIG_ORGANIZATION => Configuration::get(Configuration::CONFIG_ORGANIZATION),
+        Configuration::CONFIG_USE_PKCE => Configuration::get(Configuration::CONFIG_USE_PKCE, true),
+        Configuration::CONFIG_SCOPE => Configuration::get(Configuration::CONFIG_SCOPE, ['openid', 'profile', 'email']),
+        Configuration::CONFIG_RESPONSE_MODE => Configuration::get(Configuration::CONFIG_RESPONSE_MODE, 'query'),
+        Configuration::CONFIG_RESPONSE_TYPE => Configuration::get(Configuration::CONFIG_RESPONSE_TYPE, 'code'),
+        Configuration::CONFIG_TOKEN_ALGORITHM => Configuration::get(Configuration::CONFIG_TOKEN_ALGORITHM, Token::ALGO_RS256),
+        Configuration::CONFIG_TOKEN_JWKS_URI => Configuration::get(Configuration::CONFIG_TOKEN_JWKS_URI),
+        Configuration::CONFIG_TOKEN_MAX_AGE => Configuration::get(Configuration::CONFIG_TOKEN_MAX_AGE),
+        Configuration::CONFIG_TOKEN_LEEWAY => Configuration::get(Configuration::CONFIG_TOKEN_LEEWAY, 60),
+        Configuration::CONFIG_TOKEN_CACHE => Configuration::get(Configuration::CONFIG_TOKEN_CACHE),
+        Configuration::CONFIG_TOKEN_CACHE_TTL => Configuration::get(Configuration::CONFIG_TOKEN_CACHE_TTL, 60),
+        Configuration::CONFIG_HTTP_MAX_RETRIES => Configuration::get(Configuration::CONFIG_HTTP_MAX_RETRIES, 3),
+        Configuration::CONFIG_HTTP_TELEMETRY => Configuration::get(Configuration::CONFIG_HTTP_TELEMETRY, true),
+        Configuration::CONFIG_SESSION_STORAGE => Configuration::get(Configuration::CONFIG_SESSION_STORAGE),
+        Configuration::CONFIG_SESSION_STORAGE_ID => Configuration::get(Configuration::CONFIG_SESSION_STORAGE_ID, 'auth0_session'),
+        Configuration::CONFIG_TRANSIENT_STORAGE => Configuration::get(Configuration::CONFIG_TRANSIENT_STORAGE),
+        Configuration::CONFIG_TRANSIENT_STORAGE_ID => Configuration::get(Configuration::CONFIG_TRANSIENT_STORAGE_ID, 'auth0_transient'),
+        Configuration::CONFIG_MANAGEMENT_TOKEN => Configuration::get(Configuration::CONFIG_MANAGEMENT_TOKEN),
+        Configuration::CONFIG_MANAGEMENT_TOKEN_CACHE => Configuration::get(Configuration::CONFIG_MANAGEMENT_TOKEN_CACHE),
+        Configuration::CONFIG_CLIENT_ASSERTION_SIGNING_KEY => Configuration::get(Configuration::CONFIG_CLIENT_ASSERTION_SIGNING_KEY),
+        Configuration::CONFIG_CLIENT_ASSERTION_SIGNING_ALGORITHM => Configuration::get(Configuration::CONFIG_CLIENT_ASSERTION_SIGNING_ALGORITHM, Token::ALGO_RS256),
+        Configuration::CONFIG_PUSHED_AUTHORIZATION_REQUEST => Configuration::get(Configuration::CONFIG_PUSHED_AUTHORIZATION_REQUEST, false),
     ],
 
-    'behavior' => [
-        // If TRUE, the Guard will follow < 7.5 behavior in which calling Guard::user() will automatically login a user using discovered credentials, if they are not already.
-        // Note that if this property is missing from the configuration, the SDK will default to true as a fallback for previous behavior.
-        // You must explicitly set it to FALSE to disable this behavior.
-        'legacyGuardUserMethod' => Configuration::stringToBoolOrNull(env('AUTH0_BEHAVIOR_LEGACY_GUARD_USER_METHOD'), false),
-    ]
+    'api' => [
+        Configuration::CONFIG_STRATEGY => Strategy::STRATEGY_API,
+    ],
+
+    'web' => [
+        Configuration::CONFIG_STRATEGY => Strategy::STRATEGY_REGULAR,
+        Configuration::CONFIG_REDIRECT_URI => Configuration::get(Configuration::CONFIG_REDIRECT_URI, env('APP_URL') . '/callback'),
+        Configuration::CONFIG_COOKIE_SECRET => Configuration::get(Configuration::CONFIG_COOKIE_SECRET, env('APP_KEY')),
+    ],
+
+    'registerGuards' => true,
+    'registerMiddleware' => true,
+    'registerAuthenticationRoutes' => true,
 ];

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Facade;
 
-use Illuminate\Support\Facades\Facade as FacadeContract;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  */
-final class Auth0 extends FacadeContract
+final class Auth0 extends Facade
 {
     /**
      * Get the registered name of the component.

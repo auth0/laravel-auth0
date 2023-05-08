@@ -21,7 +21,7 @@ final class TokenVerificationAttempting extends Auth0Event implements TokenVerif
 
     public function setToken(string $token): self
     {
-        $this->token   = $token;
+        $this->token = $token;
         $this->mutated = true;
 
         return $this;

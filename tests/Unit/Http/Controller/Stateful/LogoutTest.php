@@ -21,7 +21,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
 
     $this->validSession = [
@@ -38,7 +38,7 @@ beforeEach(function (): void {
 it('redirects to the home route if an incompatible guard is active', function (): void {
     config($config = [
         'auth.defaults.guard' => 'web',
-        'auth.guards.testGuard' => null
+        'auth.guards.legacyGuard' => null
     ]);
 
     $this->get('/logout')

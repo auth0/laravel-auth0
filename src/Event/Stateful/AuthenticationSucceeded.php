@@ -21,7 +21,7 @@ final class AuthenticationSucceeded extends Auth0Event implements Authentication
 
     public function setUser(Authenticatable $user): self
     {
-        $this->user    = $user;
+        $this->user = $user;
         $this->mutated = true;
 
         return $this;

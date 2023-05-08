@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+-   This release adds support for authenticating using **[Pushed Authorization Requests](https://www.rfc-editor.org/rfc/rfc6749)**.
+
+-   This release introduces **two new Authentication Guards** which provide a streamlined integration experience for developers that need to simultaneously support both session-based authentication and token-based endpoint authorization in their Laravel applications.
+
+    | Guard                | Class                                    | Description                   |
+    | -------------------- | ---------------------------------------- | ----------------------------- |
+    | `auth0.sessionGuard` | `Auth0\Laravel\Auth\Guards\SessionGuard` | Session-based authentication. |
+    | `auth0.tokenGuard`   | `Auth0\Laravel\Auth\Guards\TokenGuard`   | Token-based authorization.    |
+
+-   These guards are **compatible with Laravel's Authentication and Gate APIs**. These also support Laravel's native `auth` middleware, and do not require any custom routing middleware.
+
+### Improved
+
+-   We've introduced **a new configuration syntax**. This new syntax is more flexible, and allows for more complex configuration scenarios. It also allows more efficient configuration of multiple guards. Developers using the previous syntax will have their existing configurations applied to all guards uniformly, to avoid a breaking change.
+
+-   The SDK can now **configure itself using a `.auth0.json` file in the project root directory**. This file can be generated [using the Auth0 CLI](./docs/JSON%20Configuration.md), and provides a significantly simpler configuration experience for developers.
+
+-   The previous `auth0.guard` Guard (`Auth0\Laravel\Auth\Guard`) has been **refactored** as a lightweight wrapper around the new `SessionGuard` and `TokenGuard` guards.
+
 ## [7.7.0](https://github.com/auth0/laravel-auth0/tree/7.7.0) (2023-04-26)
 
 ### Added

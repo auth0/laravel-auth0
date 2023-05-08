@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Cache;
 
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
@@ -25,8 +24,8 @@ final class LaravelCacheItem implements CacheItemInterface
     public function expiresAfter(int | DateInterval | null $time): static
     {
         $this->expiration = match (true) {
-            null === $time                => new DateTimeImmutable('now +1 year'),
-            is_int($time)                 => new DateTimeImmutable('now +' . (string) $time . ' seconds'),
+            null === $time => new DateTimeImmutable('now +1 year'),
+            is_int($time) => new DateTimeImmutable('now +' . (string) $time . ' seconds'),
             $time instanceof DateInterval => (new DateTimeImmutable())->add($time),
         };
 
@@ -50,7 +49,7 @@ final class LaravelCacheItem implements CacheItemInterface
      */
     public function getExpiration(): DateTimeInterface
     {
-        return $this->expiration ?? new DateTime('now +1 year');
+        return $this->expiration ?? new DateTimeImmutable('now +1 year');
     }
 
     public function getKey(): string

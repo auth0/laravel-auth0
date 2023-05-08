@@ -6,11 +6,13 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Auth\User\Provider;
 use Auth0\Laravel\Auth\User\Repository;
 use Auth0\Laravel\Auth0;
+use Auth0\Laravel\Auth\Guards\{SessionGuard, TokenGuard};
 use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
 use Auth0\Laravel\Http\Middleware\Stateful\{Authenticate, AuthenticateOptional};
 use Auth0\Laravel\Http\Middleware\Stateless\{Authorize, AuthorizeOptional};
 use Auth0\Laravel\Http\Middleware\Guard as ShouldUseMiddleware;
 use Auth0\Laravel\Store\LaravelSession;
+use Illuminate\Support\Facades\Auth;
 
 uses()->group('service-provider');
 
@@ -31,7 +33,9 @@ it('provides the expected classes', function (): void {
             Logout::class,
             Provider::class,
             Repository::class,
-            ShouldUseMiddleware::class
+            SessionGuard::class,
+            ShouldUseMiddleware::class,
+            TokenGuard::class,
         ]);
 });
 
@@ -50,7 +54,7 @@ it('creates a Auth0 singleton', function (): void {
 });
 
 it('does NOT create a Guard singleton', function (): void {
-    $singleton1 = $this->app->make('auth0.guard');
+    $singleton1 = auth()->guard('legacyGuard');
     $singleton2 = $this->app->make(Guard::class);
 
     expect($singleton1)
@@ -77,8 +81,8 @@ it('creates a Repository singleton', function (): void {
         ->toBe($singleton2);
 });
 
-it('creates a Provider singleton', function (): void {
-    $singleton1 = $this->app->make('auth0.provider');
+it('does NOT a Provider singleton', function (): void {
+    $singleton1 = Auth::createUserProvider('testProvider');
     $singleton2 = $this->app->make(Provider::class);
 
     expect($singleton1)
@@ -88,7 +92,7 @@ it('creates a Provider singleton', function (): void {
         ->toBeInstanceOf(Provider::class);
 
     expect($singleton1)
-        ->toBe($singleton2);
+        ->not()->toBe($singleton2);
 });
 
 it('creates a Authenticate singleton', function (): void {

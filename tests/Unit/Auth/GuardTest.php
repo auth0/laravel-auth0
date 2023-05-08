@@ -9,6 +9,10 @@ use Auth0\Laravel\Entities\Credential;
 use Auth0\Laravel\Model\Stateful\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Support\Facades\Route;
+use PsrMock\Psr18\Client as MockHttpClient;
+use PsrMock\Psr17\RequestFactory as MockRequestFactory;
+use PsrMock\Psr17\ResponseFactory as MockResponseFactory;
+use PsrMock\Psr17\StreamFactory as MockStreamFactory;
 
 uses()->group('auth', 'auth.guard', 'auth.guard.shared');
 
@@ -25,7 +29,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();
@@ -40,7 +44,7 @@ beforeEach(function (): void {
 it('returns its configured name', function (): void {
     expect($this->guard)
         ->toBeInstanceOf(Guard::class)
-        ->getName()->toBe('testGuard');
+        ->getName()->toBe('legacyGuard');
 });
 
 it('assigns a user at login', function (): void {
@@ -204,4 +208,50 @@ it('gets/sets a credentials', function (): void {
 
     expect($this->guard)
         ->user()->toBe($this->user);
+});
+
+it('queries the /userinfo endpoint', function (): void {
+    $credential = Credential::create(
+        user: $this->user,
+        idToken: uniqid(),
+        accessToken: uniqid(),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
+
+    expect($this->guard)
+        ->user()->toBe($this->user);
+
+    $requestFactory = new MockRequestFactory;
+    $responseFactory = new MockResponseFactory;
+    $streamFactory = new MockStreamFactory;
+
+    $identifier = 'updated|' . uniqid();
+
+    $response = $responseFactory->createResponse(200);
+    $response->getBody()->write(json_encode(
+        [
+            'sub' => $identifier,
+        ],
+        JSON_PRETTY_PRINT
+    ));
+
+    $client = new MockHttpClient(fallbackResponse: $response);
+
+    $this->config->setHttpRequestFactory($requestFactory);
+    $this->config->setHttpResponseFactory($responseFactory);
+    $this->config->setHttpStreamFactory($streamFactory);
+    $this->config->setHttpClient($client);
+
+    $this->guard->refreshUser();
+
+    $userAttributes = $this->guard->user()->getAttributes();
+
+    expect($userAttributes)
+        ->toBeArray()
+        ->toMatchArray([
+            'sub' => $identifier,
+        ]);
 });

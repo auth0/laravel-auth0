@@ -29,7 +29,7 @@ final class AuthenticationFailed extends Auth0Event implements AuthenticationFai
     public function setException(Throwable $exception): self
     {
         $this->exception = $exception;
-        $this->mutated   = true;
+        $this->mutated = true;
 
         return $this;
     }

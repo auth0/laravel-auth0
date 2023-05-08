@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Http\Controller\Stateful;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Contract\Auth\Guard as GuardContract;
-use Auth0\Laravel\Contract\Entities\Credential;
+use Auth0\Laravel\Contract\Auth\Guards\SessionGuardContract;
+use Auth0\Laravel\Contract\Entities\CredentialContract;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Callback as CallbackContract;
+use Auth0\Laravel\Exception\ControllerException;
 use Auth0\Laravel\Event\Stateful\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exception\Stateful\CallbackException;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
@@ -31,14 +32,15 @@ final class Callback extends ControllerAbstract implements CallbackContract
     ): Response {
         $guard = auth()->guard();
 
-        if (! $guard instanceof GuardContract || $guard->check()) {
-            return redirect()->intended(config('auth0.routes.home', '/'));
+        if (! $guard instanceof SessionGuardContract) {
+            logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', get_class($this), get_class($guard)), $request->toArray());
+            throw new ControllerException(ControllerException::ROUTED_USING_INCOMPATIBLE_GUARD);
         }
 
-        $code    = $request->query('code');
-        $state   = $request->query('state');
-        $code    = is_string($code) ? trim($code) : '';
-        $state   = is_string($state) ? trim($state) : '';
+        $code = $request->query('code');
+        $state = $request->query('state');
+        $code = is_string($code) ? trim($code) : '';
+        $state = is_string($state) ? trim($state) : '';
         $success = false;
 
         if ('' === $code) {
@@ -58,20 +60,20 @@ final class Callback extends ControllerAbstract implements CallbackContract
             if (null !== $code && null !== $state) {
                 event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
 
-                $success = $this->getSdk()->exchange(
+                $success = $guard->sdk()->exchange(
                     code: $code,
                     state: $state,
                 );
             }
         } catch (Throwable $throwable) {
-            $credentials          = $this->getSdk()->getUser() ?? [];
-            $credentials['code']  = $code;
+            $credentials = $guard->sdk()->getUser() ?? [];
+            $credentials['code'] = $code;
             $credentials['state'] = $state;
             $credentials['error'] = ['description' => $throwable->getMessage()];
 
             event(new Failed($guard::class, $guard->user(), $credentials));
 
-            $this->getSdk()->clear();
+            $guard->sdk()->clear();
 
             // Throw hookable $event to allow custom error handling scenarios.
             $event = new AuthenticationFailed($throwable, true);
@@ -85,21 +87,21 @@ final class Callback extends ControllerAbstract implements CallbackContract
 
         if (null !== $request->query('error') && null !== $request->query('error_description')) {
             // Workaround to aid static analysis, due to the mixed formatting of the query() response:
-            $error            = $request->query('error', '');
+            $error = $request->query('error', '');
             $errorDescription = $request->query('error_description', '');
-            $error            = is_string($error) ? $error : '';
+            $error = is_string($error) ? $error : '';
             $errorDescription = is_string($errorDescription) ? $errorDescription : '';
 
             event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
 
             event(new Failed($guard::class, $guard->user(), [
-                'code'  => $code,
+                'code' => $code,
                 'state' => $state,
-                'error' => ['error' => $error, 'description' => $errorDescription]
+                'error' => ['error' => $error, 'description' => $errorDescription],
             ]));
 
             // Clear the local session via the Auth0-PHP SDK:
-            $this->getSdk()->clear();
+            $guard->getSdk()->clear();
 
             // Create a dynamic exception to report the API error response
             $exception = new CallbackException(sprintf(CallbackException::MSG_API_RESPONSE, $error, $errorDescription));
@@ -118,13 +120,13 @@ final class Callback extends ControllerAbstract implements CallbackContract
         }
 
         if (! $success) {
-            return redirect()->intended(config('auth0.routes.login', '/'));
+            return redirect()->intended(config('auth0.routes.login', 'login'));
         }
 
         $credential = $guard->find(Guard::SOURCE_SESSION);
-        $user       = $credential?->getUser();
+        $user = $credential?->getUser();
 
-        if ($credential instanceof Credential && $user instanceof Authenticatable) {
+        if ($credential instanceof CredentialContract && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
             $guard->login($credential, Guard::SOURCE_SESSION);
 

@@ -21,7 +21,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
 
     $this->validSession = [
@@ -42,7 +42,7 @@ it('does not assign a user when an incompatible guard is used', function (): voi
 
     config($config = [
         'auth.defaults.guard' => 'web',
-        'auth.guards.testGuard' => null
+        'auth.guards.legacyGuard' => null
     ]);
 
     $this->get($route)

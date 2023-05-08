@@ -27,7 +27,7 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = auth('testGuard');
+    $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();

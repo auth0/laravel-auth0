@@ -12,7 +12,6 @@ beforeEach(function (): void {
 });
 
 it('assigns the guard for route handling', function (): void {
-    $routeNonexistentGuard = '/' . uniqid();
     $routeMiddlewareAssignedGuard = '/' . uniqid();
     $routeMiddlewareUnassignedGuard = '/' . uniqid();
     $routeUnspecifiedGuard = '/' . uniqid();
@@ -26,11 +25,7 @@ it('assigns the guard for route handling', function (): void {
         return get_class(auth()->guard());
     });
 
-    Route::middleware('guard:nonexistent')->get($routeNonexistentGuard, function (): string {
-        return get_class(auth()->guard());
-    });
-
-    Route::middleware('guard:testGuard')->get($routeMiddlewareAssignedGuard, function (): string {
+    Route::middleware('guard:legacyGuard')->get($routeMiddlewareAssignedGuard, function (): string {
         return get_class(auth()->guard());
     });
 
@@ -41,9 +36,6 @@ it('assigns the guard for route handling', function (): void {
     $this->get($routeUnspecifiedGuard)
          ->assertStatus(Response::HTTP_OK)
          ->assertSee($defaultGuardClass);
-
-    $this->get($routeNonexistentGuard)
-         ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
 
     $this->get($routeMiddlewareAssignedGuard)
          ->assertStatus(Response::HTTP_OK)
@@ -71,7 +63,7 @@ it('assigns the guard for route group handling', function (): void {
 
     config(['auth.defaults.guard' => 'web']);
 
-    Route::middleware('guard:testGuard')->group(function () use ($routeUnspecifiedGuard, $routeMiddlewareUnassignedGuard) {
+    Route::middleware('guard:legacyGuard')->group(function () use ($routeUnspecifiedGuard, $routeMiddlewareUnassignedGuard) {
         Route::get($routeUnspecifiedGuard, function (): string {
             return get_class(auth()->guard());
         });

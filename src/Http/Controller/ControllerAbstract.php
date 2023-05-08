@@ -14,16 +14,4 @@ use Illuminate\Routing\Controller;
  */
 abstract class ControllerAbstract extends Controller
 {
-    final public function getSdk(): SDK
-    {
-        $service = app('auth0');
-
-        // @phpstan-ignore-next-line
-        if ($service instanceof Service) {
-            return $service->getSdk();
-        }
-
-        // @phpstan-ignore-next-line
-        return Auth0::getSdk();
-    }
 }

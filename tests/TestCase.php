@@ -23,7 +23,7 @@ class TestCase extends BaseTestCase
     {
         $app['config']->set('auth', [
             'defaults' => [
-                'guard' => 'testGuard',
+                'guard' => 'legacyGuard',
                 'passwords' => 'users',
             ],
             'guards' => [
@@ -31,8 +31,16 @@ class TestCase extends BaseTestCase
                     'driver' => 'session',
                     'provider' => 'users',
                 ],
-                'testGuard' => [
+                'legacyGuard' => [
                     'driver' => 'auth0.guard',
+                    'provider' => 'testProvider',
+                ],
+                'sessionGuard' => [
+                    'driver' => 'auth0.sessionGuard',
+                    'provider' => 'testProvider',
+                ],
+                'tokenGuard' => [
+                    'driver' => 'auth0.tokenGuard',
                     'provider' => 'testProvider',
                 ],
             ],

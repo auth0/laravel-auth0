@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Entities;
 
-use Auth0\Laravel\Contract\Entities\Credential as CredentialContract;
+use Auth0\Laravel\Contract\Entities\CredentialContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 final class Credential implements CredentialContract
@@ -16,6 +16,7 @@ final class Credential implements CredentialContract
      * @param null|array<string>   $accessTokenScope      The access token scope for this credential.
      * @param null|int             $accessTokenExpiration The access token expiration for this credential.
      * @param null|string          $refreshToken          The refresh token for this credential.
+     * @param null|array<string>   $accessTokenDecoded    The decoded access token for this credential.
      */
     public function __construct(
         private ?Authenticatable $user = null,
@@ -24,17 +25,19 @@ final class Credential implements CredentialContract
         private ?array $accessTokenScope = null,
         private ?int $accessTokenExpiration = null,
         private ?string $refreshToken = null,
+        private ?array $accessTokenDecoded = null,
     ) {
     }
 
     public function clear(): self
     {
-        $this->user                  = null;
-        $this->idToken               = null;
-        $this->accessToken           = null;
-        $this->accessTokenScope      = null;
+        $this->user = null;
+        $this->idToken = null;
+        $this->accessToken = null;
+        $this->accessTokenDecoded = null;
+        $this->accessTokenScope = null;
         $this->accessTokenExpiration = null;
-        $this->refreshToken          = null;
+        $this->refreshToken = null;
 
         return $this;
     }
@@ -58,6 +61,14 @@ final class Credential implements CredentialContract
         }
 
         return time() >= $expires;
+    }
+
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
+    public function getAccessTokenDecoded(): ?array
+    {
+        return $this->accessTokenDecoded;
     }
 
     /**
@@ -89,13 +100,14 @@ final class Credential implements CredentialContract
     public function jsonSerialize(): mixed
     {
         return [
-            'user'                  => json_encode($this->getUser(), JSON_FORCE_OBJECT),
-            'idToken'               => $this->getIdToken(),
-            'accessToken'           => $this->getAccessToken(),
-            'accessTokenScope'      => $this->getAccessTokenScope(),
+            'user' => json_encode($this->getUser(), JSON_FORCE_OBJECT),
+            'idToken' => $this->getIdToken(),
+            'accessToken' => $this->getAccessToken(),
+            'accessTokenDecoded' => $this->getAccessTokenDecoded(),
+            'accessTokenScope' => $this->getAccessTokenScope(),
             'accessTokenExpiration' => $this->getAccessTokenExpiration(),
-            'accessTokenExpired'    => $this->getAccessTokenExpired(),
-            'refreshToken'          => $this->getRefreshToken(),
+            'accessTokenExpired' => $this->getAccessTokenExpired(),
+            'refreshToken' => $this->getRefreshToken(),
         ];
     }
 
@@ -119,6 +131,14 @@ final class Credential implements CredentialContract
         ?array $accessTokenScope = null,
     ): self {
         $this->accessTokenScope = $accessTokenScope;
+
+        return $this;
+    }
+
+    public function setAccessTokenDecoded(
+        ?array $accessTokenDecoded = null,
+    ): self {
+        $this->accessTokenDecoded = $accessTokenDecoded;
 
         return $this;
     }
@@ -154,6 +174,7 @@ final class Credential implements CredentialContract
         ?array $accessTokenScope = null,
         ?int $accessTokenExpiration = null,
         ?string $refreshToken = null,
+        ?array $accessTokenDecoded = null,
     ): self {
         return new self(
             $user,
@@ -162,6 +183,7 @@ final class Credential implements CredentialContract
             $accessTokenScope,
             $accessTokenExpiration,
             $refreshToken,
+            $accessTokenDecoded,
         );
     }
 }
