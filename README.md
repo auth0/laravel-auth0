@@ -221,7 +221,7 @@ The SDK supports [Laravel's Authorization API](https://laravel.com/docs/authoriz
 | Gate    | Facade Usage                     | Middleware Usage                              | Purpose |
 | ------- | -------------------------------- | --------------------------------------------- | ------- |
 | `scope` | `Gate::check('scope', 'email');` | `Route::get(/*...*/)->can('scope', 'email');` | Determine if the user's access token has a specified [scope](https://auth0.com/docs/get-started/apis/scopes). |
-| `permission` | `Gate::check('permission', 'read:messages');` | `Route::get(/*...*/)->can('permission', 'read:messages');` | Determine if the user's access token has a specified [permission](https://auth0.com/docs/manage-users/access-control/rbac). You must enable RBAC on [your Auth0 API's settings](https://manage.auth0.com/#/apis). |
+| `permission` | `Gate::check('permission', 'read:messages');` | `Route::get(/*...*/)->can('permission', 'read:messages');` | Determine if the user's access token has a specified [permission](https://auth0.com/docs/manage-users/access-control/rbac). This requires RBAC be enabled on [your Auth0 API's settings](https://manage.auth0.com/#/apis). |
 | `*:*` | `Gate::check('read:messages');` | `Route::get(/*...*/)->can('read:messages');` | A convenience alias for `permission` (described above), you can supply any permission string in the colon-delimited `ability:context` syntax. |
 
 Using these gates, you can easily authorize users or access tokens to perform actions in your application. Your application can use Laravel's [Policies API](https://laravel.com/docs/10.x/authorization#creating-policies) in combination with these gates to further simplify authorization.
