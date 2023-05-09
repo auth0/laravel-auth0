@@ -11,6 +11,7 @@ use Auth0\Laravel\Entities\{Configuration, ConfigurationContract, Credential};
 use Auth0\Laravel\Exception\{AuthenticationException, GuardException};
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
+use Auth0\Laravel\Configuration as ConfigurationHelper;
 use Exception;
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Session\Session;
@@ -199,11 +200,20 @@ abstract class AbstractGuard implements GuardContract
         $reset = false,
     ): Auth0Interface {
         if (! $this->sdk instanceof ConfigurationContract || true === $reset) {
-            $configuration = $this->config['configuration'] ?? $this->name;
+            $configuration = [];
 
-            $defaultConfiguration = config('auth0.default') ?? [];
-            $guardConfiguration = config('auth0.' . $configuration) ?? [];
-            $configuration = array_merge($defaultConfiguration, $guardConfiguration);
+            if (ConfigurationHelper::version() === ConfigurationHelper::VERSION_2) {
+                $configuration = $this->config['configuration'] ?? $this->name;
+
+                $defaultConfiguration = config('auth0.default') ?? [];
+                $guardConfiguration = config('auth0.' . $configuration) ?? [];
+                $configuration = array_merge($defaultConfiguration, $guardConfiguration);
+            }
+
+            // Fallback to the legacy configuration format if a version is not defined.
+            if (ConfigurationHelper::version() !== ConfigurationHelper::VERSION_2) {
+                $configuration = config('auth0');
+            }
 
             $this->sdk = Configuration::create($configuration);
         }
