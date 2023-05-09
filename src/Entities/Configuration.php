@@ -86,7 +86,6 @@ class Configuration implements ConfigurationContract
 
     public function management(): ManagementInterface
     {
-        // dd($this->getConfiguration());
         return $this->getSdk()->management();
     }
 

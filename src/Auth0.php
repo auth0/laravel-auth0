@@ -30,7 +30,7 @@ final class Auth0 extends Configuration implements ServiceContract
     public static function routes(
         string $authenticationGuard = 'auth0-session'
     ): void {
-        Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], function () {
+        Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], static function () : void {
             Route::get('/login', Login::class)->name('login');
             Route::get('/logout', Logout::class)->name('logout');
             Route::get('/callback', Callback::class)->name('callback');

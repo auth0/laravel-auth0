@@ -66,8 +66,6 @@ final class Provider implements ProviderContract
 
         $guard = auth()->guard();
 
-        var_dump(get_class($guard));
-
         if (! $guard instanceof TokenGuardContract) {
             return null;
         }

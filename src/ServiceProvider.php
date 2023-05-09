@@ -48,33 +48,27 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         $router->aliasMiddleware('auth0.authorize', Authorize::class);
         $router->aliasMiddleware('guard', GuardMiddleware::class);
 
-        $gate->define('scope', function (Authenticatable $user, string $scope, ?GuardContract $guard = null): bool {
+        $gate->define('scope', static function (Authenticatable $user, string $scope, ?GuardContract $guard = null) : bool {
             $guard ??= auth()->guard();
-
             if (! $guard instanceof GuardContract) {
                 return false;
             }
-
             return $guard->hasScope($scope);
         });
 
-        $gate->define('permission', function (Authenticatable $user, string $permission, ?GuardContract $guard = null): bool {
+        $gate->define('permission', static function (Authenticatable $user, string $permission, ?GuardContract $guard = null) : bool {
             $guard ??= auth()->guard();
-
             if (! $guard instanceof GuardContract) {
                 return false;
             }
-
             return $guard->hasPermission($permission);
         });
 
-        $gate->before(function ($user, $ability) {
+        $gate->before(static function ($user, $ability) {
             $guard = auth()->guard();
-
             if (! $guard instanceof GuardContract || ! $user instanceof Authenticatable || ! is_string($ability)) {
                 return;
             }
-
             if (str_starts_with($ability, 'scope:')) {
                 if ($guard->hasScope(substr($ability, 6))) {
                     return Response::allow();
@@ -82,7 +76,6 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
 
                 return Response::deny();
             }
-
             if (str_contains($ability, ':')) {
                 if ($guard->hasPermission($ability)) {
                     return Response::allow();
@@ -99,7 +92,7 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         }
 
         if (config('auth0.registerAuthenticationRoutes') === true) {
-            Route::group(['middleware' => 'web'], function () {
+            Route::group(['middleware' => 'web'], static function () : void {
                 Route::get('/login', Login::class)->name('login');
                 Route::get('/logout', Logout::class)->name('logout');
                 Route::get('/callback', Callback::class)->name('callback');

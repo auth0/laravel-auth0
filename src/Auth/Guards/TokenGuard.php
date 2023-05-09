@@ -129,8 +129,6 @@ final class TokenGuard extends AbstractGuard implements TokenGuardContract
             if (HttpResponse::wasSuccessful($response)) {
                 $response = HttpResponse::decodeContent($response);
 
-                var_dump($response); exit;
-
                 if (! is_array($response)) {
                     return;
                 }

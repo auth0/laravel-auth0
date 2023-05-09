@@ -19,78 +19,192 @@ final class Configuration implements ConfigurationContract
     private static ?array $json = null;
     private static ?string $path = null;
 
+    /**
+     * @var array<string, int>
+     */
     PUBLIC CONST VERSION_2 = ['AUTH0_CONFIG_VERSION' => 2];
 
+    /**
+     * @var string
+     */
     public const CONFIG_STRATEGY = 'strategy';
+    /**
+     * @var string
+     */
     public const CONFIG_DOMAIN = 'domain';
+    /**
+     * @var string
+     */
     public const CONFIG_CUSTOM_DOMAIN = 'customDomain';
+    /**
+     * @var string
+     */
     public const CONFIG_CLIENT_ID = 'clientId';
+    /**
+     * @var string
+     */
     public const CONFIG_REDIRECT_URI = 'redirectUri';
+    /**
+     * @var string
+     */
     public const CONFIG_CLIENT_SECRET = 'clientSecret';
+    /**
+     * @var string
+     */
     public const CONFIG_AUDIENCE = 'audience';
+    /**
+     * @var string
+     */
     public const CONFIG_ORGANIZATION = 'organization';
+    /**
+     * @var string
+     */
     public const CONFIG_USE_PKCE = 'usePkce';
+    /**
+     * @var string
+     */
     public const CONFIG_SCOPE = 'scope';
+    /**
+     * @var string
+     */
     public const CONFIG_RESPONSE_MODE = 'responseMode';
+    /**
+     * @var string
+     */
     public const CONFIG_RESPONSE_TYPE = 'responseType';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_ALGORITHM = 'tokenAlgorithm';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_JWKS_URI = 'tokenJwksUri';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_MAX_AGE = 'tokenMaxAge';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_LEEWAY = 'tokenLeeway';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_CACHE = 'tokenCache';
+    /**
+     * @var string
+     */
     public const CONFIG_TOKEN_CACHE_TTL = 'tokenCacheTtl';
+    /**
+     * @var string
+     */
     public const CONFIG_HTTP_MAX_RETRIES = 'httpMaxRetries';
+    /**
+     * @var string
+     */
     public const CONFIG_HTTP_TELEMETRY = 'httpTelemetry';
+    /**
+     * @var string
+     */
     public const CONFIG_SESSION_STORAGE = 'sessionStorage';
+    /**
+     * @var string
+     */
     public const CONFIG_SESSION_STORAGE_ID = 'sessionStorageId';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_SECRET = 'cookieSecret';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_DOMAIN = 'cookieDomain';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_EXPIRES = 'cookieExpires';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_PATH = 'cookiePath';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_SECURE = 'cookieSecure';
+    /**
+     * @var string
+     */
     public const CONFIG_COOKIE_SAME_SITE = 'cookieSameSite';
+    /**
+     * @var string
+     */
     public const CONFIG_TRANSIENT_STORAGE = 'transientStorage';
+    /**
+     * @var string
+     */
     public const CONFIG_TRANSIENT_STORAGE_ID = 'transientStorageId';
+    /**
+     * @var string
+     */
     public const CONFIG_MANAGEMENT_TOKEN = 'managementToken';
+    /**
+     * @var string
+     */
     public const CONFIG_MANAGEMENT_TOKEN_CACHE = 'managementTokenCache';
+    /**
+     * @var string
+     */
     public const CONFIG_CLIENT_ASSERTION_SIGNING_KEY = 'clientAssertionSigningKey';
+    /**
+     * @var string
+     */
     public const CONFIG_CLIENT_ASSERTION_SIGNING_ALGORITHM = 'clientAssertionSigningAlgorithm';
+    /**
+     * @var string
+     */
     public const CONFIG_PUSHED_AUTHORIZATION_REQUEST = 'pushedAuthorizationRequest';
+    /**
+     * @var string[]
+     */
+    private const USES_ARRAYS = [
+        self::CONFIG_AUDIENCE,
+        self::CONFIG_SCOPE,
+        self::CONFIG_ORGANIZATION,
+    ];
+    /**
+     * @var string[]
+     */
+    private const USES_BOOLEANS = [
+        self::CONFIG_USE_PKCE,
+        self::CONFIG_HTTP_TELEMETRY,
+        self::CONFIG_COOKIE_SECURE,
+        self::CONFIG_PUSHED_AUTHORIZATION_REQUEST,
+    ];
+    /**
+     * @var string[]
+     */
+    private const USES_INTEGERS = [
+        self::CONFIG_TOKEN_MAX_AGE,
+        self::CONFIG_TOKEN_LEEWAY,
+        self::CONFIG_TOKEN_CACHE_TTL,
+        self::CONFIG_HTTP_MAX_RETRIES,
+        self::CONFIG_COOKIE_EXPIRES
+    ];
 
     public static function get(
         string $setting,
         array|string|int|bool|null $default = null
     ): array|string|int|bool|null {
-        $usesArrays = [
-            self::CONFIG_AUDIENCE,
-            self::CONFIG_SCOPE,
-            self::CONFIG_ORGANIZATION,
-        ];
-
-        if (in_array($setting, $usesArrays, true)) {
+        if (in_array($setting, self::USES_ARRAYS, true)) {
             return self::stringToArrayOrNull(self::getValue($setting, $default), ',');
         }
 
-        $usesBooleans = [
-            self::CONFIG_USE_PKCE,
-            self::CONFIG_HTTP_TELEMETRY,
-            self::CONFIG_COOKIE_SECURE,
-            self::CONFIG_PUSHED_AUTHORIZATION_REQUEST,
-        ];
-
-        if (in_array($setting, $usesBooleans, true)) {
+        if (in_array($setting, self::USES_BOOLEANS, true)) {
             return self::stringToBoolOrNull(self::getValue($setting, $default), $default);
         }
 
-        $usesIntegers = [
-            self::CONFIG_TOKEN_MAX_AGE,
-            self::CONFIG_TOKEN_LEEWAY,
-            self::CONFIG_TOKEN_CACHE_TTL,
-            self::CONFIG_HTTP_MAX_RETRIES,
-            self::CONFIG_COOKIE_EXPIRES
-        ];
-
-        if (in_array($setting, $usesIntegers, true)) {
+        if (in_array($setting, self::USES_INTEGERS, true)) {
             return self::stringOrIntToIntOrNull(self::getValue($setting, $default), $default);
         }
 
@@ -114,13 +228,7 @@ final class Configuration implements ConfigurationContract
         array|bool|string|int|null $default = null
     ): array|bool|string|int|null {
         $env ??= 'AUTH0_' . strtoupper(Str::snake($setting));
-        $json = Str::snake($setting);
-
-        if ($setting === self::CONFIG_AUDIENCE) {
-            $json = 'identifier';
-        } else {
-            $json = Str::snake($setting);
-        }
+        $json = $setting === self::CONFIG_AUDIENCE ? 'identifier' : Str::snake($setting);
 
         $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
 
@@ -272,13 +380,15 @@ final class Configuration implements ConfigurationContract
                 }
 
                 $contents = file($path . $file, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-
-                if (! is_array($contents) || [] === $contents) {
+                if (! is_array($contents)) {
+                    continue;
+                }
+                if ([] === $contents) {
                     continue;
                 }
 
-                foreach($contents as $line) {
-                    [$k,$v] = explode('=', $line);
+                foreach($contents as $content) {
+                    [$k,$v] = explode('=', $content);
                     $v = trim($v);
 
                     if ('' === $v) {

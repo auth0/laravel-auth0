@@ -33,7 +33,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
         $guard = auth()->guard();
 
         if (! $guard instanceof SessionGuardContract) {
-            logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', get_class($this), get_class($guard)), $request->toArray());
+            logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', self::class, $guard::class), $request->toArray());
             throw new ControllerException(ControllerException::ROUTED_USING_INCOMPATIBLE_GUARD);
         }
 
