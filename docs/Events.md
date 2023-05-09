@@ -65,7 +65,9 @@ During logout with the `Auth0\Laravel\Http\Controller\Stateful\Logout` controlle
 | ------------------------------- | ------------------------------------------------------------------------------------ |
 | `Illuminate\Auth\Events\Logout` | Raised when a user is logging out. The model of the user is provided with the event. |
 
-## Authentication Middleware Events
+## Deprecated Middleware Events
+
+### Authentication Middleware Events
 
 During request handling with any `Auth0\Laravel\Http\Middleware\Stateful` middleware, the following events may be raised:
 
@@ -73,7 +75,7 @@ During request handling with any `Auth0\Laravel\Http\Middleware\Stateful` middle
 | ------------------------------------------------ | ---------------------------------------------------------------------------------- |
 | `Auth0\Laravel\Event\Middleware\StatefulRequest` | Raised when a request is being handled by a session-based ('stateful') middleware. |
 
-## Authorization Middleware Events
+### Authorization Middleware Events
 
 During request handling with any `Auth0\Laravel\Http\Controller\Stateless` middleware, the following events may be raised:
 
