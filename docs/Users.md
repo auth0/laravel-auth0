@@ -134,7 +134,7 @@ Once you have created your repository and model, you can integrate them into you
  * You should not remove any other entries from this array.
  */
 'providers' => [
-  'my-example-provider' => [
+  'auth0-provider' => [
     'driver' => 'auth0.provider',
     'repository' => \App\Repositories\UserRepository::class,
   ],
