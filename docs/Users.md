@@ -1,4 +1,4 @@
-# User Models and Repositories
+# Users
 
 The Auth0 Laravel SDK uses the repository pattern to allow the abstraction of potential database operations. This pattern is useful for building completely custom integrations that fit your application's needs.
 
