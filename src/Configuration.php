@@ -235,6 +235,11 @@ final class Configuration implements ConfigurationContract
 
     private static ?string $path = null;
 
+    public static function version(): int
+    {
+        return config('auth0.AUTH0_CONFIG_VERSION') ?? 1;
+    }
+
     public static function get(
         string $setting,
         array | string | int | bool | null $default = null,
