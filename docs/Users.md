@@ -1,6 +1,49 @@
 # Users
 
-## ...
+## Retrieving User Information
+
+To retrieve information about the currently authenticated user, use the `Auth::user()` method.
+
+```php
+auth()->user();
+```
+
+You can also retrieve information for any user using [the Management API](./Management.md). This also returns extended information about the user, including stored metadata.
+
+```php
+use Auth0\Laravel\Facade\Auth0;
+
+Route::get('/profile', function () {
+  $profile = Auth0::management()->users()->get(auth()->id());
+  $profile = Auth0::json($profile);
+
+  $name = $profile['name'] ?? 'Unknown';
+  $email = $profile['email'] ?? 'Unknown';
+
+  return response("Hello {$name}! Your email address is {$email}.");
+})->middleware('auth');
+```
+
+## Updating User Information
+
+To update a user's information, use [the Management API](./Management.md).
+
+```php
+use Auth0\Laravel\Facade\Auth0;
+
+Route::get('/update', function () {
+  Auth0::management()
+    ->users()
+    ->update(
+        id: auth()->id(),
+        body: [
+            'user_metadata' => [
+                'last_visited' => time()
+            ]
+        ]
+    );
+})->middleware('auth');
+```
 
 ## Custom User Models and Repositories
 
