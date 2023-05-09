@@ -2,7 +2,7 @@
 
 ## Retrieving User Information
 
-To retrieve information about the currently authenticated user, use the `Auth::user()` method.
+To retrieve information about the currently authenticated user, use the `user()` method on the `Auth0` facade, or the `auth0()` helper.
 
 ```php
 auth()->user();
