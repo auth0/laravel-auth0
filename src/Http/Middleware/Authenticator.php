@@ -12,9 +12,10 @@ final class Authenticator
 {
     public function handle(
         Request $request,
-        Closure $next
+        Closure $next,
     ): Response {
         auth()->shouldUse('auth0-session');
+
         return $next($request);
     }
 }

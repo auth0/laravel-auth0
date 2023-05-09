@@ -20,6 +20,13 @@ interface CredentialContract extends JsonSerializable
     public function getAccessToken(): ?string;
 
     /**
+     * Get the decoded access token content for this credential.
+     *
+     * @return null|array<string>
+     */
+    public function getAccessTokenDecoded(): ?array;
+
+    /**
      * Get the access token expiration for this credential.
      */
     public function getAccessTokenExpiration(): ?int;
@@ -35,13 +42,6 @@ interface CredentialContract extends JsonSerializable
      * @return null|array<string>
      */
     public function getAccessTokenScope(): ?array;
-
-    /**
-     * Get the decoded access token content for this credential.
-     *
-     * @return null|array<string>
-     */
-    public function getAccessTokenDecoded(): ?array;
 
     /**
      * Get the ID token for this credential.

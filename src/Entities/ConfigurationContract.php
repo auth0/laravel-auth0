@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Entities;
 
-use Auth0\SDK\Configuration\SdkConfiguration as SdkConfiguration;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface as Sdk;
 

@@ -29,6 +29,7 @@ final class Logout extends ControllerAbstract implements LogoutContract
 
         if (! $guard instanceof SessionGuardContract) {
             logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', self::class, $guard::class), $request->toArray());
+
             throw new ControllerException(ControllerException::ROUTED_USING_INCOMPATIBLE_GUARD);
         }
 

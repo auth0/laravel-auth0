@@ -2,12 +2,15 @@
 .gitattributes         export-ignore
 .github/               export-ignore
 .gitignore             export-ignore
+.php-cs-fixer.dist.php export-ignore
 .semgrepignore         export-ignore
 .shiprc                export-ignore
+CHANGELOG.ARCHIVE.md   export-ignore
 CHANGELOG.md           export-ignore
 docs/                  export-ignore
 EXAMPLES.md            export-ignore
 examples/              export-ignore
+infection.json5.dist   export-ignore
 opslevel.yml           export-ignore
 phpstan.neon.dist      export-ignore
 phpunit.xml.dist       export-ignore
@@ -16,6 +19,3 @@ rector.php             export-ignore
 tests/                 export-ignore
 UPGRADE.md             export-ignore
 vendor/                export-ignore
-CHANGELOG.ARCHIVE.md   export-ignore
-infection.json5.dist   export-ignore
-.php-cs-fixer.dist.php export-ignore

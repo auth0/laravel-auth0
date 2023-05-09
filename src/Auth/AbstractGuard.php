@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Auth;
 
 use Auth0\Laravel\Contract\Auth\GuardContract;
-use Auth0\Laravel\Entities\ConfigurationContract;
 use Auth0\Laravel\Contract\Entities\CredentialContract;
 use Auth0\Laravel\Contract\Exception\GuardException as GuardExceptionContract;
-use Auth0\Laravel\Entities\Configuration;
-use Auth0\Laravel\Entities\Credential;
+use Auth0\Laravel\Entities\{Configuration, ConfigurationContract, Credential};
 use Auth0\Laravel\Exception\{AuthenticationException, GuardException};
-use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\Contract\Auth0Interface;
 use Exception;
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Session\Session;
@@ -26,13 +24,13 @@ abstract class AbstractGuard implements GuardContract
 {
     private ?int $impersonationSource = null;
 
-    protected ?ConfigurationContract $sdk = null;
-
     protected ?CredentialContract $credential = null;
 
     protected ?CredentialContract $impersonating = null;
 
     protected ?UserProvider $provider = null;
+
+    protected ?ConfigurationContract $sdk = null;
 
     public function __construct(
         public string $name = '',
@@ -104,6 +102,13 @@ abstract class AbstractGuard implements GuardContract
         // @codeCoverageIgnoreEnd
     }
 
+    final public function getRefreshedUser(): ?Authenticatable
+    {
+        $this->refreshUser();
+
+        return $this->user();
+    }
+
     final public function getSession(): Session
     {
         $store = app('session.store');
@@ -125,25 +130,6 @@ abstract class AbstractGuard implements GuardContract
         return ! $this->check();
     }
 
-    final public function hasScope(
-        string $scope,
-        ?CredentialContract $credential = null,
-    ): bool {
-        $scope = trim($scope);
-
-        if ('*' === $scope) {
-            return true;
-        }
-
-        $available = $credential?->getAccessTokenScope() ?? $this->getCredential()?->getAccessTokenScope() ?? [];
-
-        if (is_array($available) && [] !== $available) {
-            return in_array($scope, $available, true);
-        }
-
-        return false;
-    }
-
     final public function hasPermission(
         string $permission,
         ?CredentialContract $credential = null,
@@ -159,6 +145,25 @@ abstract class AbstractGuard implements GuardContract
 
         if (is_array($available) && [] !== $available) {
             return in_array($permission, $available, true);
+        }
+
+        return false;
+    }
+
+    final public function hasScope(
+        string $scope,
+        ?CredentialContract $credential = null,
+    ): bool {
+        $scope = trim($scope);
+
+        if ('*' === $scope) {
+            return true;
+        }
+
+        $available = $credential?->getAccessTokenScope() ?? $this->getCredential()?->getAccessTokenScope() ?? [];
+
+        if (is_array($available) && [] !== $available) {
+            return in_array($scope, $available, true);
         }
 
         return false;
@@ -183,6 +188,27 @@ abstract class AbstractGuard implements GuardContract
     final public function isImpersonating(): bool
     {
         return $this->impersonating instanceof CredentialContract;
+    }
+
+    final public function management(): ManagementInterface
+    {
+        return $this->sdk()->management();
+    }
+
+    final public function sdk(
+        $reset = false,
+    ): Auth0Interface {
+        if (! $this->sdk instanceof ConfigurationContract || true === $reset) {
+            $configuration = $this->config['configuration'] ?? $this->name;
+
+            $defaultConfiguration = config('auth0.default') ?? [];
+            $guardConfiguration = config('auth0.' . $configuration) ?? [];
+            $configuration = array_merge($defaultConfiguration, $guardConfiguration);
+
+            $this->sdk = Configuration::create($configuration);
+        }
+
+        return $this->sdk->getSdk();
     }
 
     final public function setImpersonating(
@@ -233,11 +259,6 @@ abstract class AbstractGuard implements GuardContract
 
     abstract public function refreshUser(): void;
 
-    final public function getRefreshedUser(): ?Authenticatable {
-        $this->refreshUser();
-        return $this->user();
-    }
-
     /**
      * Sets the guard's currently configured credential.
      *
@@ -250,28 +271,6 @@ abstract class AbstractGuard implements GuardContract
     ): void;
 
     abstract public function user(): ?Authenticatable;
-
-    public function sdk(
-        $reset = false,
-    ): Auth0Interface
-    {
-        if (! $this->sdk instanceof ConfigurationContract || $reset === true) {
-            $configuration = $this->config['configuration'] ?? $this->name;
-
-            $defaultConfiguration = config('auth0.default') ?? [];
-            $guardConfiguration = config('auth0.' . $configuration) ?? [];
-            $configuration = array_merge($defaultConfiguration, $guardConfiguration);
-
-            $this->sdk = Configuration::create($configuration);
-        }
-
-        return $this->sdk->getSdk();
-    }
-
-    public function management(): ManagementInterface
-    {
-        return $this->sdk()->management();
-    }
 
     /**
      * Normalize a user model object for easier storage or comparison.

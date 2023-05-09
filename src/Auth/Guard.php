@@ -201,11 +201,6 @@ final class Guard extends AbstractGuard implements GuardContract
         return null;
     }
 
-    private function getCredentialSource(): ?int
-    {
-        return $this->credentialSource;
-    }
-
     private function getAuthenticationGuard(): SessionGuardContract
     {
         return $this->sessionGuard ??= new SessionGuard(name: $this->name, config: $this->config);
@@ -214,5 +209,10 @@ final class Guard extends AbstractGuard implements GuardContract
     private function getAuthorizationGuard(): TokenGuardContract
     {
         return $this->tokenGuard ??= new TokenGuard(name: $this->name, config: $this->config);
+    }
+
+    private function getCredentialSource(): ?int
+    {
+        return $this->credentialSource;
     }
 }

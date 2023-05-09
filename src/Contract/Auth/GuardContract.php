@@ -9,8 +9,8 @@ use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\{Authenticatable, Guard, UserProvider};
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Session\Session;
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
 
 interface GuardContract extends Guard
@@ -26,6 +26,11 @@ interface GuardContract extends Guard
      * Returns whether there is a currently authenticated user for the guard.
      */
     public function check(): bool;
+
+    /**
+     * Discover and return any potential credentials from the request.
+     */
+    public function find(): ?CredentialContract;
 
     /**
      * Clears the currently authenticated user for the guard. This will not clear a session, if one is set.
@@ -47,6 +52,11 @@ interface GuardContract extends Guard
     public function getProvider(): UserProvider;
 
     /**
+     * Queries the /userinfo endpoint, updates the currently authenticated user for the guard, and returns a new Authenticatable user representing the updated user.
+     */
+    public function getRefreshedUser(): ?Authenticatable;
+
+    /**
      * Returns a Laravel session store from the current Request context. Note that this will start a session if one is not already started.
      */
     public function getSession(): Session;
@@ -57,21 +67,10 @@ interface GuardContract extends Guard
     public function guest(): bool;
 
     /**
-     * Returns whether a credential has a specified scope, such as "read:users". Note that RBAC must be enabled for this to work.
-     *
-     * @param string             $scope      The scope to check for.
-     * @param CredentialContract|null $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
-     */
-    public function hasScope(
-        string $scope,
-        ?CredentialContract $credential = null,
-    ): bool;
-
-    /**
      * Returns whether a credential has a specified permission, such as "read:users". Note that RBAC must be enabled for this to work.
      *
-     * @param string             $permission      The permission to check for.
-     * @param CredentialContract|null $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
+     * @param string                  $permission The permission to check for.
+     * @param null|CredentialContract $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
      */
     public function hasPermission(
         string $permission,
@@ -79,14 +78,20 @@ interface GuardContract extends Guard
     ): bool;
 
     /**
+     * Returns whether a credential has a specified scope, such as "read:users". Note that RBAC must be enabled for this to work.
+     *
+     * @param string                  $scope      The scope to check for.
+     * @param null|CredentialContract $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
+     */
+    public function hasScope(
+        string $scope,
+        ?CredentialContract $credential = null,
+    ): bool;
+
+    /**
      * Returns whether there is a currently authenticated user for the guard.
      */
     public function hasUser(): bool;
-
-    /**
-     * Queries the /userinfo endpoint, updates the currently authenticated user for the guard, and returns a new Authenticatable user representing the updated user.
-     */
-    public function getRefreshedUser(): ?Authenticatable;
 
     /**
      * Returns the id of the currently authenticated user for the guard, if available.
@@ -101,9 +106,29 @@ interface GuardContract extends Guard
     public function logout(): self;
 
     /**
+     * Get an Auth0 Management API instance.
+     */
+    public function management(): ManagementInterface;
+
+    /**
      * Query the /userinfo endpoint and update the currently authenticated user for the guard.
      */
     public function refreshUser(): void;
+
+    /**
+     * Get an Auth0 PHP SDK instance.
+     *
+     * @param mixed $reset
+     *
+     * @throws BindingResolutionException  If the Auth0 class cannot be resolved.
+     * @throws NotFoundExceptionInterface  If the Auth0 service cannot be found.
+     * @throws ContainerExceptionInterface If the Auth0 service cannot be resolved.
+     *
+     * @return Auth0Interface Auth0 PHP SDK instance.
+     */
+    public function sdk(
+        $reset = false,
+    ): Auth0Interface;
 
     /**
      * Toggle the Guard's impersonation state. This should only be used by the Impersonate trait, and is not intended for use by end-users. It is public to allow for testing.
@@ -146,27 +171,4 @@ interface GuardContract extends Guard
      * This method is not currently implemented, but is required by Laravel's Guard contract.
      */
     public function viaRemember(): bool;
-
-    /**
-     * Discover and return any potential credentials from the request.
-     */
-    public function find(): ?CredentialContract;
-
-    /**
-     * Get an Auth0 PHP SDK instance.
-     *
-     * @throws BindingResolutionException  If the Auth0 class cannot be resolved.
-     * @throws NotFoundExceptionInterface  If the Auth0 service cannot be found.
-     * @throws ContainerExceptionInterface If the Auth0 service cannot be resolved.
-     *
-     * @return Auth0Interface Auth0 PHP SDK instance.
-     */
-    public function sdk(
-        $reset = false,
-    ): Auth0Interface;
-
-    /**
-     * Get an Auth0 Management API instance.
-     */
-    public function management(): ManagementInterface;
 }

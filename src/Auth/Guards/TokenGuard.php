@@ -9,9 +9,7 @@ use Auth0\Laravel\Contract\Auth\Guards\TokenGuardContract;
 use Auth0\Laravel\Contract\Auth\User\Provider;
 use Auth0\Laravel\Contract\Entities\CredentialContract;
 use Auth0\Laravel\Entities\Credential;
-use Auth0\Laravel\Event\Stateless\TokenVerificationAttempting;
-use Auth0\Laravel\Event\Stateless\TokenVerificationFailed;
-use Auth0\Laravel\Event\Stateless\TokenVerificationSucceeded;
+use Auth0\Laravel\Event\Stateless\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Auth0\SDK\Utility\HttpResponse;
@@ -73,7 +71,7 @@ final class TokenGuard extends AbstractGuard implements TokenGuardContract
                     accessToken: $token,
                     accessTokenScope: $scope,
                     accessTokenExpiration: $exp,
-                    accessTokenDecoded: $decoded
+                    accessTokenDecoded: $decoded,
                 );
             }
         }
@@ -108,6 +106,25 @@ final class TokenGuard extends AbstractGuard implements TokenGuardContract
         $this->forgetUser();
 
         return $this;
+    }
+
+    public function processToken(
+        string $token,
+    ): ?array {
+        $event = new TokenVerificationAttempting($token);
+        event($event);
+        $token = $event->getToken();
+
+        try {
+            $data = $this->sdk()->decode(token: $token, tokenType: Token::TYPE_ACCESS_TOKEN)->toArray();
+            event(new TokenVerificationSucceeded($token, $data));
+
+            return $data;
+        } catch (InvalidTokenException $invalidTokenException) {
+            event(new TokenVerificationFailed($token, $invalidTokenException));
+
+            return null;
+        }
     }
 
     public function refreshUser(): void
@@ -195,24 +212,5 @@ final class TokenGuard extends AbstractGuard implements TokenGuardContract
         }
 
         return null;
-    }
-
-    public function processToken(
-        string $token,
-    ): ?array {
-        $event = new TokenVerificationAttempting($token);
-        event($event);
-        $token = $event->getToken();
-
-        try {
-            $data = $this->sdk()->decode(token: $token, tokenType: Token::TYPE_ACCESS_TOKEN)->toArray();
-            event(new TokenVerificationSucceeded($token, $data));
-
-            return $data;
-        } catch (InvalidTokenException $invalidTokenException) {
-            event(new TokenVerificationFailed($token, $invalidTokenException));
-
-            return null;
-        }
     }
 }

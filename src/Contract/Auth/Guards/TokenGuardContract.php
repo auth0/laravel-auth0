@@ -20,10 +20,6 @@ interface TokenGuardContract extends GuardContract
         ?CredentialContract $credential,
     ): self;
 
-    public function setCredential(
-        ?CredentialContract $credential = null,
-    ): self;
-
     /**
      * Processes a JWT token and returns the decoded token, or null if the token is invalid.
      *
@@ -34,4 +30,8 @@ interface TokenGuardContract extends GuardContract
     public function processToken(
         string $token,
     ): ?array;
+
+    public function setCredential(
+        ?CredentialContract $credential = null,
+    ): self;
 }

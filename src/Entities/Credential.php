@@ -47,6 +47,14 @@ final class Credential implements CredentialContract
         return $this->accessToken;
     }
 
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
+    public function getAccessTokenDecoded(): ?array
+    {
+        return $this->accessTokenDecoded;
+    }
+
     public function getAccessTokenExpiration(): ?int
     {
         return $this->accessTokenExpiration;
@@ -61,14 +69,6 @@ final class Credential implements CredentialContract
         }
 
         return time() >= $expires;
-    }
-
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
-    public function getAccessTokenDecoded(): ?array
-    {
-        return $this->accessTokenDecoded;
     }
 
     /**
@@ -119,6 +119,14 @@ final class Credential implements CredentialContract
         return $this;
     }
 
+    public function setAccessTokenDecoded(
+        ?array $accessTokenDecoded = null,
+    ): self {
+        $this->accessTokenDecoded = $accessTokenDecoded;
+
+        return $this;
+    }
+
     public function setAccessTokenExpiration(
         ?int $accessTokenExpiration = null,
     ): self {
@@ -131,14 +139,6 @@ final class Credential implements CredentialContract
         ?array $accessTokenScope = null,
     ): self {
         $this->accessTokenScope = $accessTokenScope;
-
-        return $this;
-    }
-
-    public function setAccessTokenDecoded(
-        ?array $accessTokenDecoded = null,
-    ): self {
-        $this->accessTokenDecoded = $accessTokenDecoded;
 
         return $this;
     }

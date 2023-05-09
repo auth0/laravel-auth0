@@ -8,8 +8,8 @@ use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Contract\Auth\Guards\SessionGuardContract;
 use Auth0\Laravel\Contract\Entities\CredentialContract;
 use Auth0\Laravel\Contract\Http\Controller\Stateful\Callback as CallbackContract;
-use Auth0\Laravel\Exception\ControllerException;
 use Auth0\Laravel\Event\Stateful\{AuthenticationFailed, AuthenticationSucceeded};
+use Auth0\Laravel\Exception\ControllerException;
 use Auth0\Laravel\Exception\Stateful\CallbackException;
 use Auth0\Laravel\Http\Controller\ControllerAbstract;
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
@@ -34,6 +34,7 @@ final class Callback extends ControllerAbstract implements CallbackContract
 
         if (! $guard instanceof SessionGuardContract) {
             logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', self::class, $guard::class), $request->toArray());
+
             throw new ControllerException(ControllerException::ROUTED_USING_INCOMPATIBLE_GUARD);
         }
 

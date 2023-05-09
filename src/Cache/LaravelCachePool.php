@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Cache;
 
 use DateTimeInterface;
-use Illuminate\Cache\CacheManager;
-use Illuminate\Contracts\Cache\Store;
 use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 use function is_string;

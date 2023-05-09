@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Illuminate\Contracts\Http\Kernel;
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Auth\Guards\{SessionGuard, TokenGuard};
 use Auth0\Laravel\Auth\User\{Provider, Repository};
 use Auth0\Laravel\Contract\Auth\GuardContract;
 use Auth0\Laravel\Contract\ServiceProviderContract;
 use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
-use Auth0\Laravel\Http\Middleware\Authenticator;
-use Auth0\Laravel\Http\Middleware\Authorizer;
-use Auth0\Laravel\Http\Middleware\Guard as GuardMiddleware;
 use Auth0\Laravel\Http\Middleware\Stateful\{Authenticate, AuthenticateOptional};
 use Auth0\Laravel\Http\Middleware\Stateless\{Authorize, AuthorizeOptional};
+use Auth0\Laravel\Http\Middleware\{Authenticator, Authorizer, Guard as GuardMiddleware};
 use Auth0\Laravel\Store\LaravelSession;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+
+use function is_string;
 
 final class ServiceProvider extends LaravelServiceProvider implements ServiceProviderContract
 {
@@ -48,19 +48,21 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
         $router->aliasMiddleware('auth0.authorize', Authorize::class);
         $router->aliasMiddleware('guard', GuardMiddleware::class);
 
-        $gate->define('scope', static function (Authenticatable $user, string $scope, ?GuardContract $guard = null) : bool {
+        $gate->define('scope', static function (Authenticatable $user, string $scope, ?GuardContract $guard = null): bool {
             $guard ??= auth()->guard();
             if (! $guard instanceof GuardContract) {
                 return false;
             }
+
             return $guard->hasScope($scope);
         });
 
-        $gate->define('permission', static function (Authenticatable $user, string $permission, ?GuardContract $guard = null) : bool {
+        $gate->define('permission', static function (Authenticatable $user, string $permission, ?GuardContract $guard = null): bool {
             $guard ??= auth()->guard();
             if (! $guard instanceof GuardContract) {
                 return false;
             }
+
             return $guard->hasPermission($permission);
         });
 
@@ -70,7 +72,7 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
                 return;
             }
             if (str_starts_with($ability, 'scope:')) {
-                if ($guard->hasScope(substr($ability, 6))) {
+                if ($guard->hasScope(mb_substr($ability, 6))) {
                     return Response::allow();
                 }
 
@@ -85,14 +87,14 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
             }
         });
 
-        if (config('auth0.registerMiddleware') === true) {
+        if (true === config('auth0.registerMiddleware')) {
             $kernel = app()->make(Kernel::class);
             $kernel->prependMiddlewareToGroup('web', Authenticator::class);
             $kernel->prependMiddlewareToGroup('api', Authorizer::class);
         }
 
-        if (config('auth0.registerAuthenticationRoutes') === true) {
-            Route::group(['middleware' => 'web'], static function () : void {
+        if (true === config('auth0.registerAuthenticationRoutes')) {
+            Route::group(['middleware' => 'web'], static function (): void {
                 Route::get('/login', Login::class)->name('login');
                 Route::get('/logout', Logout::class)->name('logout');
                 Route::get('/callback', Callback::class)->name('callback');
@@ -125,7 +127,7 @@ final class ServiceProvider extends LaravelServiceProvider implements ServicePro
 
     public function register(): self
     {
-        if (config('auth0.registerGuards') === true) {
+        if (true === config('auth0.registerGuards')) {
             if (null === config('auth.guards.auth0-session')) {
                 config([
                     'auth.guards.auth0-session' => [

@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Auth0\Laravel;
 
 use Auth0\Laravel\Contract\Auth0 as ServiceContract;
-use Auth0\Laravel\Entities\Configuration;
-use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
+use Auth0\Laravel\Entities\ConfigurationAbstract;
+use Auth0\Laravel\Http\Controller\Stateful\{Callback, Login, Logout};
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ResponseInterface;
+
+use function in_array;
+use function is_array;
 
 /**
  * Service that provides access to the Auth0 SDK.
  */
-final class Auth0 extends Configuration implements ServiceContract
+final class Auth0 extends ConfigurationAbstract implements ServiceContract
 {
     /**
      * The Laravel-Auth0 SDK version:.
@@ -23,22 +26,9 @@ final class Auth0 extends Configuration implements ServiceContract
     public const VERSION = '7.7.0';
 
     /**
-     * Register the SDK's authentication routes and controllers.
-     *
-     * @param string $authenticationGuard The name of the authentication guard to use.
-     */
-    public static function routes(
-        string $authenticationGuard = 'auth0-session'
-    ): void {
-        Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], static function () : void {
-            Route::get('/login', Login::class)->name('login');
-            Route::get('/logout', Logout::class)->name('logout');
-            Route::get('/callback', Callback::class)->name('callback');
-        });
-    }
-
-    /**
      * Decode a PSR-7 HTTP Response Message containing a JSON content body to a PHP array. Returns null if the response was not successful, or the response body was not JSON.
+     *
+     * @param ResponseInterface $response
      *
      * @return null|array<mixed>
      */
@@ -50,10 +40,25 @@ final class Auth0 extends Configuration implements ServiceContract
 
         $json = json_decode((string) $response->getBody(), true);
 
-        if ( ! is_array($json)) {
+        if (! is_array($json)) {
             return null;
         }
 
         return $json;
+    }
+
+    /**
+     * Register the SDK's authentication routes and controllers.
+     *
+     * @param string $authenticationGuard The name of the authentication guard to use.
+     */
+    public static function routes(
+        string $authenticationGuard = 'auth0-session',
+    ): void {
+        Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], static function (): void {
+            Route::get('/login', Login::class)->name('login');
+            Route::get('/logout', Logout::class)->name('logout');
+            Route::get('/callback', Callback::class)->name('callback');
+        });
     }
 }

@@ -12,9 +12,10 @@ final class Authorizer
 {
     public function handle(
         Request $request,
-        Closure $next
+        Closure $next,
     ): Response {
         auth()->shouldUse('auth0-api');
+
         return $next($request);
     }
 }
