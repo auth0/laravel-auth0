@@ -1,25 +1,12 @@
 # Users
 
+## ...
+
+## Custom User Models and Repositories
+
 The Auth0 Laravel SDK uses the repository pattern to allow the abstraction of potential database operations. This pattern is useful for building completely custom integrations that fit your application's needs.
 
-Let's assume you've configured the SDK's user provider in application's `config/auth.php` like this:
-
-```php
-/**
- * Register the SDK's User Provider with your application.
- * You should not remove any other entries from this array.
- */
-'providers' => [
-  'my-example-provider' => [
-    'driver' => 'auth0.provider',
-    'repository' => \Auth0\Laravel\Auth\User\Repository::class
-  ],
-],
-```
-
-Note the `repository` property — this tells the SDK what class to use for storing and retrieving users. The SDK provides a default implementation, but this does not persist users to an application database. You can add this functionality by using the default implementation as a starting point for building a custom repository of your own.
-
-## Creating a User Repository
+### Creating a User Repository
 
 Creating a repository is simple: it must implement the `Auth0\Laravel\Contract\Auth\User\Repository` interface, and include two methods:
 
@@ -89,7 +76,7 @@ final class UserRepository implements RepositoryContract
 }
 ```
 
-## Creating a User Model
+### Creating a User Model
 
 The repository is responsible for retrieving and storing users, but it does not define the user model itself. The SDK provides an abstract user model class that can be extended for building your own implementations, `Auth0\Laravel\Model\User`.
 
@@ -124,7 +111,7 @@ final class User extends Auth0User
 }
 ```
 
-## Integrating the Repository and Model
+### Integrating the Repository and Model
 
 Once you have created your repository and model, you can integrate them into your application by updating your `config/auth.php` file:
 
