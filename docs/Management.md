@@ -13,7 +13,7 @@ The Management API class can be accessed through the `management()` method on th
 ```php
 use Auth0\Laravel\Facade\Auth0;
 
-$management = Auth0::management();
+Auth0::management();
 ```
 
 ## Available endpoints
