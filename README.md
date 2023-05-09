@@ -50,6 +50,9 @@ php artisan vendor:publish --tag auth0
 
 ### SDK Configuration
 
+> **Note**
+> If you prefer to use environment variables to configure the SDK, please see [docs/Installation](./docs/Installation.md) for guidance.
+
 Run the following command from your project directory to download the [Auth0 CLI](https://github.com/auth0/auth0-cli):
 
 ```shell
@@ -95,9 +98,6 @@ As these files contain credentials it's important to treat these as sensitive. Y
 echo ".auth0.*.json" >> .gitignore
 ```
 
-> **Note**
-> If you prefer to use environment variables, please see [docs/Installation](./docs/Installation.md) for setup guidance.
-
 ### Authentication
 
 The SDK automatically registers all the necessary facilities within the `web` middleware group for your users to authenticate with your application. These routes are:
@@ -108,15 +108,13 @@ The SDK automatically registers all the necessary facilities within the `web` mi
 | `/logout`   | Logs the user out.                 |
 | `/callback` | Handles the callback from Auth0.   |
 
-> **Note**
-> If you require more control over these, or if they conflict with existing routes in your application, you can disable automatic route registration by setting the `auth0.registerAuthenticationRoutes` configuration option to `false`. Please see [docs/Installation](./docs/Installation.md) for guidance.
+See [docs/Configuration](./docs/Configuration.md) for guidance on disabling automatic registration, and manually registering these facilities.
 
 ### Access Control
 
 The SDK automatically registers its authentication and authorization guards into the standard `web` and `api` middleware for your Laravel application, respectively.
 
-> **Note**
-> You can disable automatic guard registration by setting the `auth0.registerGuards` configuration option to `false`, or automatic middleware registration by setting the `auth0.registerMiddleware` configuration option to `false`. Please see [docs/Installation](./docs/Installation.md) for guidance.
+See [docs/Configuration](./docs/Configuration.md) for guidance on disabling this automatic registration, and manually registering the guards.
 
 You can use the Auth0 SDK's authentication guard to restrict access to your application's routes.
 
