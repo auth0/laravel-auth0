@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Entities\Credential;
+use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Model\Stateless\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
@@ -13,13 +13,13 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.domain' => uniqid() . '.auth0.com',
-        'auth0.clientId' => uniqid(),
-        'auth0.audience' => [uniqid()],
-        'auth0.clientSecret' => $this->secret,
-        'auth0.tokenAlgorithm' => Token::ALGO_HS256,
-        'auth0.routes.home' => '/' . uniqid(),
+        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.default.domain' => uniqid() . '.auth0.com',
+        'auth0.default.clientId' => uniqid(),
+        'auth0.default.audience' => [uniqid()],
+        'auth0.default.clientSecret' => $this->secret,
+        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -35,7 +35,7 @@ beforeEach(function (): void {
 });
 
 test('create() returns a properly configured instance', function (): void {
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         idToken: $this->idToken,
         accessToken: $this->accessToken,
@@ -45,7 +45,7 @@ test('create() returns a properly configured instance', function (): void {
     );
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getUser()->toBe($this->user)
         ->getIdToken()->toBe($this->idToken)
         ->getAccessToken()->toBe($this->accessToken)
@@ -55,7 +55,7 @@ test('create() returns a properly configured instance', function (): void {
 });
 
 it('clear() nullifies all properties', function (): void {
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         idToken: $this->idToken,
         accessToken: $this->accessToken,
@@ -65,7 +65,7 @@ it('clear() nullifies all properties', function (): void {
     );
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getUser()->toBe($this->user)
         ->getIdToken()->toBe($this->idToken)
         ->getAccessToken()->toBe($this->accessToken)
@@ -74,7 +74,7 @@ it('clear() nullifies all properties', function (): void {
         ->getRefreshToken()->toBe($this->refreshToken);
 
     expect($credential->clear())
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getUser()->toBeNull()
         ->getIdToken()->toBeNull()
         ->getAccessToken()->toBeNull()
@@ -84,95 +84,95 @@ it('clear() nullifies all properties', function (): void {
 });
 
 it('setUser() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getUser()->toBeNull();
 
     expect($credential->setUser($this->user))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getUser()->toBe($this->user);
 });
 
 it('setIdToken() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getIdToken()->toBeNull();
 
     expect($credential->setIdToken($this->idToken))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getIdToken()->toBe($this->idToken);
 });
 
 it('setAccessToken() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessToken()->toBeNull();
 
     expect($credential->setAccessToken($this->accessToken))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessToken()->toBe($this->accessToken);
 });
 
 it('setAccessTokenScope() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenScope()->toBeNull();
 
     expect($credential->setAccessTokenScope($this->accessTokenScope))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenScope()->toBe($this->accessTokenScope);
 });
 
 it('setAccessTokenExpiration() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenExpiration()->toBeNull();
 
     expect($credential->setAccessTokenExpiration($this->accessTokenExpiration))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenExpiration()->toBe($this->accessTokenExpiration);
 });
 
 it('setRefreshToken() assigns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getRefreshToken()->toBeNull();
 
     expect($credential->setRefreshToken($this->refreshToken))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getRefreshToken()->toBe($this->refreshToken);
 });
 
 it('getAccessTokenExpired() returns a correct value', function (): void {
-    $credential = Credential::create();
+    $credential = CredentialEntity::create();
 
     expect($credential)
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenExpired()->toBeNull();
 
     expect($credential->setAccessTokenExpiration($this->accessTokenExpiration))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenExpired()->toBeFalse();
 
     expect($credential->setAccessTokenExpiration($this->accessTokenExpiration - 3600 * 2))
-        ->toBeInstanceOf(Credential::class)
+        ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenExpired()->toBeTrue();
 });
 
 it('jsonSerialize() returns a correct structure', function (): void {
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         idToken: $this->idToken,
         accessToken: $this->accessToken,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Contract\Configuration as ConfigurationContract;
 use Illuminate\Support\{Arr, Str};
 
 use function count;
@@ -16,6 +15,8 @@ use function is_string;
 
 /**
  * Helpers to map configuration data stored as strings from .env files into formats consumable by the Auth0-PHP SDK.
+ *
+ * @api
  */
 final class Configuration implements ConfigurationContract
 {
@@ -237,7 +238,7 @@ final class Configuration implements ConfigurationContract
 
     public static function version(): int
     {
-        return config('auth0.AUTH0_CONFIG_VERSION') ?? 1;
+        return config('auth0.AUTH0_CONFIG_VERSION', 1);
     }
 
     public static function get(
@@ -245,25 +246,43 @@ final class Configuration implements ConfigurationContract
         array | string | int | bool | null $default = null,
     ): array | string | int | bool | null {
         if (in_array($setting, self::USES_ARRAYS, true)) {
-            return self::stringToArrayOrNull(self::getValue($setting, $default), ',');
+            $value = self::getValue($setting, $default);
+
+            if (! is_string($value)) {
+                return $default;
+            }
+
+            return self::stringToArrayOrNull($value, ',') ?? $default;
         }
 
         if (in_array($setting, self::USES_BOOLEANS, true)) {
-            return self::stringToBoolOrNull(self::getValue($setting, $default), $default);
+            $value = self::getValue($setting, $default);
+
+            if (! is_bool($value) && ! is_string($value)) {
+                return $default;
+            }
+
+            return self::stringToBoolOrNull($value) ?? $default;
         }
 
         if (in_array($setting, self::USES_INTEGERS, true)) {
-            return self::stringOrIntToIntOrNull(self::getValue($setting, $default), $default);
+            $value = self::getValue($setting, $default);
+
+            if (! is_integer($value) && ! is_string($value)) {
+                return $default;
+            }
+
+            return self::stringOrIntToIntOrNull($value) ?? $default;
         }
 
-        $result = self::stringOrNull(self::getValue($setting, $default), $default);
+        $result = self::stringOrNull(self::getValue($setting, $default)) ?? $default;
 
         if (self::CONFIG_DOMAIN === $setting && null === $result) {
             // Fallback to extracting the tenant domain from the signing key subject.
             $result = self::getJson()['signing_keys.0.subject'] ?? '';
             $result = explode('=', $result);
 
-            if (count($result) >= 1 && str_ends_with($result[1] ?? '', '.auth0.com')) {
+            if (isset($result[1]) && str_ends_with($result[1] ?? '', '.auth0.com')) {
                 return $result[1];
             }
         }
@@ -275,14 +294,13 @@ final class Configuration implements ConfigurationContract
     {
         if (null === self::$environment) {
             $path = self::getPath();
+            $laravelEnvironment = env('APP_ENV');
+            $laravelEnvironment = is_string($laravelEnvironment) && '' !== trim($laravelEnvironment) ? trim($laravelEnvironment) : 'local';
 
             $env = [];
             $files = ['.env', '.env.auth0'];
-
-            if (null !== env('APP_ENV')) {
-                $files[] = '.env.' . env('APP_ENV');
-                $files[] = '.env.auth0.' . env('APP_ENV');
-            }
+            $files[] = '.env.' . $laravelEnvironment;
+            $files[] = '.env.auth0.' . $laravelEnvironment;
 
             foreach ($files as $file) {
                 if (! file_exists($path . $file)) {
@@ -335,15 +353,14 @@ final class Configuration implements ConfigurationContract
     {
         if (null === self::$json) {
             $path = self::getPath();
+            $laravelEnvironment = env('APP_ENV');
+            $laravelEnvironment = is_string($laravelEnvironment) && '' !== trim($laravelEnvironment) ? trim($laravelEnvironment) : 'local';
 
             $configuration = [];
             $files = ['.auth0.json', '.auth0.api.json', '.auth0.app.json'];
-
-            if (null !== env('APP_ENV')) {
-                $files[] = '.auth0.' . env('APP_ENV') . '.json';
-                $files[] = '.auth0.' . env('APP_ENV') . '.api.json';
-                $files[] = '.auth0.' . env('APP_ENV') . '.app.json';
-            }
+            $files[] = '.auth0.' . $laravelEnvironment . '.json';
+            $files[] = '.auth0.' . $laravelEnvironment . '.api.json';
+            $files[] = '.auth0.' . $laravelEnvironment . '.app.json';
 
             foreach ($files as $file) {
                 if (file_exists($path . $file)) {
@@ -476,7 +493,7 @@ final class Configuration implements ConfigurationContract
         return $default;
     }
 
-    private static function getPath(): string
+    public static function getPath(): string
     {
         if (null === self::$path) {
             self::$path = base_path() . DIRECTORY_SEPARATOR;
@@ -489,7 +506,7 @@ final class Configuration implements ConfigurationContract
         string $setting,
         array | bool | string | int | null $default = null,
     ): array | bool | string | int | null {
-        $env ??= 'AUTH0_' . mb_strtoupper(Str::snake($setting));
+        $env = 'AUTH0_' . mb_strtoupper(Str::snake($setting));
         $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
 
         $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;

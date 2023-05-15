@@ -18,6 +18,7 @@
         <MixedAssignment errorLevel="suppress"/>
         <MixedInferredReturnType errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
+        <DeprecatedClass errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>

@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Configuration;
-use Auth0\SDK\Configuration\SdkConfiguration as Strategy;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 
 return Configuration::VERSION_2 + [
 
     'default' => [
-        Configuration::CONFIG_STRATEGY => Configuration::get(Configuration::CONFIG_STRATEGY, Strategy::STRATEGY_NONE),
+        Configuration::CONFIG_STRATEGY => Configuration::get(Configuration::CONFIG_STRATEGY, SdkConfiguration::STRATEGY_NONE),
         Configuration::CONFIG_DOMAIN => Configuration::get(Configuration::CONFIG_DOMAIN),
         Configuration::CONFIG_CUSTOM_DOMAIN => Configuration::get(Configuration::CONFIG_CUSTOM_DOMAIN),
         Configuration::CONFIG_CLIENT_ID => Configuration::get(Configuration::CONFIG_CLIENT_ID),
@@ -40,11 +40,11 @@ return Configuration::VERSION_2 + [
     ],
 
     'api' => [
-        Configuration::CONFIG_STRATEGY => Strategy::STRATEGY_API,
+        Configuration::CONFIG_STRATEGY => SdkConfiguration::STRATEGY_API,
     ],
 
     'web' => [
-        Configuration::CONFIG_STRATEGY => Strategy::STRATEGY_REGULAR,
+        Configuration::CONFIG_STRATEGY => SdkConfiguration::STRATEGY_REGULAR,
         Configuration::CONFIG_REDIRECT_URI => Configuration::get(Configuration::CONFIG_REDIRECT_URI, env('APP_URL') . '/callback'),
         Configuration::CONFIG_COOKIE_SECRET => Configuration::get(Configuration::CONFIG_COOKIE_SECRET, env('APP_KEY')),
     ],

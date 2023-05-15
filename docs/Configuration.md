@@ -80,7 +80,7 @@ To register the guards manually, update your `config/auth.php` file as follows:
         'provider' => 'auth0-provider',
         'configuration' => 'web',
     ],
-    'auth0-token' => [
+    'auth0-api' => [
         'driver' => 'auth0.authorization',
         'provider' => 'auth0-provider',
         'configuration' => 'api',
@@ -126,7 +126,7 @@ Auth::shouldUse('auth0-session');
 For `routes/api.php`, add the following before any routes:
 
 ```php
-Auth::shouldUse('auth0-token');
+Auth::shouldUse('auth0-api');
 ```
 
 ### Authentication Routes

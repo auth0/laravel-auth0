@@ -1,0 +1,12 @@
+codecov:
+  range: "95...100"
+  status:
+    project:
+    patch:
+    changes:
+ignore:
+  - "src/Contract"
+  - "src/Event"
+  - "src/Exception"
+  - "src/Http"
+  - "src/Model"

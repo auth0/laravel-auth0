@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Artisan;
 
-// Flag to indicate that we are running tests.
-define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
-
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -19,13 +16,9 @@ define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
 
 uses(\Auth0\Laravel\Tests\TestCase::class)->in(__DIR__);
 
-// uses()->afterEach(function (): void {
-//     $commands = ['optimize:clear'];
-
-//     foreach ($commands as $command) {
-//         Artisan::call($command);
-//     }
-// })->in(__DIR__);
+uses()->beforeAll(function (): void {
+    ray()->clearAll();
+})->in(__DIR__);
 
 uses()->beforeEach(function (): void {
     $this->events = [];
@@ -34,6 +27,14 @@ uses()->beforeEach(function (): void {
         $this->events[] = $event;
     });
 })->in(__DIR__);
+
+// uses()->afterEach(function (): void {
+//     $commands = ['optimize:clear'];
+
+//     foreach ($commands as $command) {
+//         Artisan::call($command);
+//     }
+// })->in(__DIR__);
 
 uses()->compact();
 
@@ -68,3 +69,53 @@ uses()->compact();
 //     // ..
 // }
 
+// function createIdToken($claims = [], $headers = []): string
+
+function createRsaKeys(
+    string $digestAlg = 'sha256',
+    int $keyType = OPENSSL_KEYTYPE_RSA,
+    int $bitLength = 2048
+): object
+{
+    $config = [
+        'digest_alg' => $digestAlg,
+        'private_key_type' => $keyType,
+        'private_key_bits' => $bitLength,
+    ];
+
+    $privateKeyResource = openssl_pkey_new($config);
+
+    if ($privateKeyResource === false) {
+        throw new RuntimeException("OpenSSL reported an error: " . getSslError());
+    }
+
+    $export = openssl_pkey_export($privateKeyResource, $privateKey);
+
+    if ($export === false) {
+        throw new RuntimeException("OpenSSL reported an error: " . getSslError());
+    }
+
+    $publicKey = openssl_pkey_get_details($privateKeyResource);
+
+    $resCsr = openssl_csr_new([], $privateKeyResource);
+    $resCert = openssl_csr_sign($resCsr, null, $privateKeyResource, 30);
+    openssl_x509_export($resCert, $x509);
+
+    return (object) [
+        'private' => $privateKey,
+        'public' => $publicKey['key'],
+        'cert' => $x509,
+        'resource' => $privateKeyResource,
+    ];
+}
+
+function getSslError(): string
+{
+    $errors = [];
+
+    while ($error = openssl_error_string()) {
+        $errors[] = $error;
+    }
+
+    return implode(', ', $errors);
+}

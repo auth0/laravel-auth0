@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Contract\Exception\AuthenticationException as AuthenticationExceptionContract;
-use Auth0\Laravel\Exception\AuthenticationException;
-use Auth0\Laravel\Entities\Credential;
+use Auth0\Laravel\Exceptions\AuthenticationException;
+use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Model\Stateful\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Support\Facades\Route;
@@ -20,12 +19,12 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.domain' => uniqid() . '.auth0.com',
-        'auth0.clientId' => uniqid(),
-        'auth0.clientSecret' => $this->secret,
-        'auth0.cookieSecret' => uniqid(),
-        'auth0.routes.home' => '/' . uniqid(),
+        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.default.domain' => uniqid() . '.auth0.com',
+        'auth0.default.clientId' => uniqid(),
+        'auth0.default.clientSecret' => $this->secret,
+        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -52,7 +51,7 @@ it('assigns a user at login', function (): void {
         ->toBeInstanceOf(Guard::class)
         ->user()->toBeNull();
 
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -68,7 +67,7 @@ it('logs out a user', function (): void {
         ->toBeInstanceOf(Guard::class)
         ->user()->toBeNull();
 
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -88,7 +87,7 @@ it('checks if a user is logged in', function (): void {
     expect($this->guard)
         ->check()->toBeFalse();
 
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -100,7 +99,7 @@ it('checks if a user is a guest', function (): void {
     expect($this->guard)
         ->guest()->toBeTrue();
 
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -109,7 +108,7 @@ it('checks if a user is a guest', function (): void {
 });
 
 it('gets the user identifier', function (): void {
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -118,7 +117,7 @@ it('gets the user identifier', function (): void {
 });
 
 it('validates a user', function (): void {
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -149,7 +148,7 @@ it('has a user', function (): void {
 it('has a scope', function (): void {
     $this->user = new User(['sub' => uniqid('auth0|'), 'scope' => 'read:users 456']);
 
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         accessTokenScope: ['read:users', '456']
     );
@@ -161,7 +160,7 @@ it('has a scope', function (): void {
         ->hasScope('789', $credential)->toBeFalse()
         ->hasScope('*', $credential)->toBeTrue();
 
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user
     );
 
@@ -171,7 +170,7 @@ it('has a scope', function (): void {
 });
 
 it('checks if a user was authenticated via remember', function (): void {
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -182,10 +181,10 @@ it('checks if a user was authenticated via remember', function (): void {
 it('returns null if authenticate() is called without being authenticated', function (): void {
     $response = $this->guard->authenticate();
     expect($response)->toBeNull();
-})->throws(AuthenticationException::class, AuthenticationExceptionContract::UNAUTHENTICATED);
+})->throws(AuthenticationException::class, AuthenticationException::UNAUTHENTICATED);
 
 it('returns a user from authenticate() if called while authenticated', function (): void {
-    $this->guard->login(Credential::create(
+    $this->guard->login(CredentialEntity::create(
         user: $this->user
     ));
 
@@ -196,7 +195,7 @@ it('returns a user from authenticate() if called while authenticated', function 
 });
 
 it('gets/sets a credentials', function (): void {
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         idToken: uniqid(),
         accessToken: uniqid(),
@@ -211,7 +210,7 @@ it('gets/sets a credentials', function (): void {
 });
 
 it('queries the /userinfo endpoint', function (): void {
-    $credential = Credential::create(
+    $credential = CredentialEntity::create(
         user: $this->user,
         idToken: uniqid(),
         accessToken: uniqid(),

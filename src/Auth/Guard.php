@@ -4,39 +4,30 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Auth;
 
-use Auth0\Laravel\Auth\Guards\{SessionGuard, TokenGuard};
-use Auth0\Laravel\Contract\Auth\GuardContract;
-use Auth0\Laravel\Contract\Auth\Guards\{SessionGuardContract, TokenGuardContract};
-use Auth0\Laravel\Contract\Entities\CredentialContract;
+use Auth0\Laravel\Guards\{AuthenticationGuard, AuthorizationGuard, AuthenticationGuardContract, AuthorizationGuardContract, GuardAbstract, GuardContract};
+use Auth0\Laravel\Entities\CredentialEntityContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
- * @deprecated 7.8.0 Use either Auth0\Laravel\Auth\Guards\SessionGuard or Auth0\Laravel\Auth\Guards\TokenGuard instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Guards\AuthenticationGuard or Auth0\Laravel\Guards\AuthorizerGuard instead.
+ *
+ * @codeCoverageIgnore
+ * @api
  */
-final class Guard extends AbstractGuard implements GuardContract
+final class Guard extends GuardAbstract implements GuardContract
 {
-    /**
-     * @var int Credential source is a stateful session.
-     */
-    public const SOURCE_SESSION = 2;
-
-    /**
-     * @var int Credential source is a stateless token.
-     */
-    public const SOURCE_TOKEN = 1;
-
     private ?int $credentialSource = null;
 
-    private ?SessionGuardContract $sessionGuard = null;
+    private ?AuthenticationGuardContract $authenticator = null;
 
-    private ?TokenGuardContract $tokenGuard = null;
+    private ?AuthorizationGuardContract $authorizer = null;
 
     /**
      * @param null|int $source Credential source in which to search. Defaults to searching all sources.
      */
     public function find(
         ?int $source = null,
-    ): ?CredentialContract {
+    ): ?CredentialEntityContract {
         $token = null;
         $session = null;
 
@@ -55,7 +46,7 @@ final class Guard extends AbstractGuard implements GuardContract
         return $token ?? $session ?? null;
     }
 
-    public function getCredential(): ?CredentialContract
+    public function getCredential(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
             return $this->getImposter();
@@ -76,8 +67,14 @@ final class Guard extends AbstractGuard implements GuardContract
         return $token ?? $session ?? null;
     }
 
+    /**
+     * Sets the currently authenticated user for the guard.
+     *
+     * @param null|CredentialEntityContract $credential Optional. The credential to use.
+     * @param null|int $source Optional. The source context in which to assign the user. Defaults to all sources.
+     */
     public function login(
-        ?CredentialContract $credential,
+        ?CredentialEntityContract $credential,
         ?int $source = null,
     ): GuardContract {
         $this->stopImpersonating();
@@ -134,7 +131,7 @@ final class Guard extends AbstractGuard implements GuardContract
     }
 
     public function setCredential(
-        ?CredentialContract $credential = null,
+        ?CredentialEntityContract $credential = null,
         ?int $source = null,
     ): GuardContract {
         $this->stopImpersonating();
@@ -156,7 +153,7 @@ final class Guard extends AbstractGuard implements GuardContract
         Authenticatable $user,
     ): void {
         if ($this->isImpersonating()) {
-            if ($this->getImposter()->getUser() === $user) {
+            if ($this->getImposter()?->getUser() === $user) {
                 return;
             }
 
@@ -177,11 +174,11 @@ final class Guard extends AbstractGuard implements GuardContract
     public function user(): ?Authenticatable
     {
         if ($this->isImpersonating()) {
-            return $this->getImposter()->getUser();
+            return $this->getImposter()?->getUser();
         }
 
-        if ($this->getCredential() instanceof CredentialContract) {
-            return $this->getCredential()->getUser();
+        if ($this->getCredential() instanceof CredentialEntityContract) {
+            return $this->getCredential()?->getUser();
         }
 
         // $source = $this->getCredentialSource();
@@ -201,14 +198,14 @@ final class Guard extends AbstractGuard implements GuardContract
         return null;
     }
 
-    private function getAuthenticationGuard(): SessionGuardContract
+    private function getAuthenticationGuard(): AuthenticationGuardContract
     {
-        return $this->sessionGuard ??= new SessionGuard(name: $this->name, config: $this->config);
+        return $this->authenticator ??= new AuthenticationGuard(name: $this->name, config: $this->config);
     }
 
-    private function getAuthorizationGuard(): TokenGuardContract
+    private function getAuthorizationGuard(): AuthorizationGuardContract
     {
-        return $this->tokenGuard ??= new TokenGuard(name: $this->name, config: $this->config);
+        return $this->authorizer ??= new AuthorizationGuard(name: $this->name, config: $this->config);
     }
 
     private function getCredentialSource(): ?int

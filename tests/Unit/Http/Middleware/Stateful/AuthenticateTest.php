@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Contract\Model\Stateful\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
@@ -13,11 +12,11 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.domain' => uniqid() . '.auth0.com',
-        'auth0.clientId' => uniqid(),
-        'auth0.clientSecret' => $this->secret,
-        'auth0.cookieSecret' => uniqid(),
+        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.default.domain' => uniqid() . '.auth0.com',
+        'auth0.default.clientId' => uniqid(),
+        'auth0.default.clientSecret' => $this->secret,
+        'auth0.default.cookieSecret' => uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -60,11 +59,11 @@ it('redirects to login route if a visitor does not have a session', function ():
     });
 
     config($config = [
-        'auth0.routes.login' => '/' . uniqid()
+        'auth0.default.routes.login' => '/' . uniqid()
     ]);
 
     $this->get($route)
-         ->assertRedirect($config['auth0.routes.login']);
+         ->assertRedirect($config['auth0.default.routes.login']);
 
     expect(redirect()->getIntendedUrl())
         ->toEqual('http://localhost' . $route);

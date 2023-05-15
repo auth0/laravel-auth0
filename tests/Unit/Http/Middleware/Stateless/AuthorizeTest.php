@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Contract\Model\Stateless\User;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
@@ -15,13 +14,13 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.domain' => uniqid() . '.auth0.com',
-        'auth0.clientId' => uniqid(),
-        'auth0.audience' => [uniqid()],
-        'auth0.clientSecret' => $this->secret,
-        'auth0.cookieSecret' => uniqid(),
-        'auth0.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.default.domain' => uniqid() . '.auth0.com',
+        'auth0.default.clientId' => uniqid(),
+        'auth0.default.audience' => [uniqid()],
+        'auth0.default.clientSecret' => $this->secret,
+        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
     ]);
 
     $this->laravel = app('auth0');
@@ -71,14 +70,14 @@ it('assigns a user', function (): void {
     });
 
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.domain') . '/',
+        "iss" => 'https://' . config('auth0.default.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
           "https://example.com/health-api",
           "https://my-domain.auth0.com/userinfo",
-          config('auth0.clientId')
+          config('auth0.default.clientId')
         ],
-        "azp" => config('auth0.clientId'),
+        "azp" => config('auth0.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
@@ -100,14 +99,14 @@ it('assigns a user when using a configured scope matches', function (): void {
     });
 
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.domain') . '/',
+        "iss" => 'https://' . config('auth0.default.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
           "https://example.com/health-api",
           "https://my-domain.auth0.com/userinfo",
-          config('auth0.clientId')
+          config('auth0.default.clientId')
         ],
-        "azp" => config('auth0.clientId'),
+        "azp" => config('auth0.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
@@ -129,14 +128,14 @@ it('returns a 403 and does not assign a user when a configured scope is not matc
     });
 
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.domain') . '/',
+        "iss" => 'https://' . config('auth0.default.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
           "https://example.com/health-api",
           "https://my-domain.auth0.com/userinfo",
-          config('auth0.clientId')
+          config('auth0.default.clientId')
         ],
-        "azp" => config('auth0.clientId'),
+        "azp" => config('auth0.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"

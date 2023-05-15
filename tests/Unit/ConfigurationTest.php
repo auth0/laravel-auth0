@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Auth0\Laravel\Configuration;
 
-uses()->group('configuration');
+uses()->group('Configuration');
 
 test('stringToArrayOrNull() behaves as expected', function (): void {
     expect(Configuration::stringToArrayOrNull('foo bar baz'))

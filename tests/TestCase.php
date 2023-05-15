@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Auth0\Laravel\ServiceProvider;
+use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -15,6 +16,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
+            RayServiceProvider::class,
             ServiceProvider::class,
         ];
     }
@@ -36,11 +38,11 @@ class TestCase extends BaseTestCase
                     'provider' => 'testProvider',
                 ],
                 'sessionGuard' => [
-                    'driver' => 'auth0.sessionGuard',
+                    'driver' => 'auth0.authenticator',
                     'provider' => 'testProvider',
                 ],
                 'tokenGuard' => [
-                    'driver' => 'auth0.tokenGuard',
+                    'driver' => 'auth0.authorizer',
                     'provider' => 'testProvider',
                 ],
             ],

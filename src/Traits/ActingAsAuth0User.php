@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Traits;
 
-use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Auth\User\Provider;
-use Auth0\Laravel\Contract\Auth\GuardContract;
-use Auth0\Laravel\Entities\Credential;
-use Auth0\Laravel\Model\Imposter;
+use Auth0\Laravel\UserProvider;
+use Auth0\Laravel\Guards\GuardContract;
+use Auth0\Laravel\Entities\CredentialEntity;
+use Auth0\Laravel\Users\ImposterUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
- * @deprecated 7.5.0 Use of this trait is longer recommended. Use the Impersonate trait instead. This trait will be removed in the next major release.
+ * Set the currently logged in user for the application. Only intended for unit testing.
+ *
+ * @deprecated 7.8.0 Use Auth0\Laravel\Traits\Impersonate instead.
+ * @api
  */
 trait ActingAsAuth0User
 {
@@ -32,7 +34,7 @@ trait ActingAsAuth0User
     public function actingAsAuth0User(
         array $attributes = [],
         ?string $guard = null,
-        ?int $source = Guard::SOURCE_TOKEN,
+        ?int $source = GuardContract::SOURCE_TOKEN,
     ): self {
         $issued = time();
         $expires = $issued + 60 * 60;
@@ -44,20 +46,20 @@ trait ActingAsAuth0User
         $instance = auth()->guard($guard);
 
         if (! $instance instanceof GuardContract) {
-            $user = new Imposter($attributes);
+            $user = new ImposterUser($attributes);
 
             return $this->actingAs($user, $guard);
         }
 
-        $provider = new Provider();
+        $provider = new UserProvider();
 
-        if (Guard::SOURCE_SESSION === $source) {
+        if (GuardContract::SOURCE_SESSION === $source) {
             $user = $provider->getRepository()->fromSession($attributes);
         } else {
             $user = $provider->getRepository()->fromAccessToken($attributes);
         }
 
-        $credential = Credential::create(
+        $credential = CredentialEntity::create(
             user: $user,
             accessTokenScope: $scope,
         );

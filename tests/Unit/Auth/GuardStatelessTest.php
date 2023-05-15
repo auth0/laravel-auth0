@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Contract\Auth\User\Repository;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
@@ -18,13 +17,13 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.domain' => uniqid() . '.auth0.com',
-        'auth0.clientId' => uniqid(),
-        'auth0.audience' => ['https://example.com/health-api'],
-        'auth0.clientSecret' => $this->secret,
-        'auth0.tokenAlgorithm' => Token::ALGO_HS256,
-        'auth0.routes.home' => '/' . uniqid(),
+        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.default.domain' => uniqid() . '.auth0.com',
+        'auth0.default.clientId' => uniqid(),
+        'auth0.default.audience' => ['https://example.com/health-api'],
+        'auth0.default.clientSecret' => $this->secret,
+        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -33,13 +32,13 @@ beforeEach(function (): void {
     $this->config = $this->sdk->configuration();
 
     $this->token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.domain') . '/',
+        "iss" => 'https://' . config('auth0.default.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
-            config('auth0.audience')[0],
+            config('auth0.default.audience')[0],
             "https://my-domain.auth0.com/userinfo"
         ],
-        "azp" => config('auth0.clientId'),
+        "azp" => config('auth0.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
