@@ -9,6 +9,6 @@ use Psr\Cache\CacheItemPoolInterface;
 /**
  * @api
  */
-interface CacheBridgeContract extends CacheItemPoolInterface, BridgeContract
+interface CacheBridgeContract extends BridgeContract, CacheItemPoolInterface
 {
 }

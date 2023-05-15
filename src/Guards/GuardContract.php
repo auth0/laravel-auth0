@@ -8,8 +8,7 @@ use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Session\Session;
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
@@ -52,15 +51,6 @@ interface GuardContract
     public function getCredential(): ?CredentialEntityContract;
 
     /**
-     * Sets the currently authenticated user for the guard.
-     *
-     * @param null|CredentialEntityContract $credential Optional. The credential to use.
-     */
-    public function login(
-        ?CredentialEntityContract $credential
-    ): ?GuardContract;
-
-    /**
      * Get the currently impersonated user, if any.
      */
     public function getImposter(): ?CredentialEntityContract;
@@ -93,7 +83,7 @@ interface GuardContract
     /**
      * Returns whether a credential has a specified permission, such as "read:users". Note that RBAC must be enabled for this to work.
      *
-     * @param string                  $permission The permission to check for.
+     * @param string                        $permission The permission to check for.
      * @param null|CredentialEntityContract $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
      */
     public function hasPermission(
@@ -104,7 +94,7 @@ interface GuardContract
     /**
      * Returns whether a credential has a specified scope, such as "read:users". Note that RBAC must be enabled for this to work.
      *
-     * @param string                  $scope      The scope to check for.
+     * @param string                        $scope      The scope to check for.
      * @param null|CredentialEntityContract $credential Optional. The Credential to check. If omitted, the currently authenticated Credential will be used.
      */
     public function hasScope(
@@ -128,6 +118,15 @@ interface GuardContract
     public function isImpersonating(): bool;
 
     /**
+     * Sets the currently authenticated user for the guard.
+     *
+     * @param null|CredentialEntityContract $credential Optional. The credential to use.
+     */
+    public function login(
+        ?CredentialEntityContract $credential,
+    ): ?self;
+
+    /**
      * Clears the currently authenticated user for the guard. If a credential is set, it will be cleared. If a session is set, it will be cleared.
      */
     public function logout(): self;
@@ -141,13 +140,6 @@ interface GuardContract
      * Query the /userinfo endpoint and update the currently authenticated user for the guard.
      */
     public function refreshUser(): void;
-
-    /**
-     * Sets the guard's currently configured credential.
-     *
-     * @param null|CredentialEntityContract $credential Optional. The credential to assign.
-     */
-    public function setCredential(?CredentialEntityContract $credential = null): GuardContract;
 
     /**
      * Get an Auth0 PHP SDK instance.
@@ -165,11 +157,18 @@ interface GuardContract
     ): Auth0Interface;
 
     /**
+     * Sets the guard's currently configured credential.
+     *
+     * @param null|CredentialEntityContract $credential Optional. The credential to assign.
+     */
+    public function setCredential(?CredentialEntityContract $credential = null): self;
+
+    /**
      * Toggle the Guard's impersonation state. This should only be used by the Impersonate trait, and is not intended for use by end-users. It is public to allow for testing.
      *
-     * @param bool               $impersonate Whether or not the Guard should be impersonating.
+     * @param bool                     $impersonate Whether or not the Guard should be impersonating.
      * @param CredentialEntityContract $credential
-     * @param ?int               $source
+     * @param ?int                     $source
      */
     public function setImpersonating(
         CredentialEntityContract $credential,

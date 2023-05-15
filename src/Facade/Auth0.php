@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * Facade for the Auth0 SDK.
  *
  * @codeCoverageIgnore
+ *
  * @api
  */
 final class Auth0 extends Facade

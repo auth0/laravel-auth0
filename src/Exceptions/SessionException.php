@@ -8,6 +8,7 @@ namespace Auth0\Laravel\Exceptions;
  * Exception thrown when an error occurs with the Laravel session store.
  *
  * @codeCoverageIgnore
+ *
  * @api
  */
 final class SessionException extends ExceptionAbstract implements SessionExceptionContract

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Controllers;
 
-use Auth0\Laravel\Guards\AuthenticationGuardContract;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
+use Auth0\Laravel\Guards\AuthenticationGuardContract;
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;

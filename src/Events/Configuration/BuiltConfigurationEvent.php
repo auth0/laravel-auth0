@@ -12,7 +12,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
  *
  * @api
  */
-class BuiltConfigurationEvent extends EventAbstract implements BuiltConfigurationContract
+final class BuiltConfigurationEvent extends EventAbstract implements BuiltConfigurationContract
 {
     public function __construct(private SdkConfiguration $configuration)
     {

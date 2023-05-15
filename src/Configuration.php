@@ -236,11 +236,6 @@ final class Configuration implements ConfigurationContract
 
     private static ?string $path = null;
 
-    public static function version(): int
-    {
-        return config('auth0.AUTH0_CONFIG_VERSION', 1);
-    }
-
     public static function get(
         string $setting,
         array | string | int | bool | null $default = null,
@@ -268,7 +263,7 @@ final class Configuration implements ConfigurationContract
         if (in_array($setting, self::USES_INTEGERS, true)) {
             $value = self::getValue($setting, $default);
 
-            if (! is_integer($value) && ! is_string($value)) {
+            if (! is_int($value) && ! is_string($value)) {
                 return $default;
             }
 
@@ -376,6 +371,15 @@ final class Configuration implements ConfigurationContract
         }
 
         return self::$json;
+    }
+
+    public static function getPath(): string
+    {
+        if (null === self::$path) {
+            self::$path = base_path() . DIRECTORY_SEPARATOR;
+        }
+
+        return self::$path;
     }
 
     public static function stringOrIntToIntOrNull(
@@ -493,13 +497,9 @@ final class Configuration implements ConfigurationContract
         return $default;
     }
 
-    public static function getPath(): string
+    public static function version(): int
     {
-        if (null === self::$path) {
-            self::$path = base_path() . DIRECTORY_SEPARATOR;
-        }
-
-        return self::$path;
+        return config('auth0.AUTH0_CONFIG_VERSION', 1);
     }
 
     private static function getValue(

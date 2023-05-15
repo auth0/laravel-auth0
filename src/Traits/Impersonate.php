@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Traits;
 
-use Auth0\Laravel\Guards\GuardContract;
 use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Guards\GuardContract;
 use Auth0\Laravel\Users\ImposterUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -20,8 +20,8 @@ trait Impersonate
      * Pretend to be an authenticated user or a bearer token-established stateless user for the request. Only intended for unit testing.
      *
      * @param CredentialEntityContract $credential The Credential to impersonate.
-     * @param null|int           $source     The source of the Credential.
-     * @param null|string        $guard      The guard to impersonate with.
+     * @param null|int                 $source     The source of the Credential.
+     * @param null|string              $guard      The guard to impersonate with.
      *
      * @return $this The current test case instance.
      */
@@ -45,7 +45,7 @@ trait Impersonate
      * Pretend to be an authenticated user for the request. Only intended for unit testing.
      *
      * @param CredentialEntityContract $credential The Credential to impersonate.
-     * @param null|string        $guard      The guard to impersonate with.
+     * @param null|string              $guard      The guard to impersonate with.
      *
      * @return $this The current test case instance.
      */
@@ -67,7 +67,7 @@ trait Impersonate
      * Pretend to be a bearer token-established stateless user for the request. Only intended for unit testing.
      *
      * @param CredentialEntityContract $credential The Credential to impersonate.
-     * @param null|string        $guard      The guard to impersonate with.
+     * @param null|string              $guard      The guard to impersonate with.
      *
      * @return $this The current test case instance.
      */

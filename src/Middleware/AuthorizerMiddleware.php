@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Middleware for assigning the Auth0 token authorizer driver to the request.
  *
  * @internal
+ *
  * @api
  */
 final class AuthorizerMiddleware extends MiddlewareAbstract implements AuthorizerMiddlewareContract

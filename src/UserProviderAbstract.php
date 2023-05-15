@@ -27,7 +27,7 @@ abstract class UserProviderAbstract implements UserProviderContract
     ) {
     }
 
-    public function getRepository(): UserRepositoryContract
+    final public function getRepository(): UserRepositoryContract
     {
         return $this->repository ?? $this->resolveRepository();
     }
@@ -37,7 +37,7 @@ abstract class UserProviderAbstract implements UserProviderContract
      *
      * @param array $credentials
      */
-    public function retrieveByCredentials(array $credentials): ?Authenticatable
+    final public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         return $this->getRepository()->fromSession($credentials);
     }
@@ -49,7 +49,7 @@ abstract class UserProviderAbstract implements UserProviderContract
      *
      * @param mixed $identifier
      */
-    public function retrieveById($identifier): ?Authenticatable
+    final public function retrieveById($identifier): ?Authenticatable
     {
         return null;
     }
@@ -62,7 +62,7 @@ abstract class UserProviderAbstract implements UserProviderContract
      * @param mixed $identifier
      * @param mixed $token
      */
-    public function retrieveByToken($identifier, $token): ?Authenticatable
+    final public function retrieveByToken($identifier, $token): ?Authenticatable
     {
         // @phpstan-ignore-next-line
         if (! is_string($token)) {
@@ -88,7 +88,7 @@ abstract class UserProviderAbstract implements UserProviderContract
         );
     }
 
-    public function setRepository(string $repository): void
+    final public function setRepository(string $repository): void
     {
         $this->resolveRepository($repository);
     }
@@ -101,7 +101,7 @@ abstract class UserProviderAbstract implements UserProviderContract
      * @param Authenticatable $user
      * @param mixed           $token
      */
-    public function updateRememberToken(Authenticatable $user, $token): void
+    final public function updateRememberToken(Authenticatable $user, $token): void
     {
     }
 
@@ -111,7 +111,7 @@ abstract class UserProviderAbstract implements UserProviderContract
      * @param Authenticatable $user
      * @param array           $credentials
      */
-    public function validateCredentials(
+    final public function validateCredentials(
         Authenticatable $user,
         array $credentials,
     ): bool {

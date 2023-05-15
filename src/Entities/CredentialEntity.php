@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * An entity representing a user credential.
  *
  * @internal
+ *
  * @api
  */
 final class CredentialEntity extends CredentialEntityAbstract

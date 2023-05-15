@@ -78,7 +78,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
 
         $this->configuration = $configuration;
 
-        if ($this->configuration !== null && $this->sdk instanceof Auth0Interface) {
+        if (null !== $this->configuration && $this->sdk instanceof Auth0Interface) {
             $this->sdk->setConfiguration($this->configuration);
         }
 

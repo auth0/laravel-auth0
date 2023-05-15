@@ -32,7 +32,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
     ) {
     }
 
-    public function clear(): self
+    final public function clear(): self
     {
         $this->user = null;
         $this->idToken = null;
@@ -45,7 +45,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function getAccessToken(): ?string
+    final public function getAccessToken(): ?string
     {
         return $this->accessToken;
     }
@@ -53,17 +53,17 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function getAccessTokenDecoded(): ?array
+    final public function getAccessTokenDecoded(): ?array
     {
         return $this->accessTokenDecoded;
     }
 
-    public function getAccessTokenExpiration(): ?int
+    final public function getAccessTokenExpiration(): ?int
     {
         return $this->accessTokenExpiration;
     }
 
-    public function getAccessTokenExpired(): ?bool
+    final public function getAccessTokenExpired(): ?bool
     {
         $expires = $this->getAccessTokenExpiration();
 
@@ -77,22 +77,22 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function getAccessTokenScope(): ?array
+    final public function getAccessTokenScope(): ?array
     {
         return $this->accessTokenScope;
     }
 
-    public function getIdToken(): ?string
+    final public function getIdToken(): ?string
     {
         return $this->idToken;
     }
 
-    public function getRefreshToken(): ?string
+    final public function getRefreshToken(): ?string
     {
         return $this->refreshToken;
     }
 
-    public function getUser(): ?Authenticatable
+    final public function getUser(): ?Authenticatable
     {
         return $this->user;
     }
@@ -100,7 +100,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
     /**
      * @return array{user: false|string, idToken: null|string, accessToken: null|string, accessTokenDecoded: null|string[], accessTokenScope: null|string[], accessTokenExpiration: null|int, accessTokenExpired: null|bool, refreshToken: null|string}
      */
-    public function jsonSerialize(): mixed
+    final public function jsonSerialize(): mixed
     {
         return [
             'user' => json_encode($this->getUser(), JSON_FORCE_OBJECT),
@@ -114,7 +114,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         ];
     }
 
-    public function setAccessToken(
+    final public function setAccessToken(
         ?string $accessToken = null,
     ): self {
         $this->accessToken = $accessToken;
@@ -122,7 +122,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setAccessTokenDecoded(
+    final public function setAccessTokenDecoded(
         ?array $accessTokenDecoded = null,
     ): self {
         $this->accessTokenDecoded = $accessTokenDecoded;
@@ -130,7 +130,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setAccessTokenExpiration(
+    final public function setAccessTokenExpiration(
         ?int $accessTokenExpiration = null,
     ): self {
         $this->accessTokenExpiration = $accessTokenExpiration;
@@ -138,7 +138,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setAccessTokenScope(
+    final public function setAccessTokenScope(
         ?array $accessTokenScope = null,
     ): self {
         $this->accessTokenScope = $accessTokenScope;
@@ -146,7 +146,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setIdToken(
+    final public function setIdToken(
         ?string $idToken = null,
     ): self {
         $this->idToken = $idToken;
@@ -154,7 +154,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setRefreshToken(
+    final public function setRefreshToken(
         ?string $refreshToken = null,
     ): self {
         $this->refreshToken = $refreshToken;
@@ -162,7 +162,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         return $this;
     }
 
-    public function setUser(
+    final public function setUser(
         ?Authenticatable $user = null,
     ): self {
         $this->user = $user;

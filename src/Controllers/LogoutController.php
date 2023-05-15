@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Controllers;
 
-use Auth0\Laravel\Guards\AuthenticationGuardContract;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Exceptions\ControllerException;
+use Auth0\Laravel\Guards\AuthenticationGuardContract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

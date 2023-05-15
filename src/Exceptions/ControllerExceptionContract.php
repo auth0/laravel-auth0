@@ -8,6 +8,7 @@ namespace Auth0\Laravel\Exceptions;
  * Exception thrown when an error occurs in the SDK's controllers.
  *
  * @codeCoverageIgnore
+ *
  * @api
  */
 interface ControllerExceptionContract extends ExceptionContract

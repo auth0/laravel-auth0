@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Events\Middleware;
 
-use Auth0\Laravel\Guards\GuardContract;
 use Auth0\Laravel\Events\EventAbstract;
+use Auth0\Laravel\Guards\GuardContract;
 use Illuminate\Http\Request;
 
 final class StatefulMiddlewareRequest extends EventAbstract implements StatefulMiddlewareRequestContract

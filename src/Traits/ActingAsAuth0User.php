@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Traits;
 
-use Auth0\Laravel\UserProvider;
-use Auth0\Laravel\Guards\GuardContract;
 use Auth0\Laravel\Entities\CredentialEntity;
+use Auth0\Laravel\Guards\GuardContract;
+use Auth0\Laravel\UserProvider;
 use Auth0\Laravel\Users\ImposterUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * Set the currently logged in user for the application. Only intended for unit testing.
  *
  * @deprecated 7.8.0 Use Auth0\Laravel\Traits\Impersonate instead.
+ *
  * @api
  */
 trait ActingAsAuth0User

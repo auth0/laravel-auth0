@@ -23,7 +23,7 @@ abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
     ) {
     }
 
-    public function expiresAfter(int | DateInterval | null $time): static
+    final public function expiresAfter(int | DateInterval | null $time): static
     {
         $this->expiration = match (true) {
             null === $time => new DateTimeImmutable('now +1 year'),
@@ -34,14 +34,14 @@ abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
         return $this;
     }
 
-    public function expiresAt(?DateTimeInterface $expiration): static
+    final public function expiresAt(?DateTimeInterface $expiration): static
     {
         $this->expiration = $expiration ?? new DateTimeImmutable('now +1 year');
 
         return $this;
     }
 
-    public function get(): mixed
+    final public function get(): mixed
     {
         return $this->isHit() ? $this->value : null;
     }
@@ -49,12 +49,12 @@ abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
     /**
      * Returns the expiration timestamp.
      */
-    public function getExpiration(): DateTimeInterface
+    final public function getExpiration(): DateTimeInterface
     {
         return $this->expiration ?? new DateTimeImmutable('now +1 year');
     }
 
-    public function getKey(): string
+    final public function getKey(): string
     {
         return $this->key;
     }
@@ -62,17 +62,17 @@ abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
     /**
      * Returns the raw value, regardless of hit status.
      */
-    public function getRawValue(): mixed
+    final public function getRawValue(): mixed
     {
         return $this->value;
     }
 
-    public function isHit(): bool
+    final public function isHit(): bool
     {
         return $this->hit;
     }
 
-    public function set(mixed $value): static
+    final public function set(mixed $value): static
     {
         $this->value = $value;
 

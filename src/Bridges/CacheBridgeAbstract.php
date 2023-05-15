@@ -19,14 +19,14 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
      */
     private array $deferred = [];
 
-    public function clear(): bool
+    final public function clear(): bool
     {
         $this->deferred = [];
 
         return cache()->flush();
     }
 
-    public function commit(): bool
+    final public function commit(): bool
     {
         $success = true;
 
@@ -48,12 +48,12 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
     /**
      * @param string $key the key for which to return the corresponding Cache Item
      */
-    public function deleteItem(string $key): bool
+    final public function deleteItem(string $key): bool
     {
         return cache()->forget($key);
     }
 
-    public function deleteItems(array $keys): bool
+    final public function deleteItems(array $keys): bool
     {
         $deleted = true;
 
@@ -66,7 +66,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
         return $deleted;
     }
 
-    public function getItem(string $key): CacheItemInterface
+    final public function getItem(string $key): CacheItemInterface
     {
         $value = cache()->get($key);
 
@@ -82,7 +82,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
      *
      * @return CacheItemInterface[]
      */
-    public function getItems(array $keys = []): iterable
+    final public function getItems(array $keys = []): iterable
     {
         if ([] === $keys) {
             return [];
@@ -102,13 +102,13 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
     /**
      * @param string $key the key for which to return the corresponding Cache Item
      */
-    public function hasItem(string $key): bool
+    final public function hasItem(string $key): bool
     {
         return $this->getItem($key)
             ->isHit();
     }
 
-    public function save(CacheItemInterface $item): bool
+    final public function save(CacheItemInterface $item): bool
     {
         if (! $item instanceof CacheItemBridge) {
             return false;
@@ -127,7 +127,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
         return cache()->put($key, $value, $ttl);
     }
 
-    public function saveDeferred(CacheItemInterface $item): bool
+    final public function saveDeferred(CacheItemInterface $item): bool
     {
         if (! $item instanceof CacheItemBridge) {
             return false;

@@ -10,11 +10,12 @@ use Auth0\SDK\Configuration\SdkConfiguration;
  * An entity representing an instance of the Auth0 PHP SDK.
  *
  * @internal
+ *
  * @api
  */
 final class InstanceEntity extends InstanceEntityAbstract
 {
-    final public static function create(
+    public static function create(
         SdkConfiguration | array | null $configuration = null,
     ): self {
         $instance = new self();

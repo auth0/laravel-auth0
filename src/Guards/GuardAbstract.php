@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Configuration;
-use Auth0\Laravel\Entities\{InstanceEntity, InstanceEntityContract, CredentialEntityContract};
+use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntity, InstanceEntityContract};
 use Auth0\Laravel\Exceptions\{AuthenticationException, GuardException, GuardExceptionContract};
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
 use Exception;
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Session\Session;
+
+use JsonSerializable;
 
 use function in_array;
 use function is_array;
@@ -20,6 +22,7 @@ use function is_string;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class GuardAbstract implements GuardContract
@@ -148,7 +151,6 @@ abstract class GuardAbstract implements GuardContract
         /**
          * @var mixed $available
          */
-
         if (is_array($available) && [] !== $available) {
             return in_array($permission, $available, true);
         }
@@ -207,7 +209,7 @@ abstract class GuardAbstract implements GuardContract
         if (! $this->sdk instanceof InstanceEntityContract || true === $reset) {
             $configuration = [];
 
-            if (Configuration::version() === 2) {
+            if (2 === Configuration::version()) {
                 /**
                  * @var string $configName
                  */
@@ -219,7 +221,7 @@ abstract class GuardAbstract implements GuardContract
             }
 
             // Fallback to the legacy configuration format if a version is not defined.
-            if (Configuration::version() !== 2) {
+            if (2 !== Configuration::version()) {
                 $configuration = config('auth0');
             }
 
@@ -247,6 +249,8 @@ abstract class GuardAbstract implements GuardContract
 
     /**
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
+     *
+     * @param array $credentials
      */
     final public function validate(
         array $credentials = [],
@@ -295,7 +299,7 @@ abstract class GuardAbstract implements GuardContract
 
         if (in_array('JsonSerializable', $implements, true) && method_exists($user, 'jsonSerialize')) {
             /**
-             * @var \JsonSerializable $user
+             * @var JsonSerializable $user
              */
             $user = (array) $user->jsonSerialize();
 

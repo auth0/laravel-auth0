@@ -10,6 +10,7 @@ use Auth0\Laravel\Exceptions\ExceptionContract;
  * Exception thrown when an error occurs in the SDK's callback handler.
  *
  * @codeCoverageIgnore
+ *
  * @api
  */
 interface CallbackControllerExceptionContract extends ExceptionContract

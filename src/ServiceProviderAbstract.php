@@ -26,7 +26,7 @@ use function is_string;
  */
 abstract class ServiceProviderAbstract extends ServiceProvider implements ServiceProviderContract
 {
-    public function boot(
+    final public function boot(
         Router $router,
         AuthManager $auth,
         Gate $gate,
@@ -105,7 +105,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
         return $this;
     }
 
-    public function provides()
+    final public function provides()
     {
         return [
             Auth0::class,
@@ -132,7 +132,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
         ];
     }
 
-    public function register(): self
+    final public function register(): self
     {
         if (true === config('auth0.registerGuards')) {
             if (null === config('auth.guards.auth0-session')) {

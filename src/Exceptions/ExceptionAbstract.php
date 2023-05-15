@@ -10,6 +10,7 @@ use Exception;
  * Base exception for all Auth0 Laravel SDK exceptions.
  *
  * @codeCoverageIgnore
+ *
  * @api
  */
 abstract class ExceptionAbstract extends Exception implements ExceptionContract

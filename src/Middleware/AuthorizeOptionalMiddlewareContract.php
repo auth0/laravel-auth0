@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Middleware;
 
-use Auth0\Laravel\Middleware\MiddlewareContract;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @codeCoverageIgnore
+ *
  * @api
  */
 interface AuthorizeOptionalMiddlewareContract extends MiddlewareContract

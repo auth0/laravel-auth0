@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Events;
 
-use Auth0\Laravel\Events\EventAbstract;
 use Throwable;
 
 /**

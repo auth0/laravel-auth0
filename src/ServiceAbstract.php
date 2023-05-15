@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Controllers\CallbackController;
-use Auth0\Laravel\Controllers\LoginController;
-use Auth0\Laravel\Controllers\LogoutController;
+use Auth0\Laravel\Controllers\{CallbackController, LoginController, LogoutController};
 use Auth0\Laravel\Entities\InstanceEntityAbstract;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -33,7 +31,7 @@ abstract class ServiceAbstract extends InstanceEntityAbstract implements Service
      *
      * @return null|array<mixed>
      */
-    public static function json(ResponseInterface $response): ?array
+    final public static function json(ResponseInterface $response): ?array
     {
         if (! in_array($response->getStatusCode(), [200, 201], true)) {
             return null;
@@ -53,7 +51,7 @@ abstract class ServiceAbstract extends InstanceEntityAbstract implements Service
      *
      * @param string $authenticationGuard The name of the authentication guard to use.
      */
-    public static function routes(
+    final public static function routes(
         string $authenticationGuard = 'auth0-session',
     ): void {
         Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], static function (): void {

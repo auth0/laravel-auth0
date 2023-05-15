@@ -26,7 +26,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @param bool $deferring whether to defer persisting the storage state
      */
-    public function defer(bool $deferring): void
+    final public function defer(bool $deferring): void
     {
     }
 
@@ -37,7 +37,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    public function delete(string $key): void
+    final public function delete(string $key): void
     {
         $this->getStore()->forget($this->getPrefixedKey($key));
     }
@@ -50,7 +50,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    public function get(string $key, $default = null)
+    final public function get(string $key, $default = null)
     {
         return $this->getStore()->get($this->getPrefixedKey($key), $default);
     }
@@ -60,7 +60,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    public function getAll(): array
+    final public function getAll(): array
     {
         $pairs = $this->getStore()->all();
         $prefix = $this->prefix . '_';
@@ -80,7 +80,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @return string Prefix used for all session keys.
      */
-    public function getPrefix(): string
+    final public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -90,7 +90,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    public function purge(): void
+    final public function purge(): void
     {
         $entities = $this->getAll();
 
@@ -107,7 +107,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    public function set(string $key, $value): void
+    final public function set(string $key, $value): void
     {
         $this->getStore()->put($this->getPrefixedKey($key), $value);
     }
@@ -119,7 +119,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @return $this
      */
-    public function setPrefix(
+    final public function setPrefix(
         string $prefix = 'auth0',
     ): self {
         $prefix = trim($prefix);
