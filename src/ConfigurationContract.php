@@ -32,16 +32,16 @@ interface ConfigurationContract
     /**
      * Converts a delimited string into an array, or null, if nothing was provided.
      *
-     * @param ?string $config
+     * @param array<string>|string|null $config
      * @param string  $delimiter
      */
-    public static function stringToArrayOrNull(?string $config, string $delimiter = ' '): ?array;
+    public static function stringToArrayOrNull(array | string | null $config, string $delimiter = ' '): ?array;
 
     /**
      * Converts a truthy string representation into a boolean.
      *
-     * @param ?string $config
+     * @param bool|null|string $config
      * @param ?bool   $default
      */
-    public static function stringToBoolOrNull(?string $config, ?bool $default = null): ?bool;
+    public static function stringToBoolOrNull(string | bool | null $config, ?bool $default = null): ?bool;
 }
