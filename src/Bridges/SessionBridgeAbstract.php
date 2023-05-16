@@ -11,12 +11,10 @@ use InvalidArgumentException;
 /**
  * @api
  */
-abstract class SessionBridgeAbstract implements SessionBridgeContract
+abstract class SessionBridgeAbstract extends BridgeAbstract
 {
-    private string $prefix = 'auth0';
-
     public function __construct(
-        string $prefix = 'auth0',
+        protected string $prefix = 'auth0',
     ) {
         $this->setPrefix($prefix);
     }
@@ -50,7 +48,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @throws SessionException If a Laravel session store is not available.
      */
-    final public function get(string $key, $default = null)
+    final public function get(string $key, $default = null): mixed
     {
         return $this->getStore()->get($this->getPrefixedKey($key), $default);
     }
@@ -138,7 +136,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @param string $key
      */
-    private function getPrefixedKey(string $key): string
+    protected function getPrefixedKey(string $key): string
     {
         return $this->getPrefix() . '_' . trim($key);
     }
@@ -150,7 +148,7 @@ abstract class SessionBridgeAbstract implements SessionBridgeContract
      *
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    private function getStore(): Store
+    protected function getStore(): Store
     {
         $store = app('session.store');
         $request = app('request');

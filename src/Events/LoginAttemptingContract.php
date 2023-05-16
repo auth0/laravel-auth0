@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Events;
 /**
  * @api
  */
-interface LoginAttemptingContract
+interface LoginAttemptingContract extends EventContract
 {
     /**
      * @param array $parameters The login parameters array.

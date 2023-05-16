@@ -9,7 +9,7 @@ namespace Auth0\Laravel\Events;
  *
  * @api
  */
-abstract class EventAbstract implements EventContract
+abstract class EventAbstract
 {
     /**
      * Tracks whether an event payload has been overwritten.

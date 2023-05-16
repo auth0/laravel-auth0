@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Entities\Credential;
 use Auth0\Laravel\Entities\CredentialEntity;
-use Auth0\Laravel\Model\Stateless\User;
+use Auth0\Laravel\Users\StatelessUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +29,6 @@ beforeEach(function (): void {
         'auth0.default.audience' => ['https://example.com/health-api'],
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -123,7 +121,7 @@ it('does not query the /userinfo endpoint for refreshUser() without a bearer tok
         ->user()->toBeNull();
 
     $this->guard->setCredential(new CredentialEntity(
-        user: new User(['sub' => $this->identifier]),
+        user: new StatelessUser(['sub' => $this->identifier]),
     ));
 
     expect($this->guard)
@@ -149,22 +147,21 @@ it('aborts querying the /userinfo endpoint for refreshUser() when a bad response
     expect($this->guard)
         ->user()->getAuthIdentifier()->toBe($this->identifier);
 
-    $requestFactory = new MockRequestFactory;
-    $responseFactory = new MockResponseFactory;
-    $streamFactory = new MockStreamFactory;
+    $response = (new MockResponseFactory)->createResponse();
 
-    $response = $responseFactory->createResponse(200);
-    $response->getBody()->write(json_encode(
-        true,
-        JSON_PRETTY_PRINT
-    ));
-
-    $client = new MockHttpClient(fallbackResponse: $response);
-
-    $this->config->setHttpRequestFactory($requestFactory);
-    $this->config->setHttpResponseFactory($responseFactory);
-    $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: true,
+                    flags: JSON_PRETTY_PRINT
+                )
+            )
+        )
+    );
 
     $this->guard->refreshUser();
 
@@ -172,7 +169,7 @@ it('aborts querying the /userinfo endpoint for refreshUser() when a bad response
 
     expect($userAttributes)
         ->toBeArray()
-        ->sub->toBe($this->identifier);
+        ->toHaveKey('sub', $this->identifier);
 });
 
 it('queries the /userinfo endpoint for refreshUser()', function (): void {
@@ -185,26 +182,25 @@ it('queries the /userinfo endpoint for refreshUser()', function (): void {
     expect($this->guard)
         ->user()->getAuthIdentifier()->toBe($this->identifier);
 
-    $requestFactory = new MockRequestFactory;
-    $responseFactory = new MockResponseFactory;
-    $streamFactory = new MockStreamFactory;
+    $response = (new MockResponseFactory)->createResponse();
 
-    $response = $responseFactory->createResponse(200);
-    $response->getBody()->write(json_encode(
-        [
-            'sub' => $this->identifier,
-            'name' => 'John Doe',
-            'email' => '...',
-        ],
-        JSON_PRETTY_PRINT
-    ));
-
-    $client = new MockHttpClient(fallbackResponse: $response);
-
-    $this->config->setHttpRequestFactory($requestFactory);
-    $this->config->setHttpResponseFactory($responseFactory);
-    $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: [
+                        'sub' => $this->identifier,
+                        'name' => 'John Doe',
+                        'email' => '...',
+                    ],
+                    flags: JSON_PRETTY_PRINT
+                )
+            )
+        )
+    );
 
     $this->guard->refreshUser();
 

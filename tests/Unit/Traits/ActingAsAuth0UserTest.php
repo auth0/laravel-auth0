@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Model\Imposter;
 use Auth0\Laravel\Traits\ActingAsAuth0User;
+use Auth0\Laravel\Users\UserContract;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Illuminate\Http\Response;
@@ -74,7 +74,7 @@ it('impersonates a user against auth0.authenticate', function (): void {
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('impersonates a user against auth0.authenticate.optional', function (): void {
@@ -107,7 +107,7 @@ it('impersonates a user against auth0.authenticate.optional', function (): void 
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('impersonates a user against auth0.authenticate using a scope', function (): void {
@@ -140,7 +140,7 @@ it('impersonates a user against auth0.authenticate using a scope', function (): 
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('impersonates a user against auth0.authorize', function (): void {
@@ -173,7 +173,7 @@ it('impersonates a user against auth0.authorize', function (): void {
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('impersonates a user against auth0.authorize.optional', function (): void {
@@ -206,7 +206,7 @@ it('impersonates a user against auth0.authorize.optional', function (): void {
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('impersonates a user against auth0.authorize using a scope', function (): void {
@@ -239,5 +239,5 @@ it('impersonates a user against auth0.authorize using a scope', function (): voi
         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });

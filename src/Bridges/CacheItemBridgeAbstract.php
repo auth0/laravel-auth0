@@ -8,37 +8,17 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-use function is_int;
-
 /**
  * @api
  */
-abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
+abstract class CacheItemBridgeAbstract extends BridgeAbstract
 {
     public function __construct(
-        private string $key,
-        private mixed $value,
-        private bool $hit,
-        private ?DateTimeInterface $expiration = null,
+        protected string $key,
+        protected mixed $value,
+        protected bool $hit,
+        protected ?DateTimeInterface $expiration = null,
     ) {
-    }
-
-    final public function expiresAfter(int | DateInterval | null $time): static
-    {
-        $this->expiration = match (true) {
-            null === $time => new DateTimeImmutable('now +1 year'),
-            is_int($time) => new DateTimeImmutable('now +' . (string) $time . ' seconds'),
-            $time instanceof DateInterval => (new DateTimeImmutable())->add($time),
-        };
-
-        return $this;
-    }
-
-    final public function expiresAt(?DateTimeInterface $expiration): static
-    {
-        $this->expiration = $expiration ?? new DateTimeImmutable('now +1 year');
-
-        return $this;
     }
 
     final public function get(): mixed
@@ -72,10 +52,9 @@ abstract class CacheItemBridgeAbstract implements CacheItemBridgeContract
         return $this->hit;
     }
 
-    final public function set(mixed $value): static
-    {
-        $this->value = $value;
+    abstract public function expiresAfter(int | DateInterval | null $time): static;
 
-        return $this;
-    }
+    abstract public function expiresAt(?DateTimeInterface $expiration): static;
+
+    abstract public function set(mixed $value): static;
 }

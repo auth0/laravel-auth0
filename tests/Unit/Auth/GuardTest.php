@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Exceptions\AuthenticationException;
 use Auth0\Laravel\Entities\CredentialEntity;
-use Auth0\Laravel\Model\Stateful\User;
+use Auth0\Laravel\Users\StatefulUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Support\Facades\Route;
 use PsrMock\Psr18\Client as MockHttpClient;
@@ -24,7 +24,6 @@ beforeEach(function (): void {
         'auth0.default.clientId' => uniqid(),
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -33,7 +32,7 @@ beforeEach(function (): void {
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();
 
-    $this->user = new User(['sub' => uniqid('auth0|')]);
+    $this->user = new StatefulUser(['sub' => uniqid('auth0|')]);
 
     Route::middleware('auth:auth0')->get('/test', function () {
         return 'OK';
@@ -146,7 +145,7 @@ it('has a user', function (): void {
 });
 
 it('has a scope', function (): void {
-    $this->user = new User(['sub' => uniqid('auth0|'), 'scope' => 'read:users 456']);
+    $this->user = new StatefulUser(['sub' => uniqid('auth0|'), 'scope' => 'read:users 456']);
 
     $credential = CredentialEntity::create(
         user: $this->user,
@@ -223,26 +222,27 @@ it('queries the /userinfo endpoint', function (): void {
     expect($this->guard)
         ->user()->toBe($this->user);
 
-    $requestFactory = new MockRequestFactory;
-    $responseFactory = new MockResponseFactory;
-    $streamFactory = new MockStreamFactory;
-
     $identifier = 'updated|' . uniqid();
 
-    $response = $responseFactory->createResponse(200);
-    $response->getBody()->write(json_encode(
-        [
-            'sub' => $identifier,
-        ],
-        JSON_PRETTY_PRINT
-    ));
+    $response = (new MockResponseFactory)->createResponse();
 
-    $client = new MockHttpClient(fallbackResponse: $response);
-
-    $this->config->setHttpRequestFactory($requestFactory);
-    $this->config->setHttpResponseFactory($responseFactory);
-    $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: [
+                        'sub' => $identifier,
+                        'name' => 'John Doe',
+                        'email' => '...',
+                    ],
+                    flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+                )
+            )
+        )
+    );
 
     $this->guard->refreshUser();
 

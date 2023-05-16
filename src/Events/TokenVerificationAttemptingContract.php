@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Events;
 /**
  * @api
  */
-interface TokenVerificationAttemptingContract
+interface TokenVerificationAttemptingContract extends EventContract
 {
     /**
      * AuthenticationSucceeded constructor.

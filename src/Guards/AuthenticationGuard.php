@@ -47,12 +47,19 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $user = $this->getProvider()->retrieveByCredentials($this->normalizeUserArray($user));
 
             if ($user instanceof Authenticatable) {
+                $scope = $session->getAccessTokenScope();
+                $decoded = $session->getAccessTokenDecoded();
+
+                /**
+                 * @var array<string> $scope
+                 * @var array<string> $decoded
+                 */
                 $credential = CredentialEntity::create(
                     user: $user,
                     idToken: $session->getIdToken(),
                     accessToken: $session->getAccessToken(),
-                    accessTokenDecoded: $session->getAccessTokenDecoded(),
-                    accessTokenScope: $session->getAccessTokenScope(),
+                    accessTokenDecoded: $decoded,
+                    accessTokenScope: $scope,
                     accessTokenExpiration: $session->getAccessTokenExpiration(),
                     refreshToken: $session->getRefreshToken(),
                 );
@@ -62,6 +69,13 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         }
 
         return null;
+    }
+
+    public function forgetUser(): self
+    {
+        $this->setCredential();
+
+        return $this;
     }
 
     public function getCredential(): ?CredentialEntityContract
@@ -151,6 +165,9 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         }
 
         if (null !== $accessTokenScope && $accessTokenScope !== $sdk->getAccessTokenScope()) {
+            /**
+             * @var array<string> $accessTokenScope
+             */
             $sdk->setAccessTokenScope($accessTokenScope);
         }
 
@@ -189,12 +206,19 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
                 }
 
                 $user = $this->getProvider()->retrieveByCredentials($response);
+                $scope = $credential->getAccessTokenScope();
+                $decoded = $credential->getAccessTokenDecoded();
 
+                /**
+                 * @var array<string> $scope
+                 * @var array<string> $decoded
+                 */
                 $this->pushState(CredentialEntity::create(
                     user: $user,
                     idToken: $credential->getIdToken(),
                     accessToken: $credential->getAccessToken(),
-                    accessTokenScope: $credential->getAccessTokenScope(),
+                    accessTokenScope: $scope,
+                    accessTokenDecoded: $decoded,
                     accessTokenExpiration: $credential->getAccessTokenExpiration(),
                     refreshToken: $credential->getRefreshToken(),
                 ));
@@ -208,6 +232,18 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         $this->stopImpersonating();
 
         $this->credential = $credential;
+
+        return $this;
+    }
+
+    /**
+     * @param CredentialEntityContract $credential
+     */
+    public function setImpersonating(
+        CredentialEntityContract $credential,
+    ): self {
+        $this->impersonationSource = self::SOURCE_SESSION;
+        $this->impersonating = $credential;
 
         return $this;
     }
@@ -268,6 +304,10 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
                 $decoded = (new Parser(new SdkConfiguration(strategy: SdkConfiguration::STRATEGY_NONE), $credentials->accessToken))->export();
             }
 
+            /**
+             * @var null|array<string> $decoded
+             */
+
             return CredentialEntity::create(
                 user: new StatefulUser($credentials->user),
                 idToken: $credentials->idToken,
@@ -305,7 +345,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             event(new TokenRefreshSucceeded());
             $user = $session->getUser();
 
-            if (null === $user) {
+            if (! $user instanceof Authenticatable) {
                 return null;
             }
 
@@ -319,12 +359,19 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
                     $decoded = (new Parser(new SdkConfiguration(strategy: SdkConfiguration::STRATEGY_NONE), $accessToken))->export();
                 }
 
+                $scope = $session->getAccessTokenScope();
+
+                /**
+                 * @var array<string>      $scope
+                 * @var null|array<string> $decoded
+                 */
+
                 return CredentialEntity::create(
                     user: $user,
                     idToken: $session->getIdToken(),
                     accessToken: $session->getAccessToken(),
                     accessTokenDecoded: $decoded,
-                    accessTokenScope: $session->getAccessTokenScope(),
+                    accessTokenScope: $scope,
                     accessTokenExpiration: $session->getAccessTokenExpiration(),
                     refreshToken: $session->getRefreshToken(),
                 );

@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Events;
 /**
  * @api
  */
-interface Auth0EventContract
+interface Auth0EventContract extends EventContract
 {
     /**
      * Returns whether an event payload has been overwritten.

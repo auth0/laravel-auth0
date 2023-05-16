@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Auth0\Laravel\Users\UserContract;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Token\Generator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +27,8 @@ beforeEach(function (): void {
 
     $this->validSession = [
         'auth0_session_user' => ['sub' => 'hello|world'],
-        'auth0_session_idToken' => uniqid(),
-        'auth0_session_accessToken' => uniqid(),
+        'auth0_session_idToken' => (string) Generator::create((createRsaKeys())->private),
+        'auth0_session_accessToken' => (string) Generator::create((createRsaKeys())->private),
         'auth0_session_accessTokenScope' => [uniqid(), 'read:admin'],
         'auth0_session_accessTokenExpiration' => time() + 60,
     ];
@@ -58,12 +60,8 @@ it('redirects to login route if a visitor does not have a session', function ():
         return $route;
     });
 
-    config($config = [
-        'auth0.default.routes.login' => '/' . uniqid()
-    ]);
-
     $this->get($route)
-         ->assertRedirect($config['auth0.default.routes.login']);
+         ->assertRedirect('/login');
 
     expect(redirect()->getIntendedUrl())
         ->toEqual('http://localhost' . $route);
@@ -85,7 +83,7 @@ it('assigns a user', function (): void {
             ->assertSee($route);
 
     expect($this->guard)
-         ->user()->toBeInstanceOf(User::class);
+         ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('assigns a user when using a configured scope matches', function (): void {
@@ -101,7 +99,7 @@ it('assigns a user when using a configured scope matches', function (): void {
             ->assertSee($route);
 
     expect($this->guard)
-         ->user()->toBeInstanceOf(User::class);
+         ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('does not assign a user when a configured scope is not matched', function (): void {

@@ -270,14 +270,19 @@ final class Configuration implements ConfigurationContract
             return self::stringOrIntToIntOrNull($value) ?? $default;
         }
 
-        $result = self::stringOrNull(self::getValue($setting, $default)) ?? $default;
+        $result = null;
+        $value = self::getValue($setting) ?? $default;
+
+        if (is_string($value) || is_int($value) || null === $value) {
+            $result = self::stringOrNull($value) ?? $default;
+        }
 
         if (self::CONFIG_DOMAIN === $setting && null === $result) {
             // Fallback to extracting the tenant domain from the signing key subject.
             $result = self::getJson()['signing_keys.0.subject'] ?? '';
             $result = explode('=', $result);
 
-            if (isset($result[1]) && str_ends_with($result[1] ?? '', '.auth0.com')) {
+            if (isset($result[1]) && str_ends_with($result[1], '.auth0.com')) {
                 return $result[1];
             }
         }
@@ -359,10 +364,14 @@ final class Configuration implements ConfigurationContract
 
             foreach ($files as $file) {
                 if (file_exists($path . $file)) {
-                    $json = json_decode(file_get_contents($path . $file), true, 512);
+                    $content = file_get_contents($path . $file);
 
-                    if (is_array($json)) {
-                        $configuration = array_merge($configuration, $json);
+                    if (is_string($content)) {
+                        $json = json_decode($content, true, 512);
+
+                        if (is_array($json)) {
+                            $configuration = array_merge($configuration, $json);
+                        }
                     }
                 }
             }
@@ -383,15 +392,11 @@ final class Configuration implements ConfigurationContract
     }
 
     public static function stringOrIntToIntOrNull(
-        mixed $value,
+        int | string $value,
         int | null $default = null,
     ): int | null {
         if (is_int($value)) {
             return $value;
-        }
-
-        if (! is_string($value)) {
-            return $default;
         }
 
         $value = trim($value);
@@ -408,7 +413,7 @@ final class Configuration implements ConfigurationContract
     }
 
     public static function stringOrNull(
-        mixed $value,
+        string | int | null $value,
         string | int | null $default = null,
     ): string | int | null {
         if (! is_string($value)) {
@@ -499,7 +504,9 @@ final class Configuration implements ConfigurationContract
 
     public static function version(): int
     {
-        return config('auth0.AUTH0_CONFIG_VERSION', 1);
+        $version = config('auth0.AUTH0_CONFIG_VERSION', 1);
+
+        return is_int($version) ? $version : 1;
     }
 
     private static function getValue(

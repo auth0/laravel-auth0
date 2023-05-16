@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Controllers\CallbackController;
+use Auth0\Laravel\Events\AuthenticationFailed;
 use Auth0\Laravel\Events\AuthenticationSucceeded;
+use Auth0\Laravel\Exceptions\ControllerException;
+use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
 use Auth0\Laravel\Users\ImposterUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Exception\StateException;
@@ -15,6 +18,7 @@ use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Http\Response;
 
 use function Pest\Laravel\getJson;
 
@@ -29,14 +33,11 @@ beforeEach(function (): void {
         'auth0.default.clientId' => uniqid(),
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
-    $this->laravel = app('auth0');
     $this->guard = auth('legacyGuard');
-    $this->sdk = $this->laravel->getSdk();
-    $this->config = $this->sdk->configuration();
-
+    $this->sdk = $this->guard->sdk();
+    $this->config = $this->guard->sdk()->configuration();
     $this->user = new ImposterUser(['sub' => uniqid('auth0|')]);
 
     Route::get('/auth0/callback', CallbackController::class)->name('callback');
@@ -48,9 +49,11 @@ it('redirects home if an incompatible guard is active', function (): void {
         'auth.guards.legacyGuard' => null,
     ]);
 
-    getJson('/auth0/callback')
-        ->assertFound()
-        ->assertLocation(config('auth0.default.routes.home'));
+    expect(function () {
+        $this->withoutExceptionHandling()
+             ->getJson('/auth0/callback')
+             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+    })->toThrow(ControllerException::class);
 });
 
 it('accepts code and state parameters', function (): void {
@@ -74,7 +77,7 @@ it('accepts error and error_description parameters', function (): void {
     expect(function () {
         $this->withoutExceptionHandling()
              ->getJson('/auth0/callback?error=123&error_description=456');
-    })->toThrow(CallbackException::class);
+    })->toThrow(CallbackControllerException::class);
 
     $this->assertDispatched(Attempting::class, 1);
     $this->assertDispatched(Failed::class, 1);
@@ -101,7 +104,7 @@ it('returns a user and sets up a session', function (): void {
         'aud' => config('auth0.default.clientId'),
         'exp' => time() + 60,
         'iat' => time(),
-        'email' => 'john.doe@somewhere.teset'
+        'email' => 'john.doe@somewhere.test'
     ], []);
 
     $idToken = Generator::create($this->secret, Token::ALGO_HS256, [
@@ -128,13 +131,13 @@ it('returns a user and sets up a session', function (): void {
     $client->addResponse('POST', 'https://' . config('auth0.default.domain') . '/oauth/token', $response);
 
     $this->withSession([
-            'auth0_transient_state' => $state,
-            'auth0_transient_pkce' => $pkce,
-            'auth0_transient_nonce' => $nonce,
-            'auth0_transient_code_verifier' => $verifier
-         ])->getJson('/auth0/callback?code=code&state=' . $state)
-            ->assertFound()
-            ->assertLocation(config('auth0.default.routes.home'));
+        'auth0_transient_state' => $state,
+        'auth0_transient_pkce' => $pkce,
+        'auth0_transient_nonce' => $nonce,
+        'auth0_transient_code_verifier' => $verifier
+    ])->getJson('/auth0/callback?code=code&state=' . $state)
+        ->assertFound()
+        ->assertLocation('/');
 
     $this->assertDispatched(Attempting::class, 1);
     $this->assertDispatched(Validated::class, 1);

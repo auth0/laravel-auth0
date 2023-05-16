@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Auth0\Laravel\Users\UserContract;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
@@ -31,7 +32,7 @@ beforeEach(function (): void {
 it('does not assign a user when an incompatible guard is used', function (): void {
     $route = '/' . uniqid();
 
-    Route::middleware('auth0.authorize.optional')->get($route, function () use ($route): string {
+    Route::middleware('auth0.authorize')->get($route, function () use ($route): string {
         return json_encode(['status' => $route]);
     });
 
@@ -48,16 +49,15 @@ it('does not assign a user when an incompatible guard is used', function (): voi
         ->user()->toBeNull();
 });
 
-it('does not assign a user when an invalid bearer token is provided', function (): void {
+it('returns a 401 and does not assign a user when an invalid bearer token is provided', function (): void {
     $route = '/' . uniqid();
 
-    Route::middleware('auth0.authorize.optional')->get($route, function () use ($route): string {
+    Route::middleware('auth0.authorize')->get($route, function () use ($route): string {
         return json_encode(['status' => $route]);
     });
 
     $this->getJson($route, ['Authorization' => 'Bearer ' . uniqid()])
-        ->assertStatus(Response::HTTP_OK)
-        ->assertJson(['status' => $route]);
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
     expect($this->guard)
         ->user()->toBeNull();
@@ -66,7 +66,7 @@ it('does not assign a user when an invalid bearer token is provided', function (
 it('assigns a user', function (): void {
     $route = '/' . uniqid();
 
-    Route::middleware('auth0.authorize.optional')->get($route, function () use ($route): string {
+    Route::middleware('auth0.authorize')->get($route, function () use ($route): string {
         return json_encode(['status' => $route]);
     });
 
@@ -89,13 +89,13 @@ it('assigns a user', function (): void {
         ->assertJson(['status' => $route]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
 it('assigns a user when using a configured scope matches', function (): void {
     $route = '/' . uniqid();
 
-    Route::middleware('auth0.authorize.optional:read:admin')->get($route, function () use ($route): string {
+    Route::middleware('auth0.authorize:read:admin')->get($route, function () use ($route): string {
         return json_encode(['status' => $route]);
     });
 
@@ -118,13 +118,13 @@ it('assigns a user when using a configured scope matches', function (): void {
         ->assertJson(['status' => $route]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(User::class);
+        ->user()->toBeInstanceOf(UserContract::class);
 });
 
-it('does not assign a user when a configured scope is not matched', function (): void {
+it('returns a 403 and does not assign a user when a configured scope is not matched', function (): void {
     $route = '/' . uniqid();
 
-    Route::middleware('auth0.authorize.optional:something:else')->get($route, function () use ($route): string {
+    Route::middleware('auth0.authorize:something:else')->get($route, function () use ($route): string {
         return json_encode(['status' => $route]);
     });
 
@@ -143,8 +143,7 @@ it('does not assign a user when a configured scope is not matched', function ():
     ]);
 
     $this->getJson($route, ['Authorization' => 'Bearer ' . $token->toString()])
-        ->assertStatus(Response::HTTP_OK)
-        ->assertJson(['status' => $route]);
+        ->assertStatus(Response::HTTP_FORBIDDEN);
 
     expect($this->guard)
         ->user()->toBeNull();

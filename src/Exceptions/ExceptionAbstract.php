@@ -13,6 +13,6 @@ use Exception;
  *
  * @api
  */
-abstract class ExceptionAbstract extends Exception implements ExceptionContract
+abstract class ExceptionAbstract extends Exception
 {
 }

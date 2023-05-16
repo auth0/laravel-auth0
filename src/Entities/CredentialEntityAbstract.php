@@ -10,39 +10,26 @@ use JsonSerializable;
 /**
  * @api
  */
-abstract class CredentialEntityAbstract implements CredentialEntityContract, JsonSerializable
+abstract class CredentialEntityAbstract extends EntityAbstract implements JsonSerializable
 {
     /**
      * @param null|Authenticatable $user                  The user entity this credential represents.
      * @param null|string          $idToken               The ID token for this credential.
      * @param null|string          $accessToken           The access token for this credential.
-     * @param null|array<string>   $accessTokenScope      The access token scope for this credential.
+     * @param null|array<mixed>    $accessTokenScope      The access token scope for this credential.
      * @param null|int             $accessTokenExpiration The access token expiration for this credential.
      * @param null|string          $refreshToken          The refresh token for this credential.
-     * @param null|array<string>   $accessTokenDecoded    The decoded access token for this credential.
+     * @param null|array<mixed>    $accessTokenDecoded    The decoded access token for this credential.
      */
     public function __construct(
-        private ?Authenticatable $user = null,
-        private ?string $idToken = null,
-        private ?string $accessToken = null,
-        private ?array $accessTokenScope = null,
-        private ?int $accessTokenExpiration = null,
-        private ?string $refreshToken = null,
-        private ?array $accessTokenDecoded = null,
+        protected ?Authenticatable $user = null,
+        protected ?string $idToken = null,
+        protected ?string $accessToken = null,
+        protected ?array $accessTokenScope = null,
+        protected ?int $accessTokenExpiration = null,
+        protected ?string $refreshToken = null,
+        protected ?array $accessTokenDecoded = null,
     ) {
-    }
-
-    final public function clear(): self
-    {
-        $this->user = null;
-        $this->idToken = null;
-        $this->accessToken = null;
-        $this->accessTokenDecoded = null;
-        $this->accessTokenScope = null;
-        $this->accessTokenExpiration = null;
-        $this->refreshToken = null;
-
-        return $this;
     }
 
     final public function getAccessToken(): ?string
@@ -98,7 +85,7 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
     }
 
     /**
-     * @return array{user: false|string, idToken: null|string, accessToken: null|string, accessTokenDecoded: null|string[], accessTokenScope: null|string[], accessTokenExpiration: null|int, accessTokenExpired: null|bool, refreshToken: null|string}
+     * @return array{user: false|string, idToken: null|string, accessToken: null|string, accessTokenDecoded: null|array<mixed>, accessTokenScope: null|array<mixed>, accessTokenExpiration: null|int, accessTokenExpired: null|bool, refreshToken: null|string}
      */
     final public function jsonSerialize(): mixed
     {
@@ -114,59 +101,33 @@ abstract class CredentialEntityAbstract implements CredentialEntityContract, Jso
         ];
     }
 
-    final public function setAccessToken(
+    abstract public function clear(): self;
+
+    abstract public function setAccessToken(
         ?string $accessToken = null,
-    ): self {
-        $this->accessToken = $accessToken;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setAccessTokenDecoded(
+    abstract public function setAccessTokenDecoded(
         ?array $accessTokenDecoded = null,
-    ): self {
-        $this->accessTokenDecoded = $accessTokenDecoded;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setAccessTokenExpiration(
+    abstract public function setAccessTokenExpiration(
         ?int $accessTokenExpiration = null,
-    ): self {
-        $this->accessTokenExpiration = $accessTokenExpiration;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setAccessTokenScope(
+    abstract public function setAccessTokenScope(
         ?array $accessTokenScope = null,
-    ): self {
-        $this->accessTokenScope = $accessTokenScope;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setIdToken(
+    abstract public function setIdToken(
         ?string $idToken = null,
-    ): self {
-        $this->idToken = $idToken;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setRefreshToken(
+    abstract public function setRefreshToken(
         ?string $refreshToken = null,
-    ): self {
-        $this->refreshToken = $refreshToken;
+    ): self;
 
-        return $this;
-    }
-
-    final public function setUser(
+    abstract public function setUser(
         ?Authenticatable $user = null,
-    ): self {
-        $this->user = $user;
-
-        return $this;
-    }
+    ): self;
 }

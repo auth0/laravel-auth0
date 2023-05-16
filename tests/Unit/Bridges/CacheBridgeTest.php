@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Cache\LaravelCachePool;
-use Auth0\Laravel\Cache\LaravelCacheItem;
+use Auth0\Laravel\Bridges\CacheBridge;
+use Auth0\Laravel\Bridges\CacheItemBridge;
 use Psr\Cache\CacheItemInterface;
 
 uses()->group('cache', 'cache.laravel', 'cache.laravel.pool');
 
 test('getItem(), hasItem() and save() behave as expected', function (): void {
-    $pool = new LaravelCachePool();
+    $pool = new CacheBridge();
     $cache = $pool->getItem('testing');
 
     expect($pool)
         ->hasItem('testing')->toBeFalse();
 
     expect($cache)
-        ->toBeInstanceOf(LaravelCacheItem::class)
+        ->toBeInstanceOf(CacheItemBridge::class)
         ->get()->toBeNull()
         ->isHit()->toBeFalse();
 
@@ -34,7 +34,7 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
     $cache = $pool->getItem('testing');
 
     expect($cache)
-        ->toBeInstanceOf(LaravelCacheItem::class)
+        ->toBeInstanceOf(CacheItemBridge::class)
         ->isHit()->toBeTrue()
         ->get()->toBeNull()
         ->set(42)
@@ -49,7 +49,7 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
     $results = $pool->getItems(['testing' => uniqid()]);
 
     expect($results['testing'])
-        ->toBeInstanceOf(LaravelCacheItem::class)
+        ->toBeInstanceOf(CacheItemBridge::class)
         ->isHit()->toBeTrue()
         ->get()->not()->toBe(42);
 
@@ -63,7 +63,7 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
         ->hasItem('testing')->toBeFalse();
 
     expect($cache)
-        ->toBeInstanceOf(LaravelCacheItem::class)
+        ->toBeInstanceOf(CacheItemBridge::class)
         ->get()->toBeNull()
         ->isHit()->toBeFalse();
 
@@ -74,8 +74,8 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
 });
 
 test('save() with a negative expiration value is deleted', function (): void {
-    $pool = new LaravelCachePool();
-    $cache = new LaravelCacheItem('testing', 42, true, new DateTime('now - 1 year'));
+    $pool = new CacheBridge();
+    $cache = new CacheItemBridge('testing', 42, true, new DateTime('now - 1 year'));
 
     expect($pool)->hasItem('testing')->toBeFalse();
 
@@ -85,8 +85,8 @@ test('save() with a negative expiration value is deleted', function (): void {
 });
 
 test('saveDeferred() behaves as expected', function (): void {
-    $pool = new LaravelCachePool();
-    $cache = new LaravelCacheItem('testing', 42, true, new DateTime('now + 1 hour'));
+    $pool = new CacheBridge();
+    $cache = new CacheItemBridge('testing', 42, true, new DateTime('now + 1 hour'));
 
     expect($pool)
         ->hasItem('testing')->toBeFalse()
@@ -97,8 +97,8 @@ test('saveDeferred() behaves as expected', function (): void {
 });
 
 test('save() with a false value is discarded', function (): void {
-    $pool = new LaravelCachePool();
-    $cache = new LaravelCacheItem('testing', false, true, new DateTime('now + 1 hour'));
+    $pool = new CacheBridge();
+    $cache = new CacheItemBridge('testing', false, true, new DateTime('now + 1 hour'));
 
     expect($pool)
         ->hasItem('testing')->toBeFalse()
@@ -107,8 +107,8 @@ test('save() with a false value is discarded', function (): void {
 });
 
 test('saveDeferred() returns false when the wrong type of interface is saved', function (): void {
-    $pool = new LaravelCachePool();
-    $cache = new LaravelCacheItem('testing', 42, true, new DateTime('now + 1 hour'));
+    $pool = new CacheBridge();
+    $cache = new CacheItemBridge('testing', 42, true, new DateTime('now + 1 hour'));
 
     $cache = new class implements CacheItemInterface {
         public function getKey(): string
@@ -149,8 +149,8 @@ test('saveDeferred() returns false when the wrong type of interface is saved', f
 });
 
 test('deleteItem() behaves as expected', function (): void {
-    $pool = new LaravelCachePool();
-    $cache = new LaravelCacheItem('testing', 42, true, new DateTime('now + 1 minute'));
+    $pool = new CacheBridge();
+    $cache = new CacheItemBridge('testing', 42, true, new DateTime('now + 1 minute'));
 
     expect($pool)->hasItem('testing')->toBeFalse();
 
@@ -177,20 +177,20 @@ test('deleteItem() behaves as expected', function (): void {
 });
 
 test('deleteItems() behaves as expected', function (): void {
-    $pool = new LaravelCachePool();
+    $pool = new CacheBridge();
 
     expect($pool)
         ->hasItem('testing1')->toBeFalse()
         ->hasItem('testing2')->toBeFalse()
         ->hasItem('testing3')->toBeFalse();
 
-    $cache = new LaravelCacheItem('testing1', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing1', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
-    $cache = new LaravelCacheItem('testing2', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing2', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
-    $cache = new LaravelCacheItem('testing3', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing3', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
     expect($pool)
@@ -217,20 +217,20 @@ test('deleteItems() behaves as expected', function (): void {
 });
 
 test('clear() behaves as expected', function (): void {
-    $pool = new LaravelCachePool();
+    $pool = new CacheBridge();
 
     expect($pool)
         ->hasItem('testing1')->toBeFalse()
         ->hasItem('testing2')->toBeFalse()
         ->hasItem('testing3')->toBeFalse();
 
-    $cache = new LaravelCacheItem('testing1', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing1', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
-    $cache = new LaravelCacheItem('testing2', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing2', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
-    $cache = new LaravelCacheItem('testing3', uniqid(), true, new DateTime('now + 1 minute'));
+    $cache = new CacheItemBridge('testing3', uniqid(), true, new DateTime('now + 1 minute'));
     $pool->save($cache);
 
     expect($pool)

@@ -23,7 +23,6 @@ beforeEach(function (): void {
         'auth0.default.audience' => ['https://example.com/health-api'],
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -80,7 +79,10 @@ it('does not assign a user from a empty token', function (): void {
 });
 
 it('does not get a user from a bad token', function (): void {
-    $this->config->setAudience(['BAD_AUDIENCE']);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->setAudience(['BAD_AUDIENCE']);
 
     expect($this->guard)
         ->user()->toBeNull();

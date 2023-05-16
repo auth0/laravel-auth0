@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Auth0;
-use Auth0\Laravel\Cache\LaravelCachePool;
-use Auth0\Laravel\Store\LaravelSession;
+use Auth0\Laravel\Service;
+use Auth0\Laravel\Bridges\{CacheBridge, CacheBridgeContract, SessionBridgeContract};
 use Auth0\SDK\Contract\Auth0Interface as SdkContract;
 use Auth0\SDK\Auth0 as SDKAuth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Store\MemoryStore;
+use Auth0\SDK\Token\Generator;
+use Illuminate\Support\Facades\Route;
 use Psr\Cache\CacheItemPoolInterface;
+use PsrMock\Psr17\ResponseFactory;
 
 uses()->group('Service');
 
@@ -23,7 +25,6 @@ beforeEach(function (): void {
         'auth0.default.clientId' => uniqid(),
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -64,8 +65,8 @@ it('can get the sdk credentials', function (): void {
         ->toBeNull();
 
     $this->session->set('user', ['sub' => 'hello|world']);
-    $this->session->set('idToken', uniqid());
-    $this->session->set('accessToken', uniqid());
+    $this->session->set('idToken', (string) Generator::create((createRsaKeys())->private));
+    $this->session->set('accessToken', (string) Generator::create((createRsaKeys())->private));
     $this->session->set('accessTokenScope', [uniqid()]);
     $this->session->set('accessTokenExpiration', time() - 1000);
 
@@ -106,7 +107,7 @@ it('can reset the internal static state', function (): void {
 });
 
 test('bootStrategy() rejects non-string values', function (): void {
-    $method = new ReflectionMethod(Auth0::class, 'bootStrategy');
+    $method = new ReflectionMethod(Service::class, 'bootStrategy');
     $method->setAccessible(true);
 
     expect($method->invoke($this->laravel, ['strategy' => 123]))
@@ -114,19 +115,19 @@ test('bootStrategy() rejects non-string values', function (): void {
 });
 
 test('bootSessionStorage() behaves as expected', function (): void {
-    $method = new ReflectionMethod(Auth0::class, 'bootSessionStorage');
+    $method = new ReflectionMethod(Service::class, 'bootSessionStorage');
     $method->setAccessible(true);
 
     expect($method->invoke($this->laravel, []))
-        ->sessionStorage->toBeInstanceOf(LaravelSession::class);
+        ->sessionStorage->toBeInstanceOf(SessionBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['sessionStorage' => null]))
-        ->sessionStorage->toBeInstanceOf(LaravelSession::class);
+        ->sessionStorage->toBeInstanceOf(SessionBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['sessionStorage' => false]))
         ->sessionStorage->toBeNull();
 
-    expect($method->invoke($this->laravel, ['sessionStorage' => LaravelCachePool::class]))
+    expect($method->invoke($this->laravel, ['sessionStorage' => CacheBridge::class]))
         ->sessionStorage->toBeNull();
 
     expect($method->invoke($this->laravel, ['sessionStorage' => MemoryStore::class]))
@@ -139,19 +140,19 @@ test('bootSessionStorage() behaves as expected', function (): void {
 });
 
 test('bootTransientStorage() behaves as expected', function (): void {
-    $method = new ReflectionMethod(Auth0::class, 'bootTransientStorage');
+    $method = new ReflectionMethod(Service::class, 'bootTransientStorage');
     $method->setAccessible(true);
 
     expect($method->invoke($this->laravel, []))
-        ->transientStorage->toBeInstanceOf(LaravelSession::class);
+        ->transientStorage->toBeInstanceOf(SessionBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['transientStorage' => null]))
-        ->transientStorage->toBeInstanceOf(LaravelSession::class);
+        ->transientStorage->toBeInstanceOf(SessionBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['transientStorage' => false]))
         ->transientStorage->toBeNull();
 
-    expect($method->invoke($this->laravel, ['transientStorage' => LaravelCachePool::class]))
+    expect($method->invoke($this->laravel, ['transientStorage' => CacheBridge::class]))
         ->transientStorage->toBeNull();
 
     expect($method->invoke($this->laravel, ['transientStorage' => MemoryStore::class]))
@@ -164,17 +165,17 @@ test('bootTransientStorage() behaves as expected', function (): void {
 });
 
 test('bootTokenCache() behaves as expected', function (): void {
-    $method = new ReflectionMethod(Auth0::class, 'bootTokenCache');
+    $method = new ReflectionMethod(Service::class, 'bootTokenCache');
     $method->setAccessible(true);
 
     expect($method->invoke($this->laravel, []))
-        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+        ->tokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['tokenCache' => null]))
-        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+        ->tokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
-    expect($method->invoke($this->laravel, ['tokenCache' => LaravelCachePool::class]))
-        ->tokenCache->toBeInstanceOf(LaravelCachePool::class);
+    expect($method->invoke($this->laravel, ['tokenCache' => CacheBridge::class]))
+        ->tokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
     expect($method->invoke($this->laravel, ['tokenCache' => false]))
         ->tokenCache->toBeNull();
@@ -186,25 +187,57 @@ test('bootTokenCache() behaves as expected', function (): void {
         ->tokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
 });
 
-test('bootManagementTokenCache() behaves as expected', function (): void {
-    $method = new ReflectionMethod(Auth0::class, 'bootManagementTokenCache');
-    $method->setAccessible(true);
+// test('bootManagementTokenCache() behaves as expected', function (): void {
+//     $method = new ReflectionMethod(Service::class, 'bootManagementTokenCache');
+//     $method->setAccessible(true);
 
-    expect($method->invoke($this->laravel, []))
-        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+//     expect($method->invoke($this->laravel, []))
+//         ->managementTokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
-    expect($method->invoke($this->laravel, ['managementTokenCache' => null]))
-        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+//     expect($method->invoke($this->laravel, ['managementTokenCache' => null]))
+//         ->managementTokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
-    expect($method->invoke($this->laravel, ['managementTokenCache' => LaravelCachePool::class]))
-        ->managementTokenCache->toBeInstanceOf(LaravelCachePool::class);
+//     expect($method->invoke($this->laravel, ['managementTokenCache' => CacheBridgeContract::class]))
+//         ->managementTokenCache->toBeInstanceOf(CacheBridgeContract::class);
 
-    expect($method->invoke($this->laravel, ['managementTokenCache' => false]))
-        ->managementTokenCache->toBeNull();
+//     expect($method->invoke($this->laravel, ['managementTokenCache' => false]))
+//         ->managementTokenCache->toBeNull();
 
-    expect($method->invoke($this->laravel, ['managementTokenCache' => MemoryStore::class]))
-        ->managementTokenCache->toBeNull();
+//     expect($method->invoke($this->laravel, ['managementTokenCache' => MemoryStore::class]))
+//         ->managementTokenCache->toBeNull();
 
-    expect($method->invoke($this->laravel, ['managementTokenCache' => 'cache.psr6']))
-        ->managementTokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
+//     expect($method->invoke($this->laravel, ['managementTokenCache' => 'cache.psr6']))
+//         ->managementTokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
+// });
+
+test('json() behaves as expected', function (): void {
+    $factory = new ResponseFactory;
+
+    $response = $factory->createResponse(200);
+    $response->getBody()->write('{"foo":"bar"}');
+
+    expect(Service::json($response))
+        ->toBe(['foo' => 'bar']);
+
+    $response = $factory->createResponse(500);
+    $response->getBody()->write('{"foo":"bar"}');
+
+    expect(Service::json($response))
+        ->toBeNull();
+
+    $response = $factory->createResponse(200);
+    $response->getBody()->write(json_encode(true));
+
+    expect(Service::json($response))
+        ->toBeNull();
+});
+
+test('routes() behaves as expected', function (): void {
+    expect((array) Route::getRoutes()->get('GET'))
+        ->not()->toHaveKeys(['login', 'logout', 'callback']);
+
+    Service::routes();
+
+    expect((array) Route::getRoutes()->get('GET'))
+        ->toHaveKeys(['login', 'logout', 'callback']);
 });

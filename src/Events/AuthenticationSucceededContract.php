@@ -9,7 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 /**
  * @api
  */
-interface AuthenticationSucceededContract
+interface AuthenticationSucceededContract extends EventContract
 {
     /**
      * AuthenticationSucceeded constructor.

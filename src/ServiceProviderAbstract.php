@@ -24,7 +24,7 @@ use function is_string;
 /**
  * @api
  */
-abstract class ServiceProviderAbstract extends ServiceProvider implements ServiceProviderContract
+abstract class ServiceProviderAbstract extends ServiceProvider
 {
     final public function boot(
         Router $router,
@@ -48,6 +48,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
 
         $gate->define('scope', static function (Authenticatable $user, string $scope, ?GuardContract $guard = null): bool {
             $guard ??= auth()->guard();
+
             if (! $guard instanceof GuardContract) {
                 return false;
             }
@@ -57,6 +58,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
 
         $gate->define('permission', static function (Authenticatable $user, string $permission, ?GuardContract $guard = null): bool {
             $guard ??= auth()->guard();
+
             if (! $guard instanceof GuardContract) {
                 return false;
             }
@@ -88,12 +90,26 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
             }
         });
 
+        $this->registerMiddleware();
+        $this->registerRoutes();
+
+        return $this;
+    }
+
+    final public function registerMiddleware(): Kernel
+    {
+        $kernel = $this->app->make(Kernel::class);
+
         if (true === config('auth0.registerMiddleware')) {
-            $kernel = app()->make(Kernel::class);
             $kernel->prependMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->prependMiddlewareToGroup('api', AuthorizerMiddleware::class);
         }
 
+        return $kernel;
+    }
+
+    final public function registerRoutes()
+    {
         if (true === config('auth0.registerAuthenticationRoutes')) {
             Route::group(['middleware' => 'web'], static function (): void {
                 Route::get('/login', LoginController::class)->name('login');
@@ -101,8 +117,6 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
                 Route::get('/callback', CallbackController::class)->name('callback');
             });
         }
-
-        return $this;
     }
 
     final public function provides()
@@ -165,7 +179,8 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
             }
         }
 
-        $this->app->singleton(Auth0::class, static fn (): Auth0 => new Auth0());
+        $this->app->singleton(Auth0::class, static fn (): Service => new Service());
+        $this->app->singleton(Service::class, static fn (): Service => new Service());
         $this->app->singleton(Configuration::class, static fn (): Configuration => new Configuration());
         $this->app->singleton(Service::class, static fn (): Service => new Service());
         $this->app->singleton(AuthenticatorMiddleware::class, static fn (): AuthenticatorMiddleware => new AuthenticatorMiddleware());
@@ -181,7 +196,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider implements Servic
         $this->app->singleton(UserProvider::class, static fn (): UserProvider => new UserProvider());
         $this->app->singleton(UserRepository::class, static fn (): UserRepository => new UserRepository());
 
-        $this->app->singleton('auth0', static fn (): Auth0 => app(Auth0::class));
+        $this->app->singleton('auth0', static fn (): Service => app(Service::class));
         $this->app->singleton('auth0.repository', static fn (): UserRepository => app(UserRepository::class));
 
         return $this;

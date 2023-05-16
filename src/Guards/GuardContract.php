@@ -137,6 +137,17 @@ interface GuardContract
     public function management(): ManagementInterface;
 
     /**
+     * Processes a JWT token and returns the decoded token, or null if the token is invalid.
+     *
+     * @param string $token The JWT token to process.
+     *
+     * @return null|array<mixed>
+     */
+    public function processToken(
+        string $token,
+    ): ?array;
+
+    /**
      * Query the /userinfo endpoint and update the currently authenticated user for the guard.
      */
     public function refreshUser(): void;
@@ -144,7 +155,7 @@ interface GuardContract
     /**
      * Get an Auth0 PHP SDK instance.
      *
-     * @param mixed $reset
+     * @param bool $reset Optional. Whether to reset the SDK instance.
      *
      * @throws BindingResolutionException  If the Auth0 class cannot be resolved.
      * @throws NotFoundExceptionInterface  If the Auth0 service cannot be found.
@@ -153,7 +164,7 @@ interface GuardContract
      * @return Auth0Interface Auth0 PHP SDK instance.
      */
     public function sdk(
-        $reset = false,
+        bool $reset = false,
     ): Auth0Interface;
 
     /**
@@ -166,13 +177,10 @@ interface GuardContract
     /**
      * Toggle the Guard's impersonation state. This should only be used by the Impersonate trait, and is not intended for use by end-users. It is public to allow for testing.
      *
-     * @param bool                     $impersonate Whether or not the Guard should be impersonating.
      * @param CredentialEntityContract $credential
-     * @param ?int                     $source
      */
     public function setImpersonating(
         CredentialEntityContract $credential,
-        ?int $source = null,
     ): self;
 
     /**

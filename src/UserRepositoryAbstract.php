@@ -11,7 +11,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  *
  * @api
  */
-abstract class UserRepositoryAbstract implements UserRepositoryContract
+abstract class UserRepositoryAbstract
 {
     abstract public function fromAccessToken(array $user): ?Authenticatable;
 

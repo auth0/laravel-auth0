@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Entities\CredentialEntity;
-use Auth0\Laravel\Model\Stateless\User;
+use Auth0\Laravel\Users\StatelessUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 
@@ -19,17 +19,17 @@ beforeEach(function (): void {
         'auth0.default.audience' => [uniqid()],
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
     $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
 
-    $this->user = new User(['sub' => uniqid('auth0|')]);
+    $this->user = new StatelessUser(['sub' => uniqid('auth0|')]);
     $this->idToken = uniqid();
     $this->accessToken = uniqid();
     $this->accessTokenScope = ['openid', 'profile', 'email', uniqid()];
+    $this->accessTokenDecoded = [uniqid(), ['hello' => 'world']];
     $this->accessTokenExpiration = time() + 3600;
     $this->refreshToken = uniqid();
 });
@@ -129,6 +129,18 @@ it('setAccessTokenScope() assigns a correct value', function (): void {
     expect($credential->setAccessTokenScope($this->accessTokenScope))
         ->toBeInstanceOf(CredentialEntity::class)
         ->getAccessTokenScope()->toBe($this->accessTokenScope);
+});
+
+it('setAccessTokenDecoded() assigns a correct value', function (): void {
+    $credential = CredentialEntity::create();
+
+    expect($credential)
+        ->toBeInstanceOf(CredentialEntity::class)
+        ->getAccessTokenDecoded()->toBeNull();
+
+    expect($credential->setAccessTokenDecoded($this->accessTokenDecoded))
+        ->toBeInstanceOf(CredentialEntity::class)
+        ->getAccessTokenDecoded()->toBe($this->accessTokenDecoded);
 });
 
 it('setAccessTokenExpiration() assigns a correct value', function (): void {

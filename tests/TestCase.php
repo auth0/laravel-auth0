@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Tests;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Auth0\Laravel\ServiceProvider;
+use Orchestra\Testbench\Concerns\CreatesApplication;
 use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends BaseTestCase
 {
+    use CreatesApplication;
+
     protected $enablesPackageDiscoveries = true;
     protected $events = [];
 
@@ -23,6 +26,12 @@ class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app): void
     {
+        $app['config']->set('auth0', [
+            'registerGuards' => null,
+            'registerMiddleware' => null,
+            'registerAuthenticationRoutes' => null,
+        ]);
+
         $app['config']->set('auth', [
             'defaults' => [
                 'guard' => 'legacyGuard',
@@ -79,20 +88,27 @@ class TestCase extends BaseTestCase
      */
     protected function assertDispatched(string $expectedEvent, int $times = 0, ?string $followingEvent = null)
     {
-        $this->assertTrue(\in_array($expectedEvent, $this->events), 'Event ' . $expectedEvent . ' was not dispatched.');
+        expect($this->events)
+            ->toBeArray()
+            ->toContain($expectedEvent);
 
         if ($times > 0) {
-            $this->assertTrue(array_count_values($this->events)[$expectedEvent] === $times, 'Event ' . $expectedEvent . ' was not dispatched ' . $times . ' times.');
+            expect(array_count_values($this->events)[$expectedEvent])
+                ->toBeInt()
+                ->toBe($times);
         }
 
         if (null !== $followingEvent) {
-            $this->assertTrue(\in_array($followingEvent, $this->events));
+            expect($this->events)
+                ->toContain($followingEvent);
 
             $indexExpected = array_search($expectedEvent, $this->events);
             $indexFollowing = array_search($followingEvent, $this->events);
 
             if ($indexExpected !== false && $indexFollowing !== false) {
-                $this->assertTrue($indexExpected > $indexFollowing, 'Event ' . $expectedEvent . ' was not dispatched after ' . $followingEvent . '.');
+                expect($indexExpected)
+                    ->toBeInt()
+                    ->toBeGreaterThan($indexFollowing);
             }
         }
     }
@@ -108,8 +124,11 @@ class TestCase extends BaseTestCase
 
         foreach ($events as $event) {
             $index = array_search($event, $this->events);
-            $this->assertTrue($index !== false);
-            $this->assertTrue($index > $previousIndex);
+
+            expect($index)
+                ->toBeInt()
+                ->toBeGreaterThan($previousIndex);
+
             $previousIndex = $index;
         }
     }

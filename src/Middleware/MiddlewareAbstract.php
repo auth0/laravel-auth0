@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @api
  */
-abstract class MiddlewareAbstract implements MiddlewareContract
+abstract class MiddlewareAbstract
 {
     final public function getAuthenticationGuard(
         ?string $guard = null,

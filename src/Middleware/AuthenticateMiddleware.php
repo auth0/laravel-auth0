@@ -52,6 +52,6 @@ final class AuthenticateMiddleware extends MiddlewareAbstract implements Authent
 
         return redirect()
             ->setIntendedUrl($request->fullUrl())
-            ->to(config('auth0.routes.login', 'login')); // @phpstan-ignore-line
+            ->to('/login'); // @phpstan-ignore-line
     }
 }

@@ -13,8 +13,77 @@ use Illuminate\Contracts\Auth\Authenticatable;
  *
  * @api
  */
-final class CredentialEntity extends CredentialEntityAbstract
+final class CredentialEntity extends CredentialEntityAbstract implements CredentialEntityContract
 {
+    public function clear(): self
+    {
+        $this->user = null;
+        $this->idToken = null;
+        $this->accessToken = null;
+        $this->accessTokenDecoded = null;
+        $this->accessTokenScope = null;
+        $this->accessTokenExpiration = null;
+        $this->refreshToken = null;
+
+        return $this;
+    }
+
+    public function setAccessToken(
+        ?string $accessToken = null,
+    ): self {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    public function setAccessTokenDecoded(
+        ?array $accessTokenDecoded = null,
+    ): self {
+        $this->accessTokenDecoded = $accessTokenDecoded;
+
+        return $this;
+    }
+
+    public function setAccessTokenExpiration(
+        ?int $accessTokenExpiration = null,
+    ): self {
+        $this->accessTokenExpiration = $accessTokenExpiration;
+
+        return $this;
+    }
+
+    public function setAccessTokenScope(
+        ?array $accessTokenScope = null,
+    ): self {
+        $this->accessTokenScope = $accessTokenScope;
+
+        return $this;
+    }
+
+    public function setIdToken(
+        ?string $idToken = null,
+    ): self {
+        $this->idToken = $idToken;
+
+        return $this;
+    }
+
+    public function setRefreshToken(
+        ?string $refreshToken = null,
+    ): self {
+        $this->refreshToken = $refreshToken;
+
+        return $this;
+    }
+
+    public function setUser(
+        ?Authenticatable $user = null,
+    ): self {
+        $this->user = $user;
+
+        return $this;
+    }
+
     /**
      * Create a new Credential instance.
      *

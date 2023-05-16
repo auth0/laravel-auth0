@@ -11,6 +11,6 @@ namespace Auth0\Laravel\Bridges;
  *
  * @api
  */
-final class CacheBridge extends CacheBridgeAbstract
+final class CacheBridge extends CacheBridgeAbstract implements CacheBridgeContract
 {
 }

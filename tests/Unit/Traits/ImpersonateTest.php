@@ -7,6 +7,7 @@ use Auth0\Laravel\Guards\AuthenticationGuard;
 use Auth0\Laravel\Guards\AuthorizationGuard;
 use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Traits\Impersonate;
+use Auth0\Laravel\Users\ImposterUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Illuminate\Http\Response;
@@ -48,7 +49,7 @@ it('impersonates with other guards', function (): void {
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -71,7 +72,7 @@ it('impersonates a user against auth0.authenticate', function (): void {
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -85,7 +86,7 @@ it('impersonates a user against auth0.authenticate', function (): void {
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -97,7 +98,7 @@ it('impersonates a user against auth0.authenticate.optional', function (): void 
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -111,7 +112,7 @@ it('impersonates a user against auth0.authenticate.optional', function (): void 
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -123,7 +124,7 @@ it('impersonates a user against auth0.authenticate using a scope', function (): 
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -137,7 +138,7 @@ it('impersonates a user against auth0.authenticate using a scope', function (): 
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateful\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -149,7 +150,7 @@ it('impersonates a user against auth0.authorize', function (): void {
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -163,7 +164,7 @@ it('impersonates a user against auth0.authorize', function (): void {
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -175,7 +176,7 @@ it('impersonates a user against auth0.authorize.optional', function (): void {
     });
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -189,7 +190,7 @@ it('impersonates a user against auth0.authorize.optional', function (): void {
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -197,7 +198,7 @@ it('impersonates a user against auth0.authorize using a scope', function (): voi
     $route = '/' . uniqid();
 
     $imposter = CredentialEntity::create(
-        user: new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]),
+        user: new ImposterUser(['sub' => uniqid()]),
         idToken: uniqid(),
         accessToken: uniqid(),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
@@ -215,7 +216,7 @@ it('impersonates a user against auth0.authorize using a scope', function (): voi
          ->assertJson(['user' => json_encode($imposter->getUser())]);
 
     expect($this->guard)
-        ->user()->toBeInstanceOf(\Auth0\Laravel\Model\Stateless\User::class)
+        ->user()->toBeInstanceOf(ImposterUser::class)
         ->toBe($imposter->getUser());
 });
 
@@ -230,7 +231,7 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
         return json_encode(['route' => get_class(auth()->guard()), 'user' => json_encode(auth()->user()), 'status' => $route]);
     });
 
-    $imposter = new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]);
+    $imposter = new ImposterUser(['sub' => uniqid()]);
 
     $credential = CredentialEntity::create(
         user: $imposter,
@@ -268,7 +269,7 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
     expect(auth('sessionGuard'))
         ->refreshUser();
 
-    auth('sessionGuard')->setUser(new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]));
+    auth('sessionGuard')->setUser(new ImposterUser(['sub' => uniqid()]));
 
     expect(auth('sessionGuard'))
         ->isImpersonating()->toBeFalse()
@@ -289,7 +290,7 @@ it('AuthorizationGuard returns the impersonated user', function (): void {
         return json_encode(['route' => get_class(auth()->guard()), 'user' => json_encode(auth()->user()), 'status' => $route]);
     });
 
-    $imposter = new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]);
+    $imposter = new ImposterUser(['sub' => uniqid()]);
 
     $credential = CredentialEntity::create(
         user: $imposter,
@@ -328,7 +329,7 @@ it('AuthorizationGuard returns the impersonated user', function (): void {
     expect(auth('tokenGuard'))
         ->refreshUser();
 
-    auth('tokenGuard')->setUser(new \Auth0\Laravel\Model\Stateless\User(['sub' => uniqid()]));
+    auth('tokenGuard')->setUser(new ImposterUser(['sub' => uniqid()]));
 
     expect(auth('tokenGuard'))
         ->isImpersonating()->toBeFalse()
@@ -349,7 +350,7 @@ it('Guard returns the impersonated user', function (): void {
         return json_encode(['route' => get_class(auth()->guard()), 'user' => json_encode(auth()->user()), 'status' => $route]);
     });
 
-    $imposter = new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]);
+    $imposter = new ImposterUser(['sub' => uniqid()]);
 
     $credential = CredentialEntity::create(
         user: $imposter,
@@ -385,7 +386,7 @@ it('Guard returns the impersonated user', function (): void {
     $this->sdk->configuration()->setHttpClient($client);
 
     auth('legacyGuard')->refreshUser();
-    auth('legacyGuard')->setUser(new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]));
+    auth('legacyGuard')->setUser(new ImposterUser(['sub' => uniqid()]));
 
     expect(auth('legacyGuard'))
         ->isImpersonating()->toBeFalse()
@@ -405,7 +406,7 @@ it('Guard clears the impersonated user during logout()', function (): void {
         return json_encode(['route' => get_class(auth()->guard()), 'user' => json_encode(auth()->user()), 'status' => $route]);
     });
 
-    $imposter = new \Auth0\Laravel\Model\Stateful\User(['sub' => uniqid()]);
+    $imposter = new ImposterUser(['sub' => uniqid()]);
 
     $credential = CredentialEntity::create(
         user: $imposter,

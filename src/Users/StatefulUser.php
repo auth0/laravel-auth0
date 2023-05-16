@@ -11,4 +11,5 @@ namespace Auth0\Laravel\Users;
  */
 final class StatefulUser extends UserAbstract implements StatefulUserContract
 {
+    use UserTrait;
 }

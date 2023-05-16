@@ -7,7 +7,6 @@ namespace Auth0\Laravel\Guards;
 use Auth0\Laravel\Entities\{CredentialEntity, CredentialEntityContract};
 use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\UserProviderContract;
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Auth0\SDK\Utility\HttpResponse;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -47,6 +46,9 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
             token: $token,
         );
 
+        /**
+         * @var null|array<string> $decoded
+         */
         if (null === $decoded) {
             return null;
         }
@@ -81,6 +83,13 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
         return null;
     }
 
+    public function forgetUser(): self
+    {
+        $this->setCredential();
+
+        return $this;
+    }
+
     public function getCredential(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
@@ -110,25 +119,6 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
         return $this;
     }
 
-    public function processToken(
-        string $token,
-    ): ?array {
-        $event = new TokenVerificationAttempting($token);
-        event($event);
-        $token = $event->getToken();
-
-        try {
-            $data = $this->sdk()->decode(token: $token, tokenType: Token::TYPE_ACCESS_TOKEN)->toArray();
-            event(new TokenVerificationSucceeded($token, $data));
-
-            return $data;
-        } catch (InvalidTokenException $invalidTokenException) {
-            event(new TokenVerificationFailed($token, $invalidTokenException));
-
-            return null;
-        }
-    }
-
     public function refreshUser(): void
     {
         if ($this->isImpersonating()) {
@@ -153,12 +143,16 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
                 }
 
                 $user = $this->getProvider()->retrieveByCredentials($response);
+                $scope = $credential->getAccessTokenScope();
 
+                /**
+                 * @var array<string> $scope
+                 */
                 $this->setCredential(CredentialEntity::create(
                     user: $user,
                     idToken: $credential->getIdToken(),
                     accessToken: $credential->getAccessToken(),
-                    accessTokenScope: $credential->getAccessTokenScope(),
+                    accessTokenScope: $scope,
                     accessTokenExpiration: $credential->getAccessTokenExpiration(),
                     refreshToken: $credential->getRefreshToken(),
                 ));
@@ -172,6 +166,18 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
         $this->stopImpersonating();
 
         $this->credential = $credential;
+
+        return $this;
+    }
+
+    /**
+     * @param CredentialEntityContract $credential
+     */
+    public function setImpersonating(
+        CredentialEntityContract $credential,
+    ): self {
+        $this->impersonationSource = self::SOURCE_TOKEN;
+        $this->impersonating = $credential;
 
         return $this;
     }

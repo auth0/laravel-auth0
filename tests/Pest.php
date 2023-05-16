@@ -1,5 +1,6 @@
 <?php
 
+use Auth0\Laravel\Tests\TestCase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Artisan;
 
@@ -14,10 +15,10 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-uses(\Auth0\Laravel\Tests\TestCase::class)->in(__DIR__);
+uses(TestCase::class)->in(__DIR__);
 
 uses()->beforeAll(function (): void {
-    ray()->clearAll();
+    // ray()->clearAll();
 })->in(__DIR__);
 
 uses()->beforeEach(function (): void {

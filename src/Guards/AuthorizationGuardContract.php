@@ -27,17 +27,6 @@ interface AuthorizationGuardContract extends GuardContract
         ?CredentialEntityContract $credential,
     ): self;
 
-    /**
-     * Processes a JWT token and returns the decoded token, or null if the token is invalid.
-     *
-     * @param string $token The JWT token to process.
-     *
-     * @return null|array<mixed>
-     */
-    public function processToken(
-        string $token,
-    ): ?array;
-
     public function setCredential(
         ?CredentialEntityContract $credential = null,
     ): self;

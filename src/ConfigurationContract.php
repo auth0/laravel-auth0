@@ -18,12 +18,12 @@ interface ConfigurationContract
     public static function getPath(): string;
 
     public static function stringOrIntToIntOrNull(
-        mixed $value,
+        int | string $value,
         int | null $default = null,
     ): int | null;
 
     public static function stringOrNull(
-        mixed $value,
+        int | string | null $value,
         string | int | null $default = null,
     ): string | int | null;
 
@@ -32,16 +32,16 @@ interface ConfigurationContract
     /**
      * Converts a delimited string into an array, or null, if nothing was provided.
      *
-     * @param array<string>|string|null $config
-     * @param string  $delimiter
+     * @param null|array<string>|string $config
+     * @param string                    $delimiter
      */
     public static function stringToArrayOrNull(array | string | null $config, string $delimiter = ' '): ?array;
 
     /**
      * Converts a truthy string representation into a boolean.
      *
-     * @param bool|null|string $config
-     * @param ?bool   $default
+     * @param null|bool|string $config
+     * @param ?bool            $default
      */
     public static function stringToBoolOrNull(string | bool | null $config, ?bool $default = null): ?bool;
 }

@@ -11,6 +11,6 @@ namespace Auth0\Laravel\Bridges;
  *
  * @api
  */
-final class SessionBridge extends SessionBridgeAbstract
+final class SessionBridge extends SessionBridgeAbstract implements SessionBridgeContract
 {
 }

@@ -6,14 +6,18 @@ namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntity, InstanceEntityContract};
+use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\Exceptions\{AuthenticationException, GuardException, GuardExceptionContract};
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
+use Auth0\SDK\Exception\InvalidTokenException;
+use Auth0\SDK\Token;
 use Exception;
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Session\Session;
-
+use Illuminate\Contracts\Support\{Arrayable, Jsonable};
 use JsonSerializable;
+use ReflectionClass;
 
 use function in_array;
 use function is_array;
@@ -25,21 +29,20 @@ use function is_string;
  *
  * @api
  */
-abstract class GuardAbstract implements GuardContract
+abstract class GuardAbstract
 {
-    private ?int $impersonationSource = null;
-
     protected ?CredentialEntityContract $credential = null;
 
     protected ?CredentialEntityContract $impersonating = null;
 
-    protected ?UserProvider $provider = null;
+    protected ?int $impersonationSource = null;
 
-    protected ?InstanceEntityContract $sdk = null;
+    protected ?UserProvider $provider = null;
 
     public function __construct(
         public string $name = '',
         protected ?array $config = null,
+        protected ?InstanceEntityContract $sdk = null,
     ) {
     }
 
@@ -55,13 +58,6 @@ abstract class GuardAbstract implements GuardContract
     final public function check(): bool
     {
         return $this->hasUser();
-    }
-
-    final public function forgetUser(): GuardContract
-    {
-        $this->setCredential();
-
-        return $this;
     }
 
     final public function getImposter(): ?CredentialEntityContract
@@ -203,10 +199,32 @@ abstract class GuardAbstract implements GuardContract
         return $this->sdk()->management();
     }
 
+    final public function processToken(
+        string $token,
+    ): ?array {
+        $event = new TokenVerificationAttempting($token);
+        event($event);
+        $token = $event->getToken();
+
+        $decoded = null;
+
+        try {
+            $decoded = $this->sdk()->decode(token: $token, tokenType: Token::TYPE_ACCESS_TOKEN)->toArray();
+        } catch (InvalidTokenException $invalidTokenException) {
+            event(new TokenVerificationFailed($token, $invalidTokenException));
+
+            return null;
+        }
+
+        event(new TokenVerificationSucceeded($token, $decoded));
+
+        return $decoded;
+    }
+
     final public function sdk(
-        $reset = false,
+        bool $reset = false,
     ): Auth0Interface {
-        if (! $this->sdk instanceof InstanceEntityContract || true === $reset) {
+        if (! $this->sdk instanceof InstanceEntityContract || $reset) {
             $configuration = [];
 
             if (2 === Configuration::version()) {
@@ -217,28 +235,29 @@ abstract class GuardAbstract implements GuardContract
 
                 $defaultConfiguration = config('auth0.default') ?? [];
                 $guardConfiguration = config('auth0.' . $configName) ?? [];
-                $configuration = array_merge($defaultConfiguration, $guardConfiguration);
+
+                if (is_array($defaultConfiguration) && [] !== $defaultConfiguration) {
+                    $configuration = array_merge($configuration, $defaultConfiguration);
+                }
+
+                if (is_array($guardConfiguration) && [] !== $guardConfiguration) {
+                    $configuration = array_merge($configuration, $guardConfiguration);
+                }
             }
 
             // Fallback to the legacy configuration format if a version is not defined.
             if (2 !== Configuration::version()) {
                 $configuration = config('auth0');
+
+                if (! is_array($configuration)) {
+                    $configuration = [];
+                }
             }
 
             $this->sdk = InstanceEntity::create($configuration);
         }
 
         return $this->sdk->getSdk();
-    }
-
-    final public function setImpersonating(
-        CredentialEntityContract $credential,
-        ?int $source = null,
-    ): GuardContract {
-        $this->impersonationSource = $source;
-        $this->impersonating = $credential;
-
-        return $this;
     }
 
     final public function stopImpersonating(): void
@@ -265,13 +284,26 @@ abstract class GuardAbstract implements GuardContract
 
     abstract public function find(): ?CredentialEntityContract;
 
+    abstract public function forgetUser(): self;
+
     abstract public function getCredential(): ?CredentialEntityContract;
 
     abstract public function login(?CredentialEntityContract $credential): GuardContract;
 
+    abstract public function logout(): GuardContract;
+
     abstract public function refreshUser(): void;
 
     abstract public function setCredential(?CredentialEntityContract $credential = null): GuardContract;
+
+    /**
+     * Toggle the Guard's impersonation state. This should only be used by the Impersonate trait, and is not intended for use by end-users. It is public to allow for testing.
+     *
+     * @param CredentialEntityContract $credential
+     */
+    abstract public function setImpersonating(
+        CredentialEntityContract $credential,
+    ): self;
 
     abstract public function setUser(
         Authenticatable $user,
@@ -288,64 +320,60 @@ abstract class GuardAbstract implements GuardContract
      *
      * @return array<array|int|string> Normalized user model object.
      *
-     * @psalm-suppress TypeDoesNotContainType, UndefinedDocblockClass
+     * @psalm-suppress TypeDoesNotContainType, UndefinedDocblockClass, UndefinedInterfaceMethod
      *
      * @codeCoverageIgnore
      */
     protected function normalizeUserArray(
         Authenticatable $user,
     ): array {
-        $implements = class_implements($user);
+        $response = null;
+        $implements = class_implements($user, true);
+        $implements = is_array($implements) ? $implements : [];
 
-        if (in_array('JsonSerializable', $implements, true) && method_exists($user, 'jsonSerialize')) {
+        if (isset($implements[JsonSerializable::class])) {
             /**
              * @var JsonSerializable $user
              */
-            $user = (array) $user->jsonSerialize();
+            $response = json_encode($user->jsonSerialize(), JSON_THROW_ON_ERROR);
+        }
 
+        if (null === $response && isset($implements[Jsonable::class])) {
+            /**
+             * @var Jsonable $user
+             */
+            $response = $user->toJson();
+        }
+
+        if (null === $response && isset($implements[Arrayable::class])) {
+            /**
+             * @var Arrayable $user
+             */
             try {
-                return json_decode(json_encode($user, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                throw new GuardException(GuardExceptionContract::USER_MODEL_NORMALIZATION_FAILURE);
+                $response = json_encode($user->toArray(), JSON_THROW_ON_ERROR);
+            } catch (\Exception) {
             }
         }
 
-        if (in_array('Illuminate\Contracts\Support\Arrayable', $implements, true) && method_exists($user, 'toArray')) {
-            /**
-             * @var \Illuminate\Contracts\Support\Arrayable $user
-             */
-            $user = (array) $user->toArray();
+        // if (null === $response && (new ReflectionClass($user))->hasMethod('attributesToArray')) {
+        //     try {
+        //         // @phpstan-ignore-next-line
+        //         $response = json_encode($user->attributesToArray(), JSON_THROW_ON_ERROR);
+        //     } catch (\Exception) {
+        //     }
+        // }
 
+        if (is_string($response)) {
             try {
-                return json_decode(json_encode($user, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                throw new GuardException(GuardExceptionContract::USER_MODEL_NORMALIZATION_FAILURE);
-            }
-        }
+                $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
-        if (in_array('Illuminate\Contracts\Support\Jsonable', $implements, true) && method_exists($user, 'toJson')) {
-            /**
-             * @var \Illuminate\Contracts\Support\Jsonable $user
-             */
-            $user = (array) $user->toJson();
-
-            try {
-                return json_decode(json_encode($user, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                throw new GuardException(GuardExceptionContract::USER_MODEL_NORMALIZATION_FAILURE);
-            }
-        }
-
-        if (in_array('Illuminate\Database\Eloquent\Concerns\HasAttributes', $implements, true) && method_exists($user, 'attributesToArray')) {
-            /**
-             * @var \Illuminate\Database\Eloquent\Concerns\HasAttributes $user
-             */
-            $user = (array) $user->attributesToArray();
-
-            try {
-                return json_decode(json_encode($user, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                throw new GuardException(GuardExceptionContract::USER_MODEL_NORMALIZATION_FAILURE);
+                if (is_array($response) && [] !== $response) {
+                    /**
+                     * @var array<array|int|string> $response
+                     */
+                    return $response;
+                }
+            } catch (\Exception) {
             }
         }
 

@@ -15,7 +15,7 @@ use function is_array;
 /**
  * @api
  */
-abstract class ServiceAbstract extends InstanceEntityAbstract implements ServiceContract
+abstract class ServiceAbstract extends InstanceEntityAbstract
 {
     /**
      * The Laravel-Auth0 SDK version:.

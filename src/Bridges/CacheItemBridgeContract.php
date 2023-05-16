@@ -11,4 +11,10 @@ use Psr\Cache\CacheItemInterface;
  */
 interface CacheItemBridgeContract extends BridgeContract, CacheItemInterface
 {
+    /**
+     * Return a LaravelCacheItem instance flagged as missed.
+     *
+     * @param string $key
+     */
+    public static function miss(string $key): self;
 }

@@ -11,6 +11,6 @@ namespace Auth0\Laravel;
  *
  * @api
  */
-final class UserProvider extends UserProviderAbstract
+final class UserProvider extends UserProviderAbstract implements UserProviderContract
 {
 }

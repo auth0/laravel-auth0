@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Entities;
 
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
+use Auth0\Laravel\Service;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
@@ -20,13 +21,13 @@ use function is_string;
 /**
  * @api
  */
-abstract class InstanceEntityAbstract implements InstanceEntityContract
+abstract class InstanceEntityAbstract extends EntityAbstract
 {
     public function __construct(
-        private ?Auth0Interface $sdk = null,
-        private ?SdkConfiguration $configuration = null,
-        private ?CacheItemPoolInterface $tokenCachePool = null,
-        private ?CacheItemPoolInterface $managementTokenCachePool = null,
+        protected ?Auth0Interface $sdk = null,
+        protected ?SdkConfiguration $configuration = null,
+        protected ?CacheItemPoolInterface $tokenCachePool = null,
+        protected ?CacheItemPoolInterface $managementTokenCachePool = null,
     ) {
     }
 
@@ -34,6 +35,11 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
     {
         if (! $this->configuration instanceof SdkConfiguration) {
             $configuration = config('auth0.default') ?? config('auth0') ?? [];
+
+            if (! is_array($configuration)) {
+                $configuration = [];
+            }
+
             $this->configuration = $this->createConfiguration($configuration);
         }
 
@@ -59,32 +65,6 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $this->getSdk()->management();
     }
 
-    final public function reset(): self
-    {
-        unset($this->sdk, $this->configuration);
-
-        $this->sdk = null;
-        $this->configuration = null;
-
-        return $this;
-    }
-
-    final public function setConfiguration(
-        SdkConfiguration | array | null $configuration = null,
-    ): self {
-        if (is_array($configuration)) {
-            $configuration = $this->createConfiguration($configuration);
-        }
-
-        $this->configuration = $configuration;
-
-        if (null !== $this->configuration && $this->sdk instanceof Auth0Interface) {
-            $this->sdk->setConfiguration($this->configuration);
-        }
-
-        return $this;
-    }
-
     final public function setSdk(Auth0Interface $sdk): Auth0Interface
     {
         $this->configuration = $sdk->configuration();
@@ -95,9 +75,19 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $this->sdk;
     }
 
-    private function bootManagementTokenCache(array $config): array
+    abstract public function reset(): self;
+
+    /**
+     * @param null|array<string>|SdkConfiguration $configuration
+     */
+    abstract public function setConfiguration(
+        SdkConfiguration | array | null $configuration = null,
+    ): self;
+
+    protected function bootManagementTokenCache(array $config): array
     {
         $managementTokenCache = $config['managementTokenCache'] ?? null;
+        $this->getManagementTokenCachePool();
 
         // if (false === $managementTokenCache) {
         //     unset($config['managementTokenCache']);
@@ -118,7 +108,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $config;
     }
 
-    private function bootSessionStorage(array $config): array
+    protected function bootSessionStorage(array $config): array
     {
         $sessionStorage = $config['sessionStorage'] ?? null;
         $sessionStorageId = $config['sessionStorageId'] ?? 'auth0_session';
@@ -146,7 +136,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $config;
     }
 
-    private function bootStrategy(array $config): array
+    protected function bootStrategy(array $config): array
     {
         $strategy = $config['strategy'] ?? SdkConfiguration::STRATEGY_REGULAR;
 
@@ -159,7 +149,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $config;
     }
 
-    private function bootTokenCache(array $config): array
+    protected function bootTokenCache(array $config): array
     {
         $tokenCache = $config['tokenCache'] ?? null;
 
@@ -182,7 +172,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $config;
     }
 
-    private function bootTransientStorage(array $config): array
+    protected function bootTransientStorage(array $config): array
     {
         $transientStorage = $config['transientStorage'] ?? null;
         $transientStorageId = $config['transientStorageId'] ?? 'auth0_transient';
@@ -210,11 +200,9 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $config;
     }
 
-    private function createConfiguration(
+    protected function createConfiguration(
         array $configuration,
     ): SdkConfiguration {
-        // ray($configuration);
-
         // Give host application an opportunity to update the configuration before building configuration.
         $event = new BuildingConfigurationEvent($configuration);
         event($event);
@@ -229,8 +217,6 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
             $configuration = $this->bootTransientStorage($configuration);
         }
 
-        // ray($configuration);
-
         $configuration = new SdkConfiguration($configuration);
 
         // Give host application an opportunity to update the configuration before applying it.
@@ -240,7 +226,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $event->getConfiguration();
     }
 
-    private function getManagementTokenCachePool(): CacheItemPoolInterface
+    protected function getManagementTokenCachePool(): CacheItemPoolInterface
     {
         if (! $this->managementTokenCachePool instanceof CacheItemPoolInterface) {
             $this->managementTokenCachePool = app(CacheBridge::class);
@@ -249,7 +235,7 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
         return $this->managementTokenCachePool;
     }
 
-    private function getTokenCachePool(): CacheItemPoolInterface
+    protected function getTokenCachePool(): CacheItemPoolInterface
     {
         if (! $this->tokenCachePool instanceof CacheItemPoolInterface) {
             $this->tokenCachePool = app(CacheBridge::class);
@@ -261,10 +247,10 @@ abstract class InstanceEntityAbstract implements InstanceEntityContract
     /**
      * Updates the Auth0 PHP SDK's telemetry to include the correct Laravel markers.
      */
-    private function setSdkTelemetry(): self
+    protected function setSdkTelemetry(): self
     {
         HttpTelemetry::setEnvProperty('Laravel', app()->version());
-        HttpTelemetry::setPackage('laravel-auth0', Auth0::VERSION);
+        HttpTelemetry::setPackage('laravel-auth0', Service::VERSION);
 
         return $this;
     }

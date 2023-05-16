@@ -7,10 +7,11 @@ namespace Auth0\Laravel\Users;
 /**
  * @api
  */
-abstract class UserAbstract implements UserContract
+abstract class UserAbstract
 {
-    public function __construct(private array $attributes = [])
-    {
+    public function __construct(
+        protected array $attributes = [],
+    ) {
         $this->fill($attributes);
     }
 
@@ -19,21 +20,12 @@ abstract class UserAbstract implements UserContract
         return $this->getAttribute($key);
     }
 
-    public function __set(string $key, $value): void
+    public function __set(string $key, mixed $value): void
     {
         $this->setAttribute($key, $value);
     }
 
-    final public function fill(array $attributes): self
-    {
-        foreach ($attributes as $key => $value) {
-            $this->setAttribute($key, $value);
-        }
-
-        return $this;
-    }
-
-    final public function getAttribute(string $key, $default = null): mixed
+    final public function getAttribute(string $key, mixed $default = null): mixed
     {
         return $this->attributes[$key] ?? $default;
     }
@@ -73,19 +65,14 @@ abstract class UserAbstract implements UserContract
         return $this->attributes;
     }
 
-    final public function setAttribute(string $key, mixed $value): self
-    {
-        $this->attributes[$key] = $value;
-
-        return $this;
-    }
-
     /**
-     * @inheritdoc
-     *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    final public function setRememberToken($value): void
+    final public function setRememberToken(mixed $value): void
     {
     }
+
+    abstract public function fill(array $attributes): self;
+
+    abstract public function setAttribute(string $key, mixed $value): self;
 }

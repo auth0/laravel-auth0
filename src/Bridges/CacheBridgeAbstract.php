@@ -5,25 +5,29 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Bridges;
 
 use DateTimeInterface;
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Store;
 use Psr\Cache\CacheItemInterface;
+
+use RuntimeException;
 
 use function is_string;
 
 /**
  * @api
  */
-abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridgeContract
+abstract class CacheBridgeAbstract extends BridgeAbstract
 {
     /**
      * @var array<array{item: CacheItemInterface, expiration: null|DateTimeInterface|int}>
      */
-    private array $deferred = [];
+    protected array $deferred = [];
 
     final public function clear(): bool
     {
         $this->deferred = [];
 
-        return cache()->flush();
+        return $this->getCache()->flush();
     }
 
     final public function commit(): bool
@@ -50,7 +54,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
      */
     final public function deleteItem(string $key): bool
     {
-        return cache()->forget($key);
+        return $this->getCache()->forget($key);
     }
 
     final public function deleteItems(array $keys): bool
@@ -68,7 +72,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
 
     final public function getItem(string $key): CacheItemInterface
     {
-        $value = cache()->get($key);
+        $value = $this->getCache()->get($key);
 
         if (false === $value) {
             return CacheItemBridge::miss($key);
@@ -88,7 +92,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
             return [];
         }
 
-        $results = cache()->many($keys);
+        $results = $this->getCache()->many($keys);
         $items = [];
 
         foreach ($results as $key => $value) {
@@ -124,7 +128,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
 
         $ttl = $expires->getTimestamp() - time();
 
-        return cache()->put($key, $value, $ttl);
+        return $this->getCache()->put($key, $value, $ttl);
     }
 
     final public function saveDeferred(CacheItemInterface $item): bool
@@ -141,7 +145,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
         return true;
     }
 
-    private function createItem(string $key, mixed $value): CacheItemInterface
+    protected function createItem(string $key, mixed $value): CacheItemInterface
     {
         if (! is_string($value)) {
             return CacheItemBridge::miss($key);
@@ -156,12 +160,25 @@ abstract class CacheBridgeAbstract extends BridgeAbstract implements CacheBridge
         return new CacheItemBridge($key, $value, true);
     }
 
+    protected function getCache(): Store
+    {
+        $cache = cache();
+
+        // @codeCoverageIgnoreStart
+        if (! $cache instanceof CacheManager) {
+            throw new RuntimeException('Cache store is not an instance of Illuminate\Contracts\Cache\CacheManager');
+        }
+        // @codeCoverageIgnoreEnd
+
+        return $cache->getStore();
+    }
+
     /**
      * @param string $key the key for which to return the corresponding Cache Item
      *
      * @codeCoverageIgnore
      */
-    private function getDeferred(string $key): ?CacheItemInterface
+    protected function getDeferred(string $key): ?CacheItemInterface
     {
         if (! isset($this->deferred[$key])) {
             return null;

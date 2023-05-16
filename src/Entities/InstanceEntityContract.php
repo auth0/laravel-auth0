@@ -11,7 +11,7 @@ use Auth0\SDK\Contract\Auth0Interface;
 /**
  * @api
  */
-interface InstanceEntityContract
+interface InstanceEntityContract extends EntityContract
 {
     /**
      * Create/return instance of the Auth0-PHP SdkConfiguration.
@@ -36,7 +36,7 @@ interface InstanceEntityContract
     /**
      * Assign the Auth0-PHP SdkConfiguration.
      *
-     * @param null|array<mixed>|SdkConfiguration $configuration
+     * @param null|array<string>|SdkConfiguration $configuration
      */
     public function setConfiguration(SdkConfiguration | array | null $configuration): self;
 

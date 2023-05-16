@@ -27,7 +27,6 @@ beforeEach(function (): void {
         'auth0.default.clientId' => uniqid(),
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -48,7 +47,6 @@ beforeEach(function (): void {
     $guard = $this->guard;
 
     Route::get($this->route, function () use ($guard) {
-        // ray(config('auth0'));
         $credential = $guard->find(Guard::SOURCE_SESSION);
 
         if (null !== $credential) {
@@ -228,26 +226,25 @@ it('queries the /userinfo endpoint for refreshUser()', function (): void {
     expect($this->session)
         ->get('user')->toBe(['sub' => $identifier]);
 
-    $requestFactory = new MockRequestFactory;
-    $responseFactory = new MockResponseFactory;
-    $streamFactory = new MockStreamFactory;
+    $response = (new MockResponseFactory)->createResponse();
 
-    $response = $responseFactory->createResponse(200);
-    $response->getBody()->write(json_encode(
-        [
-            'sub' => $identifier,
-            'name' => 'John Doe',
-            'email' => '...',
-        ],
-        JSON_PRETTY_PRINT
-    ));
-
-    $client = new MockHttpClient(fallbackResponse: $response);
-
-    $this->config->setHttpRequestFactory($requestFactory);
-    $this->config->setHttpResponseFactory($responseFactory);
-    $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: [
+                        'sub' => $identifier,
+                        'name' => 'John Doe',
+                        'email' => '...',
+                    ],
+                    flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+                )
+            )
+        )
+    );
 
     $this->guard->refreshUser();
 
@@ -294,12 +291,13 @@ it('does not query the /userinfo endpoint for refreshUser() if an access token i
         JSON_PRETTY_PRINT
     ));
 
-    $client = new MockHttpClient(fallbackResponse: $response, requestLimit: 0);
+    $http = new MockHttpClient(fallbackResponse: $response, requestLimit: 0);
+    $http->addResponseWildcard($response);
 
     $this->config->setHttpRequestFactory($requestFactory);
     $this->config->setHttpResponseFactory($responseFactory);
     $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->config->setHttpClient($http);
 
     $this->guard->refreshUser();
 
@@ -331,19 +329,21 @@ it('rejects bad responses from the /userinfo endpoint for refreshUser()', functi
     expect($this->session)
         ->get('user')->toBe(['sub' => $identifier]);
 
-    $requestFactory = new MockRequestFactory;
-    $responseFactory = new MockResponseFactory;
-    $streamFactory = new MockStreamFactory;
+    $response = (new MockResponseFactory)->createResponse();
 
-    $response = $responseFactory->createResponse(200);
-    $response->getBody()->write(json_encode('bad response', JSON_PRETTY_PRINT));
-
-    $client = new MockHttpClient(fallbackResponse: $response);
-
-    $this->config->setHttpRequestFactory($requestFactory);
-    $this->config->setHttpResponseFactory($responseFactory);
-    $this->config->setHttpStreamFactory($streamFactory);
-    $this->config->setHttpClient($client);
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: 'bad response',
+                    flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+                )
+            )
+        )
+    );
 
     $this->guard->refreshUser();
 
@@ -383,31 +383,30 @@ it('invalidates an expired session when an access token fails to refresh', funct
         ->get('user')->toBeNull();
 });
 
-it('successfully continues a session when an access token succeeds is renewed', function (): void {
+it('successfully continues a session when an access token is successfully refreshed', function (): void {
     $this->session->set('accessTokenExpiration', time() - 1000);
     $this->session->set('refreshToken', (string) Generator::create((createRsaKeys())->private));
 
-    $http = $this->config->getHttpClient();
-    $streamFactory = $this->config->getHttpStreamFactory();
-    $responseFactory = $this->config->getHttpResponseFactory();
+    $response = (new MockResponseFactory)->createResponse();
 
-    $response = $responseFactory->createResponse();
-
-    $response = $response->withBody(
-        $streamFactory->createStream(
-            json_encode(
-                value: [
-                    'access_token' => (string) Generator::create((createRsaKeys())->private),
-                    'expires_in' => 60,
-                    'scope' => 'openid profile',
-                    'token_type' => 'Bearer',
-                ],
-                flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: [
+                        'access_token' => (string) Generator::create((createRsaKeys())->private),
+                        'expires_in' => 60,
+                        'scope' => 'openid profile',
+                        'token_type' => 'Bearer',
+                    ],
+                    flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
+                )
             )
         )
     );
-
-    $http->addResponseWildcard($response);
 
     $found = $this->guard->find(Guard::SOURCE_SESSION);
     $this->guard->login($found, Guard::SOURCE_SESSION);

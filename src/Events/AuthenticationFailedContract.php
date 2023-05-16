@@ -9,7 +9,7 @@ use Throwable;
 /**
  * @api
  */
-interface AuthenticationFailedContract
+interface AuthenticationFailedContract extends EventContract
 {
     /**
      * AuthenticationFailed constructor.

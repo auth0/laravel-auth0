@@ -47,6 +47,13 @@ final class Guard extends GuardAbstract implements GuardContract
         return $token ?? $session ?? null;
     }
 
+    public function forgetUser(): self
+    {
+        $this->setCredential();
+
+        return $this;
+    }
+
     public function getCredential(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
@@ -150,6 +157,20 @@ final class Guard extends GuardAbstract implements GuardContract
         return $this;
     }
 
+    /**
+     * @param CredentialEntityContract $credential
+     * @param ?int                     $source
+     */
+    public function setImpersonating(
+        CredentialEntityContract $credential,
+        ?int $source = null,
+    ): self {
+        $this->impersonationSource = $source;
+        $this->impersonating = $credential;
+
+        return $this;
+    }
+
     public function setUser(
         Authenticatable $user,
     ): void {
@@ -178,8 +199,10 @@ final class Guard extends GuardAbstract implements GuardContract
             return $this->getImposter()?->getUser();
         }
 
-        if ($this->getCredential() instanceof CredentialEntityContract) {
-            return $this->getCredential()?->getUser();
+        $credential = $this->getCredential();
+
+        if ($credential instanceof CredentialEntityContract) {
+            return $credential->getUser();
         }
 
         // $source = $this->getCredentialSource();
@@ -201,12 +224,16 @@ final class Guard extends GuardAbstract implements GuardContract
 
     private function getAuthenticationGuard(): AuthenticationGuardContract
     {
-        return $this->authenticator ??= new AuthenticationGuard(name: $this->name, config: $this->config);
+        $this->sdk();
+
+        return $this->authenticator ??= new AuthenticationGuard(name: $this->name, config: $this->config, sdk: $this->sdk);
     }
 
     private function getAuthorizationGuard(): AuthorizationGuardContract
     {
-        return $this->authorizer ??= new AuthorizationGuard(name: $this->name, config: $this->config);
+        $this->sdk();
+
+        return $this->authorizer ??= new AuthorizationGuard(name: $this->name, config: $this->config, sdk: $this->sdk);
     }
 
     private function getCredentialSource(): ?int

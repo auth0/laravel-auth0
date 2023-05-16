@@ -9,6 +9,6 @@ namespace Auth0\Laravel\Bridges;
  *
  * @api
  */
-abstract class BridgeAbstract implements BridgeContract
+abstract class BridgeAbstract
 {
 }

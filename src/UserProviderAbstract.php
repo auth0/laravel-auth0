@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Guards\AuthorizationGuardContract;
+use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
+use Auth0\Laravel\Guards\{AuthorizationGuardContract, GuardContract};
 use Auth0\Laravel\{UserRepository, UserRepositoryContract};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -16,14 +17,14 @@ use function is_string;
  *
  * @api
  */
-abstract class UserProviderAbstract implements UserProviderContract
+abstract class UserProviderAbstract
 {
-    private ?UserRepositoryContract $repository = null;
+    protected ?UserRepositoryContract $repository = null;
 
-    private string $repositoryName = '';
+    protected string $repositoryName = '';
 
     public function __construct(
-        private array $config = [],
+        protected array $config = [],
     ) {
     }
 
@@ -71,21 +72,13 @@ abstract class UserProviderAbstract implements UserProviderContract
 
         $guard = auth()->guard();
 
-        if (! $guard instanceof AuthorizationGuardContract) {
+        if (! $guard instanceof GuardContract) {
             return null;
         }
 
-        $user = $guard->processToken(
-            token: $token,
-        );
+        $user = $guard->processToken($token);
 
-        if (null === $user) {
-            return null;
-        }
-
-        return $this->getRepository()->fromAccessToken(
-            user: $user,
-        );
+        return null !== $user ? $this->getRepository()->fromAccessToken($user) : null;
     }
 
     final public function setRepository(string $repository): void
@@ -118,18 +111,18 @@ abstract class UserProviderAbstract implements UserProviderContract
         return false;
     }
 
-    private function getConfiguration(
+    protected function getConfiguration(
         string $key,
     ): array | string | null {
         return $this->config[$key] ?? null;
     }
 
-    private function getRepositoryName(): string
+    protected function getRepositoryName(): string
     {
         return $this->repositoryName;
     }
 
-    private function resolveRepository(
+    protected function resolveRepository(
         ?string $repositoryName = null,
     ): UserRepositoryContract {
         $model = $repositoryName;
@@ -158,14 +151,14 @@ abstract class UserProviderAbstract implements UserProviderContract
         return $this->repository = app($model);
     }
 
-    private function setConfiguration(
+    protected function setConfiguration(
         string $key,
-        mixed $value,
+        string $value,
     ): void {
         $this->config[$key] = $value;
     }
 
-    private function setRepositoryName(string $repositoryName): void
+    protected function setRepositoryName(string $repositoryName): void
     {
         $this->setConfiguration('model', $repositoryName);
         $this->repositoryName = $repositoryName;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Controllers;
 
+use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
-use Auth0\Laravel\Guards\AuthenticationGuardContract;
+use Auth0\Laravel\Guards\GuardAbstract;
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ final class CallbackController extends ControllerAbstract implements CallbackCon
     ): Response {
         $guard = auth()->guard();
 
-        if (! $guard instanceof AuthenticationGuardContract) {
+        if (! $guard instanceof GuardAbstract) {
             logger()->error(sprintf('A request implementing the `%s` controller was not routed through a Guard configured with an Auth0 driver. The incorrectly assigned Guard was: %s', self::class, $guard::class), $request->toArray());
 
             throw new ControllerException(ControllerException::ROUTED_USING_INCOMPATIBLE_GUARD);
@@ -54,11 +55,10 @@ final class CallbackController extends ControllerAbstract implements CallbackCon
             $state = null;
         }
 
-        /*
-         * @var string|null $code
-         * @var string|null $state
+        /**
+         * @var null|string $code
+         * @var null|string $state
          */
-
         try {
             if (null !== $code && null !== $state) {
                 event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
@@ -123,15 +123,20 @@ final class CallbackController extends ControllerAbstract implements CallbackCon
         }
 
         if (! $success) {
-            return redirect()->intended(config('auth0.routes.login', 'login'));
+            return redirect()->intended('/login');
         }
 
-        $credential = $guard->find(AuthenticationGuardContract::SOURCE_SESSION);
+        $credential = ($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find();
+
         $user = $credential?->getUser();
 
         if ($credential instanceof CredentialEntityContract && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
-            $guard->login($credential, AuthenticationGuardContract::SOURCE_SESSION);
+
+            /**
+             * @var Guard $guard
+             */
+            $guard->login($credential, Guard::SOURCE_SESSION);
 
             $request->session()->regenerate();
 
@@ -146,6 +151,6 @@ final class CallbackController extends ControllerAbstract implements CallbackCon
             }
         }
 
-        return redirect()->intended(config('auth0.routes.home', '/'));
+        return redirect()->intended('/');
     }
 }

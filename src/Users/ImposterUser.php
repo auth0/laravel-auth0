@@ -11,4 +11,5 @@ namespace Auth0\Laravel\Users;
  */
 final class ImposterUser extends UserAbstract implements ImposterUserContract
 {
+    use UserTrait;
 }

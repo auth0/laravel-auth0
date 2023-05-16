@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Controllers\LoginController;
+use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Illuminate\Support\Facades\Route;
 use Auth0\Laravel\Http\Controller\Stateful\Login;
+use Auth0\SDK\Token\Generator;
+use Illuminate\Http\Response;
 
 uses()->group('stateful', 'controller', 'controller.stateful', 'controller.stateful.login');
 
@@ -18,7 +21,6 @@ beforeEach(function (): void {
         'auth0.default.clientId' => uniqid(),
         'auth0.default.clientSecret' => $this->secret,
         'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.routes.home' => '/' . uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -27,8 +29,8 @@ beforeEach(function (): void {
 
     $this->validSession = [
         'auth0_session_user' => ['sub' => 'hello|world'],
-        'auth0_session_idToken' => uniqid(),
-        'auth0_session_accessToken' => uniqid(),
+        'auth0_session_idToken' => (string) Generator::create((createRsaKeys())->private),
+        'auth0_session_accessToken' => (string) Generator::create((createRsaKeys())->private),
         'auth0_session_accessTokenScope' => [uniqid()],
         'auth0_session_accessTokenExpiration' => time() + 60,
     ];
@@ -42,18 +44,17 @@ it('redirects to the home route if an incompatible guard is active', function ()
         'auth.guards.legacyGuard' => null,
     ]);
 
-    $this->get('/login')
-         ->assertRedirect(config('auth0.default.routes.home'));
+    expect(function () {
+        $this->withoutExceptionHandling()
+             ->getJson('/login')
+             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+    })->toThrow(ControllerException::class);
 });
 
 it('redirects to the home route when a user is already logged in', function (): void {
-    config($config = [
-        'auth0.default.routes.home' => '/' . uniqid()
-    ]);
-
     $this->withSession($this->validSession)
          ->get('/login')
-            ->assertRedirect(config('auth0.default.routes.home'));
+            ->assertRedirect('/');
 });
 
 it('redirects to the Universal Login Page', function (): void {

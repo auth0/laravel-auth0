@@ -9,7 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 /**
  * @api
  */
-interface CredentialEntityContract
+interface CredentialEntityContract extends EntityContract
 {
     /**
      * Clear all values from this Credential instance.
@@ -24,7 +24,7 @@ interface CredentialEntityContract
     /**
      * Get the decoded access token content for this credential.
      *
-     * @return null|array<string>
+     * @return null|array<mixed>
      */
     public function getAccessTokenDecoded(): ?array;
 
@@ -41,7 +41,7 @@ interface CredentialEntityContract
     /**
      * Get the access token scope for this credential.
      *
-     * @return null|array<string>
+     * @return null|array<mixed>
      */
     public function getAccessTokenScope(): ?array;
 
@@ -72,7 +72,7 @@ interface CredentialEntityContract
     /**
      * Set the decoded access token content for this credential.
      *
-     * @param null|array<string> $accessTokenDecoded The decoded access token content for this credential.
+     * @param null|array<mixed> $accessTokenDecoded The decoded access token content for this credential.
      */
     public function setAccessTokenDecoded(
         ?array $accessTokenDecoded = null,
@@ -90,7 +90,7 @@ interface CredentialEntityContract
     /**
      * Set the access token scope for this credential.
      *
-     * @param null|array<string> $accessTokenScope The access token scope for this credential.
+     * @param null|array<mixed> $accessTokenScope The access token scope for this credential.
      */
     public function setAccessTokenScope(
         ?array $accessTokenScope = null,

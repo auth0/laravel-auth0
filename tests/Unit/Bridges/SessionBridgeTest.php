@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Auth0\Laravel\Store\LaravelSession;
+use Auth0\Laravel\Bridges\SessionBridge;
 use Auth0\SDK\Contract\StoreInterface;
 
 uses()->group('session-store');
 
 it('throws an exception when an empty prefix is provided', function (): void {
     expect(function () {
-        new LaravelSession(
+        new SessionBridge(
             prefix: '',
         );
     })->toThrow(InvalidArgumentException::class);
@@ -18,7 +18,7 @@ it('throws an exception when an empty prefix is provided', function (): void {
 it('accepts and uses a specified prefix', function (): void {
     $prefix = uniqid();
 
-    $store = new LaravelSession(
+    $store = new SessionBridge(
         prefix: $prefix,
     );
 
@@ -28,7 +28,7 @@ it('accepts and uses a specified prefix', function (): void {
 });
 
 it('allows updating the prefix', function (): void {
-    $store = new LaravelSession();
+    $store = new SessionBridge();
 
     expect($store)
         ->toBeInstanceOf(StoreInterface::class)
@@ -45,7 +45,7 @@ it('allows updating the prefix', function (): void {
 it('supports CRUD operations', function (): void {
     $prefix = uniqid();
 
-    $store = new LaravelSession(
+    $store = new SessionBridge(
         prefix: $prefix,
     );
 

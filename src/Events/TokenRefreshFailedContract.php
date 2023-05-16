@@ -7,6 +7,6 @@ namespace Auth0\Laravel\Events;
 /**
  * @api
  */
-interface TokenRefreshFailedContract
+interface TokenRefreshFailedContract extends EventContract
 {
 }
