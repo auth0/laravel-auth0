@@ -8,16 +8,16 @@
 
 -   This release introduces **two new Authentication Guards** which provide a streamlined integration experience for developers that need to simultaneously support both session-based authentication and token-based endpoint authorization in their Laravel applications.
 
-    | Guard                 | Class                                    | Description                   |
-    | --------------------- | ---------------------------------------- | ----------------------------- |
-    | `auth0.authenticator` | `Auth0\Laravel\Auth\Guards\SessionGuard` | Session-based authentication. |
-    | `auth0.authorizer`    | `Auth0\Laravel\Auth\Guards\TokenGuard`   | Token-based authorization.    |
+    | Guard                 | Class                                           | Description                   |
+    | --------------------- | ----------------------------------------------- | ----------------------------- |
+    | `auth0.authenticator` | `Auth0\Laravel\Auth\Guards\AuthenticationGuard` | Session-based authentication. |
+    | `auth0.authorizer`    | `Auth0\Laravel\Auth\Guards\AuthorizationGuard`  | Token-based authorization.    |
 
 -   These guards are compatible with Laravel's Authentication API and support the native `auth` middleware.
 
 -   These guards are compatible with Laravel's Authorization API and support the native `can` middleware, and the `Guard` facade, and work with the Policies API.
 
--   3 new pre-built Guards are available: `scope` and `permission`, as well as a dynamic `*:*`. This enables you to verify the user's access token has a particular scope, or if RBAC is enabled on the Auth0 API, if they have a particular permission. For example `Gate::check('scope', 'email')` or `Route::get(/*...*/)->can('read:messages')`.
+-   3 new pre-built Guards are available: `scope` and `permission`, as well as a dynamic `*:*`. This enables you to verify whether the user's access token has a particular scope or (if RBAC is enabled on the Auth0 API) a particular permission. For example `Gate::check('scope', 'email')` or `Route::get(/*...*/)->can('read:messages')`.
 
 -   The SDK now automatically registers these guards to Laravel's standard `web` and `api` middleware groups, respectively. Manual Guard setup in `config/auth.php` is no longer necessary.
 
