@@ -63,13 +63,12 @@ The default implementation looks like this:
 
 declare(strict_types=1);
 
-namespace Auth0\Laravel\Auth\User;
+namespace Auth0\Laravel;
 
-use Auth0\Laravel\Auth\User\RepositoryContract;
-use Auth0\Laravel\Entities{StatefulUser, StatelessUser};
+use Auth0\Laravel\Users\{StatefulUser, StatelessUser};
 use Illuminate\Contracts\Auth\Authenticatable;
 
-final class Repository implements RepositoryContract
+final class UserRepository extends UserRepositoryAbstract implements UserRepositoryContract
 {
     public function fromAccessToken(array $user): ?Authenticatable
     {
@@ -134,10 +133,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Auth0\Laravel\Entities\UserAbstract;
+use Auth0\Laravel\Users\{UserAbstract, UserContract, UserTrait};
 
-final class User extends UserAbstract
+final class User extends UserAbstract implements UserContract
 {
+    use UserTrait;
+
     protected $table = 'users';
 
     protected $fillable = [
@@ -155,7 +156,7 @@ final class User extends UserAbstract
 
 ### Integrating the Repository and Model
 
-Once you have created your repository and model, you can integrate them into your application by updating your `config/auth.php` file:
+Once you have created your repository and model, you can integrate them into your application by updating your `config/auth.php` file and pointing the `repository` key to your repository class.
 
 ```php
 /**
