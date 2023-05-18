@@ -37,7 +37,7 @@ Route::get('/api/private-scoped', function () {
         'authorized' => Auth::check(),
         'user' => Auth::check() ? json_decode(json_encode((array) Auth::user(), JSON_THROW_ON_ERROR), true) : null,
     ], 200, [], JSON_PRETTY_PRINT);
-})->middleware(['auth0.authorize:read:messages']);
+})->can('read:messages');
 ```
 
 ## Events
@@ -66,7 +66,7 @@ use Illuminate\Support\Facades\Route;
 uses(Impersonate::class);
 
 it('impersonates a user for the request', function (): void {
-    Route::middleware('auth0.authorize')->get('/example', function () use ($route): string {
+    Route::get('/example', function () use ($route): string {
         return response()->json('Hello World');
     });
     
