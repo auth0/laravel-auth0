@@ -8,6 +8,7 @@ use Auth0\Laravel\UserRepositoryContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\UserRepositoryContract instead.
+ *
  * @api
  */
 interface Repository extends UserRepositoryContract

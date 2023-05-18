@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\AuthenticationFailedContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationFailed instead.
+ *
  * @api
  */
 interface AuthenticationFailed extends AuthenticationFailedContract

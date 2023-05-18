@@ -12,7 +12,7 @@ namespace Auth0\Laravel\Events;
 abstract class LoginAttemptingAbstract extends EventAbstract
 {
     public function __construct(
-        private array $parameters = [],
+        protected array $parameters = [],
     ) {
     }
 

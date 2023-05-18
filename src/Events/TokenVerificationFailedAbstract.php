@@ -14,8 +14,8 @@ use Throwable;
 abstract class TokenVerificationFailedAbstract extends EventAbstract
 {
     public function __construct(
-        private string $token,
-        private Throwable $exception,
+        protected string $token,
+        protected Throwable $exception,
     ) {
     }
 

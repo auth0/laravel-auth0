@@ -8,6 +8,7 @@ use Auth0\Laravel\ServiceProviderContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\ServiceProviderContract instead.
+ *
  * @api
  */
 interface ServiceProvider extends ServiceProviderContract

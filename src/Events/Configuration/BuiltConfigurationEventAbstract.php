@@ -14,8 +14,9 @@ use Auth0\SDK\Configuration\SdkConfiguration;
  */
 abstract class BuiltConfigurationEventAbstract extends EventAbstract
 {
-    public function __construct(private SdkConfiguration $configuration)
-    {
+    public function __construct(
+        protected SdkConfiguration $configuration,
+    ) {
     }
 
     final public function getConfiguration(): SdkConfiguration

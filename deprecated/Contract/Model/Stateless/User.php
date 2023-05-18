@@ -8,6 +8,7 @@ use Auth0\Laravel\Users\StatelessUserContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Users\StatelessUserContract instead.
+ *
  * @api
  */
 interface User extends StatelessUserContract

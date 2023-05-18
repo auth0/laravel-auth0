@@ -12,7 +12,7 @@ namespace Auth0\Laravel\Events;
 abstract class TokenVerificationAttemptingAbstract extends EventAbstract
 {
     public function __construct(
-        private string $token,
+        protected string $token,
     ) {
     }
 

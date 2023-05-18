@@ -14,8 +14,8 @@ use Throwable;
 abstract class AuthenticationFailedAbstract extends EventAbstract
 {
     public function __construct(
-        private Throwable $exception,
-        private bool $throwException = true,
+        protected Throwable $exception,
+        protected bool $throwException = true,
     ) {
     }
 

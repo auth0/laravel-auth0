@@ -10,6 +10,7 @@
 >
     <projectFiles>
         <directory name="src"/>
+        <directory name="deprecated"/>
     </projectFiles>
 
     <issueHandlers>

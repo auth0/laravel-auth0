@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\AuthenticationSucceededContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationSucceeded instead.
+ *
  * @api
  */
 interface AuthenticationSucceeded extends AuthenticationSucceededContract

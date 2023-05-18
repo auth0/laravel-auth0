@@ -8,6 +8,7 @@ use Auth0\Laravel\Controllers\LogoutControllerContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Controllers\LogoutControllerContract instead.
+ *
  * @api
  */
 interface Logout extends LogoutControllerContract

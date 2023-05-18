@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequestContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequest instead.
+ *
  * @api
  */
 interface StatelessRequest extends StatelessMiddlewareRequestContract

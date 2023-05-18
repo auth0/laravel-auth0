@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Cache;
 
-use Auth0\Laravel\Bridges\CacheItemBridgeAbstract;
-use Auth0\Laravel\Bridges\CacheItemBridgeContract;
-
+use Auth0\Laravel\Bridges\{CacheItemBridgeAbstract, CacheItemBridgeContract};
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -15,7 +13,9 @@ use function is_int;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Bridges\CacheItemBridge instead.
+ *
  * @internal
+ *
  * @api
  */
 final class LaravelCacheItem extends CacheItemBridgeAbstract implements CacheItemBridgeContract

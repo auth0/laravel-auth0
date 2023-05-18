@@ -8,6 +8,7 @@ use Auth0\Laravel\Middleware\AuthorizeOptionalMiddlewareContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Middleware\AuthorizeOptionalMiddleware instead.
+ *
  * @api
  */
 interface AuthorizeOptional extends AuthorizeOptionalMiddlewareContract

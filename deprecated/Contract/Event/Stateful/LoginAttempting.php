@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\LoginAttemptingContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\LoginAttempting instead.
+ *
  * @api
  */
 interface LoginAttempting extends LoginAttemptingContract

@@ -13,8 +13,9 @@ use Auth0\Laravel\Events\EventAbstract;
  */
 abstract class BuildingConfigurationEventAbstract extends EventAbstract
 {
-    public function __construct(private array $configuration)
-    {
+    public function __construct(
+        protected array $configuration,
+    ) {
     }
 
     final public function getConfiguration(): array

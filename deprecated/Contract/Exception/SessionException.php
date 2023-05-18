@@ -8,6 +8,7 @@ use Auth0\Laravel\Exceptions\SessionExceptionContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\SessionException instead.
+ *
  * @api
  */
 interface SessionException extends SessionExceptionContract

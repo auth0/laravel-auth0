@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\TokenVerificationFailedContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\TokenVerificationFailed instead.
+ *
  * @api
  */
 interface TokenVerificationFailed extends TokenVerificationFailedContract

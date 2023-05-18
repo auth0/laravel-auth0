@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Entities;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use JsonSerializable;
 
 /**
  * An entity representing a user credential.
@@ -13,7 +14,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  *
  * @api
  */
-final class CredentialEntity extends CredentialEntityAbstract implements CredentialEntityContract
+final class CredentialEntity extends CredentialEntityAbstract implements CredentialEntityContract, JsonSerializable
 {
     public function clear(): self
     {

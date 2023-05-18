@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Event\Middleware;
 
-use Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequestAbstract;
-use Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequestContract;
+use Auth0\Laravel\Events\Middleware\{StatefulMiddlewareRequestAbstract, StatefulMiddlewareRequestContract};
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequest instead

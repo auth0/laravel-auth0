@@ -67,12 +67,15 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Auth0\\Laravel\\": "src"
+            "Auth0\\Laravel\\": [
+                "src/",
+                "deprecated/"
+            ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Auth0\\Laravel\\Tests\\": "tests"
+            "Auth0\\Laravel\\Tests\\": "tests/"
         }
     },
     "config": {

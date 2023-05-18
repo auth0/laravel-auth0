@@ -13,7 +13,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  */
 abstract class AuthenticationSucceededAbstract extends EventAbstract
 {
-    public function __construct(private Authenticatable $user)
+    public function __construct(protected Authenticatable $user)
     {
     }
 

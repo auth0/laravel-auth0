@@ -8,6 +8,7 @@ use Auth0\Laravel\Middleware\AuthenticateMiddlewareContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Middleware\AuthenticateMiddleware instead.
+ *
  * @api
  */
 interface Authenticate extends AuthenticateMiddlewareContract

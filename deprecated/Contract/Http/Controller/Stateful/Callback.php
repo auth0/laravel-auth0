@@ -8,6 +8,7 @@ use Auth0\Laravel\Controllers\CallbackControllerContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\Controllers\CallbackControllerContract instead.
+ *
  * @api
  */
 interface Callback extends CallbackControllerContract

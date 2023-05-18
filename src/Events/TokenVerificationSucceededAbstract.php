@@ -12,8 +12,8 @@ namespace Auth0\Laravel\Events;
 abstract class TokenVerificationSucceededAbstract extends EventAbstract
 {
     public function __construct(
-        private string $token,
-        private array $payload,
+        protected string $token,
+        protected array $payload,
     ) {
     }
 

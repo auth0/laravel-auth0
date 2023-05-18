@@ -8,6 +8,7 @@ use Auth0\Laravel\ServiceContract;
 
 /**
  * @deprecated 7.8.0 Use Auth0\Laravel\ServiceContract instead.
+ *
  * @api
  */
 interface Auth0 extends ServiceContract
