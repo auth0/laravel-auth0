@@ -23,33 +23,35 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.audience' => ['https://example.com/health-api'],
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.audience' => ['https://example.com/health-api'],
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256,
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = $guard = auth('tokenGuard');
+    $this->guard = $guard = auth('auth0-api');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
 
     $this->identifier = 'auth0|' . uniqid();
 
     $this->token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.default.domain') . '/',
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         "sub" => $this->identifier,
         "aud" => [
-            config('auth0.default.audience')[0],
+            config('auth0.guards.default.audience')[0],
             "https://my-domain.auth0.com/userinfo"
         ],
-        "azp" => config('auth0.default.clientId'),
+        "azp" => config('auth0.guards.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
     ]);
+
     $this->bearerToken = ['Authorization' => 'Bearer ' . $this->token->toString()];
 
     $this->route = '/' . uniqid();

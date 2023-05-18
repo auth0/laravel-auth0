@@ -13,12 +13,13 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.audience' => [uniqid()],
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.audience' => [uniqid()],
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256,
     ]);
 
     $this->laravel = app('auth0');
@@ -26,8 +27,8 @@ beforeEach(function (): void {
     $this->sdk = $this->laravel->getSdk();
 
     $this->user = new StatelessUser(['sub' => uniqid('auth0|')]);
-    $this->idToken = uniqid();
-    $this->accessToken = uniqid();
+    $this->idToken = mockIdToken(algorithm: Token::ALGO_HS256);
+    $this->accessToken = mockAccessToken(algorithm: Token::ALGO_HS256);
     $this->accessTokenScope = ['openid', 'profile', 'email', uniqid()];
     $this->accessTokenDecoded = [uniqid(), ['hello' => 'world']];
     $this->accessTokenExpiration = time() + 3600;

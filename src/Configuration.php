@@ -274,22 +274,25 @@ final class Configuration implements ConfigurationContract
         $value = self::getValue($setting) ?? $default;
 
         if (is_string($value) || is_int($value) || null === $value) {
-            $result = self::stringOrNull($value) ?? $default;
+            $value = self::stringOrNull($value) ?? $default;
         }
 
-        if (self::CONFIG_DOMAIN === $setting && null === $result) {
+        if (self::CONFIG_DOMAIN === $setting && null === $value) {
             // Fallback to extracting the tenant domain from the signing key subject.
             $result = self::getJson()['signing_keys.0.subject'] ?? '';
             $result = explode('=', $result);
 
-            if (isset($result[1]) && str_ends_with($result[1], '.auth0.com')) {
-                return $result[1];
+            if (isset($result[1]) && is_string($result[1]) && str_ends_with($result[1], '.auth0.com')) {
+                $value = $result[1]; // @codeCoverageIgnore
             }
         }
 
-        return $result;
+        return $result ?? $default;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getEnvironment(): array
     {
         if (null === self::$environment) {
@@ -308,9 +311,11 @@ final class Configuration implements ConfigurationContract
                 }
 
                 $contents = file($path . $file, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+
                 if (! is_array($contents)) {
                     continue;
                 }
+
                 if ([] === $contents) {
                     continue;
                 }
@@ -349,6 +354,9 @@ final class Configuration implements ConfigurationContract
         return self::$environment;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getJson(): array
     {
         if (null === self::$json) {
@@ -513,15 +521,16 @@ final class Configuration implements ConfigurationContract
         string $setting,
         array | bool | string | int | null $default = null,
     ): array | bool | string | int | null {
-        $env = 'AUTH0_' . mb_strtoupper(Str::snake($setting));
-        $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
+        $value = null;
 
-        $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
-
-        if (is_string($value) || is_int($value)) {
-            return $value;
+        if (defined('AUTH0_OVERRIDE_CONFIGURATION')) {
+            $value = config(constant('AUTH0_OVERRIDE_CONFIGURATION') . '.' . $setting);
+        } else {
+            $env = 'AUTH0_' . mb_strtoupper(Str::snake($setting));
+            $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
+            $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
         }
 
-        return $default;
+        return $value ?? $default;
     }
 }

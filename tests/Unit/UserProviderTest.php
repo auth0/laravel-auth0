@@ -22,11 +22,12 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.cookieSecret' => uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -42,7 +43,7 @@ test('retrieveByToken() returns null when an incompatible guard token is used', 
 
     $route = '/' . uniqid();
     Route::get($route, function () {
-        $provider = Auth::createUserProvider('testProvider');
+        $provider = Auth::createUserProvider('auth0-provider');
         $credential = $provider->retrieveByToken('token', '');
 
         if (null === $credential) {
@@ -57,21 +58,21 @@ test('retrieveByToken() returns null when an incompatible guard token is used', 
 });
 
 test('retrieveByToken() returns null when an invalid token is provided', function (): void {
-    config(['auth0.default.tokenAlgorithm' => Token::ALGO_HS256]);
+    config(['auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256]);
 
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://123.' . config('auth0.default.domain') . '/',
+        "iss" => 'https://123.' . config('auth0.guards.default.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => config('auth0.default.clientId'),
+        'aud' => config('auth0.guards.default.clientId'),
         'iat' => time(),
         'exp' => time() + 60,
-        'azp' => config('auth0.default.clientId'),
+        'azp' => config('auth0.guards.default.clientId'),
         'scope' => 'openid profile email'
     ], []);
 
     $route = '/' . uniqid();
     Route::get($route, function () use ($token) {
-        $provider = Auth::createUserProvider('testProvider');
+        $provider = Auth::createUserProvider('auth0-provider');
         $credential = $provider->retrieveByToken('token', $token);
 
         if (null === $credential) {
@@ -87,21 +88,21 @@ test('retrieveByToken() returns null when an invalid token is provided', functio
 });
 
 test('retrieveByToken() returns a user when a valid token is provided', function (): void {
-    config(['auth0.default.tokenAlgorithm' => Token::ALGO_HS256]);
+    config(['auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256]);
 
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.default.domain') . '/',
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => config('auth0.default.clientId'),
+        'aud' => config('auth0.guards.default.clientId'),
         'iat' => time(),
         'exp' => time() + 60,
-        'azp' => config('auth0.default.clientId'),
+        'azp' => config('auth0.guards.default.clientId'),
         'scope' => 'openid profile email'
     ], []);
 
     $route = '/' . uniqid();
     Route::get($route, function () use ($token) {
-        $provider = Auth::createUserProvider('testProvider');
+        $provider = Auth::createUserProvider('auth0-provider');
         $credential = $provider->retrieveByToken('token', (string) $token);
 
         if (null !== $credential) {
@@ -116,7 +117,7 @@ test('retrieveByToken() returns a user when a valid token is provided', function
 });
 
 test('validateCredentials() always returns false', function (): void {
-    $provider = Auth::createUserProvider('testProvider');
+    $provider = Auth::createUserProvider('auth0-provider');
     $user = new StatefulUser();
 
     expect($provider->validateCredentials($user, []))

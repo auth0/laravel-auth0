@@ -147,11 +147,12 @@ abstract class GuardAbstract
         /**
          * @var mixed $available
          */
-        if (is_array($available) && [] !== $available) {
-            return in_array($permission, $available, true);
+
+        if (! is_array($available) || [] === $available) {
+            return false;
         }
 
-        return false;
+        return in_array($permission, $available, true);
     }
 
     final public function hasScope(
@@ -225,36 +226,11 @@ abstract class GuardAbstract
         bool $reset = false,
     ): Auth0Interface {
         if (! $this->sdk instanceof InstanceEntityContract || $reset) {
-            $configuration = [];
+            $configurationName = $this->config['configuration'] ?? $this->name;
 
-            if (2 === Configuration::version()) {
-                /**
-                 * @var string $configName
-                 */
-                $configName = $this->config['configuration'] ?? $this->name;
-
-                $defaultConfiguration = config('auth0.default') ?? [];
-                $guardConfiguration = config('auth0.' . $configName) ?? [];
-
-                if (is_array($defaultConfiguration) && [] !== $defaultConfiguration) {
-                    $configuration = array_merge($configuration, $defaultConfiguration);
-                }
-
-                if (is_array($guardConfiguration) && [] !== $guardConfiguration) {
-                    $configuration = array_merge($configuration, $guardConfiguration);
-                }
-            }
-
-            // Fallback to the legacy configuration format if a version is not defined.
-            if (2 !== Configuration::version()) {
-                $configuration = config('auth0');
-
-                if (! is_array($configuration)) {
-                    $configuration = [];
-                }
-            }
-
-            $this->sdk = InstanceEntity::create($configuration);
+            $this->sdk = InstanceEntity::create(
+                guardConfigurationName: $configurationName
+            );
         }
 
         return $this->sdk->getSdk();

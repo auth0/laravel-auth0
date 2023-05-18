@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Users\StatefulUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
@@ -10,10 +11,8 @@ use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-use PsrMock\Psr18\Client as MockHttpClient;
-use PsrMock\Psr17\RequestFactory as MockRequestFactory;
-use PsrMock\Psr17\ResponseFactory as MockResponseFactory;
-use PsrMock\Psr17\StreamFactory as MockStreamFactory;
+use PsrMock\Psr17\ResponseFactory;
+use PsrMock\Psr17\StreamFactory;
 
 use function Pest\Laravel\getJson;
 
@@ -23,15 +22,16 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.cookieSecret' => uniqid(),
     ]);
 
     $this->laravel = app('auth0');
-    $this->guard = $guard = auth('sessionGuard');
+    $this->guard = $guard = auth('auth0-session');
     $this->sdk = $this->laravel->getSdk();
     $this->config = $this->sdk->configuration();
     $this->session = $this->config->getSessionStorage();
@@ -226,14 +226,14 @@ it('queries the /userinfo endpoint for refreshUser()', function (): void {
     expect($this->session)
         ->get('user')->toBe(['sub' => $identifier]);
 
-    $response = (new MockResponseFactory)->createResponse();
+    $response = (new ResponseFactory)->createResponse();
 
     $this->guard
         ->sdk()
         ->configuration()
         ->getHttpClient()
         ->addResponseWildcard($response->withBody(
-            (new MockStreamFactory)->createStream(
+            (new StreamFactory)->createStream(
                 json_encode(
                     value:         [
                         'sub' => $identifier,
@@ -275,14 +275,14 @@ it('does not query the /userinfo endpoint for refreshUser() if an access token i
     expect($this->session)
         ->get('user')->toBe(['sub' => $identifier]);
 
-    $response = (new MockResponseFactory)->createResponse();
+    $response = (new ResponseFactory)->createResponse();
 
     $this->guard
         ->sdk()
         ->configuration()
         ->getHttpClient()
         ->addResponseWildcard($response->withBody(
-            (new MockStreamFactory)->createStream(
+            (new StreamFactory)->createStream(
                 json_encode(
                     value:         [
                         'sub' => $identifier,
@@ -327,14 +327,14 @@ it('rejects bad responses from the /userinfo endpoint for refreshUser()', functi
     expect($this->session)
         ->get('user')->toBe(['sub' => $identifier]);
 
-    $response = (new MockResponseFactory)->createResponse();
+    $response = (new ResponseFactory)->createResponse();
 
     $this->guard
         ->sdk()
         ->configuration()
         ->getHttpClient()
         ->addResponseWildcard($response->withBody(
-            (new MockStreamFactory)->createStream(
+            (new StreamFactory)->createStream(
                 json_encode(
                     value: 'bad response',
                     flags: JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
@@ -385,17 +385,17 @@ it('successfully continues a session when an access token succeeds is renewed', 
     $this->session->set('accessTokenExpiration', time() - 1000);
     $this->session->set('refreshToken', uniqid());
 
-    $response = (new MockResponseFactory)->createResponse();
+    $response = (new ResponseFactory)->createResponse();
 
     $token = Generator::create((createRsaKeys())->private, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.default.domain') . '/',
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         "sub" => "auth0|123456",
         "aud" => [
           "https://example.com/health-api",
           "https://my-domain.auth0.com/userinfo",
-          config('auth0.default.clientId')
+          config('auth0.guards.default.clientId')
         ],
-        "azp" => config('auth0.default.clientId'),
+        "azp" => config('auth0.guards.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
         "scope" => "openid profile read:patients read:admin"
@@ -406,7 +406,7 @@ it('successfully continues a session when an access token succeeds is renewed', 
         ->configuration()
         ->getHttpClient()
         ->addResponseWildcard($response->withBody(
-            (new MockStreamFactory)->createStream(
+            (new StreamFactory)->createStream(
                 json_encode(
                     value: [
                         'access_token' => $token->toString(),

@@ -45,9 +45,17 @@ trait InstanceEntityTrait
 
     public static function create(
         SdkConfiguration | array | null $configuration = null,
+        ?string $guardConfigurationName = null,
     ): self {
         $instance = new self();
-        $instance->setConfiguration($configuration);
+
+        if ($guardConfigurationName) {
+            $instance->setGuardConfigurationKey($guardConfigurationName);
+        }
+
+        if ($configuration) {
+            $instance->setConfiguration($configuration);
+        }
 
         return $instance;
     }

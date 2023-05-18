@@ -7,6 +7,9 @@ use Auth0\Laravel\Exceptions\AuthenticationException;
 use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Users\StatefulUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Token;
 use Illuminate\Support\Facades\Route;
 use PsrMock\Psr18\Client as MockHttpClient;
 use PsrMock\Psr17\RequestFactory as MockRequestFactory;
@@ -19,11 +22,12 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.cookieSecret' => uniqid(),
     ]);
 
     $this->laravel = app('auth0');
@@ -144,6 +148,22 @@ it('has a user', function (): void {
         ->hasUser()->toBeFalse();
 });
 
+it('clears an imposter at logout', function (): void {
+    $this->guard->setImpersonating(CredentialEntity::create(
+        user: $this->user
+    ));
+
+    expect($this->guard)
+        ->hasUser()->toBeTrue()
+        ->isImpersonating()->toBeTrue();
+
+    $this->guard->logout();
+
+    expect($this->guard)
+        ->isImpersonating()->toBeFalse()
+        ->hasUser()->toBeFalse();
+});
+
 it('has a scope', function (): void {
     $this->user = new StatefulUser(['sub' => uniqid('auth0|'), 'scope' => 'read:users 456']);
 
@@ -196,8 +216,8 @@ it('returns a user from authenticate() if called while authenticated', function 
 it('gets/sets a credentials', function (): void {
     $credential = CredentialEntity::create(
         user: $this->user,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -211,8 +231,8 @@ it('gets/sets a credentials', function (): void {
 it('queries the /userinfo endpoint', function (): void {
     $credential = CredentialEntity::create(
         user: $this->user,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -244,9 +264,7 @@ it('queries the /userinfo endpoint', function (): void {
         )
     );
 
-    $this->guard->refreshUser();
-
-    $userAttributes = $this->guard->user()->getAttributes();
+    $userAttributes = $this->guard->getRefreshedUser()->getAttributes();
 
     expect($userAttributes)
         ->toBeArray()
@@ -254,3 +272,105 @@ it('queries the /userinfo endpoint', function (): void {
             'sub' => $identifier,
         ]);
 });
+
+test('hasPermission(*) returns true for wildcard', function (): void {
+    $credential = CredentialEntity::create(
+        user: $this->user,
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
+
+    expect($this->guard->hasPermission('*'))
+        ->toBeTrue();
+});
+
+test('hasPermission() returns true for matches', function (): void {
+    $credential = CredentialEntity::create(
+        user: $this->user,
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenDecoded: [
+            'permissions' => [
+                'read:posts',
+                'read:messages',
+                'read:users',
+            ],
+        ],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
+
+    expect($this->guard->hasPermission('read:messages'))
+        ->toBeTrue();
+
+    expect($this->guard->hasPermission('write:posts'))
+        ->toBeFalse();
+});
+
+test('hasPermission() returns false when there are no permissions', function (): void {
+    $credential = CredentialEntity::create(
+        user: $this->user,
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenDecoded: [
+            'permissions' => [],
+        ],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
+
+    expect($this->guard->hasPermission('read:messages'))
+        ->toBeFalse();
+});
+
+test('management() returns a Management API class', function (): void {
+    $credential = CredentialEntity::create(
+        user: $this->user,
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
+        accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
+        accessTokenDecoded: [
+            'permissions' => [],
+        ],
+        accessTokenExpiration: time() + 3600
+    );
+
+    $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
+
+    expect($this->guard->management())
+        ->toBeInstanceOf(ManagementInterface::class);
+});
+
+test('sdk() uses the guard name to optionally merge configuration data', function (): void {
+    config([
+        'auth0.guards.default.domain' => 'https://default-domain.com',
+        'auth0.guards.web.strategy' => 'none',
+        'auth0.guards.web.domain' => 'https://legacy-domain.com',
+    ]);
+
+    expect($this->guard->sdk()->configuration()->getDomain())
+        ->toBe('legacy-domain.com');
+});
+
+test('sdk() configuration v1 is supported', function (): void {
+    config(['auth0' => [
+        'strategy' => 'none',
+        'domain' => 'https://v1-domain.com',
+    ]]);
+
+    expect($this->guard->sdk()->configuration()->getDomain())
+        ->toBe('v1-domain.com');
+});
+
+test('sdk() configuration v1 defaults to an empty array', function (): void {
+    config(['auth0' => 123]);
+    $this->guard->sdk()->configuration()->getDomain();
+})->throws(ConfigurationException::class);

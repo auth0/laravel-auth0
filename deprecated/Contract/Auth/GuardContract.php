@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Auth0\Laravel\Contract\Auth;
+
+/**
+ * @codeCoverageIgnore
+ * @deprecated 7.8.0 Use Auth0\Laravel\Guards\GuardContract instead.
+ * @api
+ */
+interface GuardContract extends \Auth0\Laravel\Guards\GuardContract
+{
+}

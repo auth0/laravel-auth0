@@ -1,6 +1,8 @@
 <?php
 
 use Auth0\Laravel\Tests\TestCase;
+use Auth0\SDK\Token;
+use Auth0\SDK\Token\Generator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Artisan;
 
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Artisan;
 uses(TestCase::class)->in(__DIR__);
 
 uses()->beforeAll(function (): void {
-    // ray()->clearAll();
+    ray()->clearAll();
 })->in(__DIR__);
 
 uses()->beforeEach(function (): void {
@@ -70,7 +72,44 @@ uses()->compact();
 //     // ..
 // }
 
-// function createIdToken($claims = [], $headers = []): string
+function mockIdToken(
+    string $algorithm = Token::ALGO_RS256,
+    array $claims = [],
+    array $headers = []
+): string {
+    $secret = createRsaKeys()->private;
+
+    $claims = array_merge([
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
+        'sub' => 'hello|world',
+        'aud' => config('auth0.guards.default.clientId'),
+        'exp' => time() + 60,
+        'iat' => time(),
+        'email' => 'john.doe@somewhere.test'
+    ], $claims);
+
+    return (string) Generator::create($secret, $algorithm, $claims, $headers);
+}
+
+function mockAccessToken(
+    string $algorithm = Token::ALGO_RS256,
+    array $claims = [],
+    array $headers = []
+): string {
+    $secret = createRsaKeys()->private;
+
+    $claims = array_merge([
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
+        'sub' => 'hello|world',
+        'aud' => config('auth0.guards.default.clientId'),
+        'iat' => time(),
+        'exp' => time() + 60,
+        'azp' => config('auth0.guards.default.clientId'),
+        'scope' => 'openid profile email',
+    ], $claims);
+
+    return (string) Generator::create($secret, $algorithm, $claims, $headers);
+}
 
 function createRsaKeys(
     string $digestAlg = 'sha256',

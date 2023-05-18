@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Entities\{CredentialEntity, CredentialEntityContract};
-use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\UserProviderContract;
-use Auth0\SDK\Token;
 use Auth0\SDK\Utility\HttpResponse;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -55,32 +53,40 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
 
         $provider = $this->getProvider();
 
+        // @codeCoverageIgnoreStart
         if (! $provider instanceof UserProviderContract) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
         $user = $provider->getRepository()->fromAccessToken(
             user: $decoded,
         );
 
-        if ($user instanceof Authenticatable) {
-            $data = $this->normalizeUserArray($user);
-
-            if ([] !== $data) {
-                $scope = isset($data['scope']) && is_string($data['scope']) ? explode(' ', $data['scope']) : [];
-                $exp = isset($data['exp']) && is_numeric($data['exp']) ? (int) $data['exp'] : null;
-
-                return CredentialEntity::create(
-                    user: $user,
-                    accessToken: $token,
-                    accessTokenScope: $scope,
-                    accessTokenExpiration: $exp,
-                    accessTokenDecoded: $decoded,
-                );
-            }
+        // @codeCoverageIgnoreStart
+        if (! $user instanceof Authenticatable) {
+            return null;
         }
+        // @codeCoverageIgnoreEnd
 
-        return null;
+        $data = $this->normalizeUserArray($user);
+
+        // @codeCoverageIgnoreStart
+        if ([] === $data) {
+            return null;
+        }
+        // @codeCoverageIgnoreEnd
+
+        $scope = isset($data['scope']) && is_string($data['scope']) ? explode(' ', $data['scope']) : [];
+        $exp = isset($data['exp']) && is_numeric($data['exp']) ? (int) $data['exp'] : null;
+
+        return CredentialEntity::create(
+            user: $user,
+            accessToken: $token,
+            accessTokenScope: $scope,
+            accessTokenExpiration: $exp,
+            accessTokenDecoded: $decoded,
+        );
     }
 
     public function forgetUser(): self

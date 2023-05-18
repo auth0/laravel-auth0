@@ -39,7 +39,7 @@ interface UserContract extends Authenticatable, JsonSerializable
     /**
      * Get an attribute from the model.
      *
-     * @param mixed  $default
+     * @param mixed $default
      * @param string $key
      */
     public function getAttribute(string $key, mixed $default = null): mixed;

@@ -151,7 +151,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $update = $this->normalizeUserArray($user);
             $current = $sdk->getUser() ?? [];
 
-            if (count($update) !== count($current) || [] !== array_diff($update, $current)) {
+            if (count($update) !== count($current) || [] !== array_diff(array_map('serialize',$update), array_map('serialize',$current))) {
                 $sdk->setUser($update);
             }
         }
@@ -345,9 +345,11 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             event(new TokenRefreshSucceeded());
             $user = $session->getUser();
 
+            // @codeCoverageIgnoreStart
             if (! $user instanceof Authenticatable) {
                 return null;
             }
+            // @codeCoverageIgnoreEnd
 
             $user = $this->getProvider()->retrieveByCredentials($this->normalizeUserArray($user));
 

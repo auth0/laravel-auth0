@@ -20,19 +20,18 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Response;
 
-use function Pest\Laravel\getJson;
-
 uses()->group('stateful', 'controller', 'controller.stateful', 'controller.stateful.callback');
 
 beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.cookieSecret' => uniqid(),
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_REGULAR,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.cookieSecret' => uniqid(),
     ]);
 
     $this->guard = auth('legacyGuard');
@@ -98,24 +97,24 @@ it('returns a user and sets up a session', function (): void {
     $nonce = uniqid();
     $verifier = uniqid();
 
-    $accessToken = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.default.domain') . '/',
+    $idToken = Generator::create($this->secret, Token::ALGO_HS256, [
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => config('auth0.default.clientId'),
+        'aud' => config('auth0.guards.default.clientId'),
         'exp' => time() + 60,
         'iat' => time(),
-        'email' => 'john.doe@somewhere.test'
+        'email' => 'john.doe@somewhere.test',
+        'nonce' => $nonce
     ], []);
 
-    $idToken = Generator::create($this->secret, Token::ALGO_HS256, [
-        "iss" => 'https://' . config('auth0.default.domain') . '/',
+    $accessToken = Generator::create($this->secret, Token::ALGO_HS256, [
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         'sub' => 'hello|world',
-        'aud' => config('auth0.default.clientId'),
+        'aud' => config('auth0.guards.default.clientId'),
         'iat' => time(),
         'exp' => time() + 60,
-        'azp' => config('auth0.default.clientId'),
-        'scope' => 'openid profile email',
-        'nonce' => $nonce,
+        'azp' => config('auth0.guards.default.clientId'),
+        'scope' => 'openid profile email'
     ], []);
 
     $factory = $this->config->getHttpResponseFactory();
@@ -128,7 +127,7 @@ it('returns a user and sets up a session', function (): void {
     ]));
 
     $client = $this->config->getHttpClient();
-    $client->addResponse('POST', 'https://' . config('auth0.default.domain') . '/oauth/token', $response);
+    $client->addResponse('POST', 'https://' . config('auth0.guards.default.domain') . '/oauth/token', $response);
 
     $this->withSession([
         'auth0_transient_state' => $state,

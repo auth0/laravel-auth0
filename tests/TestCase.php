@@ -26,12 +26,6 @@ class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('auth0', [
-            'registerGuards' => null,
-            'registerMiddleware' => null,
-            'registerAuthenticationRoutes' => null,
-        ]);
-
         $app['config']->set('auth', [
             'defaults' => [
                 'guard' => 'legacyGuard',
@@ -44,15 +38,18 @@ class TestCase extends BaseTestCase
                 ],
                 'legacyGuard' => [
                     'driver' => 'auth0.guard',
-                    'provider' => 'testProvider',
+                    'configuration' => 'web',
+                    'provider' => 'auth0-provider',
                 ],
-                'sessionGuard' => [
+                'auth0-session' => [
                     'driver' => 'auth0.authenticator',
-                    'provider' => 'testProvider',
+                    'configuration' => 'web',
+                    'provider' => 'auth0-provider',
                 ],
-                'tokenGuard' => [
+                'auth0-api' => [
                     'driver' => 'auth0.authorizer',
-                    'provider' => 'testProvider',
+                    'configuration' => 'api',
+                    'provider' => 'auth0-provider',
                 ],
             ],
             'providers' => [
@@ -60,15 +57,15 @@ class TestCase extends BaseTestCase
                     'driver' => 'eloquent',
                     'model' => App\Models\User::class,
                 ],
-                'testProvider' => [
+                'auth0-provider' => [
                     'driver' => 'auth0.provider',
-                    'model' => 'auth0.repository',
+                    'repository' => 'auth0.repository',
                 ],
             ],
         ]);
 
         // Set a random key for testing
-        $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
+        $_ENV['APP_KEY'] = 'base64:' . base64_encode(random_bytes(32));
 
         // Setup database for testing (currently unused)
         $app['config']->set('database.default', 'testbench');

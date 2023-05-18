@@ -40,7 +40,7 @@ final class Guard extends GuardAbstract implements GuardContract
             $token = $this->getAuthorizationGuard()->findToken();
         }
 
-        if (null === $source || self::SOURCE_SESSION === $source) {
+        if (null === $source && null === $token || self::SOURCE_SESSION === $source) {
             $session = $this->getAuthenticationGuard()->findSession();
         }
 

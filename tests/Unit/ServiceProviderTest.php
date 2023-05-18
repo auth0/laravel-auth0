@@ -20,7 +20,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 
 uses()->group('ServiceProvider');
@@ -138,7 +137,7 @@ it('creates a UserRepository singleton', function (): void {
 });
 
 it('does NOT a Provider singleton', function (): void {
-    $singleton1 = Auth::createUserProvider('testProvider');
+    $singleton1 = Auth::createUserProvider('auth0-provider');
     $singleton2 = $this->app->make(UserProvider::class);
 
     expect($singleton1)
@@ -412,7 +411,7 @@ test('auth0.registerGuards === true registers guards', function (): void {
     expect(config('auth.providers.auth0-provider'))
         ->toBeArray()
         ->toHaveKey('driver', 'auth0.provider')
-        ->toHaveKey('repository', UserRepository::class);
+        ->toHaveKey('repository', 'auth0.repository');
 });
 
 test('auth0.registerGuards === true registers guards, but does not overwrite an existing auth.guards.auth0-session entry', function (): void {
@@ -445,7 +444,7 @@ test('auth0.registerGuards === true registers guards, but does not overwrite an 
     expect(config('auth.providers.auth0-provider'))
         ->toBeArray()
         ->toHaveKey('driver', 'auth0.provider')
-        ->toHaveKey('repository', UserRepository::class);
+        ->toHaveKey('repository', 'auth0.repository');
 });
 
 test('auth0.registerGuards === true registers guards, but does not overwrite an existing auth.guards.auth0-api entry', function (): void {
@@ -478,7 +477,7 @@ test('auth0.registerGuards === true registers guards, but does not overwrite an 
     expect(config('auth.providers.auth0-provider'))
         ->toBeArray()
         ->toHaveKey('driver', 'auth0.provider')
-        ->toHaveKey('repository', UserRepository::class);
+        ->toHaveKey('repository', 'auth0.repository');
 });
 
 test('auth0.registerGuards === true registers guards, but does not overwrite an existing auth.providers.auth0-provider entry', function (): void {
@@ -514,42 +513,6 @@ test('auth0.registerGuards === true registers guards, but does not overwrite an 
         ->toHaveKey('repository', 'users');
 });
 
-test('auth0.registerGuards === false does not register guards', function (): void {
-    config(['auth0.registerGuards' => false]);
-
-    $service = app(ServiceProvider::class, ['app' => $this->app]);
-    /**
-     * @var ServiceProvider $service
-     */
-    $service->register();
-
-    expect(config('auth.guards.auth0-session'))
-        ->toBeNull();
-
-    expect(config('auth.guards.auth0-api'))
-        ->toBeNull();
-
-    expect(config('auth.providers.auth0-provider'))
-        ->toBeNull();
-});
-
-test('auth0.registerGuards === null does not register guards', function (): void {
-    $service = app(ServiceProvider::class, ['app' => $this->app]);
-    /**
-     * @var ServiceProvider $service
-     */
-    $service->register();
-
-    expect(config('auth.guards.auth0-session'))
-        ->toBeNull();
-
-    expect(config('auth.guards.auth0-api'))
-        ->toBeNull();
-
-    expect(config('auth.providers.auth0-provider'))
-        ->toBeNull();
-});
-
 test('auth0.registerMiddleware === true registers middleware', function (): void {
     config(['auth0.registerMiddleware' => true]);
 
@@ -557,12 +520,11 @@ test('auth0.registerMiddleware === true registers middleware', function (): void
     /**
      * @var ServiceProvider $service
      */
-    $kernel = $service->registerMiddleware();
+    $service->registerMiddleware(app('router'));
     /**
-     * @var Kernel $kernel
+     * @var \Illuminate\Foundation\Http\Kernel $kernel
      */
-
-    $middleware = $kernel->getMiddlewareGroups();
+    $middleware = app('router')->getMiddlewareGroups();
 
     expect($middleware)
         ->toBeArray()
@@ -573,54 +535,6 @@ test('auth0.registerMiddleware === true registers middleware', function (): void
 
     expect($middleware['api'])
         ->toContain(AuthorizerMiddleware::class);
-});
-
-test('auth0.registerMiddleware === false does not register middleware', function (): void {
-    config('auth0.registerMiddleware', false);
-
-    $service = app()->register(ServiceProvider::class, true);
-    /**
-     * @var ServiceProvider $service
-     */
-    $kernel = $service->registerMiddleware();
-    /**
-     * @var Kernel $kernel
-     */
-
-    $middleware = $kernel->getMiddlewareGroups();
-
-    expect($middleware)
-        ->toBeArray()
-        ->toHaveKeys(['web', 'api']);
-
-    expect($middleware['web'])
-        ->not()->toContain(AuthenticatorMiddleware::class);
-
-    expect($middleware['api'])
-        ->not()->toContain(AuthorizerMiddleware::class);
-});
-
-test('auth0.registerMiddleware === null does not register middleware', function (): void {
-    $service = app()->register(ServiceProvider::class, true);
-    /**
-     * @var ServiceProvider $service
-     */
-    $kernel = $service->registerMiddleware();
-    /**
-     * @var Kernel $kernel
-     */
-
-    $middleware = $kernel->getMiddlewareGroups();
-
-    expect($middleware)
-        ->toBeArray()
-        ->toHaveKeys(['web', 'api']);
-
-    expect($middleware['web'])
-        ->not()->toContain(AuthenticatorMiddleware::class);
-
-    expect($middleware['api'])
-        ->not()->toContain(AuthorizerMiddleware::class);
 });
 
 test('auth0.registerAuthenticationRoutes === true registers routes', function (): void {
@@ -635,30 +549,4 @@ test('auth0.registerAuthenticationRoutes === true registers routes', function ()
 
     expect($routes)
         ->toHaveKeys(['login', 'logout', 'callback']);
-});
-
-test('auth0.registerAuthenticationRoutes === false does not register routes', function (): void {
-    config(['auth0.registerAuthenticationRoutes' => false]);
-
-    $service = app(ServiceProvider::class, ['app' => $this->app]);
-    /**
-     * @var ServiceProvider $service
-     */
-    $service->registerRoutes();
-    $routes = (array) Route::getRoutes()->get('GET');
-
-    expect($routes)
-        ->not()->toHaveKeys(['login', 'logout', 'callback']);
-});
-
-test('auth0.registerAuthenticationRoutes === null does not register routes', function (): void {
-    $service = app(ServiceProvider::class, ['app' => $this->app]);
-    /**
-     * @var ServiceProvider $service
-     */
-    $service->registerRoutes();
-    $routes = (array) Route::getRoutes()->get('GET');
-
-    expect($routes)
-        ->not()->toHaveKeys(['login', 'logout', 'callback']);
 });

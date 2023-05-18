@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Entities;
 
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
+use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
 use Auth0\Laravel\Service;
 use Auth0\SDK\Auth0;
@@ -28,16 +29,38 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         protected ?SdkConfiguration $configuration = null,
         protected ?CacheItemPoolInterface $tokenCachePool = null,
         protected ?CacheItemPoolInterface $managementTokenCachePool = null,
+        protected ?string $guardConfigurationKey = null,
     ) {
     }
 
     final public function getConfiguration(): SdkConfiguration
     {
         if (! $this->configuration instanceof SdkConfiguration) {
-            $configuration = config('auth0.default') ?? config('auth0') ?? [];
-
-            if (! is_array($configuration)) {
+            if (2 === Configuration::version()) {
+                $defaultConfiguration = config('auth0.guards.default');
+                $guardConfiguration = [];
                 $configuration = [];
+
+                if (null !== $this->guardConfigurationKey && '' !== $this->guardConfigurationKey && 'default' !== $this->guardConfigurationKey) {
+                    $guardConfiguration = config('auth0.guards.' . $this->guardConfigurationKey) ?? [];
+                }
+
+                if (is_array($defaultConfiguration) && [] !== $defaultConfiguration) {
+                    $configuration = array_merge($configuration, array_filter($defaultConfiguration));
+                }
+
+                if (is_array($guardConfiguration) && [] !== $guardConfiguration) {
+                    $configuration = array_merge($configuration, array_filter($guardConfiguration));
+                }
+            }
+
+            // Fallback to the legacy configuration format if a version is not defined.
+            if (2 !== Configuration::version()) {
+                $configuration = config('auth0');
+
+                if (! is_array($configuration)) {
+                    $configuration = [];
+                }
             }
 
             $this->configuration = $this->createConfiguration($configuration);
@@ -73,6 +96,18 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         $this->setSdkTelemetry();
 
         return $this->sdk;
+    }
+
+    final public function getGuardConfigurationKey(): ?string
+    {
+        return $this->guardConfigurationKey;
+    }
+
+    final public function setGuardConfigurationKey(
+        ?string $guardConfigurationKey = null,
+    ): self {
+        $this->guardConfigurationKey = $guardConfigurationKey;
+        return $this;
     }
 
     abstract public function reset(): self;

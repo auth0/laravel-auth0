@@ -13,11 +13,14 @@ use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 use function is_string;
 
@@ -34,16 +37,10 @@ abstract class ServiceProviderAbstract extends ServiceProvider
         $this->mergeConfigFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']), 'auth0');
         $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0');
 
-        $auth->extend('auth0.guard', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
         $auth->extend('auth0.authenticator', static fn (Application $app, string $name, array $config): AuthenticationGuard => new AuthenticationGuard($name, $config));
         $auth->extend('auth0.authorizer', static fn (Application $app, string $name, array $config): AuthorizationGuard => new AuthorizationGuard($name, $config));
-
         $auth->provider('auth0.provider', static fn (Application $app, array $config): UserProvider => new UserProvider($config));
 
-        $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptionalMiddleware::class);
-        $router->aliasMiddleware('auth0.authenticate', AuthenticateMiddleware::class);
-        $router->aliasMiddleware('auth0.authorize.optional', AuthorizeOptionalMiddleware::class);
-        $router->aliasMiddleware('auth0.authorize', AuthorizeMiddleware::class);
         $router->aliasMiddleware('guard', GuardMiddleware::class);
 
         $gate->define('scope', static function (Authenticatable $user, string $scope, ?GuardContract $guard = null): bool {
@@ -90,33 +87,11 @@ abstract class ServiceProviderAbstract extends ServiceProvider
             }
         });
 
-        $this->registerMiddleware();
+        $this->registerDeprecated($router, $auth);
+        $this->registerMiddleware($router);
         $this->registerRoutes();
 
         return $this;
-    }
-
-    final public function registerMiddleware(): Kernel
-    {
-        $kernel = $this->app->make(Kernel::class);
-
-        if (true === config('auth0.registerMiddleware')) {
-            $kernel->prependMiddlewareToGroup('web', AuthenticatorMiddleware::class);
-            $kernel->prependMiddlewareToGroup('api', AuthorizerMiddleware::class);
-        }
-
-        return $kernel;
-    }
-
-    final public function registerRoutes()
-    {
-        if (true === config('auth0.registerAuthenticationRoutes')) {
-            Route::group(['middleware' => 'web'], static function (): void {
-                Route::get('/login', LoginController::class)->name('login');
-                Route::get('/logout', LogoutController::class)->name('logout');
-                Route::get('/callback', CallbackController::class)->name('callback');
-            });
-        }
     }
 
     final public function provides()
@@ -148,6 +123,48 @@ abstract class ServiceProviderAbstract extends ServiceProvider
 
     final public function register(): self
     {
+        $this->registerGuards();
+
+        $this->app->singleton(Auth0::class, static fn (): Service => new Service());
+        $this->app->singleton(Service::class, static fn (): Service => new Service());
+        $this->app->singleton(Configuration::class, static fn (): Configuration => new Configuration());
+        $this->app->singleton(Service::class, static fn (): Service => new Service());
+        $this->app->singleton(AuthenticatorMiddleware::class, static fn (): AuthenticatorMiddleware => new AuthenticatorMiddleware());
+        $this->app->singleton(AuthorizerMiddleware::class, static fn (): AuthorizerMiddleware => new AuthorizerMiddleware());
+        $this->app->singleton(AuthenticateMiddleware::class, static fn (): AuthenticateMiddleware => new AuthenticateMiddleware());
+        $this->app->singleton(AuthenticateOptionalMiddleware::class, static fn (): AuthenticateOptionalMiddleware => new AuthenticateOptionalMiddleware());
+        $this->app->singleton(AuthorizeMiddleware::class, static fn (): AuthorizeMiddleware => new AuthorizeMiddleware());
+        $this->app->singleton(AuthorizeOptionalMiddleware::class, static fn (): AuthorizeOptionalMiddleware => new AuthorizeOptionalMiddleware());
+        $this->app->singleton(GuardMiddleware::class, static fn (): GuardMiddleware => new GuardMiddleware());
+        $this->app->singleton(CallbackController::class, static fn (): CallbackController => new CallbackController());
+        $this->app->singleton(LoginController::class, static fn (): LoginController => new LoginController());
+        $this->app->singleton(LogoutController::class, static fn (): LogoutController => new LogoutController());
+        $this->app->singleton(UserProvider::class, static fn (): UserProvider => new UserProvider());
+        $this->app->singleton(UserRepository::class, static fn (): UserRepository => new UserRepository());
+
+        $this->app->singleton('auth0', static fn (): Service => app(Service::class));
+        $this->app->singleton('auth0.repository', static fn (): UserRepository => app(UserRepository::class));
+
+        return $this;
+    }
+
+    final public function registerDeprecated(
+        Router $router,
+        AuthManager $auth,
+    ): void {
+        $auth->extend('auth0.guard', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
+
+        $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptionalMiddleware::class);
+        $router->aliasMiddleware('auth0.authenticate', AuthenticateMiddleware::class);
+        $router->aliasMiddleware('auth0.authorize.optional', AuthorizeOptionalMiddleware::class);
+        $router->aliasMiddleware('auth0.authorize', AuthorizeMiddleware::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    final public function registerGuards(): void
+    {
         if (true === config('auth0.registerGuards')) {
             if (null === config('auth.guards.auth0-session')) {
                 config([
@@ -173,32 +190,37 @@ abstract class ServiceProviderAbstract extends ServiceProvider
                 config([
                     'auth.providers.auth0-provider' => [
                         'driver' => 'auth0.provider',
-                        'repository' => UserRepository::class,
+                        'repository' => 'auth0.repository',
                     ],
                 ]);
             }
         }
+    }
 
-        $this->app->singleton(Auth0::class, static fn (): Service => new Service());
-        $this->app->singleton(Service::class, static fn (): Service => new Service());
-        $this->app->singleton(Configuration::class, static fn (): Configuration => new Configuration());
-        $this->app->singleton(Service::class, static fn (): Service => new Service());
-        $this->app->singleton(AuthenticatorMiddleware::class, static fn (): AuthenticatorMiddleware => new AuthenticatorMiddleware());
-        $this->app->singleton(AuthorizerMiddleware::class, static fn (): AuthorizerMiddleware => new AuthorizerMiddleware());
-        $this->app->singleton(AuthenticateMiddleware::class, static fn (): AuthenticateMiddleware => new AuthenticateMiddleware());
-        $this->app->singleton(AuthenticateOptionalMiddleware::class, static fn (): AuthenticateOptionalMiddleware => new AuthenticateOptionalMiddleware());
-        $this->app->singleton(AuthorizeMiddleware::class, static fn (): AuthorizeMiddleware => new AuthorizeMiddleware());
-        $this->app->singleton(AuthorizeOptionalMiddleware::class, static fn (): AuthorizeOptionalMiddleware => new AuthorizeOptionalMiddleware());
-        $this->app->singleton(GuardMiddleware::class, static fn (): GuardMiddleware => new GuardMiddleware());
-        $this->app->singleton(CallbackController::class, static fn (): CallbackController => new CallbackController());
-        $this->app->singleton(LoginController::class, static fn (): LoginController => new LoginController());
-        $this->app->singleton(LogoutController::class, static fn (): LogoutController => new LogoutController());
-        $this->app->singleton(UserProvider::class, static fn (): UserProvider => new UserProvider());
-        $this->app->singleton(UserRepository::class, static fn (): UserRepository => new UserRepository());
+    /**
+     * @codeCoverageIgnore
+     */
+    final public function registerMiddleware(
+        Router $router,
+    ) {
+        if (true === config('auth0.registerMiddleware')) {
+            $kernel = $this->app->make(Kernel::class);
+            $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
+            $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
 
-        $this->app->singleton('auth0', static fn (): Service => app(Service::class));
-        $this->app->singleton('auth0.repository', static fn (): UserRepository => app(UserRepository::class));
+            $router->pushMiddlewareToGroup('web', AuthenticatorMiddleware::class);
+            $router->pushMiddlewareToGroup('api', AuthorizerMiddleware::class);
+        }
+    }
 
-        return $this;
+    final public function registerRoutes(): void
+    {
+        if (true === config('auth0.registerAuthenticationRoutes')) {
+            Route::group(['middleware' => 'web'], static function (): void {
+                Route::get('/login', LoginController::class)->name('login');
+                Route::get('/logout', LogoutController::class)->name('logout');
+                Route::get('/callback', CallbackController::class)->name('callback');
+            });
+        }
     }
 }

@@ -22,13 +22,14 @@ beforeEach(function (): void {
     $this->secret = uniqid();
 
     config([
-        'auth0.default.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.default.domain' => uniqid() . '.auth0.com',
-        'auth0.default.clientId' => uniqid(),
-        'auth0.default.audience' => [uniqid()],
-        'auth0.default.clientSecret' => $this->secret,
-        'auth0.default.cookieSecret' => uniqid(),
-        'auth0.default.tokenAlgorithm' => Token::ALGO_HS256,
+        'auth0.AUTH0_CONFIG_VERSION' => 2,
+        'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
+        'auth0.guards.default.clientId' => uniqid(),
+        'auth0.guards.default.audience' => [uniqid()],
+        'auth0.guards.default.clientSecret' => $this->secret,
+        'auth0.guards.default.cookieSecret' => uniqid(),
+        'auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256,
     ]);
 
     $this->laravel = app('auth0');
@@ -50,8 +51,8 @@ it('impersonates with other guards', function (): void {
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -73,8 +74,8 @@ it('impersonates a user against auth0.authenticate', function (): void {
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -99,8 +100,8 @@ it('impersonates a user against auth0.authenticate.optional', function (): void 
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -125,8 +126,8 @@ it('impersonates a user against auth0.authenticate using a scope', function (): 
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -151,8 +152,8 @@ it('impersonates a user against auth0.authorize', function (): void {
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -177,8 +178,8 @@ it('impersonates a user against auth0.authorize.optional', function (): void {
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -199,8 +200,8 @@ it('impersonates a user against auth0.authorize using a scope', function (): voi
 
     $imposter = CredentialEntity::create(
         user: new ImposterUser(['sub' => uniqid()]),
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600
     );
@@ -222,7 +223,7 @@ it('impersonates a user against auth0.authorize using a scope', function (): voi
 
 it('AuthenticationGuard returns the impersonated user', function (): void {
     config([
-        'auth.defaults.guard' => 'sessionGuard',
+        'auth.defaults.guard' => 'auth0-session',
     ]);
 
     $route = '/' . uniqid();
@@ -235,8 +236,8 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
 
     $credential = CredentialEntity::create(
         user: $imposter,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600,
         refreshToken: uniqid(),
@@ -253,10 +254,10 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
     expect(auth('legacyGuard'))
         ->user()->toBeNull();
 
-    expect(auth('tokenGuard'))
+    expect(auth('auth0-api'))
         ->user()->toBeNull();
 
-    expect(auth('sessionGuard'))
+    expect(auth('auth0-session'))
         ->isImpersonating()->toBeTrue()
         ->user()->toEqual($imposter)
         ->find()->toEqual($credential)
@@ -266,12 +267,12 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
     $client = new MockHttpClient(requestLimit: 0);
     $this->sdk->configuration()->setHttpClient($client);
 
-    expect(auth('sessionGuard'))
+    expect(auth('auth0-session'))
         ->refreshUser();
 
-    auth('sessionGuard')->setUser(new ImposterUser(['sub' => uniqid()]));
+    auth('auth0-session')->setUser(new ImposterUser(['sub' => uniqid()]));
 
-    expect(auth('sessionGuard'))
+    expect(auth('auth0-session'))
         ->isImpersonating()->toBeFalse()
         ->user()->not()->toEqual($imposter)
         ->find()->not()->toEqual($credential)
@@ -281,7 +282,7 @@ it('AuthenticationGuard returns the impersonated user', function (): void {
 
 it('AuthorizationGuard returns the impersonated user', function (): void {
     config([
-        'auth.defaults.guard' => 'tokenGuard',
+        'auth.defaults.guard' => 'auth0-api',
     ]);
 
     $route = '/' . uniqid();
@@ -294,8 +295,8 @@ it('AuthorizationGuard returns the impersonated user', function (): void {
 
     $credential = CredentialEntity::create(
         user: $imposter,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600,
         refreshToken: uniqid(),
@@ -312,10 +313,10 @@ it('AuthorizationGuard returns the impersonated user', function (): void {
     expect(auth('legacyGuard'))
         ->user()->toBeNull();
 
-    expect(auth('sessionGuard'))
+    expect(auth('auth0-session'))
         ->user()->toBeNull();
 
-    expect(auth('tokenGuard'))
+    expect(auth('auth0-api'))
         ->isImpersonating()->toBeTrue()
         ->getImposterSource()->toBe(Guard::SOURCE_TOKEN)
         ->user()->toEqual($imposter)
@@ -326,12 +327,12 @@ it('AuthorizationGuard returns the impersonated user', function (): void {
     $client = new MockHttpClient(requestLimit: 0);
     $this->sdk->configuration()->setHttpClient($client);
 
-    expect(auth('tokenGuard'))
+    expect(auth('auth0-api'))
         ->refreshUser();
 
-    auth('tokenGuard')->setUser(new ImposterUser(['sub' => uniqid()]));
+    auth('auth0-api')->setUser(new ImposterUser(['sub' => uniqid()]));
 
-    expect(auth('tokenGuard'))
+    expect(auth('auth0-api'))
         ->isImpersonating()->toBeFalse()
         ->user()->not()->toEqual($imposter)
         ->find()->not()->toEqual($credential)
@@ -354,8 +355,8 @@ it('Guard returns the impersonated user', function (): void {
 
     $credential = CredentialEntity::create(
         user: $imposter,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600,
         refreshToken: uniqid(),
@@ -369,10 +370,10 @@ it('Guard returns the impersonated user', function (): void {
         ->route->toBe(Guard::class)
         ->user->json()->sub->toBe($imposter->getAuthIdentifier());
 
-    expect(auth('tokenGuard'))
+    expect(auth('auth0-api'))
         ->user()->toBeNull();
 
-    expect(auth('sessionGuard'))
+    expect(auth('auth0-session'))
         ->user()->toBeNull();
 
     expect(auth('legacyGuard'))
@@ -410,8 +411,8 @@ it('Guard clears the impersonated user during logout()', function (): void {
 
     $credential = CredentialEntity::create(
         user: $imposter,
-        idToken: uniqid(),
-        accessToken: uniqid(),
+        idToken: mockIdToken(algorithm: Token::ALGO_HS256),
+        accessToken: mockAccessToken(algorithm: Token::ALGO_HS256),
         accessTokenScope: ['openid', 'profile', 'email', 'read:messages'],
         accessTokenExpiration: time() + 3600,
         refreshToken: uniqid(),
