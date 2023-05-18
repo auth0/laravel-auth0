@@ -67,6 +67,8 @@ abstract class UserAbstract
 
     /**
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
+     *
+     * @param mixed $value
      */
     final public function setRememberToken(mixed $value): void
     {
