@@ -10,7 +10,6 @@ CHANGELOG.md           export-ignore
 docs/                  export-ignore
 EXAMPLES.md            export-ignore
 examples/              export-ignore
-infection.json5.dist   export-ignore
 opslevel.yml           export-ignore
 phpstan.neon.dist      export-ignore
 phpunit.xml.dist       export-ignore
