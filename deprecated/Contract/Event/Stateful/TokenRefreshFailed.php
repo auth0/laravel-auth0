@@ -7,8 +7,7 @@ namespace Auth0\Laravel\Contract\Event\Stateful;
 use Auth0\Laravel\Events\TokenRefreshFailedContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Events\TokenRefreshFailedContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Events\TokenRefreshFailed instead.
  * @api
  */
 interface TokenRefreshFailed extends TokenRefreshFailedContract

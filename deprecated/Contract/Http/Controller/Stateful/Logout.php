@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Http\Controller\Stateful;
 
-use Auth0\Laravel\Http\Controller\Stateful\LogoutContract;
+use Auth0\Laravel\Controllers\LogoutControllerContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Http\Controller\Stateful\LogoutContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Controllers\LogoutControllerContract instead.
  * @api
  */
-interface Logout extends LogoutContract
+interface Logout extends LogoutControllerContract
 {
 }

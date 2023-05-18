@@ -7,7 +7,6 @@ namespace Auth0\Laravel\Contract\Model;
 use Auth0\Laravel\Users\UserContract;
 
 /**
- * @codeCoverageIgnore
  * @deprecated 7.8.0 Use Auth0\Laravel\Users\UserContract instead.
  * @api
  */

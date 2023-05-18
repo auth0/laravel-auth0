@@ -7,7 +7,6 @@ namespace Auth0\Laravel\Contract;
 use Auth0\Laravel\ServiceContract;
 
 /**
- * @codeCoverageIgnore
  * @deprecated 7.8.0 Use Auth0\Laravel\ServiceContract instead.
  * @api
  */

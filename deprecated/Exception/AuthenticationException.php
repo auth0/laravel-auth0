@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Exception;
 
 use Auth0\Laravel\Exceptions\AuthenticationExceptionContract;
-use Auth0\Laravel\Exceptions\ExceptionAbstract;
+use Auth0\Laravel\Exceptions\AuthenticationExceptionAbstract;
 
 /**
- * Exception thrown when an error occurs in the SDK's authentication flow.
- *
- * @codeCoverageIgnore
+ * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\AuthenticationException instead.
  * @api
  */
-final class AuthenticationException extends ExceptionAbstract implements AuthenticationExceptionContract
+final class AuthenticationException extends AuthenticationExceptionAbstract implements AuthenticationExceptionContract
 {
 }

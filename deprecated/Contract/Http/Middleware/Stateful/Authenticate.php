@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Contract\Http\Middleware\Stateful;
 
-use Auth0\Laravel\Http\Middleware\Stateful\AuthenticateContract;
+use Auth0\Laravel\Middleware\AuthenticateMiddlewareContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Http\Middleware\Stateful\AuthenticateContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Middleware\AuthenticateMiddleware instead.
  * @api
  */
-interface Authenticate extends AuthenticateContract
+interface Authenticate extends AuthenticateMiddlewareContract
 {
 }

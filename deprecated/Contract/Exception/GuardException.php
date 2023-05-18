@@ -7,8 +7,7 @@ namespace Auth0\Laravel\Contract\Exception;
 use Auth0\Laravel\Exceptions\GuardExceptionContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\GuardExceptionContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\GuardException instead.
  * @api
  */
 interface GuardException extends GuardExceptionContract

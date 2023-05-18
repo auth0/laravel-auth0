@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Exception;
 
-use Auth0\Laravel\Exceptions\ExceptionAbstract;
+use Auth0\Laravel\Exceptions\SessionExceptionAbstract;
 use Auth0\Laravel\Exceptions\SessionExceptionContract;
 
 /**
- * Exception thrown when an error occurs with the Laravel session store.
- *
- * @codeCoverageIgnore
+ * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\SessionException instead.
  * @api
  */
-final class SessionException extends ExceptionAbstract implements SessionExceptionContract
+final class SessionException extends SessionExceptionAbstract implements SessionExceptionContract
 {
 }

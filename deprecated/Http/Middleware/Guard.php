@@ -4,43 +4,15 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Http\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Auth0\Laravel\Middleware\GuardMiddlewareAbstract;
+use Auth0\Laravel\Middleware\GuardMiddlewareContract;
 
 use function is_string;
 
 /**
- * Assigns a specific guard to the request.
- *
+ * @deprecated 7.8.0 This middleware is no longer required. Please migrate to using either Auth0\Laravel\Guards\AuthenticationGuard or Auth0\Laravel\Guards\AuthorizationGuard.
  * @api
  */
-final class Guard extends MiddlewareAbstract implements GuardContract
+final class Guard extends GuardMiddlewareAbstract implements GuardMiddlewareContract
 {
-    private string $defaultGuard = '';
-
-    public function __construct()
-    {
-        $guard = config('auth.defaults.guard');
-
-        if (is_string($guard)) {
-            $this->defaultGuard = $guard;
-        }
-    }
-
-    public function handle(
-        Request $request,
-        Closure $next,
-        ?string $guard = null,
-    ): Response {
-        $guard = trim($guard ?? '');
-
-        if ('' === $guard) {
-            $guard = $this->defaultGuard;
-        }
-
-        auth()->shouldUse($guard);
-
-        return $next($request);
-    }
 }

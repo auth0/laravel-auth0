@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Exception;
 
-use Auth0\Laravel\Exceptions\ExceptionAbstract;
+use Auth0\Laravel\Exceptions\GuardExceptionAbstract;
 use Auth0\Laravel\Exceptions\GuardExceptionContract;
 
 /**
- * Exception thrown when an error occurs in the SDK's guards.
- *
- * @codeCoverageIgnore
+ * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\GuardException instead.
  * @api
  */
-final class GuardException extends ExceptionAbstract implements GuardExceptionContract
+final class GuardException extends GuardExceptionAbstract implements GuardExceptionContract
 {
 }

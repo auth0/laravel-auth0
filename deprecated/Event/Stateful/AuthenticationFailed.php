@@ -5,44 +5,13 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Event\Stateful;
 
 use Auth0\Laravel\Events\AuthenticationFailedContract;
-use Auth0\Laravel\Events\EventAbstract;
-use Throwable;
+use Auth0\Laravel\Events\AuthenticationFailedAbstract;
 
 /**
- * Raised when an authentication attempt fails.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationFailed instead
  *
  * @api
  */
-final class AuthenticationFailed extends EventAbstract implements AuthenticationFailedContract
+final class AuthenticationFailed extends AuthenticationFailedAbstract implements AuthenticationFailedContract
 {
-    public function __construct(
-        private Throwable $exception,
-        private bool $throwException = true,
-    ) {
-    }
-
-    public function getException(): Throwable
-    {
-        return $this->exception;
-    }
-
-    public function getThrowException(): bool
-    {
-        return $this->throwException;
-    }
-
-    public function setException(Throwable $exception): self
-    {
-        $this->exception = $exception;
-        $this->mutated = true;
-
-        return $this;
-    }
-
-    public function setThrowException(bool $throwException): self
-    {
-        $this->throwException = $throwException;
-
-        return $this;
-    }
 }

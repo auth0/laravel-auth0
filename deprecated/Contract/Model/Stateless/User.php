@@ -7,7 +7,6 @@ namespace Auth0\Laravel\Contract\Model\Stateless;
 use Auth0\Laravel\Users\StatelessUserContract;
 
 /**
- * @codeCoverageIgnore
  * @deprecated 7.8.0 Use Auth0\Laravel\Users\StatelessUserContract instead.
  * @api
  */

@@ -7,8 +7,7 @@ namespace Auth0\Laravel\Contract\Event\Stateful;
 use Auth0\Laravel\Events\AuthenticationSucceededContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationSucceededContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationSucceeded instead.
  * @api
  */
 interface AuthenticationSucceeded extends AuthenticationSucceededContract

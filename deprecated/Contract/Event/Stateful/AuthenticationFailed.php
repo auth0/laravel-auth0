@@ -7,8 +7,7 @@ namespace Auth0\Laravel\Contract\Event\Stateful;
 use Auth0\Laravel\Events\AuthenticationFailedContract;
 
 /**
- * @codeCoverageIgnore
- * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationFailedContract instead.
+ * @deprecated 7.8.0 Use Auth0\Laravel\Events\AuthenticationFailed instead.
  * @api
  */
 interface AuthenticationFailed extends AuthenticationFailedContract

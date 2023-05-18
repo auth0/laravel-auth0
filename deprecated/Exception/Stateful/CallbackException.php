@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Exception\Stateful;
 
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerExceptionContract;
-use Auth0\Laravel\Exceptions\ExceptionAbstract;
+use Auth0\Laravel\Exceptions\Controllers\CallbackControllerExceptionAbstract;
 
 /**
- * Exception thrown when an error occurs in the SDK's callback handler.
- *
- * @codeCoverageIgnore
+ * @deprecated 7.8.0 Use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException instead.
  * @api
  */
-final class CallbackException extends ExceptionAbstract implements CallbackControllerExceptionContract
+final class CallbackControllerException extends CallbackControllerExceptionAbstract implements CallbackControllerExceptionContract
 {
 }
+
