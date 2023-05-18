@@ -19,6 +19,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
+use function defined;
 use function is_string;
 
 /**
@@ -214,8 +215,6 @@ abstract class ServiceProviderAbstract extends ServiceProvider
 
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
-            $kernel->appendToMiddlewarePriority('web', AuthenticatorMiddleware::class);
-            $kernel->appendToMiddlewarePriority('api', AuthorizerMiddleware::class);
 
             $router->pushMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $router->pushMiddlewareToGroup('api', AuthorizerMiddleware::class);
