@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Events;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class TokenVerificationSucceededAbstract extends EventAbstract
@@ -16,12 +17,12 @@ abstract class TokenVerificationSucceededAbstract extends EventAbstract
     ) {
     }
 
-    public function getPayload(): array
+    final public function getPayload(): array
     {
         return $this->payload;
     }
 
-    public function getToken(): string
+    final public function getToken(): string
     {
         return $this->token;
     }

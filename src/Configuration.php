@@ -6,7 +6,9 @@ namespace Auth0\Laravel;
 
 use Illuminate\Support\{Arr, Str};
 
+use function constant;
 use function count;
+use function defined;
 use function in_array;
 use function is_array;
 use function is_bool;

@@ -26,7 +26,7 @@ abstract class GuardMiddlewareAbstract extends MiddlewareAbstract
         }
     }
 
-    public function handle(
+    final public function handle(
         Request $request,
         Closure $next,
         ?string $guard = null,

@@ -8,6 +8,7 @@ use Auth0\Laravel\Events\EventAbstract;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class BuildingConfigurationEventAbstract extends EventAbstract
@@ -16,12 +17,12 @@ abstract class BuildingConfigurationEventAbstract extends EventAbstract
     {
     }
 
-    public function getConfiguration(): array
+    final public function getConfiguration(): array
     {
         return $this->configuration;
     }
 
-    public function setConfiguration(array $configuration): void
+    final public function setConfiguration(array $configuration): void
     {
         $this->configuration = $configuration;
     }

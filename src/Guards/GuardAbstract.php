@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Guards;
 
-use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntity, InstanceEntityContract};
 use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\Exceptions\{AuthenticationException, GuardException, GuardExceptionContract};
@@ -147,7 +146,6 @@ abstract class GuardAbstract
         /**
          * @var mixed $available
          */
-
         if (! is_array($available) || [] === $available) {
             return false;
         }
@@ -229,7 +227,7 @@ abstract class GuardAbstract
             $configurationName = $this->config['configuration'] ?? $this->name;
 
             $this->sdk = InstanceEntity::create(
-                guardConfigurationName: $configurationName
+                guardConfigurationName: $configurationName,
             );
         }
 

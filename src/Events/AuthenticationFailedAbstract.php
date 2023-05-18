@@ -8,6 +8,7 @@ use Throwable;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class AuthenticationFailedAbstract extends EventAbstract
@@ -18,23 +19,23 @@ abstract class AuthenticationFailedAbstract extends EventAbstract
     ) {
     }
 
-    public function getException(): Throwable
+    final public function getException(): Throwable
     {
         return $this->exception;
     }
 
-    public function getThrowException(): bool
+    final public function getThrowException(): bool
     {
         return $this->throwException;
     }
 
-    public function setException(Throwable $exception): void
+    final public function setException(Throwable $exception): void
     {
         $this->exception = $exception;
         $this->mutated = true;
     }
 
-    public function setThrowException(bool $throwException): void
+    final public function setThrowException(bool $throwException): void
     {
         $this->throwException = $throwException;
     }

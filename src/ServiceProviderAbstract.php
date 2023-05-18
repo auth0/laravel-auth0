@@ -13,14 +13,12 @@ use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
 
 use function is_string;
 
@@ -199,10 +197,12 @@ abstract class ServiceProviderAbstract extends ServiceProvider
 
     /**
      * @codeCoverageIgnore
+     *
+     * @param Router $router
      */
     final public function registerMiddleware(
         Router $router,
-    ) {
+    ): void {
         if (true === config('auth0.registerMiddleware')) {
             $kernel = $this->app->make(Kernel::class);
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);

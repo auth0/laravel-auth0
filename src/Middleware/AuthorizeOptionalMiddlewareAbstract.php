@@ -14,11 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @deprecated 7.8.0 This middleware is no longer necessary when using Auth0\Laravel\Guards\AuthorizationGuard.
+ *
  * @api
  */
 abstract class AuthorizeOptionalMiddlewareAbstract extends MiddlewareAbstract
 {
-    public function handle(
+    final public function handle(
         Request $request,
         Closure $next,
         string $scope = '',

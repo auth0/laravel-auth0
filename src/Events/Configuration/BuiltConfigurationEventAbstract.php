@@ -18,12 +18,12 @@ abstract class BuiltConfigurationEventAbstract extends EventAbstract
     {
     }
 
-    public function getConfiguration(): SdkConfiguration
+    final public function getConfiguration(): SdkConfiguration
     {
         return $this->configuration;
     }
 
-    public function setConfiguration(SdkConfiguration $configuration): void
+    final public function setConfiguration(SdkConfiguration $configuration): void
     {
         $this->configuration = $configuration;
     }

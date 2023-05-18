@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class AuthenticationSucceededAbstract extends EventAbstract
@@ -16,12 +17,12 @@ abstract class AuthenticationSucceededAbstract extends EventAbstract
     {
     }
 
-    public function getUser(): Authenticatable
+    final public function getUser(): Authenticatable
     {
         return $this->user;
     }
 
-    public function setUser(Authenticatable $user): void
+    final public function setUser(Authenticatable $user): void
     {
         $this->user = $user;
         $this->mutated = true;

@@ -8,7 +8,9 @@ use Auth0\Laravel\Exceptions\ExceptionAbstract;
 
 /**
  * @codeCoverageIgnore
+ *
  * @internal
+ *
  * @api
  */
 abstract class CallbackControllerExceptionAbstract extends ExceptionAbstract

@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Events;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class TokenRefreshFailedAbstract extends EventAbstract

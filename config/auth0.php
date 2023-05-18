@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Auth0\Laravel\Configuration;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Token;
 
 return Configuration::VERSION_2 + [
     'registerGuards' => true,

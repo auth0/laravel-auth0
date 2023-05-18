@@ -6,7 +6,9 @@ namespace Auth0\Laravel\Exceptions;
 
 /**
  * @codeCoverageIgnore
+ *
  * @internal
+ *
  * @api
  */
 abstract class GuardExceptionAbstract extends ExceptionAbstract

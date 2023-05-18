@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Events;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class LoginAttemptingAbstract extends EventAbstract
@@ -15,12 +16,12 @@ abstract class LoginAttemptingAbstract extends EventAbstract
     ) {
     }
 
-    public function getParameters(): array
+    final public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function setParameters(array $parameters): void
+    final public function setParameters(array $parameters): void
     {
         $this->parameters = $parameters;
     }

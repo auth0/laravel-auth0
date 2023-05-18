@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Entities;
 
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
-use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
-use Auth0\Laravel\Service;
+use Auth0\Laravel\{Configuration, Service};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
@@ -74,6 +73,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         return $this->getSdk()->getCredentials();
     }
 
+    final public function getGuardConfigurationKey(): ?string
+    {
+        return $this->guardConfigurationKey;
+    }
+
     final public function getSdk(): Auth0Interface
     {
         if (! $this->sdk instanceof Auth0Interface) {
@@ -88,6 +92,14 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         return $this->getSdk()->management();
     }
 
+    final public function setGuardConfigurationKey(
+        ?string $guardConfigurationKey = null,
+    ): self {
+        $this->guardConfigurationKey = $guardConfigurationKey;
+
+        return $this;
+    }
+
     final public function setSdk(Auth0Interface $sdk): Auth0Interface
     {
         $this->configuration = $sdk->configuration();
@@ -96,18 +108,6 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         $this->setSdkTelemetry();
 
         return $this->sdk;
-    }
-
-    final public function getGuardConfigurationKey(): ?string
-    {
-        return $this->guardConfigurationKey;
-    }
-
-    final public function setGuardConfigurationKey(
-        ?string $guardConfigurationKey = null,
-    ): self {
-        $this->guardConfigurationKey = $guardConfigurationKey;
-        return $this;
     }
 
     abstract public function reset(): self;

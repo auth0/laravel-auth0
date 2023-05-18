@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Events;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class TokenVerificationAttemptingAbstract extends EventAbstract
@@ -15,12 +16,12 @@ abstract class TokenVerificationAttemptingAbstract extends EventAbstract
     ) {
     }
 
-    public function getToken(): string
+    final public function getToken(): string
     {
         return $this->token;
     }
 
-    public function setToken(string $token): void
+    final public function setToken(string $token): void
     {
         $this->token = $token;
         $this->mutated = true;

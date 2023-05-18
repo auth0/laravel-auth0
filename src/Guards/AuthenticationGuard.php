@@ -151,7 +151,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $update = $this->normalizeUserArray($user);
             $current = $sdk->getUser() ?? [];
 
-            if (count($update) !== count($current) || [] !== array_diff(array_map('serialize',$update), array_map('serialize',$current))) {
+            if (count($update) !== count($current) || [] !== array_diff(array_map('serialize', $update), array_map('serialize', $current))) {
                 $sdk->setUser($update);
             }
         }

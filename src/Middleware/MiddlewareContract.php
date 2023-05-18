@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Middleware;
 
 /**
  * @internal
+ *
  * @api
  */
 interface MiddlewareContract

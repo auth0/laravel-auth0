@@ -11,7 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @codeCoverageIgnore
+ *
  * @internal
+ *
  * @api
  */
 abstract class MiddlewareAbstract

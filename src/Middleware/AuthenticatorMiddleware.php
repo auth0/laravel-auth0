@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Attaches the Auth0 session authenticator as the guard for requests.
+ *
  * @api
  */
 final class AuthenticatorMiddleware extends MiddlewareAbstract implements AuthenticatorMiddlewareContract

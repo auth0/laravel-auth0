@@ -8,6 +8,7 @@ use Throwable;
 
 /**
  * @internal
+ *
  * @api
  */
 abstract class TokenVerificationFailedAbstract extends EventAbstract
@@ -18,12 +19,12 @@ abstract class TokenVerificationFailedAbstract extends EventAbstract
     ) {
     }
 
-    public function getException(): Throwable
+    final public function getException(): Throwable
     {
         return $this->exception;
     }
 
-    public function getToken(): string
+    final public function getToken(): string
     {
         return $this->token;
     }

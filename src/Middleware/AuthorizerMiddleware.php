@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Attaches the Auth0 token authorizer as the guard for requests.
+ *
  * @api
  */
 final class AuthorizerMiddleware extends MiddlewareAbstract implements AuthorizerMiddlewareContract
