@@ -13,9 +13,9 @@
     | `auth0.authenticator` | `Auth0\Laravel\Auth\Guards\AuthenticationGuard` | Session-based authentication. |
     | `auth0.authorizer`    | `Auth0\Laravel\Auth\Guards\AuthorizationGuard`  | Token-based authorization.    |
 
--   These guards are compatible with Laravel's Authentication API and support the native `auth` middleware.
+-   These guards are compatible with Laravel's Authentication API and support the standard `auth` middleware.
 
--   These guards are compatible with Laravel's Authorization API and support the native `can` middleware, and the `Guard` facade, and work with the Policies API.
+-   These guards are compatible with Laravel's Authorization API and support the standard `can` middleware, and the `Guard` facade, and work with the Policies API.
 
 -   3 new pre-built Guards are available: `scope` and `permission`, as well as a dynamic `*:*`. This enables you to verify whether the user's access token has a particular scope or (if RBAC is enabled on the Auth0 API) a particular permission. For example `Gate::check('scope', 'email')` or `Route::get(/*...*/)->can('read:messages')`.
 
@@ -23,15 +23,15 @@
 
 -   The SDK now automatically registers the Authentication routes. Manual route setup in `routes/web.php` is no longer necessary.
 
--   2 new routing Middleware have been added: `Auth0\Laravel\Http\Middleware\Authenticator` and `Auth0\Laravel\Http\Middleware\Authorizer`. These are automatically registered with your Laravel application, and ensure the Auth0 Guards are used for authentication and authorization, respectively. This replaces the need for the `guard` middleware or otherwise manual Guard assignment in your routes.
+-   2 new routing Middleware have been added: `Auth0\Laravel\Http\Middleware\AuthenticatorMiddleware` and `Auth0\Laravel\Http\Middleware\AuthorizerMiddleware`. These are automatically registered with your Laravel application, and ensure the Auth0 Guards are used for authentication for `web` routes and authorization for `api` routes, respectively. This replaces the need for the `guard` middleware or otherwise manual Guard assignment in your routes.
 
 ### Improved
 
--   We've introduced **a new configuration syntax**. This new syntax is more flexible and allows for more complex configuration scenarios. It also allows more efficient configuration of multiple guards. Developers using the previous syntax will have their existing configurations applied to all guards uniformly, to avoid a breaking change.
+-   We've introduced **a new configuration syntax**. This new syntax is more flexible and allows for more complex configuration scenarios, and introduces support for multiple guard instances. Developers using the previous syntax will have their existing configurations applied to all guards uniformly.
 
 -   The SDK can now **configure itself using a `.auth0.json` file in the project root directory**. This file can be generated [using the Auth0 CLI](./docs/JSON%20Configuration.md), and provides a significantly simpler configuration experience for developers.
 
--   The previous `auth0.guard` Guard (`Auth0\Laravel\Auth\Guard`) has been **refactored** as a lightweight wrapper around the new `SessionGuard` and `TokenGuard` guards.
+-   The previous `auth0.guard` Guard (`Auth0\Laravel\Auth\Guard`) has been **refactored** as a lightweight wrapper around the new `AuthenticationGuard` and `AuthorizationGuard` guards.
 
 ## [7.7.0](https://github.com/auth0/laravel-auth0/tree/7.7.0) (2023-04-26)
 
