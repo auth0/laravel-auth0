@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Artisan;
 uses(TestCase::class)->in(__DIR__);
 
 uses()->beforeAll(function (): void {
-    ray()->clearAll();
+    // ray()->clearAll();
 })->in(__DIR__);
 
 uses()->beforeEach(function (): void {

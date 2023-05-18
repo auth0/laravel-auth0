@@ -35,10 +35,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     final public function getConfiguration(): SdkConfiguration
     {
         if (! $this->configuration instanceof SdkConfiguration) {
+            $configuration = [];
+
             if (2 === Configuration::version()) {
                 $defaultConfiguration = config('auth0.guards.default');
                 $guardConfiguration = [];
-                $configuration = [];
 
                 if (null !== $this->guardConfigurationKey && '' !== $this->guardConfigurationKey && 'default' !== $this->guardConfigurationKey) {
                     $guardConfiguration = config('auth0.guards.' . $this->guardConfigurationKey) ?? [];
@@ -53,7 +54,6 @@ abstract class InstanceEntityAbstract extends EntityAbstract
                 }
             }
 
-            // Fallback to the legacy configuration format if a version is not defined.
             if (2 !== Configuration::version()) {
                 $configuration = config('auth0');
 

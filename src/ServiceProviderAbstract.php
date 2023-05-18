@@ -205,6 +205,9 @@ abstract class ServiceProviderAbstract extends ServiceProvider
     ): void {
         if (true === config('auth0.registerMiddleware')) {
             $kernel = $this->app->make(Kernel::class);
+            /**
+             * @var \Illuminate\Foundation\Http\Kernel $kernel
+             */
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
 

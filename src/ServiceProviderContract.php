@@ -24,13 +24,18 @@ interface ServiceProviderContract
     ): void;
 
     /**
+     * Register the Auth0 guards.
+     */
+    public function registerGuards(): void;
+
+    /**
      * Register the Auth0 service middleware.
      *
      * @param Router $router
      */
     public function registerMiddleware(
         Router $router,
-    );
+    ): void;
 
     /**
      * Register the Auth0 authentication routes.

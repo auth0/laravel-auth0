@@ -409,7 +409,7 @@ return static function (RectorConfig $rectorConfig): void {
         NullableCompareToNullRector::class,
         OptionalParametersAfterRequiredRector::class,
         OptionalParametersAfterRequiredRector::class,
-        ParamAnnotationIncorrectNullableRector::class,
+        // ParamAnnotationIncorrectNullableRector::class,
         ParamTypeByMethodCallTypeRector::class,
         ParamTypeByParentCallTypeRector::class,
         ParamTypeFromStrictTypedPropertyRector::class,

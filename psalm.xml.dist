@@ -19,6 +19,7 @@
         <MixedInferredReturnType errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
         <DeprecatedClass errorLevel="suppress"/>
+        <DeprecatedInterface errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>

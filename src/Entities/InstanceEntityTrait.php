@@ -49,11 +49,11 @@ trait InstanceEntityTrait
     ): self {
         $instance = new self();
 
-        if ($guardConfigurationName) {
+        if (null !== $guardConfigurationName) {
             $instance->setGuardConfigurationKey($guardConfigurationName);
         }
 
-        if ($configuration) {
+        if (null !== $configuration) {
             $instance->setConfiguration($configuration);
         }
 

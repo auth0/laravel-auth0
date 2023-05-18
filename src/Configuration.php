@@ -284,7 +284,7 @@ final class Configuration implements ConfigurationContract
             $result = self::getJson()['signing_keys.0.subject'] ?? '';
             $result = explode('=', $result);
 
-            if (isset($result[1]) && is_string($result[1]) && str_ends_with($result[1], '.auth0.com')) {
+            if (isset($result[1]) && str_ends_with($result[1], '.auth0.com')) {
                 $value = $result[1]; // @codeCoverageIgnore
             }
         }
@@ -523,10 +523,12 @@ final class Configuration implements ConfigurationContract
         string $setting,
         array | bool | string | int | null $default = null,
     ): array | bool | string | int | null {
-        $value = null;
-
         if (defined('AUTH0_OVERRIDE_CONFIGURATION')) {
-            $value = config(constant('AUTH0_OVERRIDE_CONFIGURATION') . '.' . $setting);
+            $override = constant('AUTH0_OVERRIDE_CONFIGURATION');
+
+            if (is_string($override)) {
+                $value = config($override . '.' . $setting);
+            }
         } else {
             $env = 'AUTH0_' . mb_strtoupper(Str::snake($setting));
             $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
