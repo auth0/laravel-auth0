@@ -15,5 +15,3 @@ composer.local.old
 .vscode
 pest.log
 NOTES.md
-examples/playground/.auth0.json
-examples/playground/auth0
