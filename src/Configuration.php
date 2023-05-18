@@ -276,16 +276,16 @@ final class Configuration implements ConfigurationContract
         $value = self::getValue($setting) ?? $default;
 
         if (is_string($value) || is_int($value) || null === $value) {
-            $value = self::stringOrNull($value) ?? $default;
+            $result = self::stringOrNull($value) ?? $default;
         }
 
-        if (self::CONFIG_DOMAIN === $setting && null === $value) {
+        if (self::CONFIG_DOMAIN === $setting && null === $result) {
             // Fallback to extracting the tenant domain from the signing key subject.
-            $result = self::getJson()['signing_keys.0.subject'] ?? '';
-            $result = explode('=', $result);
+            $temp = self::getJson()['signing_keys.0.subject'] ?? '';
+            $temp = explode('=', $temp);
 
-            if (isset($result[1]) && str_ends_with($result[1], '.auth0.com')) {
-                $value = $result[1]; // @codeCoverageIgnore
+            if (isset($temp[1]) && str_ends_with($temp[1], '.auth0.com')) {
+                $result = $temp[1]; // @codeCoverageIgnore
             }
         }
 

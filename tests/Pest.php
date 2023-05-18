@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
+define('AUTH0_LARAVEL_RUNNING_TESTS', 1);
+
 uses(TestCase::class)->in(__DIR__);
 
 uses()->beforeAll(function (): void {

@@ -66,7 +66,7 @@ final class Guard extends GuardAbstract implements GuardContract
             $token = $this->getAuthorizationGuard()->getCredential();
         }
 
-        if (null === $source || self::SOURCE_SESSION === $source) {
+        if (null === $source && ! $token instanceof CredentialEntityContract || self::SOURCE_SESSION === $source) {
             $session = $this->getAuthenticationGuard()->getCredential();
         }
 

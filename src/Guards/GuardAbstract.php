@@ -16,7 +16,6 @@ use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Support\{Arrayable, Jsonable};
 use JsonSerializable;
-use ReflectionClass;
 
 use function in_array;
 use function is_array;
@@ -37,6 +36,8 @@ abstract class GuardAbstract
     protected ?int $impersonationSource = null;
 
     protected ?UserProvider $provider = null;
+
+    protected ?Session $session = null;
 
     public function __construct(
         public string $name = '',
@@ -111,18 +112,22 @@ abstract class GuardAbstract
 
     final public function getSession(): Session
     {
-        $store = app('session.store');
-        $request = app('request');
+        if (! $this->session instanceof Session) {
+            $store = app('session.store');
+            $request = app('request');
 
-        if (! $request->hasSession(true)) {
-            $request->setLaravelSession($store);
+            if (! $request->hasSession(true)) {
+                $request->setLaravelSession($store);
+            }
+
+            if (! $store->isStarted()) {
+                $store->start();
+            }
+
+            $this->session = $store;
         }
 
-        if (! $store->isStarted()) {
-            $store->start();
-        }
-
-        return $store;
+        return $this->session;
     }
 
     final public function guest(): bool
@@ -204,7 +209,6 @@ abstract class GuardAbstract
         $event = new TokenVerificationAttempting($token);
         event($event);
         $token = $event->getToken();
-
         $decoded = null;
 
         try {

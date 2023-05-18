@@ -18,7 +18,6 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
 
 use function is_string;
 
@@ -208,8 +207,15 @@ abstract class ServiceProviderAbstract extends ServiceProvider
             /**
              * @var \Illuminate\Foundation\Http\Kernel $kernel
              */
+            if (! defined('AUTH0_LARAVEL_RUNNING_TESTS')) {
+                $kernel->pushMiddleware(AuthenticatorMiddleware::class);
+                $kernel->pushMiddleware(AuthenticatorMiddleware::class);
+            }
+
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
+            $kernel->appendToMiddlewarePriority('web', AuthenticatorMiddleware::class);
+            $kernel->appendToMiddlewarePriority('api', AuthorizerMiddleware::class);
 
             $router->pushMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $router->pushMiddlewareToGroup('api', AuthorizerMiddleware::class);
