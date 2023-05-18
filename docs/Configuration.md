@@ -135,16 +135,22 @@ By default, the SDK will register the following routes for authentication:
 
 | Method | URI         | Name       | Controller                                        | Purpose                            |
 | ------ | ----------- | ---------- | ------------------------------------------------- | ---------------------------------- |
-| `GET`  | `/login`    | `login`    | `Auth0\Laravel\Http\Controller\Stateful\Login`    | Initiates the authentication flow. |
-| `GET`  | `/logout`   | `logout`   | `Auth0\Laravel\Http\Controller\Stateful\Logout`   | Logs the user out.                 |
-| `GET`  | `/callback` | `callback` | `Auth0\Laravel\Http\Controller\Stateful\Callback` | Handles the callback from Auth0.   |
+| `GET`  | `/login`    | `login`    | `Auth0\Laravel\Controllers\LoginController`    | Initiates the authentication flow. |
+| `GET`  | `/logout`   | `logout`   | `Auth0\Laravel\Controllers\LogoutController`   | Logs the user out.                 |
+| `GET`  | `/callback` | `callback` | `Auth0\Laravel\Controllers\CallbackController` | Handles the callback from Auth0.   |
 
 You can disable this behavior by setting `registerAuthenticationRoutes` to false in your `config/auth0.php` file.
 
-To register the routes manually, update your `routes/web.php` file as follows:
+If you've disabled the automatic registration of routes, you can register the routes manually by adding the following to your `routes/web.php` file:
 
 ```php
-use Auth0\Laravel\Http\Controller\Stateful\{Login, Logout, Callback};
+Auth0::routes();
+```
+
+Or, if you prefer complete control over the routing process:
+
+```php
+use Auth0\Laravel\Controllers\{Login, Logout, Callback};
 
 Route::group(['middleware' => ['guard:auth0-session'], static function (): void {
     Route::get('/login', Login::class)->name('login');
