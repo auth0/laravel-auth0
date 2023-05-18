@@ -26,5 +26,5 @@ interface TokenVerificationAttemptingContract extends EventContract
      *
      * @param string $token a bearer JSON web token
      */
-    public function setToken(string $token): self;
+    public function setToken(string $token): void;
 }

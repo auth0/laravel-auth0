@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Middleware for assigning the Auth0 session authenticator to the request.
- *
- * @internal
- *
+ * Attaches the Auth0 session authenticator as the guard for requests.
  * @api
  */
 final class AuthenticatorMiddleware extends MiddlewareAbstract implements AuthenticatorMiddlewareContract

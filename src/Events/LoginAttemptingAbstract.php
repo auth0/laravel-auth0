@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Auth0\Laravel\Events;
+
+/**
+ * @internal
+ * @api
+ */
+abstract class LoginAttemptingAbstract extends EventAbstract
+{
+    public function __construct(
+        private array $parameters = [],
+    ) {
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
+}

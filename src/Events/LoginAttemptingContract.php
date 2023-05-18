@@ -26,5 +26,5 @@ interface LoginAttemptingContract extends EventContract
      *
      * @param array $parameters
      */
-    public function setParameters(array $parameters): self;
+    public function setParameters(array $parameters): void;
 }

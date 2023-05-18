@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Middleware for assigning the Auth0 token authorizer driver to the request.
- *
- * @internal
- *
+ * Attaches the Auth0 token authorizer as the guard for requests.
  * @api
  */
 final class AuthorizerMiddleware extends MiddlewareAbstract implements AuthorizerMiddlewareContract

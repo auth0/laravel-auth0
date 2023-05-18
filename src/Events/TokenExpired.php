@@ -9,6 +9,6 @@ namespace Auth0\Laravel\Events;
  *
  * @api
  */
-final class TokenExpired extends EventAbstract implements TokenExpiredContract
+final class TokenExpired extends TokenExpiredAbstract implements TokenExpiredContract
 {
 }

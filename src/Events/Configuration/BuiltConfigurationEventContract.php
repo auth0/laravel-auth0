@@ -10,7 +10,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 /**
  * @api
  */
-interface BuiltConfigurationContract extends EventContract
+interface BuiltConfigurationEventContract extends EventContract
 {
     /**
      * AuthenticationFailed constructor.
@@ -29,5 +29,5 @@ interface BuiltConfigurationContract extends EventContract
      *
      * @param SdkConfiguration $configuration an instance of SdkConfiguration for use with the Auth0-PHP SDK
      */
-    public function setConfiguration(SdkConfiguration $configuration): self;
+    public function setConfiguration(SdkConfiguration $configuration): void;
 }

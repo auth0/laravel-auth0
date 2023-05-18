@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @codeCoverageIgnore
- *
+ * @deprecated 7.8.0 This middleware is no longer necessary when using Auth0\Laravel\Guards\AuthorizationGuard.
  * @api
  */
 interface AuthorizeOptionalMiddlewareContract extends MiddlewareContract

@@ -28,5 +28,5 @@ interface AuthenticationSucceededContract extends EventContract
      *
      * @param Authenticatable $user an instance of Authenticatable representing the authenticated user
      */
-    public function setUser(Authenticatable $user): self;
+    public function setUser(Authenticatable $user): void;
 }

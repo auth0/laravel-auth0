@@ -9,23 +9,6 @@ namespace Auth0\Laravel\Events;
  *
  * @api
  */
-final class TokenVerificationAttempting extends EventAbstract implements TokenVerificationAttemptingContract
+final class TokenVerificationAttempting extends TokenVerificationAttemptingAbstract implements TokenVerificationAttemptingContract
 {
-    public function __construct(
-        private string $token,
-    ) {
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
-        $this->mutated = true;
-
-        return $this;
-    }
 }

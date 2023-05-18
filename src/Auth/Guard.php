@@ -9,10 +9,7 @@ use Auth0\Laravel\Guards\{AuthenticationGuard, AuthenticationGuardContract, Auth
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
- * @deprecated 7.8.0 Use Auth0\Laravel\Guards\AuthenticationGuard or Auth0\Laravel\Guards\AuthorizerGuard instead.
- *
- * @codeCoverageIgnore
- *
+ * @deprecated 7.8.0 Please migrate to using either Auth0\Laravel\Guards\AuthenticationGuard or Auth0\Laravel\Guards\AuthorizationGuard.
  * @api
  */
 final class Guard extends GuardAbstract implements GuardContract

@@ -9,7 +9,7 @@ use Auth0\Laravel\Events\EventContract;
 /**
  * @api
  */
-interface BuildingConfigurationContract extends EventContract
+interface BuildingConfigurationEventContract extends EventContract
 {
     /**
      * AuthenticationFailed constructor.
@@ -28,5 +28,5 @@ interface BuildingConfigurationContract extends EventContract
      *
      * @param array $configuration an configuration array for use with the Auth0-PHP SDK
      */
-    public function setConfiguration(array $configuration): self;
+    public function setConfiguration(array $configuration): void;
 }

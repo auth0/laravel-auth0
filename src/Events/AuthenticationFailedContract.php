@@ -34,12 +34,12 @@ interface AuthenticationFailedContract extends EventContract
      *
      * @param Throwable $exception an exception instance in which to throw for the authentication failure
      */
-    public function setException(Throwable $exception): self;
+    public function setException(Throwable $exception): void;
 
     /**
      * Determine whether the provided exception will be thrown by the SDK.
      *
      * @param bool $throwException whether or not $exception will be thrown
      */
-    public function setThrowException(bool $throwException): self;
+    public function setThrowException(bool $throwException): void;
 }

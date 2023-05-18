@@ -9,22 +9,6 @@ namespace Auth0\Laravel\Events;
  *
  * @api
  */
-final class LoginAttempting extends EventAbstract implements LoginAttemptingContract
+final class LoginAttempting extends LoginAttemptingAbstract implements LoginAttemptingContract
 {
-    public function __construct(
-        private array $parameters = [],
-    ) {
-    }
-
-    public function getParameters(): array
-    {
-        return $this->parameters;
-    }
-
-    public function setParameters(array $parameters): self
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
 }

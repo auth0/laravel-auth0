@@ -86,6 +86,27 @@ it('logs out a user', function (): void {
         ->id()->toBeNull();
 });
 
+it('forgets a user', function (): void {
+    expect($this->guard)
+        ->toBeInstanceOf(Guard::class)
+        ->user()->toBeNull();
+
+    $this->guard->login(CredentialEntity::create(
+        user: $this->user
+    ));
+
+    expect($this->guard)
+        ->user()->toBe($this->user);
+
+    $this->guard->forgetUser();
+
+    expect($this->guard)
+        ->user()->toBeNull();
+
+    expect($this->guard)
+        ->id()->toBeNull();
+});
+
 it('checks if a user is logged in', function (): void {
     expect($this->guard)
         ->check()->toBeFalse();

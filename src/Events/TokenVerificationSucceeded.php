@@ -9,21 +9,6 @@ namespace Auth0\Laravel\Events;
  *
  * @api
  */
-final class TokenVerificationSucceeded extends EventAbstract implements TokenVerificationSucceededContract
+final class TokenVerificationSucceeded extends TokenVerificationSucceededAbstract implements TokenVerificationSucceededContract
 {
-    public function __construct(
-        private string $token,
-        private array $payload,
-    ) {
-    }
-
-    public function getPayload(): array
-    {
-        return $this->payload;
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
 }

@@ -11,21 +11,6 @@ use Throwable;
  *
  * @api
  */
-final class TokenVerificationFailed extends EventAbstract implements TokenVerificationFailedContract
+final class TokenVerificationFailed extends TokenVerificationFailedAbstract implements TokenVerificationFailedContract
 {
-    public function __construct(
-        private string $token,
-        private Throwable $exception,
-    ) {
-    }
-
-    public function getException(): Throwable
-    {
-        return $this->exception;
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
 }
