@@ -4,33 +4,82 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Traits;
 
-use Auth0\Laravel\Contract\Auth\Guard;
-use Auth0\Laravel\Entities\Credential;
-use Auth0\Laravel\Model\Stateless\User;
+use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Guards\GuardContract;
+use Auth0\Laravel\Users\ImposterUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 
+/**
+ * Pretend to be an authenticated user or a bearer token-established stateless user for the request. Only intended for unit testing.
+ *
+ * @api
+ */
 trait Impersonate
 {
     /**
-     * Set the currently logged in user for the application.
+     * Pretend to be an authenticated user or a bearer token-established stateless user for the request. Only intended for unit testing.
      *
-     * @param Credential  $credential The Credential to impersonate.
-     * @param null|int    $source     The source of the Credential.
-     * @param null|string $guard      The guard to impersonate with.
+     * @param CredentialEntityContract $credential The Credential to impersonate.
+     * @param null|int                 $source     The source of the Credential.
+     * @param null|string              $guard      The guard to impersonate with.
      *
      * @return $this The current test case instance.
      */
     public function impersonate(
-        Credential $credential,
+        CredentialEntityContract $credential,
         ?int $source = null,
         ?string $guard = null,
     ): self {
-        $instance = auth()->guard($guard);
-        $user     = $credential->getUser() ?? new User([]);
+        if (GuardContract::SOURCE_SESSION === $source || null === $source) {
+            $this->impersonateSession($credential, $guard);
+        }
 
-        if ($instance instanceof Guard) {
-            $instance->setCredential($credential, $source);
-            $instance->setImpersonating(true);
+        if (GuardContract::SOURCE_TOKEN === $source || null === $source) {
+            $this->impersonateToken($credential, $guard);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Pretend to be an authenticated user for the request. Only intended for unit testing.
+     *
+     * @param CredentialEntityContract $credential The Credential to impersonate.
+     * @param null|string              $guard      The guard to impersonate with.
+     *
+     * @return $this The current test case instance.
+     */
+    public function impersonateSession(
+        CredentialEntityContract $credential,
+        ?string $guard = null,
+    ): self {
+        $instance = auth()->guard($guard);
+        $user = $credential->getUser() ?? new ImposterUser([]);
+
+        if ($instance instanceof GuardContract) {
+            $instance->setImpersonating($credential, GuardContract::SOURCE_SESSION);
+        }
+
+        return $this->actingAs($user, $guard);
+    }
+
+    /**
+     * Pretend to be a bearer token-established stateless user for the request. Only intended for unit testing.
+     *
+     * @param CredentialEntityContract $credential The Credential to impersonate.
+     * @param null|string              $guard      The guard to impersonate with.
+     *
+     * @return $this The current test case instance.
+     */
+    public function impersonateToken(
+        CredentialEntityContract $credential,
+        ?string $guard = null,
+    ): self {
+        $instance = auth()->guard($guard);
+        $user = $credential->getUser() ?? new ImposterUser([]);
+
+        if ($instance instanceof GuardContract) {
+            $instance->setImpersonating($credential, GuardContract::SOURCE_TOKEN);
         }
 
         return $this->actingAs($user, $guard);

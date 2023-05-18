@@ -1,10 +1,10 @@
 <?php
 
+use Auth0\Laravel\Tests\TestCase;
+use Auth0\SDK\Token;
+use Auth0\SDK\Token\Generator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Artisan;
-
-// Flag to indicate that we are running tests.
-define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
 
 /*
 |--------------------------------------------------------------------------
@@ -17,15 +17,13 @@ define('AUTH0_LARAVEL_SDK_TESTS_RUNNING', true);
 |
 */
 
-uses(\Auth0\Laravel\Tests\TestCase::class)->in(__DIR__);
+define('AUTH0_LARAVEL_RUNNING_TESTS', 1);
 
-// uses()->afterEach(function (): void {
-//     $commands = ['optimize:clear'];
+uses(TestCase::class)->in(__DIR__);
 
-//     foreach ($commands as $command) {
-//         Artisan::call($command);
-//     }
-// })->in(__DIR__);
+uses()->beforeAll(function (): void {
+    // ray()->clearAll();
+})->in(__DIR__);
 
 uses()->beforeEach(function (): void {
     $this->events = [];
@@ -34,6 +32,14 @@ uses()->beforeEach(function (): void {
         $this->events[] = $event;
     });
 })->in(__DIR__);
+
+// uses()->afterEach(function (): void {
+//     $commands = ['optimize:clear'];
+
+//     foreach ($commands as $command) {
+//         Artisan::call($command);
+//     }
+// })->in(__DIR__);
 
 uses()->compact();
 
@@ -68,3 +74,90 @@ uses()->compact();
 //     // ..
 // }
 
+function mockIdToken(
+    string $algorithm = Token::ALGO_RS256,
+    array $claims = [],
+    array $headers = []
+): string {
+    $secret = createRsaKeys()->private;
+
+    $claims = array_merge([
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
+        'sub' => 'hello|world',
+        'aud' => config('auth0.guards.default.clientId'),
+        'exp' => time() + 60,
+        'iat' => time(),
+        'email' => 'john.doe@somewhere.test'
+    ], $claims);
+
+    return (string) Generator::create($secret, $algorithm, $claims, $headers);
+}
+
+function mockAccessToken(
+    string $algorithm = Token::ALGO_RS256,
+    array $claims = [],
+    array $headers = []
+): string {
+    $secret = createRsaKeys()->private;
+
+    $claims = array_merge([
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
+        'sub' => 'hello|world',
+        'aud' => config('auth0.guards.default.clientId'),
+        'iat' => time(),
+        'exp' => time() + 60,
+        'azp' => config('auth0.guards.default.clientId'),
+        'scope' => 'openid profile email',
+    ], $claims);
+
+    return (string) Generator::create($secret, $algorithm, $claims, $headers);
+}
+
+function createRsaKeys(
+    string $digestAlg = 'sha256',
+    int $keyType = OPENSSL_KEYTYPE_RSA,
+    int $bitLength = 2048
+): object
+{
+    $config = [
+        'digest_alg' => $digestAlg,
+        'private_key_type' => $keyType,
+        'private_key_bits' => $bitLength,
+    ];
+
+    $privateKeyResource = openssl_pkey_new($config);
+
+    if ($privateKeyResource === false) {
+        throw new RuntimeException("OpenSSL reported an error: " . getSslError());
+    }
+
+    $export = openssl_pkey_export($privateKeyResource, $privateKey);
+
+    if ($export === false) {
+        throw new RuntimeException("OpenSSL reported an error: " . getSslError());
+    }
+
+    $publicKey = openssl_pkey_get_details($privateKeyResource);
+
+    $resCsr = openssl_csr_new([], $privateKeyResource);
+    $resCert = openssl_csr_sign($resCsr, null, $privateKeyResource, 30);
+    openssl_x509_export($resCert, $x509);
+
+    return (object) [
+        'private' => $privateKey,
+        'public' => $publicKey['key'],
+        'cert' => $x509,
+        'resource' => $privateKeyResource,
+    ];
+}
+
+function getSslError(): string
+{
+    $errors = [];
+
+    while ($error = openssl_error_string()) {
+        $errors[] = $error;
+    }
+
+    return implode(', ', $errors);
+}

@@ -38,48 +38,50 @@ You can learn more about working with the Laravel event system in the [Laravel d
 
 ## Login Controller Events
 
-During login with the `Auth0\Laravel\Http\Controller\Stateful\Login` controller, the following events may be raised:
+During login with `Auth0\Laravel\Controllers\LoginController` the following events may be raised:
 
-| Event                                                   | Description                                                                                  |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `Illuminate\Auth\Events\Login`                          | Raised when a user is logging in. The model of the user is provided with the event.          |
-| `Auth0\Laravel\Contract\Event\Stateful\LoginAttempting` | Raised before the login redirect is issued, allowing an opportunity to customize parameters. |
+| Event                                  | Description                                                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `Illuminate\Auth\Events\Login`         | Raised when a user is logging in. The model of the user is provided with the event.          |
+| `Auth0\Laravel\Events\LoginAttempting` | Raised before the login redirect is issued, allowing an opportunity to customize parameters. |
 
 ## Callback Controller Events
 
-During callback with the `Auth0\Laravel\Http\Controller\Stateful\Callback` controller, the following events may be raised:
+During callback with `Auth0\Laravel\Controllers\CallbackController` the following events may be raised:
 
 | Event                                                     | Description                                                                                                                                                                                                                                                               |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Illuminate\Auth\Events\Attempting`                       | Raised when a user is returned to the application after authenticating with Auth0. This is raised before verification of the authentication process begins.                                                                                                               |
 | `Illuminate\Auth\Events\Failed`                           | Raised when authentication with Auth0 failed. The reason is provided with the event as an array.                                                                                                                                                                          |
-| `Auth0\Laravel\Event\Stateful\AuthenticationFailed`       | Raised when authentication with Auth0 failed. This provides an opportunity to intercept the exception thrown by the middleware, by using the event's `setThrowException()` method to `false`. You can also customize the type of exception thrown using `setException()`. |
+| `Auth0\Laravel\Events\AuthenticationFailed`               | Raised when authentication with Auth0 failed. This provides an opportunity to intercept the exception thrown by the middleware, by using the event's `setThrowException()` method to `false`. You can also customize the type of exception thrown using `setException()`. |
 | `Illuminate\Auth\Events\Illuminate\Auth\Events\Validated` | Raised when authentication was successful, but immediately before the user's session is established.                                                                                                                                                                      |
-| `Auth0\Laravel\Event\Stateful\AuthenticationSucceeded`    | Raised when authentication was successful. The model of the authenticated user is provided with the event.                                                                                                                                                                |
+| `Auth0\Laravel\Events\AuthenticationSucceeded`            | Raised when authentication was successful. The model of the authenticated user is provided with the event.                                                                                                                                                                |
 
 ## Logout Controller Events
 
-During logout with the `Auth0\Laravel\Http\Controller\Stateful\Logout` controller, the following events may be raised:
+During logout with `Auth0\Laravel\Controllers\LogoutController` the following events may be raised:
 
 | Event                           | Description                                                                          |
 | ------------------------------- | ------------------------------------------------------------------------------------ |
 | `Illuminate\Auth\Events\Logout` | Raised when a user is logging out. The model of the user is provided with the event. |
 
-## Authentication Middleware Events
+## Deprecated Middleware Events
 
-During request handling with any `Auth0\Laravel\Http\Middleware\Stateful` middleware, the following events may be raised:
+### Authentication Middleware Events
 
-| Event                                            | Description                                                                        |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| `Auth0\Laravel\Event\Middleware\StatefulRequest` | Raised when a request is being handled by a session-based ('stateful') middleware. |
+During request handling with `Auth0\Laravel\Middleware\AuthenticateMiddleware` or `Auth0\Laravel\Middleware\AuthenticateOptionalMiddleware` the following events may be raised:
 
-## Authorization Middleware Events
+| Event                                                       | Description                                                                        |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequest` | Raised when a request is being handled by a session-based ('stateful') middleware. |
 
-During request handling with any `Auth0\Laravel\Http\Controller\Stateless` middleware, the following events may be raised:
+### Authorization Middleware Events
 
-| Event                                                       | Description                                                                                                     |
-| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `Auth0\Laravel\Event\Middleware\StatelessRequest`           | Raised when a request is being handled by an access token-based ('stateless') middleware.                       |
-| `Auth0\Laravel\Event\Stateless\TokenVerificationAttempting` | Raised before an access token is attempted to be verified. The encoded token string is provided with the event. |
-| `Auth0\Laravel\Event\Stateless\TokenVerificationSucceeded`  | Raised when an access token is successfully verified. The decoded token contents are provided with the event.   |
-| `Auth0\Laravel\Event\Stateless\TokenVerificationFailed`     | Raised when an access token cannot be verified. The reason (as a string) is provided with the event.            |
+During request handling with `Auth0\Laravel\Middleware\AuthorizeMiddleware` or `Auth0\Laravel\Middleware\AuthorizeOptionalMiddleware` middleware, the following events may be raised:
+
+| Event                                                        | Description                                                                                                     |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequest` | Raised when a request is being handled by an access token-based ('stateless') middleware.                       |
+| `Auth0\Laravel\Events\TokenVerificationAttempting`           | Raised before an access token is attempted to be verified. The encoded token string is provided with the event. |
+| `Auth0\Laravel\Events\TokenVerificationSucceeded`            | Raised when an access token is successfully verified. The decoded token contents are provided with the event.   |
+| `Auth0\Laravel\Events\TokenVerificationFailed`               | Raised when an access token cannot be verified. The reason (as a string) is provided with the event.            |

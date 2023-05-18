@@ -38,45 +38,50 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "auth0/auth0-php": "^8.5",
+        "auth0/auth0-php": "^8.6",
         "illuminate/contracts": "^9 || ^10",
         "illuminate/http": "^9 || ^10",
         "illuminate/support": "^9 || ^10",
+        "psr-discovery/all": "^1.0",
         "psr/cache": "^2 || ^3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.16",
-        "mockery/mockery": "^1.5.1",
-        "nunomaduro/larastan": "^2.6.0",
-        "orchestra/testbench": "^7.19 || ^8.5.1",
-        "pestphp/pest": "^2.5.3",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "phpstan/phpstan": "^1.10.14",
-        "phpstan/phpstan-strict-rules": "^1.5.1",
-        "psalm/plugin-laravel": "^2.8",
-        "psr-mock/http": "^1.0",
-        "rector/rector": "^0.15.25",
-        "symfony/cache": "^6.2.8",
-        "vimeo/psalm": "^5.9",
-        "wikimedia/composer-merge-plugin": "^2.1.0"
+        "friendsofphp/php-cs-fixer": "^3",
+        "mockery/mockery": "^1",
+        "nunomaduro/larastan": "^2",
+        "orchestra/testbench": "^7 || ^8",
+        "pestphp/pest": "^2",
+        "pestphp/pest-plugin-laravel": "^2",
+        "phpstan/phpstan": "^1",
+        "phpstan/phpstan-strict-rules": "^1",
+        "psalm/plugin-laravel": "^2",
+        "psr-mock/http": "^1",
+        "rector/rector": "*",
+        "spatie/laravel-ray": "^1",
+        "squizlabs/php_codesniffer": "^3",
+        "symfony/cache": "^6",
+        "vimeo/psalm": "^5",
+        "wikimedia/composer-merge-plugin": "^2"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Auth0\\Laravel\\": "src"
+            "Auth0\\Laravel\\": [
+                "src/",
+                "deprecated/"
+            ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Auth0\\Laravel\\Tests\\": "tests"
+            "Auth0\\Laravel\\Tests\\": "tests/"
         }
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "wikimedia/composer-merge-plugin": true,
-            "infection/extension-installer": true,
             "php-http/discovery": false
         },
         "optimize-autoloader": true,
@@ -108,9 +113,9 @@
     },
     "scripts": {
         "pest:coverage": "@php vendor/bin/pest --coverage --parallel --no-progress",
-        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --fail-on-risky --stop-on-failure",
+        "pest:debug": "@php vendor/bin/pest --fail-on-risky --stop-on-defect",
         "pest:profile": "@php vendor/bin/pest --profile",
-        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky",
+        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel --min=95",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
         "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpstan": "@php vendor/bin/phpstan analyze",

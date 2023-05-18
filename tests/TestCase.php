@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Tests;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Auth0\Laravel\ServiceProvider;
+use Orchestra\Testbench\Concerns\CreatesApplication;
+use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends BaseTestCase
 {
+    use CreatesApplication;
+
     protected $enablesPackageDiscoveries = true;
     protected $events = [];
 
     protected function getPackageProviders($app)
     {
         return [
+            RayServiceProvider::class,
             ServiceProvider::class,
         ];
     }
@@ -23,7 +28,7 @@ class TestCase extends BaseTestCase
     {
         $app['config']->set('auth', [
             'defaults' => [
-                'guard' => 'testGuard',
+                'guard' => 'legacyGuard',
                 'passwords' => 'users',
             ],
             'guards' => [
@@ -31,9 +36,20 @@ class TestCase extends BaseTestCase
                     'driver' => 'session',
                     'provider' => 'users',
                 ],
-                'testGuard' => [
+                'legacyGuard' => [
                     'driver' => 'auth0.guard',
-                    'provider' => 'testProvider',
+                    'configuration' => 'web',
+                    'provider' => 'auth0-provider',
+                ],
+                'auth0-session' => [
+                    'driver' => 'auth0.authenticator',
+                    'configuration' => 'web',
+                    'provider' => 'auth0-provider',
+                ],
+                'auth0-api' => [
+                    'driver' => 'auth0.authorizer',
+                    'configuration' => 'api',
+                    'provider' => 'auth0-provider',
                 ],
             ],
             'providers' => [
@@ -41,15 +57,15 @@ class TestCase extends BaseTestCase
                     'driver' => 'eloquent',
                     'model' => App\Models\User::class,
                 ],
-                'testProvider' => [
+                'auth0-provider' => [
                     'driver' => 'auth0.provider',
-                    'model' => 'auth0.repository',
+                    'repository' => 'auth0.repository',
                 ],
             ],
         ]);
 
         // Set a random key for testing
-        $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
+        $_ENV['APP_KEY'] = 'base64:' . base64_encode(random_bytes(32));
 
         // Setup database for testing (currently unused)
         $app['config']->set('database.default', 'testbench');
@@ -69,20 +85,27 @@ class TestCase extends BaseTestCase
      */
     protected function assertDispatched(string $expectedEvent, int $times = 0, ?string $followingEvent = null)
     {
-        $this->assertTrue(\in_array($expectedEvent, $this->events), 'Event ' . $expectedEvent . ' was not dispatched.');
+        expect($this->events)
+            ->toBeArray()
+            ->toContain($expectedEvent);
 
         if ($times > 0) {
-            $this->assertTrue(array_count_values($this->events)[$expectedEvent] === $times, 'Event ' . $expectedEvent . ' was not dispatched ' . $times . ' times.');
+            expect(array_count_values($this->events)[$expectedEvent])
+                ->toBeInt()
+                ->toBe($times);
         }
 
         if (null !== $followingEvent) {
-            $this->assertTrue(\in_array($followingEvent, $this->events));
+            expect($this->events)
+                ->toContain($followingEvent);
 
             $indexExpected = array_search($expectedEvent, $this->events);
             $indexFollowing = array_search($followingEvent, $this->events);
 
             if ($indexExpected !== false && $indexFollowing !== false) {
-                $this->assertTrue($indexExpected > $indexFollowing, 'Event ' . $expectedEvent . ' was not dispatched after ' . $followingEvent . '.');
+                expect($indexExpected)
+                    ->toBeInt()
+                    ->toBeGreaterThan($indexFollowing);
             }
         }
     }
@@ -98,8 +121,11 @@ class TestCase extends BaseTestCase
 
         foreach ($events as $event) {
             $index = array_search($event, $this->events);
-            $this->assertTrue($index !== false);
-            $this->assertTrue($index > $previousIndex);
+
+            expect($index)
+                ->toBeInt()
+                ->toBeGreaterThan($previousIndex);
+
             $previousIndex = $index;
         }
     }

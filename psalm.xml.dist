@@ -10,6 +10,7 @@
 >
     <projectFiles>
         <directory name="src"/>
+        <directory name="deprecated"/>
     </projectFiles>
 
     <issueHandlers>
@@ -18,6 +19,8 @@
         <MixedAssignment errorLevel="suppress"/>
         <MixedInferredReturnType errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
+        <DeprecatedClass errorLevel="suppress"/>
+        <DeprecatedInterface errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>

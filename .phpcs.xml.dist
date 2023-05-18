@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset>
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <properties>
+            <property name="minimumVisibility" value="public" />
+            <property name="skipIfInheritdoc" value="true" />
+        </properties>
+    </rule>
+
+	<rule ref="Generic.PHP.Syntax">
+		<exclude name="Generic.PHP.Syntax" />
+	</rule>
+</ruleset>
