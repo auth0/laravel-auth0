@@ -294,6 +294,8 @@ final class Configuration implements ConfigurationContract
 
     /**
      * @codeCoverageIgnore
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public static function getEnvironment(): array
     {
@@ -323,7 +325,22 @@ final class Configuration implements ConfigurationContract
                 }
 
                 foreach ($contents as $content) {
+                    if (1 !== mb_substr_count($content, '=')) {
+                        continue;
+                    }
+
                     [$k,$v] = explode('=', $content);
+
+                    // @phpstan-ignore-next-line
+                    if (! is_string($k)) {
+                        continue;
+                    }
+
+                    // @phpstan-ignore-next-line
+                    if (! is_string($v)) {
+                        continue;
+                    }
+
                     $v = trim($v);
 
                     if ('' === $v) {
