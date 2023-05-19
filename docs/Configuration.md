@@ -76,12 +76,12 @@ To register the guards manually, update your `config/auth.php` file as follows:
 ```php
 'guards' => [
     'auth0-session' => [
-        'driver' => 'auth0.authentication',
+        'driver' => 'auth0.authenticator',
         'provider' => 'auth0-provider',
         'configuration' => 'web',
     ],
     'auth0-api' => [
-        'driver' => 'auth0.authorization',
+        'driver' => 'auth0.authorizer',
         'provider' => 'auth0-provider',
         'configuration' => 'api',
     ],
@@ -89,8 +89,8 @@ To register the guards manually, update your `config/auth.php` file as follows:
 
 'providers' => [
     'auth0-provider' => [
-        'driver' => 'auth0',
-        'repository' => \Auth0\Laravel\Auth\User\Repository::class,
+        'driver' => 'auth0.provider',
+        'repository' => \Auth0\Laravel\UserRepository::class,
     ],
 ],
 ```
@@ -105,13 +105,13 @@ To register the middleware manually, update your `app/Http/Kernel.php` file as f
 protected $middlewareGroups = [
     'web' => [
         // ...
-        \Auth0\Laravel\Middleware\Authenticate::class,
+        \Auth0\Laravel\Middleware\AuthenticatorMiddleware::class::class,
         // ...
     ],
 
     'api' => [
         // ...
-        \Auth0\Laravel\Middleware\Authorization::class,
+        \Auth0\Laravel\Middleware\AuthorizerMiddleware::class,
         // ...
     ],
 ];
@@ -150,11 +150,11 @@ Auth0::routes();
 Or, if you prefer complete control over the routing process:
 
 ```php
-use Auth0\Laravel\Controllers\{Login, Logout, Callback};
+use Auth0\Laravel\Controllers\{LoginController, LogoutController, CallbackController};
 
 Route::group(['middleware' => ['guard:auth0-session'], static function (): void {
-    Route::get('/login', Login::class)->name('login');
-    Route::get('/logout', Logout::class)->name('logout');
-    Route::get('/callback', Callback::class)->name('callback');
+    Route::get('/login', LoginController::class)->name('login');
+    Route::get('/logout', LogoutController::class)->name('logout');
+    Route::get('/callback', CallbackController::class)->name('callback');
 });
 ```
