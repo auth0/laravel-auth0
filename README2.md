@@ -21,13 +21,13 @@ Your application must use a [supported Laravel version](https://laravelversions.
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
-### Installation
+## Installation
 
 <details>
 
 <summary>Using a Quickstart</summary>
 
-- Run the following command to create a bootstrapped Laravel application pre-configured with the SDK:
+- Run the following command to set up a bootstrapped default Laravel 9 application pre-configured with the SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app
@@ -50,7 +50,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     ```
 </details>
 
-### Configuration
+## Configuration
 
 <details>
 <summary>Using the Auth0 CLI (Recommended)</summary>
@@ -107,7 +107,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 </details>
 
-### Authentication
+## Example
 
 ## Documentation
 
