@@ -1,6 +1,6 @@
 # Configuration
 
-This document is an addendum to the [README](../README.md) file, and covers advanced configuration techniques. Please review the installation guidance there before continuing.
+This document is an addendum to the [README](../README.md) file and covers advanced configuration techniques. Please review the installation guidance there before continuing.
 
 This document covers 'version 2' of the SDK configuration format. You can determine which version you are using by looking for the `Configuration::VERSION_` const returned with the `config/auth0.php` array.
 
@@ -8,7 +8,7 @@ This document covers 'version 2' of the SDK configuration format. You can determ
 
 The SDK can automatically configure itself using the JSON files exported using the [Auth0 CLI](https://auth0.com/docs/cli).
 
-This is the preferred method of configuration due to the ease of use.
+This is the preferred method of configuration due to its ease of use.
 
 The SDK will look for the following files in the root of your project, in the order listed:
 
