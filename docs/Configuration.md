@@ -133,8 +133,8 @@ Auth::shouldUse('auth0-api');
 
 By default, the SDK will register the following routes for authentication:
 
-| Method | URI         | Name       | Controller                                        | Purpose                            |
-| ------ | ----------- | ---------- | ------------------------------------------------- | ---------------------------------- |
+| Method | URI         | Name       | Controller                                     | Purpose                            |
+| ------ | ----------- | ---------- | ---------------------------------------------- | ---------------------------------- |
 | `GET`  | `/login`    | `login`    | `Auth0\Laravel\Controllers\LoginController`    | Initiates the authentication flow. |
 | `GET`  | `/logout`   | `logout`   | `Auth0\Laravel\Controllers\LogoutController`   | Logs the user out.                 |
 | `GET`  | `/callback` | `callback` | `Auth0\Laravel\Controllers\CallbackController` | Handles the callback from Auth0.   |
