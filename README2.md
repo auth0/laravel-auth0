@@ -58,7 +58,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
 
     > **Note**
-    > If you are using the Quickstart, you can skip to the next step.
+    > If you are using the Quickstart, skip to the next step.
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
