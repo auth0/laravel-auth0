@@ -1,12 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [7.8.1](https://github.com/auth0/laravel-auth0/tree/7.8.1) (2023-05-19)
 
 ### Fixed
 
 - Parsing `.env` files could throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
 
-## [7.8.0]
+## [7.8.0](https://github.com/auth0/laravel-auth0/tree/7.8.0) (2023-05-18)
 
 ### Added
 
