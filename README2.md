@@ -100,6 +100,9 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     ```bash
     echo ".auth0.*.json" >> .gitignore
     ```
+
+---
+
 </details>
 
 <details>
