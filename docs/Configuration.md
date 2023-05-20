@@ -90,7 +90,7 @@ To register the guards manually, update your `config/auth.php` file as follows:
 'providers' => [
     'auth0-provider' => [
         'driver' => 'auth0.provider',
-        'repository' => \Auth0\Laravel\UserRepository::class,
+        'repository' => 'auth0.repository',
     ],
 ],
 ```
@@ -105,7 +105,7 @@ To register the middleware manually, update your `app/Http/Kernel.php` file as f
 protected $middlewareGroups = [
     'web' => [
         // ...
-        \Auth0\Laravel\Middleware\AuthenticatorMiddleware::class::class,
+        \Auth0\Laravel\Middleware\AuthenticatorMiddleware::class,
         // ...
     ],
 
