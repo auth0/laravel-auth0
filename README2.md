@@ -29,27 +29,27 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
 
 <summary>Using a Quickstart</summary>
 
-We provide a bootstrapped Laravel application pre-configured with the SDK that you can use to get started quickly.
+- Run the following command to create a bootstrapped Laravel application pre-configured with the SDK:
 
-```shell
-composer create-project auth0-samples/laravel auth0-laravel-app
-```
+    ```shell
+    composer create-project auth0-samples/laravel auth0-laravel-app
+    ```
 </details>
 
 <details>
 <summary>Using Composer</summary>
 
-<p style="margin-top: 1rem">Run the following command in your project directory to install the SDK:</p>
+1. Run the following command in your project directory to install the SDK:
 
-```shell
-composer require auth0/login:^7.8 --update-with-all-dependencies
-```
+    ```shell
+    composer require auth0/login:^7.8 --update-with-all-dependencies
+    ```
 
-Then generate an SDK configuration file for your application:
+2. Generate an SDK configuration file for your application:
 
-```shell
-php artisan vendor:publish --tag auth0
-```
+    ```shell
+    php artisan vendor:publish --tag auth0
+    ```
 </details>
 
 ### Configuration
@@ -57,24 +57,22 @@ php artisan vendor:publish --tag auth0
 <details>
 <summary>Using the Auth0 CLI (Recommended)</summary>
 
-You will need to download the CLI and authenticate it with your Auth0 account. You can then use it to create the configuration files for your application.
-
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your application's root directory:
-
-    > **Note**
-    > If you are using the Quickstart application, the CLI was bundled for you, and you can skip to the next step.
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
     ```
 
-2. Then authenticate with your Auth0 account:
+    > **Note**
+    > When using the Quickstart the CLI is bundled for you already.
+
+2. Authenticate with your Auth0 account:
 
     ```shell
     ./auth0 login
     ```
 
-3. Create a new application with Auth0:
+3. Register a new application with Auth0:
 
     ```shell
     ./auth0 apps create \
@@ -88,7 +86,7 @@ You will need to download the CLI and authenticate it with your Auth0 account. Y
     --json > .auth0.app.json
     ```
 
-4. Create a new API with Auth0
+4. Register a new API with Auth0
 
     ```shell
     ./auth0 apis create \
@@ -99,9 +97,7 @@ You will need to download the CLI and authenticate it with your Auth0 account. Y
     --json > .auth0.api.json
     ```
 
-5. The files created by these commands contain sensitive credentials. It is important you do not commit these to version control.
-
-    If you're using Git, you should add them to your `.gitignore` file:
+5. The files created by these commands contain sensitive credentials. Add them to your application's `.gitignore`.
 
     ```bash
     echo ".auth0.*.json" >> .gitignore
