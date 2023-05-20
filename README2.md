@@ -57,14 +57,14 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
 <details>
 <summary>Using the Auth0 CLI (Recommended)</summary>
 
-1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your application's root directory:
+1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
+
+    > **Note**
+    > If you are using the Quickstart, you can skip to the next step.
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
     ```
-
-    > **Note**
-    > When using the Quickstart the CLI is bundled for you already.
 
 2. Authenticate with your Auth0 account:
 
@@ -97,7 +97,7 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
     --json > .auth0.api.json
     ```
 
-5. The files created by these commands contain sensitive credentials. Add them to your application's `.gitignore`.
+5. The files created by these commands contain sensitive credentials, and should never be committed to version control. Add them to your application's `.gitignore`:
 
     ```bash
     echo ".auth0.*.json" >> .gitignore
