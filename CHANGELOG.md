@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Parsing `.env` files could throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
+- Resolved an issue where parsing `.env` files could sometimes throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
 
 ## [7.8.0](https://github.com/auth0/laravel-auth0/tree/7.8.0) (2023-05-18)
 
