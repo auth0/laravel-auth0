@@ -11,7 +11,7 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
-Laravel SDK Quickstart:
+Laravel SDK Quickstarts:
 
 -   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
 -   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
