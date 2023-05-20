@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Parsing `.env` files could throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
+
 ## [7.8.0]
 
 ### Added
@@ -29,7 +35,7 @@
 
 -   We've introduced **a new configuration syntax**. This new syntax is more flexible and allows for more complex configuration scenarios, and introduces support for multiple guard instances. Developers using the previous syntax will have their existing configurations applied to all guards uniformly.
 
--   The SDK can now **configure itself using a `.auth0.json` file in the project root directory**. This file can be generated [using the Auth0 CLI](./docs/JSON%20Configuration.md), and provides a significantly simpler configuration experience for developers.
+-   The SDK can now **configure itself using a `.auth0.json` file in the project root directory**. This file can be generated [using the Auth0 CLI](./docs/Configuration.md), and provides a significantly simpler configuration experience for developers.
 
 -   The previous `auth0.guard` Guard (`Auth0\Laravel\Auth\Guard`) has been **refactored** as a lightweight wrapper around the new `AuthenticationGuard` and `AuthorizationGuard` guards.
 
@@ -55,7 +61,7 @@
 
 ### Improved
 
--   `Auth0\Laravel\Http\Middleware\Stateful\Authenticate` now remembers the intended route (using `redirect()->setIntendedUrl()`) before kicking off authentication flow redirect. Users will be returned to the memorized intended route after completing their authentication flow. ([\#364](https://github.com/auth0/laravel-auth0/pull/364))
+-   `Auth0\Laravel\Http\Middleware\Stateful\Authenticate` now remembers the intended route (using `redirect()->setIntendedUrl()`) before kicking off the authentication flow redirect. Users will be returned to the memorized intended route after completing their authentication flow. ([\#364](https://github.com/auth0/laravel-auth0/pull/364))
 
 ### Fixed
 
@@ -81,26 +87,26 @@ This release includes support for Laravel 10, and major improvements to the inte
 
 -   Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
 -   New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
--   New Exception types have been added for more precise error catching.
+-   New Exception types have been added for more precise error-catching.
 
 ### Improved
 
-The following changes have no effect on the external API of this package, but may affect internal usage.
+The following changes have no effect on the external API of this package but may affect internal usage.
 
 -   `Guard` will now more reliably detect changes in the underlying Auth0-PHP SDK session state.
 -   `Guard` will now more reliably sync changes back to the underlying Auth0-PHP SDK session state.
--   `StateInstance` concept has been replaced by new `Credentials` entity.
+-   `StateInstance` concept has been replaced by a new `Credentials` entity.
 -   `Guard` updated to use new `Credentials` entity as primary internal storage for user data.
--   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new`Credentials` entity.
--   The HTTP middleware have been refactored to more clearly differentiate between token and session based identities.
--   The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now support scope filtering, as `authorize` already did.
+-   `Auth0\Laravel\Traits\ActingAsAuth0User` was updated to use new `Credentials` entity.
+-   The HTTP middleware has been refactored to more clearly differentiate between token and session-based identities.
+-   The `authenticate`, `authenticate.optional` and `authorize.optional` HTTP middleware now supports scope filtering, as `authorize` already did.
 
 -   Upgraded test suite to use PEST 2.0 framework.
 -   Updated test coverage to 100%.
 
 ### Fixed
 
--   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that use the Guard. This should be resolved now.
+-   A 'Session store not set on request' error could occur when downstream applications implemented unit testing that uses the Guard. This should be resolved now.
 -   `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
 -   `Guard` is no longer defined as a Singleton to better support applications that need multi-guard configurations.
 
@@ -108,13 +114,13 @@ The following changes have no effect on the external API of this package, but ma
 
 #### Changes to `user()` behavior
 
-This release includes a significant behavior change around the `user()` method of the Guard. Previously, by simply invoking the method, the SDK would search for any available credential (access token, device session, etc.) and automatically assign the user within the Guard. The HTTP middleware have been upgraded to handle the user assignment step, and `user()` now only returns the current state of user assignment without altering it.
+This release includes a significant behavior change around the `user()` method of the Guard. Previously, by simply invoking the method, the SDK would search for any available credential (access token, device session, etc.) and automatically assign the user within the Guard. The HTTP middleware has been upgraded to handle the user assignment step, and `user()` now only returns the current state of the user assignment without altering it.
 
 A new property has been added to the `config/auth0.php` configuration file: `behavior`. This is an array. At this time, there is a single option: `legacyGuardUserMethod`, a bool. If this value is set to true, or if the key is missing, the previously expected behavior will be applied, and `user()` will behave as it did before this release. The property defaults to `false`.
 
 #### Changes to Guard and Provider driver aliases
 
-We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver, and `auth0.provider` for the Provider driver. This is a regrettable change, but was necessary for adequate Laravel 10 support.
+We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver and `auth0.provider`` for the Provider driver. This is a regrettable change but was necessary for adequate Laravel 10 support.
 
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
 
@@ -146,7 +152,7 @@ We identified an issue with using identical alias naming for both the Guard and 
 ### Fixed
 
 -   `Auth0\Laravel\Auth0` no longer requires a session configuration for stateless strategies, restoring previous behavior. [\#317](https://github.com/auth0/laravel-auth0/pull/317)
--   The SDK now requires `^3.0` of the `psr/cache` dependency, to accomodate breaking changes made in the upstream interface (typed parameters and return types) for PHP 8.0+. [\#316](https://github.com/auth0/laravel-auth0/pull/316)
+-   The SDK now requires `^3.0` of the `psr/cache` dependency, to accommodate breaking changes made in the upstream interface (typed parameters and return types) for PHP 8.0+. [\#316](https://github.com/auth0/laravel-auth0/pull/316)
 
 ## [7.2.0](https://github.com/auth0/laravel-auth0/tree/7.2.0) (2022-10-10)
 
@@ -165,7 +171,7 @@ We identified an issue with using identical alias naming for both the Guard and 
 ### Improved
 
 -   Return interfaces instead of concrete classes [\#296](https://github.com/auth0/laravel-auth0/pull/296)
--   change: Use class names for app() calls [\#291](https://github.com/auth0/laravel-auth0/pull/291)
+-   change: Use class names for `app()` calls [\#291](https://github.com/auth0/laravel-auth0/pull/291)
 
 ### Fixed
 
