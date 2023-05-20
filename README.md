@@ -11,15 +11,27 @@ Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
--   Quickstarts
-    -   [Authentication using Sessions](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel)) — An application that uses sessions and supports logging in, logging out, and querying user profiles.
-    -   [Authorization using Tokens](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel)) — A backend API service that authorizes requests using tokens from a frontend application.
--   Documentation
-    -   [Events](./docs/Events.md) — Hooking into [events](https://laravel.com/docs/10.x/events) raised by the SDK to customize behavior.
-    -   [Management API](./docs/Management.md) — Making API calls to [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2).
-    -   [User Models and Repositories](./docs/Users.md) — Extending the SDK to support database storage, [Eloquent](https://laravel.com/docs/10.x/eloquent), and other scenarios.
-    -   [Examples](./EXAMPLES.md) — Solutions for other common scenarios and questions.
--   [Documentation Hub](https://www.auth0.com/docs) — Learn more about integrating Auth0.
+Laravel SDK Quickstart:
+
+-   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+-   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+
+Laravel SDK Documentation:
+
+-   [Getting Started](./README.md#getting-started) — Installing and configuring the SDK.
+-   [Examples](./EXAMPLES.md) — Answers and solutions for common questions and scenarios.
+-   Additional Reference:
+    -   [docs/Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
+    -   [docs/Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
+    -   [docs/Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
+    -   [docs/Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
+    -   [docs/Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+
+Auth0:
+
+-   [Documentation](https://www.auth0.com/docs)
+-   [Management API Explorer](https://auth0.com/docs/api/management/v2)
+-   [Authentication API Explorer](https://auth0.com/docs/api/authentication)
 
 ## Getting Started
 
@@ -112,7 +124,7 @@ See [docs/Configuration](./docs/Configuration.md) for guidance on disabling auto
 
 ### Access Control
 
-The SDK automatically registers its authentication and authorization guards into the standard `web` and `api` middleware for your Laravel application, respectively.
+The SDK automatically registers its authentication and authorization guards into the standard `web` and `api` middleware groups for your Laravel application, respectively.
 
 See [docs/Configuration](./docs/Configuration.md) for guidance on disabling this automatic registration, and manually registering the guards.
 
@@ -126,7 +138,7 @@ Route::get('/private', function () {
 })->middleware('auth');
 ```
 
-You can also require the requestor have specific [permissions](https://auth0.com/docs/manage-users/access-control/rbac) by combining this with Laravel's `can` middleware:
+You can also require the requestor to have specific [permissions](https://auth0.com/docs/manage-users/access-control/rbac)](https://auth0.com/docs/manage-users/access-control/rbac) by combining this with Laravel's `can` middleware:
 
 ```php
 Route::get('/scope', function () {
@@ -222,7 +234,7 @@ The SDK supports [Laravel's Authorization API](https://laravel.com/docs/authoriz
 | `permission` | `Gate::check('permission', 'read:messages');` | `Route::get(/*...*/)->can('permission', 'read:messages');` | Determine if the user's access token has a specified [permission](https://auth0.com/docs/manage-users/access-control/rbac). This requires RBAC be enabled on [your Auth0 API's settings](https://manage.auth0.com/#/apis). |
 | `*:*`        | `Gate::check('read:messages');`               | `Route::get(/*...*/)->can('read:messages');`               | A convenience alias for `permission` (described above), you can supply any permission string in the colon-delimited `ability:context` syntax.                                                                              |
 
-Using these gates, you can easily authorize users or access tokens to perform actions in your application. Your application can use Laravel's [Policies API](https://laravel.com/docs/10.x/authorization#creating-policies) in combination with these gates to further simplify authorization.
+Using these gates, you can easily authorize users or access tokens to perform actions in your application. Your application can use Laravel's [Policies API](https://laravel.com/docs/authorization#creating-policies) in combination with these gates to further simplify authorization.
 
 ## Support Policy
 
