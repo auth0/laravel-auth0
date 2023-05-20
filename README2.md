@@ -26,9 +26,9 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
 ### Installation
 
 <details>
-<summary><h4>Using a Quickstart</h4></summary>
+<summary><h4 style="margin-top: 0; margin-bottom: 0; line-height: 1rem;">Using a Quickstart</h4></summary>
 
-We provide a bootstrapped Laravel application pre-configured with the SDK that you can use to get started quickly.
+<p style="margin-top: 1rem">We provide a bootstrapped Laravel application pre-configured with the SDK that you can use to get started quickly.</p>
 
 ```shell
 composer create-project auth0-samples/laravel auth0-laravel-app
@@ -36,9 +36,9 @@ composer create-project auth0-samples/laravel auth0-laravel-app
 </details>
 
 <details>
-<summary><h4>Using Composer</h4></summary>
+<summary><h4 style="margin-top: 0; margin-bottom: 0; line-height: 1rem;">Using Composer</h4></summary>
 
-Use Composer to install the SDK in your application:
+<p style="margin-top: 1rem">Run the following command in your project directory to install the SDK:</p>
 
 ```shell
 composer require auth0/login:^7.8 --update-with-all-dependencies
