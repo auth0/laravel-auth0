@@ -21,8 +21,6 @@ Your application must use a [supported Laravel version](https://laravelversions.
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
-The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the SDK, but not required.
-
 ### Installation
 
 <details>
@@ -97,7 +95,7 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
     --json > .auth0.api.json
     ```
 
-5. The files created by these commands contain sensitive credentials, and should never be committed to version control. Add them to your application's `.gitignore`:
+5. Add the newly created files to `.gitignore`, as they contain sensitive credentials:
 
     ```bash
     echo ".auth0.*.json" >> .gitignore
@@ -108,6 +106,8 @@ The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the S
 <summary>Using Environment Variables</summary>
 
 </details>
+
+### Authentication
 
 ## Documentation
 
