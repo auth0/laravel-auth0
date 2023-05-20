@@ -22,7 +22,7 @@ abstract class ServiceAbstract extends InstanceEntityAbstract
      *
      * @var string
      */
-    public const VERSION = '7.8.0';
+    public const VERSION = '7.8.1';
 
     /**
      * Decode a PSR-7 HTTP Response Message containing a JSON content body to a PHP array. Returns null if the response was not successful, or the response body was not JSON.
