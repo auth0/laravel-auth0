@@ -74,25 +74,25 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
     ```shell
     ./auth0 apps create \
-    --name "My Laravel Application" \
-    --type "regular" \
-    --auth-method "post" \
-    --callbacks "http://localhost:8000/callback" \
-    --logout-urls "http://localhost:8000" \
-    --reveal-secrets \
-    --no-input \
-    --json > .auth0.app.json
+        --name "My Laravel Application" \
+        --type "regular" \
+        --auth-method "post" \
+        --callbacks "http://localhost:8000/callback" \
+        --logout-urls "http://localhost:8000" \
+        --reveal-secrets \
+        --no-input \
+        --json > .auth0.app.json
     ```
 
 4. Register a new API with Auth0
 
     ```shell
     ./auth0 apis create \
-    --name "My Laravel Application API" \
-    --identifier "https://github.com/auth0/laravel-auth0" \
-    --offline-access \
-    --no-input \
-    --json > .auth0.api.json
+        --name "My Laravel Application API" \
+        --identifier "https://github.com/auth0/laravel-auth0" \
+        --offline-access \
+        --no-input \
+        --json > .auth0.api.json
     ```
 
 5. Add the newly created files to `.gitignore`, as they contain sensitive credentials:
