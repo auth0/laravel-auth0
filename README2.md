@@ -21,12 +21,12 @@ Your application must use a [supported Laravel version](https://laravelversions.
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
-For the simplest integration, we recommend installing the [Auth0 CLI](https://auth0.com/docs/cli). Our documentation assumes that you have installed the CLI and are using it to configure the SDK.
+The [Auth0 CLI](https://auth0.com/docs/cli) is recommended for configuring the SDK, but not required.
 
 ### Installation
 
 <details>
-<summary>Using a Quickstart</summary>
+<summary><h4>Using a Quickstart</h4></summary>
 
 We provide a bootstrapped Laravel application pre-configured with the SDK that you can use to get started quickly.
 
@@ -36,7 +36,7 @@ composer create-project auth0-samples/laravel auth0-laravel-app
 </details>
 
 <details>
-<summary>Using Composer</summary>
+<summary><h4>Using Composer</h4></summary>
 
 Use Composer to install the SDK in your application:
 
