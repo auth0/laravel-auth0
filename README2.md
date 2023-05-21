@@ -88,7 +88,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
         --json > .auth0.app.json
     ```
 
-4. Register a new API with Auth0
+4. Register a new API with Auth0:
 
     ```shell
     ./auth0 apis create \
@@ -99,7 +99,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
         --json > .auth0.api.json
     ```
 
-5. Add the newly created JSON files to `.gitignore`, as they contain sensitive credentials:
+5. Add the new files to `.gitignore`:
 
     ```bash
     echo ".auth0.*.json" >> .gitignore
@@ -142,7 +142,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
     Make a note of the `client_id` and `client_secret` values in the output.
 
-4. Register a new API with Auth0
+4. Register a new API with Auth0:
 
     ```shell
     ./auth0 apis create \
@@ -168,7 +168,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     AUTH0_AUDIENCE=...
     ```
 
-    Additional variables are available for configuration. More on those in the [configuration guide](./docs/Configuration.md).
+    Additional variables are available. More on those in the [configuration guide](./docs/Configuration.md).
 
 </details>
 
