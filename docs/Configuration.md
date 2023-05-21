@@ -1,6 +1,7 @@
 # Configuration
 
-This document is an addendum to the [README](../README.md) file and covers advanced configuration techniques. Please review the installation guidance there before continuing.
+> **Note:**  
+> This is an addendum to the [README](../README.md) file. Please review that guidance first.
 
 This document covers 'version 2' of the SDK configuration format. You can determine which version you are using by looking for the `Configuration::VERSION_` const returned with the `config/auth0.php` array.
 
