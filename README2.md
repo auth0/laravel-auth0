@@ -48,11 +48,11 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 2.  Generate an SDK configuration file for your application:
 
-        ```shell
-        php artisan vendor:publish --tag auth0
-        ```
+    ```shell
+    php artisan vendor:publish --tag auth0
+    ```
 
-    </details>
+</details>
 
 ## Configuration
 
@@ -188,6 +188,8 @@ The SDK automatically registers the following routes to facilitate authenticatio
 > **Note**  
 > See [the configuration guide](./docs/Configuration.md) for information on customizing this behavior.
 
+---
+
 </details>
 
 <details>
@@ -213,6 +215,8 @@ Route::get('/scope', function () {
 
 > **Note**  
 > Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-control/rbac) be enabled within [your API settings](https://manage.auth0.com/#/apis).
+
+---
 
 </details>
 
@@ -255,15 +259,17 @@ Route::get('/', function () {
 });
 ```
 
+---
+
 </details>
 
 <details>
 <summary>Management API</summary>
 
-> **Note**  
-> Before your application can make calls to the Management API, you must either generate and provide [a management token](./docs/Configuration.md#management-token) or [enable your application to communicate with the Management API](./docs/Management.md#management-api-permissions).
-
 You can issue [Auth0 Management API](https://auth0.com/docs/api/management/v2) calls through the SDK's `management()` method.
+
+> **Note**  
+> Before your application can make calls to the Management API, you must [enable your application to communicate with the Management API](./docs/Management.md#management-api-permissions) or configure the SDK with [a management token](./docs/Configuration.md#management-token).
 
 For example, you can update a user's metadata by calling the `management()->users()->update()` method:
 
@@ -307,31 +313,38 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 
 ## Documentation
 
-The documentation is divided into several sections:
-
 -   [Getting Started](./README.md#getting-started) — Installing and configuring the SDK.
--   [Examples](./EXAMPLES.md) — Answers and solutions for common questions and scenarios.
+-   [Examples](./EXAMPLES.md) — Solutions for common scenarios.
 -   Reference:
     -   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
     -   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
     -   [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
     -   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
     -   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+    -   [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
 -   [Auth0 Documentation](https://www.auth0.com/docs)
 -   [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
 -   [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
 
-You can improve it by sending pull requests to [this repository](https://github.com/auth0/laravel-auth0).
+Contributions to improve our documentation [are welcomed](https://github.com/auth0/laravel-auth0/pull).
 
 ## Community
 
-The main purpose of this repository is to continue evolving React core, making it faster and easier to use. Development of React happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving React.
+The [Auth0 Community](https://community.auth0.com) is where you can ask questions, get support, and share your projects.
 
 ## Contributing
 
+We appreciate feedback and contributions to this library. Before you get started, please review Auth0's [General Contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md). Read [our contributing guide](./CONTRIBUTING.md) to learn about how to propose bug fixes and improvements, and how to build and test your changes to the library.
+
+To provide feedback or report a bug, [please raise an issue](https://github.com/auth0/laravel-auth0/issues).
+
 ## Code of Conduct
 
+Participants are expected to adhere to our [code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md) when interacting with this project.
+
 ## Security
+
+If you believe you have found a security vulnerability, we encourage you to responsibly disclose this and not open a public issue. We will investigate all reports. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ## License
 
