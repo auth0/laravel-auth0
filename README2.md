@@ -25,7 +25,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 <details>
 
-<summary>Using a Quickstart</summary>
+<summary>Using <b>Quickstart</b> (Fastest)</summary>
 
 -   Run the following command to set up a bootstrapped default Laravel 9 application that's pre-configured with the SDK:
 
@@ -38,7 +38,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 </details>
 
 <details>
-<summary>Using Composer</summary>
+<summary>Using <b>Composer</b></summary>
 
 1.  Run the following command in your project directory to install the SDK:
 
@@ -57,7 +57,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 ## Configuration
 
 <details>
-<summary>Using JSON (Recommended)</summary>
+<summary>Using <b>JSON</b> (Fastest)</summary>
 
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
 
@@ -110,7 +110,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 </details>
 
 <details>
-<summary>Using Environment Variables</summary>
+<summary>Using <b>Environment Variables</b></summary>
 
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
 
@@ -170,10 +170,16 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 </details>
 
+## Quickstart
+
+-   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+-   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+
 ## Examples
 
 <details>
-<summary>Authentication</summary>
+<summary><b>Authentication</b></summary>
+ 
 
 The SDK automatically registers all the necessary authentication services within the `web` middleware group for your application. Once you have [configured the SDK](#configuration) your users will be able to authenticate with your application using Auth0.
 
@@ -193,7 +199,8 @@ The SDK automatically registers the following routes to facilitate authenticatio
 </details>
 
 <details>
-<summary>Access Control</summary>
+<summary><b>Access Control</b></summary>
+ 
 
 The SDK automatically registers its authentication and authorization guards within the `web` and `api` middleware groups for your Laravel application.
 
@@ -221,7 +228,8 @@ Route::get('/scope', function () {
 </details>
 
 <details>
-<summary>Users and Tokens</summary>
+<summary><b>Users and Tokens</b></summary>
+ 
 
 Laravel's `Auth` Facade (or the `auth()` global helper) can be used to retrieve information about the authenticated user, or the access token used to authorize the request.
 
@@ -264,7 +272,7 @@ Route::get('/', function () {
 </details>
 
 <details>
-<summary>Management API</summary>
+<summary><b>Management API</b></summary>
  
 
 You can issue [Auth0 Management API](https://auth0.com/docs/api/management/v2) calls through the SDK's `management()` method.
@@ -314,7 +322,6 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 
 ## Documentation
 
--   [Getting Started](./README.md#getting-started) — Installing and configuring the SDK.
 -   [Examples](./EXAMPLES.md) — Solutions for common scenarios.
 -   Reference:
     -   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
