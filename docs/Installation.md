@@ -1,6 +1,7 @@
 # Installation
 
-This document is an addendum to the [README](../README.md) file and covers advanced installation techniques. Please review the installation guidance there before continuing.
+> **Note:**  
+> This is an addendum to the [README](../README.md) file. Please review that guidance there first.
 
 ## Alternative Configuration Methods
 
