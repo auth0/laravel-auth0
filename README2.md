@@ -185,7 +185,7 @@ The SDK automatically registers the following routes to facilitate authenticatio
 | `/logout`   | Logs the user out.                 |
 | `/callback` | Handles the callback from Auth0.   |
 
-> **Note** .
+> **Note**  
 > See [the configuration guide](./docs/Configuration.md) for information on customizing this behavior.
 
 </details>
