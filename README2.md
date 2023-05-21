@@ -265,6 +265,7 @@ Route::get('/', function () {
 
 <details>
 <summary>Management API</summary>
+ 
 
 You can issue [Auth0 Management API](https://auth0.com/docs/api/management/v2) calls through the SDK's `management()` method.
 
