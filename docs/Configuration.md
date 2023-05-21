@@ -25,43 +25,43 @@ Where `<APP_ENV>` is the value of Laravel's `APP_ENV` environment variable (if s
 
 The SDK supports the use of environment variables to configure the SDK. These can be defined in the `.env` file in the root of your project, or in your hosting environment.
 
-| Variable              | Description                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| `AUTH0_STRATEGY`      | String. The Auth0 strategy to use.                                                                  |
-| `AUTH0_DOMAIN`        | String (FQDN.) The Auth0 domain for your tenant.                                                    |
-| `AUTH0_CUSTOM_DOMAIN` | String (FQDN.) The Auth0 custom domain for your tenant, if set.                                     |
-| `AUTH0_CLIENT_ID`     | String. The Client ID for your Auth0 application.                                                   |
-| `AUTH0_CLIENT_SECRET` | String. The Client Secret for your Auth0 application.                                               |
-| `AUTH0_COOKIE_SECRET` | String. The optional secret used to encrypt the cookie used by the SDK.                             |
-| `AUTH0_REDIRECT_URI`  | String (URL.) The redirect URI for your application.                                                |
-| `AUTH0_AUDIENCE`      | String (comma-delimited list.) The audiences for your application.                                  |
-| `AUTH0_SCOPE`         | String (comma-delimited list.) The scopes for your application. Defaults to 'openid,profile,email'. |
-| `AUTH0_ORGANIZATION`  | String (comma-delimited list.) The organizations for your application.                              |
+| Variable              | Description                                                                                          |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| `AUTH0_STRATEGY`      | `String` The Auth0 strategy to use.                                                                  |
+| `AUTH0_DOMAIN`        | `String (FQDN)` The Auth0 domain for your tenant.                                                    |
+| `AUTH0_CUSTOM_DOMAIN` | `String (FQDN)` The Auth0 custom domain for your tenant, if set.                                     |
+| `AUTH0_CLIENT_ID`     | `String` The Client ID for your Auth0 application.                                                   |
+| `AUTH0_CLIENT_SECRET` | `String` The Client Secret for your Auth0 application.                                               |
+| `AUTH0_COOKIE_SECRET` | `String` The optional secret used to encrypt the cookie used by the SDK.                             |
+| `AUTH0_REDIRECT_URI`  | `String` (URL) The redirect URI for your application.                                                |
+| `AUTH0_AUDIENCE`      | `String (comma-delimited list)` The audiences for your application.                                  |
+| `AUTH0_SCOPE`         | `String (comma-delimited list)` The scopes for your application. Defaults to 'openid,profile,email'. |
+| `AUTH0_ORGANIZATION`  | `String (comma-delimited list)` The organizations for your application.                              |
 
 The following environment variables are also supported, but should not be adjusted unless you know what you are doing:
 
-| Variable                                   | Description                                                                                                                                                         |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH0_USE_PKCE`                           | Boolean. Whether to use PKCE for the authorization flow. Defaults to `true`.                                                                                        |
-| `AUTH0_RESPONSE_MODE`                      | String. The response mode to use for the authorization flow. Defaults to `query`.                                                                                   |
-| `AUTH0_RESPONSE_TYPE`                      | String. The response type to use for the authorization flow. Defaults to `code`.                                                                                    |
-| `AUTH0_TOKEN_ALGORITHM`                    | String. The algorithm to use for the ID token. Defaults to `RS256`.                                                                                                 |
-| `AUTH0_TOKEN_JWKS_URI`                     | String (URL.) The URI to use to retrieve the JWKS for the ID token. Defaults to `https://<AUTH0_DOMAIN>/.well-known/jwks.json`.                                     |
-| `AUTH0_TOKEN_MAX_AGE`                      | Integer. The maximum age of a token, in seconds. No default value is assigned.                                                                                      |
-| `AUTH0_TOKEN_LEEWAY`                       | Integer. The leeway to use when validating a token, in seconds. Defaults to `60` (1 minute).                                                                        |
-| `AUTH0_TOKEN_CACHE`                        | String (class name.) A PSR-6 class to use for caching JWKS responses.                                                                                               |
-| `AUTH0_TOKEN_CACHE_TTL`                    | Integer. The TTL to use for caching JWKS responses. Defaults to `60` (1 minute).                                                                                    |
-| `AUTH0_HTTP_MAX_RETRIES`                   | Integer. The maximum number of times to retry a failed HTTP request. Defaults to `3`.                                                                               |
-| `AUTH0_HTTP_TELEMETRY`                     | Boolean. Whether to send telemetry data with HTTP requests to Auth0. Defaults to `true`.                                                                            |
-| `AUTH0_SESSION_STORAGE`                    | String (class name.) The `StoreInterface` class to use for storing session data. Defaults to using Laravel's native Sessions API.                                   |
-| `AUTH0_SESSION_STORAGE_ID`                 | String. The namespace to use for storing session data. Defaults to `auth0_session`.                                                                                 |
-| `AUTH0_TRANSIENT_STORAGE`                  | String (class name.) The `StoreInterface` class to use for storing temporary session data. Defaults to using Laravel's native Sessions API.                         |
-| `AUTH0_TRANSIENT_STORAGE_ID`               | String. The namespace to use for storing temporary session data. Defaults to `auth0_transient`.                                                                     |
-| `AUTH0_MANAGEMENT_TOKEN`                   | String (class name.) The Management API token to use for the Management API client. (If one is not provided, the SDK will attempt to create one for you.)           |
-| `AUTH0_MANAGEMENT_TOKEN_CACHE`             | Integer. A PSR-6 class to use for caching Management API tokens.                                                                                                    |
-| `AUTH0_CLIENT_ASSERTION_SIGNING_KEY`       | String. The key to use for signing client assertions.                                                                                                               |
-| `AUTH0_CLIENT_ASSERTION_SIGNING_ALGORITHM` | String. The algorithm to use for signing client assertions. Defaults to `RS256`.                                                                                    |
-| `AUTH0_PUSHED_AUTHORIZATION_REQUEST`       | Boolean. Whether the SDK should use Pushed Authorization Requests during authentication. Note that your tenant must have this feature enabled. Defaults to `false`. |
+| Variable                                   | Description                                                                                                                                                          |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH0_USE_PKCE`                           | Boolean. Whether to use PKCE for the authorization flow. Defaults to `true`.                                                                                         |
+| `AUTH0_RESPONSE_MODE`                      | `String` The response mode to use for the authorization flow. Defaults to `query`.                                                                                   |
+| `AUTH0_RESPONSE_TYPE`                      | `String` The response type to use for the authorization flow. Defaults to `code`.                                                                                    |
+| `AUTH0_TOKEN_ALGORITHM`                    | `String` The algorithm to use for the ID token. Defaults to `RS256`.                                                                                                 |
+| `AUTH0_TOKEN_JWKS_URI`                     | `String (URL)` The URI to use to retrieve the JWKS for the ID token. Defaults to `https://<AUTH0_DOMAIN>/.well-known/jwks.json`.                                     |
+| `AUTH0_TOKEN_MAX_AGE`                      | `Integer` The maximum age of a token, in seconds. No default value is assigned.                                                                                      |
+| `AUTH0_TOKEN_LEEWAY`                       | `Integer` The leeway to use when validating a token, in seconds. Defaults to `60` (1 minute).                                                                        |
+| `AUTH0_TOKEN_CACHE`                        | `String (class name)` A PSR-6 class to use for caching JWKS responses.                                                                                               |
+| `AUTH0_TOKEN_CACHE_TTL`                    | `Integer` The TTL to use for caching JWKS responses. Defaults to `60` (1 minute).                                                                                    |
+| `AUTH0_HTTP_MAX_RETRIES`                   | `Integer` The maximum number of times to retry a failed HTTP request. Defaults to `3`.                                                                               |
+| `AUTH0_HTTP_TELEMETRY`                     | `Boolean` Whether to send telemetry data with HTTP requests to Auth0. Defaults to `true`.                                                                            |
+| `AUTH0_SESSION_STORAGE`                    | `String (class name)` The `StoreInterface` class to use for storing session data. Defaults to using Laravel's native Sessions API.                                   |
+| `AUTH0_SESSION_STORAGE_ID`                 | `String` The namespace to use for storing session data. Defaults to `auth0_session`.                                                                                 |
+| `AUTH0_TRANSIENT_STORAGE`                  | `String (class name)` The `StoreInterface` class to use for storing temporary session data. Defaults to using Laravel's native Sessions API.                         |
+| `AUTH0_TRANSIENT_STORAGE_ID`               | `String` The namespace to use for storing temporary session data. Defaults to `auth0_transient`.                                                                     |
+| `AUTH0_MANAGEMENT_TOKEN`                   | `String` The Management API token to use for the Management API client. If one is not provided, the SDK will attempt to create one for you.                          |
+| `AUTH0_MANAGEMENT_TOKEN_CACHE`             | `Integer` A PSR-6 class to use for caching Management API tokens.                                                                                                    |
+| `AUTH0_CLIENT_ASSERTION_SIGNING_KEY`       | `String` The key to use for signing client assertions.                                                                                                               |
+| `AUTH0_CLIENT_ASSERTION_SIGNING_ALGORITHM` | `String` The algorithm to use for signing client assertions. Defaults to `RS256`.                                                                                    |
+| `AUTH0_PUSHED_AUTHORIZATION_REQUEST`       | `Boolean` Whether the SDK should use Pushed Authorization Requests during authentication. Note that your tenant must have this feature enabled. Defaults to `false`. |
 
 ## Overriding Automatic Behavior
 
