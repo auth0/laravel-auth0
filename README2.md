@@ -27,7 +27,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 <summary>Using <b>Quickstart</b> (Fastest)</summary>
 
--   Run the following command to set up a bootstrapped default Laravel 9 application that's pre-configured with the SDK:
+-   Run the following command to create a new Laravel 9 project pre-configured with the SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app
@@ -168,9 +168,11 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     AUTH0_AUDIENCE=...
     ```
 
+    Additional variables are available for configuration. More on those in the [configuration guide](./docs/Configuration.md).
+
 </details>
 
-## Quickstart
+## Quickstarts
 
 -   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
 -   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
@@ -322,15 +324,16 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 
 ## Documentation
 
--   [Examples](./EXAMPLES.md) — Solutions for common scenarios.
--   Reference:
-    -   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
-    -   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
-    -   [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
-    -   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
-    -   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
-    -   [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
--   [Auth0 Documentation](https://www.auth0.com/docs)
+-   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
+-   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
+-   [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
+-   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
+-   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+-   [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
+
+You may also find the following resources helpful:
+
+-   [Auth0 Documentation Hub](https://www.auth0.com/docs)
 -   [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
 -   [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
 
