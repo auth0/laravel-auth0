@@ -27,7 +27,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 <summary>Using a Quickstart</summary>
 
-- Run the following command to set up a bootstrapped default Laravel 9 application that's pre-configured with the SDK:
+-   Run the following command to set up a bootstrapped default Laravel 9 application that's pre-configured with the SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app
@@ -40,18 +40,19 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 <details>
 <summary>Using Composer</summary>
 
-1. Run the following command in your project directory to install the SDK:
+1.  Run the following command in your project directory to install the SDK:
 
     ```shell
     composer require auth0/login:^7.8 --update-with-all-dependencies
     ```
 
-2. Generate an SDK configuration file for your application:
+2.  Generate an SDK configuration file for your application:
 
-    ```shell
-    php artisan vendor:publish --tag auth0
-    ```
-</details>
+        ```shell
+        php artisan vendor:publish --tag auth0
+        ```
+
+    </details>
 
 ## Configuration
 
@@ -60,7 +61,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
 
-    > **Note**
+    > **Note**  
     > If you are using the Quickstart, skip to the next step.
 
     ```shell
@@ -113,7 +114,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
 
-    > **Note**
+    > **Note**  
     > If you are using the Quickstart, skip to the next step.
 
     ```shell
@@ -184,7 +185,7 @@ The SDK automatically registers the following routes to facilitate authenticatio
 | `/logout`   | Logs the user out.                 |
 | `/callback` | Handles the callback from Auth0.   |
 
-> **Note**
+> **Note** .
 > See [the configuration guide](./docs/Configuration.md) for information on customizing this behavior.
 
 </details>
@@ -210,7 +211,7 @@ Route::get('/scope', function () {
 })->middleware('auth')->can('read:messages');
 ```
 
-> **Note**
+> **Note**  
 > Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-control/rbac) be enabled within [your API settings](https://manage.auth0.com/#/apis).
 
 </details>
@@ -253,12 +254,13 @@ Route::get('/', function () {
   ]);
 });
 ```
+
 </details>
 
 <details>
 <summary>Management API</summary>
 
-> **Note**
+> **Note**  
 > Before your application can make calls to the Management API, you must either generate and provide [a management token](./docs/Configuration.md#management-token) or [enable your application to communicate with the Management API](./docs/Management.md#management-api-permissions).
 
 You can issue [Auth0 Management API](https://auth0.com/docs/api/management/v2) calls through the SDK's `management()` method.
