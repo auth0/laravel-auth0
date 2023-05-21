@@ -7,11 +7,9 @@ This document covers 'version 2' of the SDK configuration format. You can determ
 
 ## JSON Configuration (Preferred)
 
-The SDK can automatically configure itself using the JSON files exported using the [Auth0 CLI](https://auth0.com/docs/cli).
+The preferred method of SDK configuration is to use JSON exported from the [Auth0 CLI](https://auth0.com/docs/cli). This allows you to use the CLI to manage your Auth0 configuration, and then export the configuration to JSON for use by the SDK.
 
-This is the preferred method of configuration due to its ease of use.
-
-The SDK will look for the following files in the root of your project, in the order listed:
+The SDK will look for the following files in the project directory, in the order listed:
 
 -   `auth0.json`
 -   `auth0.<APP_ENV>.json`
@@ -24,17 +22,14 @@ Where `<APP_ENV>` is the value of Laravel's `APP_ENV` environment variable (if s
 
 ## Environment Variables
 
-The SDK supports the use of environment variables to configure the SDK. These can be defined in the `.env` file in the root of your project, or in your hosting environment.
+The SDK also supports configuration using environment variables. These can be defined in the host environment, or in a `.env` file in the project directory.
 
 | Variable              | Description                                                                                          |
 | --------------------- | ---------------------------------------------------------------------------------------------------- |
-| `AUTH0_STRATEGY`      | `String` The Auth0 strategy to use.                                                                  |
 | `AUTH0_DOMAIN`        | `String (FQDN)` The Auth0 domain for your tenant.                                                    |
 | `AUTH0_CUSTOM_DOMAIN` | `String (FQDN)` The Auth0 custom domain for your tenant, if set.                                     |
 | `AUTH0_CLIENT_ID`     | `String` The Client ID for your Auth0 application.                                                   |
 | `AUTH0_CLIENT_SECRET` | `String` The Client Secret for your Auth0 application.                                               |
-| `AUTH0_COOKIE_SECRET` | `String` The optional secret used to encrypt the cookie used by the SDK.                             |
-| `AUTH0_REDIRECT_URI`  | `String` (URL) The redirect URI for your application.                                                |
 | `AUTH0_AUDIENCE`      | `String (comma-delimited list)` The audiences for your application.                                  |
 | `AUTH0_SCOPE`         | `String (comma-delimited list)` The scopes for your application. Defaults to 'openid,profile,email'. |
 | `AUTH0_ORGANIZATION`  | `String (comma-delimited list)` The organizations for your application.                              |
@@ -72,7 +67,7 @@ By default, the SDK will register the Authentication and Authorization guards wi
 
 You can disable this behavior by setting `registerGuards` to false in your `config/auth0.php` file.
 
-To register the guards manually, update your `config/auth.php` file as follows:
+To register the guards manually, update the arrays in your `config/auth.php` file to include the following additions:
 
 ```php
 'guards' => [
@@ -98,9 +93,11 @@ To register the guards manually, update your `config/auth.php` file as follows:
 
 ### Middleware Registration
 
-By default, the SDK will register the Authentication and Authorization guards within your application's `web` and `api` middleware groups. You can disable this behavior by setting `registerMiddleware` to false in your `config/auth0.php` file.
+By default, the SDK will register the Authentication and Authorization guards within your application's `web` and `api` middleware groups.
 
-To register the middleware manually, update your `app/Http/Kernel.php` file as follows:
+You can disable this behavior by setting `registerMiddleware` to false in your `config/auth0.php` file.
+
+To register the middleware manually, update your `app/Http/Kernel.php` file and include the following additions:
 
 ```php
 protected $middlewareGroups = [
@@ -142,13 +139,7 @@ By default, the SDK will register the following routes for authentication:
 
 You can disable this behavior by setting `registerAuthenticationRoutes` to false in your `config/auth0.php` file.
 
-If you've disabled the automatic registration of routes, you can register the routes manually by adding the following to your `routes/web.php` file:
-
-```php
-Auth0::routes();
-```
-
-Or, if you prefer complete control over the routing process:
+If you've disabled the automatic registration of routes, you must register the routes manually for authentication to work.
 
 ```php
 use Auth0\Laravel\Controllers\{LoginController, LogoutController, CallbackController};
@@ -159,3 +150,12 @@ Route::group(['middleware' => ['guard:auth0-session'], static function (): void 
     Route::get('/callback', CallbackController::class)->name('callback');
 });
 ```
+
+Or you can call the SDK Facade's `routes()` method in your `routes/web.php` file:
+
+```php
+Auth0::routes();
+```
+
+-   These must be registered within the `web` middleware group, as they rely on sessions.
+-   Requests must be routed through the SDK's Authenticator guard.
