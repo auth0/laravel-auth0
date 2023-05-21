@@ -168,7 +168,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     AUTH0_AUDIENCE=...
     ```
 
-    Additional variables are available. More on those in the [configuration guide](./docs/Configuration.md).
+    Additional variables are available. More on those in the [configuration guide](./docs/Configuration.md#environment-variables).
 
 </details>
 
@@ -194,7 +194,7 @@ The SDK automatically registers the following routes to facilitate authenticatio
 | `/callback` | Handles the callback from Auth0.   |
 
 > **Note**  
-> See [the configuration guide](./docs/Configuration.md) for information on customizing this behavior.
+> See [the configuration guide](./docs/Configuration.md#authentication-routes) for information on customizing this behavior.
 
 ---
 
