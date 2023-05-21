@@ -1,7 +1,7 @@
 # Installation
 
 > **Note:**  
-> This is an addendum to the [README](../README.md) file. Please review that guidance there first.
+> This is an addendum to the [README](../README.md) file. Please review that guidance first.
 
 ## Alternative Configuration Methods
 
