@@ -347,7 +347,7 @@ The [Auth0 Community](https://community.auth0.com) is where you can get support,
 
 We appreciate feedback and contributions to this library. Before you get started, please review Auth0's [General Contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
 
-The [Contribution Guide](./github/CONTRIBUTING.md) contains information about our development process and expectations, insight into how to propose bug fixes and improvements, and instructions on how to build and test changes to the library.
+The [Contribution Guide](./.github/CONTRIBUTING.md) contains information about our development process and expectations, insight into how to propose bug fixes and improvements, and instructions on how to build and test changes to the library.
 
 To provide feedback or report a bug, [please raise an issue](https://github.com/auth0/laravel-auth0/issues).
 
