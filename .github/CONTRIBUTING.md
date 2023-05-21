@@ -55,17 +55,19 @@ Pull requests that do not meet the minimum coverage requirements will not be mer
 
 ## Static Analysis
 
-We use [PHPStan](https://phpstan.org) and [Psalm](https://psalm.dev/) for static analysis. You can run `composer psalm` to run the static analysis.
+We use [PHPStan](https://phpstan.org) and [Psalm](https://psalm.dev/) for static analysis. You can use `composer phpstan` and `composer psalm` to run them.
 
 ## Coding Style
 
-We use [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) to ensure that the code style is consistent. You can run `composer phpcs` to check for any code style issues. `composer phpcs:fix` will attempt to automatically fix the issues, but be cautious as it may not always get it right.
+We use [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) to ensure that code styling is consistent. You can run `composer phpcs` to check for any code style issues. `composer phpcs:fix` will attempt to automatically fix the issues, but be cautious as it may not always get it right.
 
-We also use [Rector](https://github.com/rectorphp/rector) to catch edge cases where more optimal refactoring can be made. You can run `composer rector` to check for any recommendations, and `composer rector:fix` will to accept the suggested changes.
+We also use [Rector](https://github.com/rectorphp/rector) to catch edge cases where more optimal refactoring can be made. You can run `composer rector` to check for any recommendations, and `composer rector:fix` to accept the suggestions.
 
 It's important to note that our GitHub CI will also run these checks for pull requests, but you should run these locally first to avoid any surprises when you push your code. If you disagree with one of these tools recommendations, please bring it up in the pull request so we can discuss it. We may decide to adjust the styling rules if we feel it's warranted, but we prefer to avoid it if possible.
 
 ### PHPDoc
+
+All public methods and classes should be documented with PHPDoc blocks.
 
 Below is an example of a valid documentation block. Note that the @param attribute is followed by two spaces, the argument type, two more spaces, and finally the variable name:
 
