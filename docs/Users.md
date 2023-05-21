@@ -1,14 +1,19 @@
 # Users
 
+-   [Retrieving User Information](#retrieving-user-information)
+-   [Updating User Information](#updating-user-information)
+-   [Custom User Repositories](#custom-user-repositories)
+-   [Custom User Models](#custom-user-models)
+
 ## Retrieving User Information
 
-To retrieve information about the currently authenticated user, use the `user()` method on the `Auth0` facade, or the `auth0()` helper.
+To retrieve information about the currently authenticated user, use the `user()` method on the `Auth` facade or `auth()` helper.
 
 ```php
 auth()->user();
 ```
 
-You can also retrieve information for any user using [the Management API](./Management.md). This also returns extended information about the user, including stored metadata.
+You can also retrieve information on any user using [the Management API](./Management.md). This also returns extended information not usually contained in the authentication state such as user metadata.
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
@@ -45,16 +50,16 @@ Route::get('/update', function () {
 })->middleware('auth');
 ```
 
-## Custom User Models and Repositories
+## Custom User Repositories
 
 The Auth0 Laravel SDK uses the repository pattern to allow the abstraction of potential database operations. This pattern is useful for building completely custom integrations that fit your application's needs.
 
 ### Creating a User Repository
 
-Creating a repository is simple: it must implement the `Auth0\Laravel\Auth\User\RepositoryContract` interface, and include two methods:
+Creating a repository is simple: it must implement the `Auth0\Laravel\UserRepositoryContract` interface, and include two methods:
 
-- `fromSession()` is used to retrieve a user from the application's session.
-- `fromAccessToken` is used to retrieve a user from an access token.
+-   `fromSession()` to construct a model for an authenticated user.
+-   `fromAccessToken` to construct a model representing an access token request.
 
 The default implementation looks like this:
 
@@ -92,10 +97,10 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\User;
-use Auth0\Laravel\Auth\User\RepositoryContract;
+use Auth0\Laravel\UserRepositoryContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-final class UserRepository implements RepositoryContract
+final class UserRepository implements UserRepositoryContract
 {
     public function fromAccessToken(array $user): ?Authenticatable
     {
@@ -117,14 +122,31 @@ final class UserRepository implements RepositoryContract
 }
 ```
 
-### Creating a User Model
+### Registering the Repository
 
-The repository is responsible for retrieving and storing users, but it does not define the user model itself. The SDK provides an abstract user model class that can be extended for building your own implementations, `Auth0\Laravel\Entities\UserAbstract`.
+The SDK uses it's own repository implementation by default, but you can override this with your own by updating your application's `config/auth.php` file. Simply point the value of the `repository` key to your repository class.
 
-- User models must implement the `Illuminate\Contracts\Auth\Authenticatable` interface, which is required for Laravel's authentication system.
-- User models must also implement the `Auth0\Laravel\Entities\UserContract` interface, which is required by the Laravel SDK.
+```php
+'providers' => [
+  'auth0-provider' => [
+    'driver' => 'auth0.provider',
+    'repository' => \App\Repositories\UserRepository::class,
+  ],
+],
+```
 
-Because the abstract model already fulfills the requirements of these interfaces, you can use it as-is if you do not need to add any additional functionality. Here's an example customer user model that extends the SDK's abstract user model class to support Eloquent:
+## Custom User Models
+
+The repository is responsible for retrieving and storing users, but does not itself define the models representing those users. To customize these, the SDK provides an abstract class that can be extended, `Auth0\Laravel\Users\UserAbstract`.
+
+User models must implement the following interfaces:
+
+-   `Illuminate\Contracts\Auth\Authenticatable` required by Laravel's authentication APIs.
+-   `Auth0\Laravel\Users\UserContract` required by the SDK.
+
+The abstract model already fulfills the requirements of these interfaces, so you can use it as-is if you do not require any additional functionality.
+
+Here's an example customer user model that extends the SDK's abstract user model class to support Eloquent:
 
 ```php
 <?php
@@ -154,7 +176,7 @@ final class User extends UserAbstract implements UserContract
 }
 ```
 
-### Integrating the Repository and Model
+#
 
 Once you have created your repository and model, you can integrate them into your application by updating your `config/auth.php` file and pointing the `repository` key to your repository class.
 
@@ -169,3 +191,4 @@ Once you have created your repository and model, you can integrate them into you
     'repository' => \App\Repositories\UserRepository::class,
   ],
 ],
+```
