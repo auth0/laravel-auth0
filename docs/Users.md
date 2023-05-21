@@ -97,10 +97,10 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\User;
-use Auth0\Laravel\UserRepositoryContract;
+use Auth0\Laravel\{UserRepositoryAbstract, UserRepositoryContract};
 use Illuminate\Contracts\Auth\Authenticatable;
 
-final class UserRepository implements UserRepositoryContract
+final class UserRepository extends UserRepositoryAbstract implements UserRepositoryContract
 {
     public function fromAccessToken(array $user): ?Authenticatable
     {
@@ -174,21 +174,4 @@ final class User extends UserAbstract implements UserContract
         'auth0_id',
     ];
 }
-```
-
-#
-
-Once you have created your repository and model, you can integrate them into your application by updating your `config/auth.php` file and pointing the `repository` key to your repository class.
-
-```php
-/**
- * Register the SDK's User Provider with your application.
- * You should not remove any other entries from this array.
- */
-'providers' => [
-  'auth0-provider' => [
-    'driver' => 'auth0.provider',
-    'repository' => \App\Repositories\UserRepository::class,
-  ],
-],
 ```
