@@ -341,17 +341,19 @@ Contributions to improve our documentation [are welcomed](https://github.com/aut
 
 ## Community
 
-The [Auth0 Community](https://community.auth0.com) is where you can ask questions, get support, and share your projects.
+The [Auth0 Community](https://community.auth0.com) is where you can get support, ask questions, and share your projects.
 
 ## Contributing
 
-We appreciate feedback and contributions to this library. Before you get started, please review Auth0's [General Contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md). Read [our contributing guide](./CONTRIBUTING.md) to learn about how to propose bug fixes and improvements, and how to build and test your changes to the library.
+We appreciate feedback and contributions to this library. Before you get started, please review Auth0's [General Contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
+
+The [Contribution Guide](./github/CONTRIBUTING.md) contains information about our development process and expectations, insight into how to propose bug fixes and improvements, and instructions on how to build and test changes to the library.
 
 To provide feedback or report a bug, [please raise an issue](https://github.com/auth0/laravel-auth0/issues).
 
 ## Code of Conduct
 
-Participants are expected to adhere to our [code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md) when interacting with this project.
+Participants are expected to adhere to Auth0's [Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md) when interacting with this project.
 
 ## Security
 
