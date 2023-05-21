@@ -1,121 +1,191 @@
 ![laravel-auth0](https://cdn.auth0.com/website/sdks/banners/laravel-auth0-banner.png)
 
-Laravel SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
+<p align="right">
+<a href="https://github.com/auth0/laravel-auth0/actions"><img src="https://github.com/auth0/laravel-auth0/actions/workflows/main.yml/badge.svg?event=push" alt="Build Status"></a>
+<a href="https://codecov.io/gh/auth0/laravel-auth0"><img src="https://codecov.io/gh/auth0/laravel-auth0/branch/main/graph/badge.svg?token=vEwn6TPADf" alt="Code Coverage"></a>
+<a href="https://packagist.org/packages/auth0/laravel-auth0"><img src="https://img.shields.io/packagist/dt/auth0/login" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/auth0/login"><img src="https://img.shields.io/packagist/l/auth0/login" alt="License"></a>
+</p>
 
-[![Package](https://img.shields.io/packagist/dt/auth0/login)](https://packagist.org/packages/auth0/login)
-![Build Status](https://img.shields.io/github/checks-status/auth0/laravel-auth0/main)
-[![Coverage](https://img.shields.io/codecov/c/github/auth0/laravel-auth0/main)](https://codecov.io/gh/auth0/laravel-auth0)
-[![License](https://img.shields.io/packagist/l/auth0/login)](https://doge.mit-license.org/)
+## Requirements
 
-:books: [Documentation](#documentation) — :rocket: [Getting Started](#getting-started) — :speech_balloon: [Feedback](#feedback)
+Your application must use a [supported Laravel version](https://laravelversions.com/en), and your environment must run a [supported PHP version](https://www.php.net/supported-versions.php). We do not support versions of Laravel or PHP that are no longer supported by their maintainers.
 
-## Documentation
+| SDK  | Laravel | PHP  | Supported Until |
+| ---- | ------- | ---- | --------------- |
+| 7.5+ | 10      | 8.2+ | Feb 2025        |
+|      |         | 8.1+ | Nov 2024        |
+| 7.0+ | 9       | 8.2+ | Feb 2024        |
+|      |         | 8.1+ | Feb 2024        |
+|      |         | 8.0+ | Nov 2023        |
 
-Quickstart Guides:
+You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
+
+## Installation
+
+<details>
+
+<summary>Using <b>Quickstart</b> (Fastest)</summary>
+
+-   Run the following command to create a new Laravel 9 project pre-configured with the SDK:
+
+    ```shell
+    composer create-project auth0-samples/laravel auth0-laravel-app
+    ```
+
+---
+
+</details>
+
+<details>
+<summary>Using <b>Composer</b></summary>
+
+1.  Run the following command in your project directory to install the SDK:
+
+    ```shell
+    composer require auth0/login:^7.8 --update-with-all-dependencies
+    ```
+
+2.  Generate an SDK configuration file for your application:
+
+    ```shell
+    php artisan vendor:publish --tag auth0
+    ```
+
+</details>
+
+## Configuration
+
+<details>
+<summary>Using <b>JSON</b> (Fastest)</summary>
+
+1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
+
+    > **Note**  
+    > If you are using the Quickstart, skip to the next step.
+
+    ```shell
+    curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
+    ```
+
+2. Authenticate with your Auth0 account:
+
+    ```shell
+    ./auth0 login
+    ```
+
+3. Register a new application with Auth0:
+
+    ```shell
+    ./auth0 apps create \
+        --name "My Laravel Application" \
+        --type "regular" \
+        --auth-method "post" \
+        --callbacks "http://localhost:8000/callback" \
+        --logout-urls "http://localhost:8000" \
+        --reveal-secrets \
+        --no-input \
+        --json > .auth0.app.json
+    ```
+
+4. Register a new API with Auth0:
+
+    ```shell
+    ./auth0 apis create \
+        --name "My Laravel Application API" \
+        --identifier "https://github.com/auth0/laravel-auth0" \
+        --offline-access \
+        --no-input \
+        --json > .auth0.api.json
+    ```
+
+5. Add the new files to `.gitignore`:
+
+    ```bash
+    echo ".auth0.*.json" >> .gitignore
+    ```
+
+---
+
+</details>
+
+<details>
+<summary>Using <b>Environment Variables</b></summary>
+
+1. Download the [Auth0 CLI](https://github.com/auth0/auth0-cli) to your project directory:
+
+    > **Note**  
+    > If you are using the Quickstart, skip to the next step.
+
+    ```shell
+    curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
+    ```
+
+2. Authenticate with your Auth0 account:
+
+    ```shell
+    ./auth0 login
+    ```
+
+3. Register a new application with Auth0:
+
+    ```shell
+    ./auth0 apps create \
+        --name "My Laravel Application" \
+        --type "regular" \
+        --auth-method "post" \
+        --callbacks "http://localhost:8000/callback" \
+        --logout-urls "http://localhost:8000" \
+        --reveal-secrets \
+        --no-input
+    ```
+
+    Make a note of the `client_id` and `client_secret` values in the output.
+
+4. Register a new API with Auth0:
+
+    ```shell
+    ./auth0 apis create \
+        --name "My Laravel Application API" \
+        --identifier "https://github.com/auth0/laravel-auth0" \
+        --offline-access \
+        --no-input
+    ```
+
+5. Open the `.env` file in your project directory. Add the following lines, replacing the values with the ones you noted in the previous steps:
+
+    ```ini
+    # The Auth0 domain for your tenant (e.g. tenant.region.auth0.com):
+    AUTH0_DOMAIN=...
+
+    # The application `client_id` you noted above:
+    AUTH0_CLIENT_ID=...
+
+    # The application `client_secret` you noted above:
+    AUTH0_CLIENT_SECRET=...
+
+    # The API `identifier` you used above:
+    AUTH0_AUDIENCE=...
+    ```
+
+    Additional variables are available. More on those in the [configuration guide](./docs/Configuration.md).
+
+</details>
+
+## Quickstarts
 
 -   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
 -   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
 
-Documentation:
+## Examples
 
--   [Getting Started](./README.md#getting-started) — Installing and configuring the SDK.
--   [Examples](./EXAMPLES.md) — Answers and solutions for common questions and scenarios.
--   Reference:
-    -   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
-    -   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
-    -   [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
-    -   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
-    -   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
--   [Auth0 Documentation](https://www.auth0.com/docs)
--   [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
--   [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
+<details>
+<summary><b>Authentication</b></summary>
+ 
 
-## Getting Started
+The SDK automatically registers all the necessary authentication services within the `web` middleware group for your application. Once you have [configured the SDK](#configuration) your users will be able to authenticate with your application using Auth0.
 
-### Requirements
-
-You will need to use a [supported version](#support-policy) of PHP and Laravel:
-
-| Laravel | PHP  |
-| ------- | ---- |
-| 10      | 8.1+ |
-| 9       | 8.0+ |
-
-You'll also need an [Auth0 account](https://auth0.com/signup), as well as [Composer](https://getcomposer.org/) and the [Auth0 CLI](https://github.com/auth0/auth0-cli).
-
----
-
-### SDK Installation
-
-Run the following command within your project directory to install the [Auth0 Laravel SDK](https://github.com/auth0/laravel-auth0):
-
-```shell
-composer require auth0/login:^7.8 --update-with-all-dependencies
-```
-
-Then generate an SDK configuration file for your application:
-
-```shell
-php artisan vendor:publish --tag auth0
-```
-
----
-
-### SDK Configuration
-
-> **Note**
-> If you prefer to use environment variables to configure the SDK, please see [docs/Installation](./docs/Installation.md) for guidance.
-
-Run the following command from your project directory to download the [Auth0 CLI](https://github.com/auth0/auth0-cli):
-
-```shell
-curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
-```
-
-Then authenticate the CLI with your Auth0 account:
-
-```shell
-./auth0 login
-```
-
-Next, create a new application with Auth0:
-
-```shell
-./auth0 apps create \
-  --name "My Laravel Application" \
-  --type "regular" \
-  --auth-method "post" \
-  --callbacks "http://localhost:8000/callback" \
-  --logout-urls "http://localhost:8000" \
-  --reveal-secrets \
-  --no-input \
-  --json > .auth0.app.json
-```
-
-You should also create a new API:
-
-```shell
-./auth0 apis create \
-  --name "My Laravel Application API" \
-  --identifier "https://github.com/auth0/laravel-auth0" \
-  --offline-access \
-  --no-input \
-  --json > .auth0.api.json
-```
-
-This produces two files in your project directory that configure the SDK.
-
-As these files contain credentials it's important to treat these as sensitive. You should ensure you do not commit these to version control. If you're using Git, you should add them to your `.gitignore` file:
-
-```bash
-echo ".auth0.*.json" >> .gitignore
-```
-
----
-
-### Authentication
-
-The SDK automatically registers all the necessary facilities within the `web` middleware group for your users to authenticate with your application. These routes are:
+The SDK automatically registers the following routes to facilitate authentication:
 
 | Route       | Purpose                            |
 | ----------- | ---------------------------------- |
@@ -123,19 +193,20 @@ The SDK automatically registers all the necessary facilities within the `web` mi
 | `/logout`   | Logs the user out.                 |
 | `/callback` | Handles the callback from Auth0.   |
 
-See [docs/Configuration](./docs/Configuration.md) for guidance on disabling automatic registration, and manually registering these facilities.
+> **Note**  
+> See [the configuration guide](./docs/Configuration.md) for information on customizing this behavior.
 
 ---
 
-### Access Control
+</details>
 
-The SDK automatically registers its authentication and authorization guards into the standard `web` and `api` middleware groups for your Laravel application, respectively.
+<details>
+<summary><b>Access Control</b></summary>
+ 
 
-See [docs/Configuration](./docs/Configuration.md) for guidance on disabling this automatic registration, and manually registering the guards.
+The SDK automatically registers its authentication and authorization guards within the `web` and `api` middleware groups for your Laravel application.
 
-You can use the Auth0 SDK's authentication guard to restrict access to your application's routes.
-
-To require the requesting party to be authenticated (routes using the `web` middleware defined in `routes/web.php`) or authorized (routes using the `api` middleware defined in `routes/api.php`), you can use Laravel's `auth` middleware:
+To require a user to be authenticated to access a route, use Laravel's `auth` middleware:
 
 ```php
 Route::get('/private', function () {
@@ -143,7 +214,7 @@ Route::get('/private', function () {
 })->middleware('auth');
 ```
 
-You can also require the requestor to have specific [permissions](https://auth0.com/docs/manage-users/access-control/rbac)](https://auth0.com/docs/manage-users/access-control/rbac) by combining this with Laravel's `can` middleware:
+You can also require that the user have specific permissions to access a route, using Laravel's `can` middleware:
 
 ```php
 Route::get('/scope', function () {
@@ -151,16 +222,20 @@ Route::get('/scope', function () {
 })->middleware('auth')->can('read:messages');
 ```
 
-> **Note**
-> Permissions need RBAC to be enabled on [your Auth0 API's settings](https://manage.auth0.com/#/apis).
+> **Note**  
+> Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-control/rbac) be enabled within [your API settings](https://manage.auth0.com/#/apis).
 
 ---
 
-### User and Token Information
+</details>
 
-When requests are made to your application, the SDK will automatically attempt to authenticate or authorize the requestor, depending on the type of route. Information about the requesting party is expressed through the `user()` method of Laravel's `Auth` Facade, or the `auth()` helper function.
+<details>
+<summary><b>Users and Tokens</b></summary>
+ 
 
-For routes using the `web` middleware defined in `routes/web.php`, the `user()` method will return profile information for the authenticated user.
+Laravel's `Auth` Facade (or the `auth()` global helper) can be used to retrieve information about the authenticated user, or the access token used to authorize the request.
+
+For example, for routes using the `web` middleware group in `routes/web.php`:
 
 ```php
 Route::get('/', function () {
@@ -173,16 +248,16 @@ Route::get('/', function () {
   $email = $user->email ?? '';
 
   return response("Hello {$name}! Your email address is {$email}.");
-});;
+});
 ```
 
-For routes using the `api` middleware defined in `routes/api.php`, the `user()` method will return details about the access token.
+Alternatively, for routes using the `api` middleware group in `routes/api.php`:
 
 ```php
 Route::get('/', function () {
   if (! auth()->check()) {
     return response()->json([
-      'message' => 'You did not provide a valid token.',
+      'message' => 'You did not provide a token.',
     ]);
   }
 
@@ -196,23 +271,27 @@ Route::get('/', function () {
 
 ---
 
-### Management API
+</details>
 
-You can update user information using the [Auth0 Management API](https://github.com/auth0/laravel-auth0/blob/main/docs/Management.md). All Management endpoints are accessible through the SDK's `management()` method.
+<details>
+<summary><b>Management API</b></summary>
+ 
 
-**Before making Management API calls you must enable your application to communicate with the Management API.** This can be done from the [Auth0 Dashboard's API page](https://manage.auth0.com/#/apis/), choosing `Auth0 Management API`, and selecting the 'Machine to Machine Applications' tab. Authorize your Laravel application, and then click the down arrow to choose the scopes you wish to grant.
+You can issue [Auth0 Management API](https://auth0.com/docs/api/management/v2) calls through the SDK's `management()` method.
 
-For the following example, in which we will update a user's metadata and assign a random favorite color, you should grant the `read:users` and `update:users` scopes. A list of API endpoints and the required scopes can be found in [the Management API documentation](https://auth0.com/docs/api/management/v2).
+> **Note**  
+> Before your application can make calls to the Management API, you must [enable your application to communicate with the Management API](./docs/Management.md#management-api-permissions) or configure the SDK with [a management token](./docs/Configuration.md#management-token).
+
+For example, you can update a user's metadata by calling the `management()->users()->update()` method:
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
 
 Route::get('/colors', function () {
-  $endpoint = Auth0::management()->users();
-
   $colors = ['red', 'blue', 'green', 'black', 'white', 'yellow', 'purple', 'orange', 'pink', 'brown'];
 
-  $endpoint->update(
+  // Update the authenticated user with a randomly assigned favorite color.
+  Auth0::management()->users()->update(
     id: auth()->id(),
     body: [
         'user_metadata' => [
@@ -221,76 +300,66 @@ Route::get('/colors', function () {
     ]
   );
 
-  $metadata = $endpoint->get(auth()->id());
-  $metadata = Auth0::json($metadata);
+  // Retrieve the user's updated profile.
+  $profile = Auth0::management()->users()->get(auth()->id());
 
-  $color = $metadata['user_metadata']['color'] ?? 'unknown';
+  // For interoperability, the SDK returns all API responses as
+  // PSR-7 Responses that contain the JSON response.
+
+  // You can use the `json()` helper to unpack the PSR-7, and
+  // convert the API's JSON response to a native PHP array.
+  $profile = Auth0::json($profile);
+
+  // Read the user's profile.
+  $color = $profile['user_metadata']['color'] ?? 'unknown';
   $name = auth()->user()->name;
 
   return response("Hello {$name}! Your favorite color is {$color}.");
 })->middleware('auth');
 ```
 
-A quick reference guide of all the SDK's Management API methods is [available here](https://github.com/auth0/laravel-auth0/blob/main/docs/Management.md).
+All the SDK's Management API methods are [documented here](./docs/Management.md).
 
----
+</details>
 
-## Gates and Policies
+## Documentation
 
-The SDK supports [Laravel's Authorization API](https://laravel.com/docs/authorization#main-content) and provides several convenient pre-built [Gates](https://laravel.com/docs/authorization#gates) for common tasks.
+-   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
+-   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
+-   [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
+-   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
+-   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+-   [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
 
-| Gate         | Facade Usage                                  | Middleware Usage                                           | Purpose                                                                                                                                                                                                                    |
-| ------------ | --------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `scope`      | `Gate::check('scope', 'email');`              | `Route::get(/*...*/)->can('scope', 'email');`              | Determine if the user's access token has a specified [scope](https://auth0.com/docs/get-started/apis/scopes).                                                                                                              |
-| `permission` | `Gate::check('permission', 'read:messages');` | `Route::get(/*...*/)->can('permission', 'read:messages');` | Determine if the user's access token has a specified [permission](https://auth0.com/docs/manage-users/access-control/rbac). This requires RBAC be enabled on [your Auth0 API's settings](https://manage.auth0.com/#/apis). |
-| `*:*`        | `Gate::check('read:messages');`               | `Route::get(/*...*/)->can('read:messages');`               | A convenience alias for `permission` (described above), you can supply any permission string in the colon-delimited `ability:context` syntax.                                                                              |
+You may also find the following resources helpful:
 
-Using these gates, you can easily authorize users or access tokens to perform actions in your application. Your application can use Laravel's [Policies API](https://laravel.com/docs/authorization#creating-policies) in combination with these gates to further simplify authorization.
+-   [Auth0 Documentation Hub](https://www.auth0.com/docs)
+-   [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
+-   [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
 
----
+Contributions to improve our documentation [are welcomed](https://github.com/auth0/laravel-auth0/pull).
 
-## Support Policy
+## Community
 
-Our support lifecycle mirrors the [Laravel release support](https://laravel.com/docs/releases#support-policy) and [PHP release support](https://www.php.net/supported-versions.php) schedules.
+The [Auth0 Community](https://community.auth0.com) is where you can ask questions, get support, and share your projects.
 
-| SDK Version | Laravel Version | PHP Version | Support Ends |
-| ----------- | --------------- | ----------- | ------------ |
-| 7.5+        | 10              | 8.2         | Feb 2025     |
-|             |                 | 8.1         | Nov 2024     |
-| 7.0+        | 9               | 8.2         | Feb 2024     |
-|             |                 | 8.1         | Feb 2024     |
-|             |                 | 8.0         | Nov 2023     |
+## Contributing
 
-We drop support for Laravel and PHP versions when they reach end-of-life and cease receiving security fixes from Laravel and the PHP Foundation, whichever comes first. Please ensure your environment remains up to date so you can continue receiving updates for Laravel, PHP, and this SDK.
+We appreciate feedback and contributions to this library. Before you get started, please review Auth0's [General Contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md). Read [our contributing guide](./CONTRIBUTING.md) to learn about how to propose bug fixes and improvements, and how to build and test your changes to the library.
 
----
+To provide feedback or report a bug, [please raise an issue](https://github.com/auth0/laravel-auth0/issues).
 
-## Octane Support
+## Code of Conduct
 
-Octane compatibility is currently considered experimental and unsupported.
+Participants are expected to adhere to our [code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md) when interacting with this project.
 
-Although we are working toward ensuring the SDK is fully compatible with this feature, we do not recommend using this with our SDK in production until we have full confidence and announced support. Due to the caching behavior of Octane, there is an opportunity for problems we have not fully identified or resolved yet.
+## Security
 
-Feedback and bug-fix contributions are greatly appreciated as we work toward full support.
+If you believe you have found a security vulnerability, we encourage you to responsibly disclose this and not open a public issue. We will investigate all reports. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
----
+## License
 
-## Feedback
-
-### Contributing
-
-We appreciate feedback and contribution to this repo! Before you get started, please see the following:
-
--   [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
--   [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
-
-### Raise an issue
-
-To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/laravel-auth0/issues).
-
-### Vulnerability Reporting
-
-Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+This library is open-sourced software licensed under the [MIT license](./LICENSE.md).
 
 ---
 
@@ -303,5 +372,3 @@ Please do not report security vulnerabilities on the public GitHub issue tracker
 </p>
 
 <p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform.<br />To learn more, check out <a href="https://auth0.com/why-auth0">"Why Auth0?"</a></p>
-
-<p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE"> LICENSE</a> file for more info.</p>
