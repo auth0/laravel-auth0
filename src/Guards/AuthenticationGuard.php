@@ -301,7 +301,11 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $decoded = null;
 
             if (null !== $credentials->accessToken) {
-                $decoded = (new Parser(new SdkConfiguration(strategy: SdkConfiguration::STRATEGY_NONE), $credentials->accessToken))->export();
+                try {
+                    $decoded = (new Parser(new SdkConfiguration(strategy: SdkConfiguration::STRATEGY_NONE), $credentials->accessToken))->export();
+                } catch(\Auth0\SDK\Exception\InvalidTokenException $e) {
+                    // Authn flows with no audience result in an opaque token (non-jwt) for /userinfo
+                }
             }
 
             /**
