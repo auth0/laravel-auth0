@@ -14,7 +14,7 @@ To encourage active collaboration, Auth0 strongly encourages pull requests, not 
 
 If you file a bug report, your issue should contain a title and a clear description of the issue. You should also include as much relevant information as possible and a code sample that demonstrates the issue. The goal of a bug report is to make it easy for yourself - and others - to replicate the bug and develop a fix.
 
-Remember, bug reports are created in the hope that others with the same problem will be able to collaborate with you on solving it. Do not expect that the bug report will automatically see any activity or that others will jump to fix it. Creating a bug report serves to help yourself and others start on the path of fixing the problem. If you want to chip in, you can help out by fixing any bugs listed in our issue trackers.
+Remember, bug reports are created in the hope that others with the same problem will be able to collaborate with you on solving it. Do not expect that the bug report will automatically see any activity or that others will jump to fix it. Creating a bug report serves to help you and others start on the path of fixing the problem. If you want to chip in, you can help out by fixing any bugs listed in our issue trackers.
 
 ## Support Questions
 
@@ -22,11 +22,11 @@ Auth0's GitHub issue trackers are not intended to provide integration support. I
 
 ## Code Contributions
 
-You may propose new features or improvements of existing SDK behavior by creating a feature request within the repository's issue tracker. If you are willing to implement at least some of the code that would be needed to complete the feature, please fork the repository and submit a pull request.
+You may propose new features or improvements to existing SDK behavior by creating a feature request within the repository's issue tracker. If you are willing to implement at least some of the code that would be needed to complete the feature, please fork the repository and submit a pull request.
 
 All development should be done in individual forks using dedicated branches, and submitted against the `main` default branch.
 
-Pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) rules so our changelogs can be automatically generated. Commits messages are irrelevant as they will be squashed into the Pull request's title during merge.
+Pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) rules so our changelogs can be automatically generated. Commits messages are irrelevant as they will be squashed into the Pull request's title during a merge.
 
 The following types are allowed:
 
@@ -35,7 +35,7 @@ The following types are allowed:
 -   _refactor:_ A code change that neither fixes a bug nor adds a feature
 -   _build:_ Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
 -   _ci:_ Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
--   _style:_ Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+-   _style:_ Changes that do not affect the meaning of the code (white space, formatting, missing semi-colons, etc)
 -   _fix:_ A bug fix
 -   _security:_ A change that improves security
 -   _docs:_ Documentation only changes
@@ -63,7 +63,7 @@ We use [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) to ensure th
 
 We also use [Rector](https://github.com/rectorphp/rector) to catch edge cases where more optimal refactoring can be made. You can run `composer rector` to check for any recommendations, and `composer rector:fix` to accept the suggestions.
 
-It's important to note that our GitHub CI will also run these checks for pull requests, but you should run these locally first to avoid any surprises when you push your code. If you disagree with one of these tools recommendations, please bring it up in the pull request so we can discuss it. We may decide to adjust the styling rules if we feel it's warranted, but we prefer to avoid it if possible.
+It's important to note that our GitHub CI will also run these checks for pull requests, but you should run these locally first to avoid any surprises when you push your code. If you disagree with one of these recommendations, please bring it up in the pull request so we can discuss it. We may decide to adjust the styling rules if we feel it's warranted, but we prefer to avoid it if possible.
 
 ### PHPDoc
 
