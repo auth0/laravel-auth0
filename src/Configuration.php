@@ -325,7 +325,7 @@ final class Configuration implements ConfigurationContract
                 }
 
                 foreach ($contents as $content) {
-                    if (1 !== mb_substr_count($content, '=')) {
+                    if (1 !== substr_count($content, '=')) {
                         continue;
                     }
 
@@ -515,7 +515,7 @@ final class Configuration implements ConfigurationContract
         }
 
         if (is_string($config) && '' !== $config) {
-            $config = mb_strtolower(trim($config));
+            $config = strtolower(trim($config));
 
             if ('true' === $config) {
                 return true;
@@ -547,7 +547,7 @@ final class Configuration implements ConfigurationContract
                 $value = config($override . '.' . $setting);
             }
         } else {
-            $env = 'AUTH0_' . mb_strtoupper(Str::snake($setting));
+            $env = 'AUTH0_' . strtoupper(Str::snake($setting));
             $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
             $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
         }
