@@ -65,7 +65,7 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
         $response = [];
 
         foreach (array_keys($pairs) as $key) {
-            if (substr($key, 0, strlen($prefix)) === $prefix) {
+            if (str_starts_with($key, $prefix)) {
                 $response[$key] = $pairs[$key];
             }
         }
