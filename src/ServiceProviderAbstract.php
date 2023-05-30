@@ -69,7 +69,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider
             }
 
             if (str_starts_with($ability, 'scope:')) {
-                if ($guard->hasScope(mb_substr($ability, 6))) {
+                if ($guard->hasScope(substr($ability, 6))) {
                     return Response::allow();
                 }
 
