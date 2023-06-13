@@ -1,7 +1,8 @@
 name: "Rector"
 
 on:
-  pull_request: {}
+  pull_request:
+  merge_group:
   push:
     branches:
       - main
