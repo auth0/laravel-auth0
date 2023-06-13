@@ -540,6 +540,8 @@ final class Configuration implements ConfigurationContract
         string $setting,
         array | bool | string | int | null $default = null,
     ): array | bool | string | int | null {
+        $value = null;
+
         if (defined('AUTH0_OVERRIDE_CONFIGURATION')) {
             $override = constant('AUTH0_OVERRIDE_CONFIGURATION');
 
@@ -550,6 +552,10 @@ final class Configuration implements ConfigurationContract
             $env = 'AUTH0_' . strtoupper(Str::snake($setting));
             $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
             $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
+        }
+
+        if (is_string($value)) {
+            $value = trim($value, '\'"');
         }
 
         return $value ?? $default;
