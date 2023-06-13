@@ -68,7 +68,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
     ```
 
-2. Authenticate with your Auth0 account:
+2. Authenticate with your Auth0 account, choosing "as a user" if prompted:
 
     ```shell
     ./auth0 login
@@ -121,7 +121,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
     ```
 
-2. Authenticate with your Auth0 account:
+2. Authenticate with your Auth0 account, choosing "as a user" if prompted:
 
     ```shell
     ./auth0 login
