@@ -12,7 +12,7 @@ use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Exception;
-use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
+use Illuminate\Contracts\Auth\{Authenticatable, Guard, UserProvider};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Support\{Arrayable, Jsonable};
 use JsonSerializable;
@@ -27,7 +27,7 @@ use function is_string;
  *
  * @api
  */
-abstract class GuardAbstract
+abstract class GuardAbstract implements Guard
 {
     protected ?CredentialEntityContract $credential = null;
 
