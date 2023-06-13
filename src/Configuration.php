@@ -552,6 +552,10 @@ final class Configuration implements ConfigurationContract
             $value = self::getEnvironment()[$env] ?? self::getJson()[$json] ?? $default;
         }
 
+        if (is_string($value)) {
+            $value = trim($value, '\'"');
+        }
+
         return $value ?? $default;
     }
 }
