@@ -9,6 +9,7 @@ return Configuration::VERSION_2 + [
     'registerGuards' => true,
     'registerMiddleware' => true,
     'registerAuthenticationRoutes' => true,
+    'configurationPath' => null,
 
     'guards' => [
         'default' => [
