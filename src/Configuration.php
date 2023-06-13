@@ -557,7 +557,6 @@ final class Configuration implements ConfigurationContract
         if (! is_string($value) && ! is_array($value) && ! is_bool($value) && ! is_int($value)) {
             $value = null;
         }
-        }
 
         return $value ?? $default;
     }
