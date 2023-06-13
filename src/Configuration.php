@@ -412,7 +412,13 @@ final class Configuration implements ConfigurationContract
     public static function getPath(): string
     {
         if (null === self::$path) {
-            self::$path = base_path() . DIRECTORY_SEPARATOR;
+            $path = config('auth0.configurationPath');
+
+            if (! is_string($path)) {
+                $path = base_path() . DIRECTORY_SEPARATOR;
+            }
+
+            self::$path = $path;
         }
 
         return self::$path;
