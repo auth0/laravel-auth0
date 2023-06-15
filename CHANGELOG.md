@@ -1,10 +1,22 @@
 # Changelog
 
+## [7.9.0](https://github.com/auth0/laravel-auth0/tree/7.8.2) (2023-06-15)
+
+### Added
+
+-   SDK configuration (`config/auth0.php`) now supports a `configurationPath` property for specifying a custom search path for `.auth0.*.json` and `.env*` files. ([\#407](https://github.com/auth0/laravel-auth0/pull/407))
+-   `Auth0\Laravel\Guards\GuardAbstract` now extends `Illuminate\Contracts\Auth\Guard`. ([\#410](https://github.com/auth0/laravel-auth0/pull/410))
+
+### Fixed
+
+-   Resolved host environment variables not being loaded as expected when a `.env` file is also used. ([\#408](https://github.com/auth0/laravel-auth0/pull/408))
+-   Resolved surrounding quote characters not being trimmed from environment variables and `.env` files during processing. ([\#409](https://github.com/auth0/laravel-auth0/pull/409))
+
 ## [7.8.1](https://github.com/auth0/laravel-auth0/tree/7.8.1) (2023-05-19)
 
 ### Fixed
 
-- Resolved an issue where parsing `.env` files could sometimes throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
+-   Resolved an issue where parsing `.env` files could sometimes throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
 
 ## [7.8.0](https://github.com/auth0/laravel-auth0/tree/7.8.0) (2023-05-18)
 
