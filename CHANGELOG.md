@@ -1,6 +1,12 @@
 # Changelog
 
-## [7.9.0](https://github.com/auth0/laravel-auth0/tree/7.8.2) (2023-06-15)
+## [7.9.1](https://github.com/auth0/laravel-auth0/tree/7.9.1) (2023-06-21)
+
+### Fixed
+
+-   Resolved an issue where, under certain circumstances, the AuthenticationGuard middleware could get erroneously added to the `api` middleware group, causing a session to be established in a stateless request. ([\#415](https://github.com/auth0/laravel-auth0/pull/415))
+
+## [7.9.0](https://github.com/auth0/laravel-auth0/tree/7.9.0) (2023-06-15)
 
 ### Added
 
