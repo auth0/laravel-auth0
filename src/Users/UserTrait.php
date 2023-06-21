@@ -18,7 +18,7 @@ trait UserTrait
         return $this;
     }
 
-    final public function setAttribute(string $key, mixed $value): self
+    final public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
 

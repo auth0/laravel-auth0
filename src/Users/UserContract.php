@@ -19,7 +19,7 @@ interface UserContract extends Authenticatable, JsonSerializable
      *
      * @param string $key
      */
-    public function __get(string $key): mixed;
+    public function __get($key);
 
     /**
      * Dynamically set attributes on the model.
@@ -27,14 +27,14 @@ interface UserContract extends Authenticatable, JsonSerializable
      * @param mixed  $value
      * @param string $key
      */
-    public function __set(string $key, mixed $value): void;
+    public function __set($key, $value);
 
     /**
      * Fill the model with an array of attributes.
      *
      * @param array $attributes
      */
-    public function fill(array $attributes): self;
+    public function fill(array $attributes);
 
     /**
      * Get an attribute from the model.
@@ -42,7 +42,7 @@ interface UserContract extends Authenticatable, JsonSerializable
      * @param mixed  $default
      * @param string $key
      */
-    public function getAttribute(string $key, mixed $default = null): mixed;
+    public function getAttribute($key);
 
     /**
      * Set a given attribute on the model.
@@ -50,5 +50,5 @@ interface UserContract extends Authenticatable, JsonSerializable
      * @param mixed  $value
      * @param string $key
      */
-    public function setAttribute(string $key, mixed $value): self;
+    public function setAttribute($key, $value);
 }

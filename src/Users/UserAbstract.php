@@ -15,22 +15,22 @@ abstract class UserAbstract
         $this->fill($attributes);
     }
 
-    public function __get(string $key): mixed
+    public function __get($key)
     {
         return $this->getAttribute($key);
     }
 
-    public function __set(string $key, mixed $value): void
+    public function __set($key, $value)
     {
         $this->setAttribute($key, $value);
     }
 
-    final public function getAttribute(string $key, mixed $default = null): mixed
+    final public function getAttribute($key, $default = null)
     {
         return $this->attributes[$key] ?? $default;
     }
 
-    final public function getAttributes(): mixed
+    final public function getAttributes()
     {
         return $this->attributes;
     }
@@ -76,5 +76,5 @@ abstract class UserAbstract
 
     abstract public function fill(array $attributes): self;
 
-    abstract public function setAttribute(string $key, mixed $value): self;
+    abstract public function setAttribute($key, $value);
 }
