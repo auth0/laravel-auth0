@@ -2,7 +2,7 @@ name: "Semgrep"
 
 on:
   workflow_run:
-    workflows: ["Pull Request Vetted"]
+    workflows: ["Pull Request Changes"]
     types:
       - completed
 
@@ -12,8 +12,6 @@ jobs:
   wait:
     name: "Scan"
     runs-on: ubuntu-latest
-
-    if: contains(github.event.issue.labels.*.name, 'State: Vetted')
 
     semgrep:
       runs-on: ubuntu-latest
