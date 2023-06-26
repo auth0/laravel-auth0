@@ -1,13 +1,19 @@
 name: "Snyk"
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Pull Request Vetted"]
+    types:
+      - completed
+
+permissions: {}
 
 jobs:
   snyk:
+    name: "Scan"
     runs-on: ubuntu-latest
+
+    if: contains(github.event.issue.labels.*.name, 'State: Vetted')
 
     steps:
       - uses: shivammathur/setup-php@v2
@@ -19,8 +25,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - run: composer install --no-progress
 
@@ -28,5 +32,3 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high --sarif-file-output=snyk.sarif
