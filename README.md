@@ -14,6 +14,7 @@
   - [1. Install the SDK](#1-install-the-sdk)
   - [2. Install the CLI](#2-install-the-cli)
   - [3. Configure the SDK](#3-configure-the-sdk)
+  - [4. Run the Application](#4-run-the-application)
 - [Documentation](#documentation)
 - [QuickStarts](#quickstarts)
 - [Contributing](#contributing)
@@ -147,6 +148,40 @@ The following is our recommended approach to getting started with the SDK. Alter
     echo .auth0.*.json >> .gitignore
     ```
     </details>
+
+### 4. Run the Application
+
+You can now run the application using the built-in PHP web server:
+
+```shell
+php artisan serve
+```
+
+Your application should now be accessible from your browser at [http://localhost:8000](http://localhost:8000).
+
+- **Testing Authentication**  
+  You can log in or out by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
+
+- **Testing API Authorization**  
+  To test `/api` routes, you can generate a test token using the CLI. In the following example, substitute `%AUDIENCE%` with the identifier of the API you created in step 3 above.
+
+    ```shell
+    auth0 test token \
+    --audience %AUDIENCE% \
+    --scopes "read:messages"
+    ```
+
+  Use the token returned by the command to make requests to your API:
+
+    ```shell
+    curl --request GET \
+    --url http://localhost:8000/api/private \
+    --header 'Accept: application/json' \
+    --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+    ```
+
+- **Deploying to Production**  
+For guidance on moving your application to production, see [our deployment guide](./docs/Deployment.md).
 
 ## Integration Examples
 
