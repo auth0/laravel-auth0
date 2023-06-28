@@ -32,7 +32,7 @@ Ensure that your development environment has [supported versions](#prerequisites
 
 ### Using Quickstart (Recommended)
 
-- Run the following command to create a new Laravel 9 project pre-configured with the SDK:
+- Create a new Laravel 9 project pre-configured with the SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app
@@ -50,7 +50,7 @@ Ensure that your development environment has [supported versions](#prerequisites
 
 #### Install the SDK
 
-1. Run the following command in your project directory to install the SDK:
+1. Run the following command from your project directory to install the SDK:
 
     ```shell
     composer require auth0/login:^7.8 --update-with-all-dependencies
@@ -88,13 +88,11 @@ Install the [Auth0 CLI](https://github.com/auth0/auth0-cli) to create and manage
 
 ### Authenticate the CLI
 
-- Authenticate with your Auth0 account:
+- Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
 
     ```shell
     auth0 login
     ```
-
-    Choose "as a user," and follow the prompts to log in.
 
 ## Configure the SDK
 
