@@ -43,13 +43,13 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 1. Install the SDK
 
-- For new applications, run the following command to create a new Laravel 9 project pre-configured with the SDK:
+- For **new applications**, we offer a quickstart template — a version of the default Laravel 9 starter project pre-configured for use with the Auth0 SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app && cd auth0-laravel-app
     ```
 
-- For existing applications, you can install the SDK using Composer:
+- For **existing applications**, you can install the SDK using Composer:
 
     ```shell
     composer require auth0/login:^7.9 --update-with-all-dependencies
@@ -103,25 +103,25 @@ The following is our recommended approach to getting started with the SDK. Alter
 
     ```shell
     auth0 apps create \
-        --name "My Laravel Application" \
-        --type "regular" \
-        --auth-method "post" \
-        --callbacks "http://localhost:8000/callback" \
-        --logout-urls "http://localhost:8000" \
-        --reveal-secrets \
-        --no-input \
-        --json > .auth0.app.json
+      --name "My Laravel Application" \
+      --type "regular" \
+      --auth-method "post" \
+      --callbacks "http://localhost:8000/callback" \
+      --logout-urls "http://localhost:8000" \
+      --reveal-secrets \
+      --no-input \
+      --json > .auth0.app.json
     ```
 
 2. Register a new API with Auth0:
 
     ```shell
     auth0 apis create \
-        --name "My Laravel Application API" \
-        --identifier "https://github.com/auth0/laravel-auth0" \
-        --offline-access \
-        --no-input \
-        --json > .auth0.api.json
+      --name "My Laravel Application API" \
+      --identifier "https://github.com/auth0/laravel-auth0" \
+      --offline-access \
+      --no-input \
+      --json > .auth0.api.json
     ```
 
 3. Add the new files to `.gitignore`:
@@ -258,7 +258,7 @@ Route::get('/', function () {
 
 Once you've [authorized your application to make Management API calls](./docs/Management.md#api-application-authorization), you'll be able to engage nearly any of the [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2) using the SDK.
 
-Each endpoint has its own Management API class, all of which can be accessed through the Facade's `management()` method.
+Each endpoint has its own Management API class, all of which can be accessed through the Facade's `management()` method. API responses are returned as [PSR-7 messages](https://www.php-fig.org/psr/psr-7/), and can be converted into native arrays using the SDK's `json()` method.
 
 For example, to update a user's metadata, you can call the `management()->users()->update()` method:
 
@@ -272,23 +272,19 @@ Route::get('/colors', function () {
   Auth0::management()->users()->update(
     id: auth()->id(),
     body: [
-        'user_metadata' => [
-            'color' => $colors[random_int(0, count($colors) - 1)]
-        ]
+      'user_metadata' => [
+        'color' => $colors[random_int(0, count($colors) - 1)]
+      ]
     ]
   );
 
   // Retrieve the user's updated profile.
   $profile = Auth0::management()->users()->get(auth()->id());
 
-  // For interoperability, the SDK returns all API responses as
-  // PSR-7 Responses that contain the JSON response.
-
-  // You can use the `json()` helper to unpack the PSR-7, and
-  // convert the API's JSON response to a native PHP array.
+  // Convert the PSR-7 response into a native array.
   $profile = Auth0::json($profile);
 
-  // Read the user's profile.
+  // Extract some values from the user's profile.
   $color = $profile['user_metadata']['color'] ?? 'unknown';
   $name = auth()->user()->name;
 
