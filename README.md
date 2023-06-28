@@ -167,17 +167,17 @@ Your application should now be accessible from your browser at [http://localhost
 
     ```shell
     auth0 test token \
-    --audience %AUDIENCE% \
-    --scopes "read:messages"
+      --audience %AUDIENCE% \
+      --scopes "read:messages"
     ```
 
   Use the token returned by the command to make requests to your API:
 
     ```shell
     curl --request GET \
-    --url http://localhost:8000/api/private \
-    --header 'Accept: application/json' \
-    --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+      --url http://localhost:8000/api/private \
+      --header 'Accept: application/json' \
+      --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
     ```
 
 - **Deploying to Production**  
