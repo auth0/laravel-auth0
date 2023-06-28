@@ -27,7 +27,7 @@ When migrating your Laravel application from local development to production, yo
 
 Note that you can include multiple URLs in these fields by separating them with commas, for example:
 
-```
+```txt
 https://example.com/callback,http://localhost:8000/callback
 ```
 
