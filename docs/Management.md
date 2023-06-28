@@ -2,12 +2,6 @@
 
 The Auth0 Laravel SDK provides easy-to-use methods to access Auth0's Management API endpoints. Nearly every endpoint of the Management API is available to use with your Laravel application. For more information about any of these endpoints, see the [Management API Explorer](https://auth0.com/docs/api/management/v2).
 
-## Management API Permissions
-
-Before making Management API calls you must enable your application to communicate with the Management API. This can be done from the [Auth0 Dashboard's API page](https://manage.auth0.com/#/apis/), choosing `Auth0 Management API`, and selecting the 'Machine to Machine Applications' tab. Authorize your Laravel application, and then click the down arrow to choose the scopes you wish to grant.
-
-## Accessing the Management API
-
 The Management API class can be accessed through the `management()` method on the Auth0 Laravel SDK service. You can pull the Auth0 SDK instance from the Laravel service container using dependency injection, or use the `Auth0` facade. Once you have an instance, you can call any of the [available endpoints](#available-endpoints).
 
 ```php
@@ -15,6 +9,10 @@ use Auth0\Laravel\Facade\Auth0;
 
 Auth0::management();
 ```
+
+## API Application Authorization
+
+Before making Management API calls you must permit your application to communicate with the Management API. This can be done from the [Auth0 Dashboard's API page](https://manage.auth0.com/#/apis/), choosing `Auth0 Management API`, and selecting the 'Machine to Machine Applications' tab. Authorize your Laravel application, and then click the down arrow to choose the scopes you wish to grant.
 
 ## Available endpoints
 
