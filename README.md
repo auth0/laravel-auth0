@@ -24,7 +24,7 @@
 
 ## Requirements
 
-Your application must use a [supported Laravel version](https://laravelversions.com/en), and your environment must run a [supported PHP version](https://www.php.net/supported-versions.php).
+Your application must use a [supported Laravel version](https://laravelversions.com/en), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
 
 | SDK  | Laravel | PHP  | Supported Until |
 | ---- | ------- | ---- | --------------- |
@@ -33,8 +33,6 @@ Your application must use a [supported Laravel version](https://laravelversions.
 | 7.0+ | 9       | 8.2+ | Feb 2024        |
 |      |         | 8.1+ | Feb 2024        |
 |      |         | 8.0+ | Nov 2023        |
-
-Please review [our support policy](./docs/Support.md) for more information.
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
