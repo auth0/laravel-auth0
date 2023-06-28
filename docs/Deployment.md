@@ -25,11 +25,7 @@ When migrating your Laravel application from local development to production, yo
 - **Allowed Callback URLs**: The URL that Auth0 will redirect to after the user authenticates. This should be set to the Internet-accessible URL of your application's `/callback` route.
 - **Allowed Logout URLs**: The URL that Auth0 will redirect to after the user logs out. This should be set to an appropriate Internet-accessible URL of your application.
 
-Note that you can include multiple URLs in these fields by separating them with commas, for example:
-
-```txt
-https://example.com/callback,http://localhost:8000/callback
-```
+Note that you can include multiple URLs in these fields by separating them with commas, for example `https://example.com/callback,http://localhost:8000/callback`.
 
 See [the configuration guide](/docs/configuration.md) for additional guidance on updating configuration properties.
 
