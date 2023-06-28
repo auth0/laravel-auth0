@@ -206,9 +206,7 @@ For guidance on moving your application to production, see [our deployment guide
 <summary><b>User Authentication</b></summary>
  
 
-The SDK automatically registers all the necessary authentication services within the `web` middleware group for your application. Once you have [configured the SDK](./docs/Management.md#api-application-authorization) your users will be able to authenticate with your application using Auth0.
-
-The SDK automatically registers the following routes to facilitate authentication:
+The SDK automatically registers all the necessary routes and authentication services within the `web` middleware group of your application to enable users to authenticate without requiring you to write any code.
 
 | Route       | Purpose                            |
 | ----------- | ---------------------------------- |
@@ -216,8 +214,7 @@ The SDK automatically registers the following routes to facilitate authenticatio
 | `/logout`   | Logs the user out.                 |
 | `/callback` | Handles the callback from Auth0.   |
 
-> **Note**  
-> See [the configuration guide](./docs/Configuration.md#authentication-routes) for information on customizing this behavior.
+If these routes conflict with your application architecture, you can override this default behavior by [adjusting the SDK configuration](./docs/Configuration.md#route-registration).
 
 ---
 
@@ -253,8 +250,7 @@ Route::get('/scope', function () {
 })->middleware('auth')->can('read:messages');
 ```
 
-> **Note**  
-> Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-control/rbac) be enabled within [your API settings](https://manage.auth0.com/#/apis).
+Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-control/rbac) be enabled within [your API settings](https://manage.auth0.com/#/apis).
 
 ---
 
@@ -264,9 +260,9 @@ Route::get('/scope', function () {
 <summary><b>Users and Tokens</b></summary>
  
 
-Laravel's `Auth` Facade (or the `auth()` global helper) can be used to retrieve information about the authenticated user, or the access token used to authorize the request.
+Laravel's `Auth` Facade can be used to retrieve information about the authenticated user or token associated with a request.
 
-For example, for routes using the `web` middleware group in `routes/web.php`:
+For routes using the `web` middleware group in `routes/web.php`:
 
 ```php
 Route::get('/', function () {
@@ -282,7 +278,7 @@ Route::get('/', function () {
 });
 ```
 
-Alternatively, for routes using the `api` middleware group in `routes/api.php`:
+For routes using the `api` middleware group in `routes/api.php`:
 
 ```php
 Route::get('/', function () {
@@ -308,9 +304,9 @@ Route::get('/', function () {
 <summary><b>Management API Calls</b></summary>
  
 
-Once you've [authorized your application to make Management API calls](./docs/Management.md#api-application-authorization), you'll be able to engage nearly any of the [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2) using the SDK.
+Once you've [authorized your application to make Management API calls](./docs/Management.md#api-application-authorization), you'll be able to engage nearly any of the [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2) through the SDK.
 
-Each endpoint has its own Management API class, all of which can be accessed through the Facade's `management()` method. API responses are returned as [PSR-7 messages](https://www.php-fig.org/psr/psr-7/), and can be converted into native arrays using the SDK's `json()` method.
+Each API endpoint has its own SDK class which can be accessed through the Facade's `management()` factory method. For interoperability, network responses from the API are returned as [PSR-7 messages](https://www.php-fig.org/psr/psr-7/). These can be converted into native arrays using the SDK's `json()` method.
 
 For example, to update a user's metadata, you can call the `management()->users()->update()` method:
 
@@ -355,6 +351,7 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 - [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
 - [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
 - [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+- [Deployment](./docs/Deployment.md) — Deploying your application to production.
 - [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
 
 You may also find the following resources helpful:
