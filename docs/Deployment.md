@@ -1,6 +1,6 @@
 # Deployment
 
-When you're ready to deploy your application to production, there are some important things you can do to make sure your application is running as efficiently as possible. In this document, we'll cover some great starting points for making sure your Laravel application is deployed properly.
+When you're preparing to deploy your application to production, there are some basic steps you can take to make sure your application is running as smoothly and securely as possible. In this guide, we'll cover some starting points for making sure your application is deployed properly.
 
 - [Auth0 Configuration](#auth0-configuration)
 - [TLS / HTTPS](#tls--https)
