@@ -184,7 +184,7 @@ Your application should now be accessible from your browser at [http://localhost
       --header 'Authorization: Bearer %TOKEN%'
     ```
 
-    <p><em><small>Substitute <code>%TOKEN%</code> with the test token returned in the previous step./small></em></p>
+    <p><em><small>Substitute <code>%TOKEN%</code> with the test token returned in the previous step.</small></em></p>
 
     <details>
     <summary>Using Windows PowerShell</summary>
