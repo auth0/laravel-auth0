@@ -165,7 +165,7 @@ Your application should now be accessible from your browser at [http://localhost
   You can log in or out by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
 
 - **Testing API Authorization**  
-  To test `/api` routes, you can generate a test token using the CLI. In the following example, substitute `%IDENTIFIER%` with the identifier of the API you created in step 3 above.
+  To test `/api` routes, generate a test token using the CLI.
 
     ```shell
     auth0 test token \
@@ -173,7 +173,9 @@ Your application should now be accessible from your browser at [http://localhost
       --scopes "read:messages"
     ```
 
-  You can now make requests to your application's API routes by providing the test token as a header in the request. Substitute `%TOKEN%` with the token returned by the previous step.
+  <p><em><small>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
+  
+  With this, you can make requests to your application's API routes by including the token as a header in requests.
 
     ```shell
     curl --request GET \
@@ -181,6 +183,8 @@ Your application should now be accessible from your browser at [http://localhost
       --header 'Accept: application/json' \
       --header 'Authorization: Bearer %TOKEN%'
     ```
+
+    <p><em><small>Substitute <code>%TOKEN%</code> with the test token returned in the previous step./small></em></p>
 
     <details>
     <summary>Using Windows PowerShell</summary>
