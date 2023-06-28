@@ -78,6 +78,7 @@ The following is our recommended approach to getting started with the SDK. Alter
     ```shell
     brew tap auth0/auth0-cli && brew install auth0
     ```
+
     </details>
 
     <details>
@@ -88,6 +89,7 @@ The following is our recommended approach to getting started with the SDK. Alter
     scoop bucket add auth0 https://github.com/auth0/scoop-auth0-cli.git
     scoop install auth0
     ```
+
     </details>
 
 2. Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
@@ -136,6 +138,7 @@ The following is our recommended approach to getting started with the SDK. Alter
     ```powershell
     Add-Content .gitignore "`n.auth0.*.json"
     ```
+
     </details>
 
     <details>
@@ -145,6 +148,7 @@ The following is our recommended approach to getting started with the SDK. Alter
     ```cmd
     echo .auth0.*.json >> .gitignore
     ```
+
     </details>
 
 ### 4. Run the Application
@@ -161,22 +165,33 @@ Your application should now be accessible from your browser at [http://localhost
   You can log in or out by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
 
 - **Testing API Authorization**  
-  To test `/api` routes, you can generate a test token using the CLI. In the following example, substitute `%AUDIENCE%` with the identifier of the API you created in step 3 above.
+  To test `/api` routes, you can generate a test token using the CLI. In the following example, substitute `%IDENTIFIER%` with the identifier of the API you created in step 3 above.
 
     ```shell
     auth0 test token \
-      --audience %AUDIENCE% \
+      --audience %IDENTIFIER% \
       --scopes "read:messages"
     ```
 
-  Use the token returned by the command to make requests to your API:
+  You can now make requests to your application's API routes by providing the test token as a header in the request. Substitute `%TOKEN%` with the token returned by the previous step.
 
     ```shell
     curl --request GET \
-      --url http://localhost:8000/api/private \
+      --url http://localhost:8000/api/example \
       --header 'Accept: application/json' \
-      --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+      --header 'Authorization: Bearer %TOKEN%'
     ```
+
+    <details>
+    <summary>Using Windows PowerShell</summary>
+     
+
+    ```powershell
+    Invoke-WebRequest http://localhost:8000/api/example `
+      -Headers @{'Accept' = 'application/json'; 'Authorization' = 'Bearer %TOKEN%'}
+    ```
+
+    </details>
 
 - **Deploying to Production**  
 For guidance on moving your application to production, see [our deployment guide](./docs/Deployment.md).
