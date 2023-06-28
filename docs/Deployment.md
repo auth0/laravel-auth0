@@ -49,22 +49,22 @@ Please ensure, like all the example configurations provided below, that your web
 
 ```nginx
 example.com {
-    root * /var/www/example.com/public
+  root * /var/www/example.com/public
 
-    encode zstd gzip
-    file_server
+  encode zstd gzip
+  file_server
 
-    limits {
-        header 4kb
-    }
+  limits {
+    header 4kb
+  }
 
-    header {
-        X-XSS-Protection "1; mode=block"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "SAMEORIGIN"
-    }
+  header {
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "SAMEORIGIN"
+  }
 
-    php_fastcgi unix//var/run/php/php8.1-fpm.sock
+  php_fastcgi unix//var/run/php/php8.1-fpm.sock
 }
 ```
 
