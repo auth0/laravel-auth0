@@ -2,12 +2,23 @@
 
 When you're ready to deploy your application to production, there are some important things you can do to make sure your application is running as efficiently as possible. In this document, we'll cover some great starting points for making sure your Laravel application is deployed properly.
 
-- [Updating the Auth0 Configuration](#updating-the-auth0-configuration)
+- [Auth0 Configuration](#auth0-configuration)
+- [TLS / HTTPS](#tls--https)
 - [Cookies](#cookies)
 - [Server Configuration](#server-configuration)
+  - [Caddy](#caddy)
+  - [Nginx](#nginx)
+  - [Apache](#apache)
 - [Optimization](#optimization)
+  - [Autoloader](#autoloader)
+  - [Dependencies](#dependencies)
+  - [Caching Configuration](#caching-configuration)
+  - [Caching Events](#caching-events)
+  - [Caching Routes](#caching-routes)
+  - [Caching Views](#caching-views)
+  - [Debug Mode](#debug-mode)
 
-## Updating the Auth0 Configuration
+## Auth0 Configuration
 
 When migrating your Laravel application from local development to production, you will need to update your Auth0 application's configuration to reflect the new URLs for your application. You can do this by logging into the [Auth0 Dashboard](https://manage.auth0.com/) and updating the following fields:
 
@@ -38,9 +49,7 @@ You should also ensure your application's `config/session.php` file is configure
 
 Please ensure, like all the example configurations provided below, that your web server directs all requests to your application's `public/index.php` file. You should **never** attempt to move the `index.php` file to your project's root, as serving the application from the project root will expose many sensitive configuration files to the public Internet.
 
-### Caddy 2
-
-If you are deploying your application to a server that is running Caddy, you may use the following configuration file as a starting point for configuring your web server. Most likely, this file will need to be customized depending on your server's configuration.
+### Caddy
 
 ```nginx
 example.com {
@@ -130,7 +139,7 @@ server {
 
 ## Optimization
 
-### Autoloader Optimization
+### Autoloader
 
 When deploying to production, make sure that you are optimizing Composer's class autoloader map so Composer can quickly find the proper file to load for a given class:
 
@@ -140,7 +149,7 @@ composer install --optimize-autoloader --no-dev
 
 Be sure to use the `--no-dev` option in production. This will prevent Composer from installing any development dependencies your project's dependencies may have.
 
-### Dependencies Lockfile
+### Dependencies
 
 You should include your `composer.lock` file in your project's source control repository. Fo project's dependencies can be installed much faster with this file is present. Your production environment does not run `composer update` directly. Instead, you can run the `composer update` command locally when you want to update your dependencies, and then commit the updated `composer.lock` file to your repository. Be sure you are running the same major PHP version as your production environment, to avoid introducing compatibility issues.
 
@@ -175,6 +184,7 @@ php artisan route:cache
 This command reduces all of your route registrations into a single method call within a cached file, improving the performance of route registration when registering hundreds of routes.
 
 ### Caching Views
+
 When deploying your application to production, you should make sure that you run the view:cache Artisan command during your deployment process:
 
 ```shell
