@@ -91,7 +91,7 @@ The following is our recommended approach to getting started with the SDK. Alter
     ```
     </details>
 
-2. Run the following command to authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
+2. Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
 
     ```shell
     auth0 login
