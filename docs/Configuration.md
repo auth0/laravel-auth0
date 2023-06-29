@@ -127,6 +127,13 @@ By default, the SDK will register the Authentication and Authorization guards wi
 
 You can disable this behavior by setting `registerGuards` to `false` in your `config/auth0.php` file.
 
+```php
+return Configuration::VERSION_2 + [
+    'registerGuards' => false,
+    // ...
+];
+```
+
 To register the guards manually, update the arrays in your `config/auth.php` file to include the following additions:
 
 ```php
@@ -156,6 +163,13 @@ To register the guards manually, update the arrays in your `config/auth.php` fil
 By default, the SDK will register the Authentication and Authorization guards within your application's `web` and `api` middleware groups.
 
 You can disable this behavior by setting `registerMiddleware` to `false` in your `config/auth0.php` file.
+
+```php
+return Configuration::VERSION_2 + [
+    'registerMiddleware' => false,
+    // ...
+];
+```
 
 To register the middleware manually, update your `app/Http/Kernel.php` file and include the following additions:
 
@@ -198,6 +212,13 @@ By default, the SDK will register the following routes for authentication:
 | `GET`  | `/callback` | `callback` | `Auth0\Laravel\Controllers\CallbackController` | Handles the callback from Auth0.   |
 
 You can disable this behavior by setting `registerAuthenticationRoutes` to `false` in your `config/auth0.php` file.
+
+```php
+return Configuration::VERSION_2 + [
+    'registerAuthenticationRoutes' => false,
+    // ...
+];
+```
 
 If you've disabled the automatic registration of routes, you must register the routes manually for authentication to work.
 
