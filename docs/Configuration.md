@@ -88,7 +88,7 @@ The following environment variables are supported, but should not be adjusted un
 
 ### Order of Priority
 
-The SDK compiles configuration data from multiple potential sources, in the following order:
+The SDK collects configuration data from multiple potential sources, in the following order:
 
 - `.auth0.json` files
 - `.env` (dotenv) files
@@ -115,7 +115,9 @@ It then loads configuration data from available `.env` (dotenv) configuration fi
 
 Finally, it loads environment variables from the host environment.
 
-Note that duplicate configuration keys will be overwritten by the last value loaded, so the host environment variables will always override any matching values set in JSON or dotenv files.
+Duplicate configuration data is overwritten by the value from the last source loaded. For example, if the `AUTH0_DOMAIN` environment variable is set in both the `.env` file and the host environment, the value from the host environment will be used.
+
+Although JSON configuration keys are different from their associated environment variable counterparts, these are translated automatically by the SDK. For example, the `domain` key in the JSON configuration files is translated to the `AUTH0_DOMAIN` environment variable.
 
 ### Default Behavior
 
