@@ -88,6 +88,35 @@ The following environment variables are supported, but should not be adjusted un
 
 ### Order of Priority
 
+The SDK compiles configuration data from multiple potential sources, in the following order:
+
+- `.auth0.json` files
+- `.env` (dotenv) files
+- Host environment variables
+
+> **Note:**  
+> In the filenames listed below, `%APP_ENV%` is replaced by the application's configured `APP_ENV` environment variable, if one is set.
+
+It begins by loading matching JSON configuration files from the project's root directory, in the following order:
+
+- `.auth0.json`
+- `.auth0.%APP_ENV%.json`
+- `.auth0.api.json`
+- `.auth0.app.json`
+- `.auth0.api.%APP_ENV%.json`
+- `.auth0.app.%APP_ENV%.json`
+
+It then loads configuration data from available `.env` (dotenv) configuration files, in the following order.
+
+- `.env`
+- `.env.auth0`
+- `.env.%APP_ENV%`
+- `.env.%APP_ENV%.auth0`
+
+Finally, it loads environment variables from the host environment.
+
+Note that duplicate configuration keys will be overwritten by the last value loaded, so the host environment variables will always override any matching values set in JSON or dotenv files.
+
 ### Default Behavior
 
 #### Guard Registration
