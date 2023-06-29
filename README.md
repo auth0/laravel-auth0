@@ -155,19 +155,19 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 4. Run the Application
 
-You can now run the application using the built-in PHP web server.
+Boot the application using PHP's built-in web server.
 
 ```shell
 php artisan serve
 ```
 
-Your application should now be accessible from your browser at [http://localhost:8000](http://localhost:8000).
+Direct your browser to [http://localhost:8000](http://localhost:8000) to experiment with the application.
 
-- **Testing Authentication**  
-  You can log in or out by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
+- **Authentication**  
+  Users can log in or out of the application by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
 
-- **Testing API Authorization**  
-  To test `/api` routes, generate a test token using the CLI.
+- **API Authorization**  
+  For simplicity sake, generate a test token using the CLI.
 
     ```shell
     auth0 test token \
@@ -176,8 +176,8 @@ Your application should now be accessible from your browser at [http://localhost
     ```
 
   <p><em><small>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
-  
-  With this, you can make requests to your application's API routes by including the token as a header in requests.
+
+  Now you can send requests to the `/api` endpoints of the application, including the token as a header.
 
     ```shell
     curl --request GET \
@@ -199,8 +199,7 @@ Your application should now be accessible from your browser at [http://localhost
 
     </details>
 
-- **Deploying to Production**  
-For guidance on moving your application to production, see [our deployment guide](./docs/Deployment.md).
+When you're ready to deploy your application to production, review [our deployment guide](./docs/Deployment.md) for best practices and advice on securing Laravel.
 
 ## Integration Examples
 
