@@ -26,7 +26,7 @@ This guide addresses v2 of the SDK configuration format. You can determine which
 
 ```php
 return Configuration::VERSION_2 + [
-    // ...
+  // ...
 ];
 ```
 
@@ -129,8 +129,8 @@ You can disable this behavior by setting `registerGuards` to `false` in your `co
 
 ```php
 return Configuration::VERSION_2 + [
-    'registerGuards' => false,
-    // ...
+  'registerGuards' => false,
+  // ...
 ];
 ```
 
@@ -138,23 +138,23 @@ To register the guards manually, update the arrays in your `config/auth.php` fil
 
 ```php
 'guards' => [
-    'auth0-session' => [
-        'driver' => 'auth0.authenticator',
-        'provider' => 'auth0-provider',
-        'configuration' => 'web',
-    ],
-    'auth0-api' => [
-        'driver' => 'auth0.authorizer',
-        'provider' => 'auth0-provider',
-        'configuration' => 'api',
-    ],
+  'auth0-session' => [
+    'driver' => 'auth0.authenticator',
+    'provider' => 'auth0-provider',
+    'configuration' => 'web',
+  ],
+  'auth0-api' => [
+    'driver' => 'auth0.authorizer',
+    'provider' => 'auth0-provider',
+    'configuration' => 'api',
+  ],
 ],
 
 'providers' => [
-    'auth0-provider' => [
-        'driver' => 'auth0.provider',
-        'repository' => 'auth0.repository',
-    ],
+  'auth0-provider' => [
+    'driver' => 'auth0.provider',
+    'repository' => 'auth0.repository',
+  ],
 ],
 ```
 
@@ -166,8 +166,8 @@ You can disable this behavior by setting `registerMiddleware` to `false` in your
 
 ```php
 return Configuration::VERSION_2 + [
-    'registerMiddleware' => false,
-    // ...
+  'registerMiddleware' => false,
+  // ...
 ];
 ```
 
@@ -175,17 +175,15 @@ To register the middleware manually, update your `app/Http/Kernel.php` file and 
 
 ```php
 protected $middlewareGroups = [
-    'web' => [
-        // ...
-        \Auth0\Laravel\Middleware\AuthenticatorMiddleware::class,
-        // ...
-    ],
+  'web' => [
+    \Auth0\Laravel\Middleware\AuthenticatorMiddleware::class,
+    // ...
+  ],
 
-    'api' => [
-        // ...
-        \Auth0\Laravel\Middleware\AuthorizerMiddleware::class,
-        // ...
-    ],
+  'api' => [
+    \Auth0\Laravel\Middleware\AuthorizerMiddleware::class,
+    // ...
+  ],
 ];
 ```
 
@@ -215,8 +213,8 @@ You can disable this behavior by setting `registerAuthenticationRoutes` to `fals
 
 ```php
 return Configuration::VERSION_2 + [
-    'registerAuthenticationRoutes' => false,
-    // ...
+  'registerAuthenticationRoutes' => false,
+  // ...
 ];
 ```
 
@@ -226,9 +224,9 @@ If you've disabled the automatic registration of routes, you must register the r
 use Auth0\Laravel\Controllers\{LoginController, LogoutController, CallbackController};
 
 Route::group(['middleware' => ['guard:auth0-session'], static function (): void {
-    Route::get('/login', LoginController::class)->name('login');
-    Route::get('/logout', LogoutController::class)->name('logout');
-    Route::get('/callback', CallbackController::class)->name('callback');
+  Route::get('/login', LoginController::class)->name('login');
+  Route::get('/logout', LogoutController::class)->name('logout');
+  Route::get('/callback', CallbackController::class)->name('callback');
 });
 ```
 
