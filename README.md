@@ -70,8 +70,15 @@ The following is our recommended approach to getting started with the SDK. Alter
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
+    ```
+
+    Move the CLI to a directory in your `PATH` to make it available system-wide.
+
+    ```shell
     sudo mv ./auth0 /usr/local/bin
     ```
+
+    <p><small>💡 <em>If you prefer not to move the CLI, simply substitute `auth0` in the CLI steps below with `./auth0`.</small></em></p>
 
     <details>
     <summary>Using <a href="https://brew.sh/">Homebrew</a> (macOS)</summary>
@@ -94,7 +101,7 @@ The following is our recommended approach to getting started with the SDK. Alter
 
     </details>
 
-2. Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
+2. Authenticate the CLI with your Auth0 account. Choose "as a user" if prompted.
 
     ```shell
     auth0 login
@@ -175,7 +182,7 @@ Direct your browser to [http://localhost:8000](http://localhost:8000) to experim
       --scopes "read:messages"
     ```
 
-  <p><em><small>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
+  <p><small>✋ <em>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
 
   Now you can send requests to the `/api` endpoints of the application, including the token as a header.
 
@@ -186,7 +193,7 @@ Direct your browser to [http://localhost:8000](http://localhost:8000) to experim
       --header 'Authorization: Bearer %TOKEN%'
     ```
 
-    <p><em><small>Substitute <code>%TOKEN%</code> with the test token returned in the previous step.</small></em></p>
+    <p><small>✋ <em>Substitute <code>%TOKEN%</code> with the test token returned in the previous step.</small></em></p>
 
     <details>
     <summary>Using Windows PowerShell</summary>
