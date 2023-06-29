@@ -28,13 +28,13 @@
 
 Your application must use a [supported Laravel version](https://laravelversions.com/en), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
 
-| SDK  | Laravel | PHP  | Supported Until |
-| ---- | ------- | ---- | --------------- |
-| 7.5+ | 10      | 8.2+ | Feb 2025        |
-|      |         | 8.1+ | Nov 2024        |
-| 7.0+ | 9       | 8.2+ | Feb 2024        |
-|      |         | 8.1+ | Feb 2024        |
-|      |         | 8.0+ | Nov 2023        |
+| SDK  | Laravel                                      | PHP                                             | Supported Until |
+| ---- | -------------------------------------------- | ----------------------------------------------- | --------------- |
+| 7.5+ | [10](https://laravel.com/docs/10.x/releases) | [8.2+](https://www.php.net/releases/8.2/en.php) | Feb 2025        |
+|      |                                              | [8.1+](https://www.php.net/releases/8.1/en.php) | Nov 2024        |
+| 7.0+ | [9](https://laravel.com/docs/9.x/releases)   | [8.2+](https://www.php.net/releases/8.2/en.php) | Feb 2024        |
+|      |                                              | [8.1+](https://www.php.net/releases/8.1/en.php) | Feb 2024        |
+|      |                                              | [8.0+](https://www.php.net/releases/8.0/en.php) | Nov 2023        |
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
