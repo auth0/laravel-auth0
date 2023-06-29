@@ -44,19 +44,19 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 1. Install the SDK
 
-- For **new applications**, we offer a quickstart template — a version of the default Laravel 9 starter project pre-configured for use with the Auth0 SDK:
+- For **new applications**, we offer a quickstart template — a version of the default Laravel 9 starter project pre-configured for use with the Auth0 SDK.
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app && cd auth0-laravel-app
     ```
 
-- For **existing applications**, you can install the SDK using Composer:
+- For **existing applications**, you can install the SDK using Composer.
 
     ```shell
     composer require auth0/login:^7.9 --update-with-all-dependencies
     ```
 
-    In this case, you will also need to generate an SDK configuration file for your application:
+    In this case, you will also need to generate an SDK configuration file for your application.
 
     ```shell
     php artisan vendor:publish --tag auth0
@@ -66,7 +66,7 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 2. Install the CLI
 
-1. Install the [Auth0 CLI](https://github.com/auth0/auth0-cli) to manage your account from the command line:
+1. Install the [Auth0 CLI](https://github.com/auth0/auth0-cli) to manage your account from the command line.
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
@@ -102,7 +102,7 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 3. Configure the SDK
 
-1. Register a new application with Auth0:
+1. Register a new application with Auth0.
 
     ```shell
     auth0 apps create \
@@ -116,7 +116,7 @@ The following is our recommended approach to getting started with the SDK. Alter
       --json > .auth0.app.json
     ```
 
-2. Register a new API with Auth0:
+2. Register a new API with Auth0.
 
     ```shell
     auth0 apis create \
@@ -127,7 +127,7 @@ The following is our recommended approach to getting started with the SDK. Alter
       --json > .auth0.api.json
     ```
 
-3. Add the new files to `.gitignore`:
+3. Add the new files to `.gitignore`.
 
     ```bash
     echo ".auth0.*.json" >> .gitignore
@@ -155,7 +155,7 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 4. Run the Application
 
-You can now run the application using the built-in PHP web server:
+You can now run the application using the built-in PHP web server.
 
 ```shell
 php artisan serve
@@ -228,7 +228,7 @@ If these routes conflict with your application architecture, you can override th
 
 The SDK automatically registers its authentication and authorization guards within the `web` and `api` middleware groups for your Laravel application, respectively.
 
-For `web` routes, you can use Laravel's `auth` middleware to require that a user be authenticated to access a route:
+For `web` routes, you can use Laravel's `auth` middleware to require that a user be authenticated to access a route.
 
 ```php
 Route::get('/private', function () {
@@ -236,7 +236,7 @@ Route::get('/private', function () {
 })->middleware('auth');
 ```
 
-For `api` routes, you can use Laravel's `auth` middleware to require that a request be authenticated with a valid bearer token to access a route:
+For `api` routes, you can use Laravel's `auth` middleware to require that a request be authenticated with a valid bearer token to access a route.
 
 ```php
 Route::get('/api/private', function () {
@@ -244,7 +244,7 @@ Route::get('/api/private', function () {
 })->middleware('auth');
 ```
 
-In addition to requiring that a user be authenticated, you can also require that the user have specific permissions to access a route, using Laravel's `can` middleware:
+In addition to requiring that a user be authenticated, you can also require that the user have specific permissions to access a route, using Laravel's `can` middleware.
 
 ```php
 Route::get('/scope', function () {
@@ -264,7 +264,7 @@ Permissions require that [RBAC](https://auth0.com/docs/manage-users/access-contr
 
 Laravel's `Auth` Facade can be used to retrieve information about the authenticated user or token associated with a request.
 
-For routes using the `web` middleware group in `routes/web.php`:
+For routes using the `web` middleware group in `routes/web.php`.
 
 ```php
 Route::get('/', function () {
@@ -280,7 +280,7 @@ Route::get('/', function () {
 });
 ```
 
-For routes using the `api` middleware group in `routes/api.php`:
+For routes using the `api` middleware group in `routes/api.php`.
 
 ```php
 Route::get('/', function () {
@@ -310,7 +310,7 @@ Once you've [authorized your application to make Management API calls](./docs/Ma
 
 Each API endpoint has its own SDK class which can be accessed through the Facade's `management()` factory method. For interoperability, network responses from the API are returned as [PSR-7 messages](https://www.php-fig.org/psr/psr-7/). These can be converted into native arrays using the SDK's `json()` method.
 
-For example, to update a user's metadata, you can call the `management()->users()->update()` method:
+For example, to update a user's metadata, you can call the `management()->users()->update()` method.
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
