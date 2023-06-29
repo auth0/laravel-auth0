@@ -9,7 +9,7 @@
     </p>
 </div>
 
-**The Auth0 Laravel SDK is a PHP package that fully integrates support for [Auth0](https://auth0.com) into your Laravel application.** It enables zero code user authentication, full support for the extensive Management API, supports permissions-based access control for routes, and more.
+**The Auth0 Laravel SDK is a PHP package that integrates [Auth0](https://auth0.com) into your Laravel application.** It includes zero code user authentication, full support for the extensive Management API, permissions-based access control for routes, and more.
 
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
