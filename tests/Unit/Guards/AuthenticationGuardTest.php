@@ -64,16 +64,15 @@ beforeEach(function (): void {
     });
 });
 
-it('gets a user from a valid session using find()', function (): void {
-    getJson($this->route)
-        ->assertStatus(Response::HTTP_OK);
+it('retrieves the authenticated user from a valid session using find()', function (): void {
+    $result = $this->guard->find();
 
-    expect($this->guard)
-        ->user()->getAuthIdentifier()->toBe('hello|world');
+    expect($result)->toBeInstanceOf(CredentialEntity::class);
+    expect($result->getUser())->toBeInstanceOf(StatefulUser::class);
 });
 
-it('gets a user from a valid session using user()', function (): void {
-    getJson($this->route2)
+it('retrieves the authenticated user from a valid session using user()', function (): void {
+    getJson($this->route)
         ->assertStatus(Response::HTTP_OK);
 
     expect($this->guard)
