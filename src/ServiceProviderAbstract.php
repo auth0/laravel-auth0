@@ -19,7 +19,6 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
-use function defined;
 use function is_string;
 
 /**
@@ -209,10 +208,6 @@ abstract class ServiceProviderAbstract extends ServiceProvider
             /**
              * @var \Illuminate\Foundation\Http\Kernel $kernel
              */
-            if (! defined('AUTH0_LARAVEL_RUNNING_TESTS')) {
-                $kernel->pushMiddleware(AuthenticatorMiddleware::class);
-                $kernel->pushMiddleware(AuthorizerMiddleware::class);
-            }
 
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
