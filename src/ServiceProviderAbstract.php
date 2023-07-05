@@ -208,7 +208,6 @@ abstract class ServiceProviderAbstract extends ServiceProvider
             /**
              * @var \Illuminate\Foundation\Http\Kernel $kernel
              */
-
             $kernel->appendMiddlewareToGroup('web', AuthenticatorMiddleware::class);
             $kernel->appendMiddlewareToGroup('api', AuthorizerMiddleware::class);
 
