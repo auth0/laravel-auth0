@@ -557,23 +557,22 @@ final class Configuration implements ConfigurationContract
         } else {
             $env = 'AUTH0_' . strtoupper(Str::snake($setting));
             $json = self::CONFIG_AUDIENCE === $setting ? 'identifier' : Str::snake($setting);
-            $value = $_ENV[$env] ?? self::getEnvironment()[$env] ?? null;
 
-            if (self::CONFIG_DOMAIN === $setting && '{DOMAIN}' === $value) {
+            $value = getenv($env);
+
+            if (! is_string($value)) {
                 $value = null;
             }
 
-            if (self::CONFIG_CLIENT_ID === $setting && '{CLIENT_ID}' === $value) {
-                $value = null;
-            }
+            $value ??= self::getEnvironment()[$env] ?? null;
 
-            if (self::CONFIG_CLIENT_SECRET === $setting && '{CLIENT_SECRET}' === $value) {
-                $value = null;
-            }
-
-            if (self::CONFIG_AUDIENCE === $setting && '{API_IDENTIFIER}' === $value) {
-                $value = null;
-            }
+            $value = match ($setting) {
+                self::CONFIG_DOMAIN => '{DOMAIN}' === $value ? null : $value,
+                self::CONFIG_CLIENT_ID => '{CLIENT_ID}' === $value ? null : $value,
+                self::CONFIG_CLIENT_SECRET => '{CLIENT_SECRET}' === $value ? null : $value,
+                self::CONFIG_AUDIENCE => '{API_IDENTIFIER}' === $value ? null : $value,
+                default => $value,
+            };
 
             $value ??= self::getJson()[$json] ?? $default;
         }
