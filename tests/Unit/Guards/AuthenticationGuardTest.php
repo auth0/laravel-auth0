@@ -69,6 +69,8 @@ it('retrieves the authenticated user from a valid session using find()', functio
 
     expect($result)->toBeInstanceOf(CredentialEntity::class);
     expect($result->getUser())->toBeInstanceOf(StatefulUser::class);
+
+    expect($this->guard->user()->getAuthIdentifier())->toBe('hello|world');
 });
 
 it('retrieves the authenticated user from a valid session using user()', function (): void {
