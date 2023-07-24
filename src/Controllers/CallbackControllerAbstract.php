@@ -155,17 +155,18 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
 
     private function clearSession(
         GuardAbstract $guard,
-        $clearTransientStorage = true,
-        $clearPersistentStorage = true,
-        $clearSdkStorage = false
-    ): void
-    {
-        if ($clearTransientStorage) {
-            $guard->service()->getConfiguration()->getTransientStorage()->purge();
+        bool $clearTransientStorage = true,
+        bool $clearPersistentStorage = true,
+        bool $clearSdkStorage = false,
+    ): void {
+        $service = $guard->service() ?? null;
+
+        if ($clearTransientStorage && null !== $service) {
+            $service->getConfiguration()->getTransientStorage()?->purge();
         }
 
-        if ($clearPersistentStorage) {
-            $guard->service()->getConfiguration()->getSessionStorage()->purge();
+        if ($clearPersistentStorage && null !== $service) {
+            $service->getConfiguration()->getSessionStorage()?->purge();
         }
 
         if ($clearSdkStorage) {
