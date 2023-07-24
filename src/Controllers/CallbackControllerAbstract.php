@@ -74,7 +74,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
 
             event(new Failed($guard::class, $guard->user(), $credentials));
 
-            $guard->sdk()->clear();
+            $this->clearSession($guard, true, true, true);
 
             // Throw hookable $event to allow custom error handling scenarios.
             $event = new AuthenticationFailed($throwable, true);
@@ -101,8 +101,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
                 'error' => ['error' => $error, 'description' => $errorDescription],
             ]));
 
-            // Clear the local session via the Auth0-PHP SDK:
-            $guard->sdk()->clear();
+            $this->clearSession($guard, true, true, true);
 
             // Create a dynamic exception to report the API error response
             $exception = new CallbackControllerException(sprintf(CallbackControllerException::MSG_API_RESPONSE, $error, $errorDescription));
@@ -131,6 +130,8 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         if ($credential instanceof CredentialEntityContract && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
 
+            $this->clearSession($guard);
+
             /**
              * @var Guard $guard
              */
@@ -150,5 +151,25 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         }
 
         return redirect()->intended('/');
+    }
+
+    private function clearSession(
+        GuardAbstract $guard,
+        $clearTransientStorage = true,
+        $clearPersistentStorage = true,
+        $clearSdkStorage = false
+    ): void
+    {
+        if ($clearTransientStorage) {
+            $guard->service()->getConfiguration()->getTransientStorage()->purge();
+        }
+
+        if ($clearPersistentStorage) {
+            $guard->service()->getConfiguration()->getSessionStorage()->purge();
+        }
+
+        if ($clearSdkStorage) {
+            $guard->sdk()->clear();
+        }
     }
 }
