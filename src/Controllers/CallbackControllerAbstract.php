@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntityContract};
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
@@ -161,11 +161,11 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
     ): void {
         $service = $guard->service() ?? null;
 
-        if ($clearTransientStorage && null !== $service) {
+        if ($clearTransientStorage && $service instanceof InstanceEntityContract) {
             $service->getConfiguration()->getTransientStorage()?->purge();
         }
 
-        if ($clearPersistentStorage && null !== $service) {
+        if ($clearPersistentStorage && $service instanceof InstanceEntityContract) {
             $service->getConfiguration()->getSessionStorage()?->purge();
         }
 
