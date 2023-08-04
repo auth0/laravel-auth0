@@ -130,7 +130,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         if ($credential instanceof CredentialEntityContract && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
 
-            $this->clearSession($guard);
+            $this->clearSession($guard, true, true, true);
 
             /**
              * @var Guard $guard
