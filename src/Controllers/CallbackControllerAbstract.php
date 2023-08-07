@@ -74,7 +74,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
 
             event(new Failed($guard::class, $guard->user(), $credentials));
 
-            $this->clearSession($guard, true, true, true);
+            $this->clearSession($guard);
 
             // Throw hookable $event to allow custom error handling scenarios.
             $event = new AuthenticationFailed($throwable, true);
@@ -101,7 +101,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
                 'error' => ['error' => $error, 'description' => $errorDescription],
             ]));
 
-            $this->clearSession($guard, true, true, true);
+            $this->clearSession($guard);
 
             // Create a dynamic exception to report the API error response
             $exception = new CallbackControllerException(sprintf(CallbackControllerException::MSG_API_RESPONSE, $error, $errorDescription));
@@ -137,6 +137,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
              */
             $guard->login($credential, Guard::SOURCE_SESSION);
 
+            $request->session()->invalidate();
             $request->session()->regenerate();
 
             $event = new AuthenticationSucceeded($user);
@@ -157,7 +158,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         GuardAbstract $guard,
         bool $clearTransientStorage = true,
         bool $clearPersistentStorage = true,
-        bool $clearSdkStorage = false,
+        bool $clearSdkStorage = true,
     ): void {
         $service = $guard->service() ?? null;
 
