@@ -238,6 +238,11 @@ abstract class GuardAbstract implements Guard
         return $this->sdk->getSdk();
     }
 
+    final public function service(): ?InstanceEntityContract
+    {
+        return $this->sdk;
+    }
+
     final public function stopImpersonating(): void
     {
         $this->impersonating = null;

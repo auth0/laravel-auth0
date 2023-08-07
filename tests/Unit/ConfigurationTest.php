@@ -83,6 +83,29 @@ test('stringOrIntToIntOrNull() behaves as expected', function (): void {
         ->toBeNull();
 });
 
+test('get() ignores quickstart placeholders', function (): void {
+    putenv('AUTH0_DOMAIN={DOMAIN}');
+    putenv('AUTH0_CLIENT_ID={CLIENT_ID}');
+    putenv('AUTH0_CLIENT_SECRET={CLIENT_SECRET}');
+    putenv('AUTH0_AUDIENCE={API_IDENTIFIER}');
+    putenv('AUTH0_CUSTOM_DOMAIN=https://example.com');
+
+    expect(Configuration::get(Configuration::CONFIG_CUSTOM_DOMAIN))
+        ->toBeString('https://example.com');
+
+    expect(Configuration::get(Configuration::CONFIG_DOMAIN))
+        ->toBeNull();
+
+    expect(Configuration::get(Configuration::CONFIG_CLIENT_ID))
+        ->toBeNull();
+
+    expect(Configuration::get(Configuration::CONFIG_CLIENT_SECRET))
+        ->toBeNull();
+
+    expect(Configuration::get(Configuration::CONFIG_AUDIENCE))
+        ->toBeNull();
+});
+
 test('get() behaves as expected', function (): void {
     config(['test' => [
         Configuration::CONFIG_AUDIENCE => implode(',', [uniqid(), uniqid()]),

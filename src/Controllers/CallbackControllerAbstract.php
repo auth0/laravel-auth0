@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntityContract};
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
@@ -74,7 +74,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
 
             event(new Failed($guard::class, $guard->user(), $credentials));
 
-            $guard->sdk()->clear();
+            $this->clearSession($guard);
 
             // Throw hookable $event to allow custom error handling scenarios.
             $event = new AuthenticationFailed($throwable, true);
@@ -101,8 +101,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
                 'error' => ['error' => $error, 'description' => $errorDescription],
             ]));
 
-            // Clear the local session via the Auth0-PHP SDK:
-            $guard->sdk()->clear();
+            $this->clearSession($guard);
 
             // Create a dynamic exception to report the API error response
             $exception = new CallbackControllerException(sprintf(CallbackControllerException::MSG_API_RESPONSE, $error, $errorDescription));
@@ -131,11 +130,14 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         if ($credential instanceof CredentialEntityContract && $user instanceof Authenticatable) {
             event(new Validated($guard::class, $user));
 
+            $this->clearSession($guard);
+
             /**
              * @var Guard $guard
              */
             $guard->login($credential, Guard::SOURCE_SESSION);
 
+            $request->session()->invalidate();
             $request->session()->regenerate();
 
             $event = new AuthenticationSucceeded($user);
@@ -150,5 +152,26 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         }
 
         return redirect()->intended('/');
+    }
+
+    private function clearSession(
+        GuardAbstract $guard,
+        bool $clearTransientStorage = true,
+        bool $clearPersistentStorage = true,
+        bool $clearSdkStorage = true,
+    ): void {
+        $service = $guard->service() ?? null;
+
+        if ($clearTransientStorage && $service instanceof InstanceEntityContract) {
+            $service->getConfiguration()->getTransientStorage()?->purge();
+        }
+
+        if ($clearPersistentStorage && $service instanceof InstanceEntityContract) {
+            $service->getConfiguration()->getSessionStorage()?->purge();
+        }
+
+        if ($clearSdkStorage) {
+            $guard->sdk()->clear();
+        }
     }
 }

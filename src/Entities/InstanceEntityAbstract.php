@@ -285,7 +285,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     protected function setSdkTelemetry(): self
     {
         HttpTelemetry::setEnvProperty('Laravel', app()->version());
-        HttpTelemetry::setPackage('laravel-auth0', Service::VERSION);
+        HttpTelemetry::setPackage('laravel', Service::VERSION);
 
         return $this;
     }

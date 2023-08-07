@@ -1,15 +1,18 @@
-name: "Semgrep"
+name: "Semgrep (Scheduled)"
+
+# This workflow will run after a push to the main branch and as a scheduled job.
 
 on:
   push:
-    branches:
-      - main
-
+    branches: ["master", "main"]
   schedule:
-    - cron: '30 0 1,15 * *'
+    - cron: "30 0 1,15 * *"
+
+permissions: {}
 
 jobs:
   semgrep:
+    name: "Scan"
     runs-on: ubuntu-latest
 
     container:

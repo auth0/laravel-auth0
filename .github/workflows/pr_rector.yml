@@ -1,22 +1,20 @@
-name: "Psalm"
+name: "Rector"
 
 on:
   pull_request:
   merge_group:
   push:
-    branches:
-      - main
+    branches: ["master", "main"]
 
 permissions: {}
 
 jobs:
-  psalm:
+  rector:
+    name: "Scan"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -24,4 +22,4 @@ jobs:
 
       - run: composer install --no-progress
 
-      - run: vendor/bin/psalm
+      - run: vendor/bin/rector process --dry-run

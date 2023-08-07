@@ -1,5 +1,24 @@
 # Changelog
 
+## [7.10.0](https://github.com/auth0/laravel-auth0/tree/7.9.1) (2023-07-24)
+
+### Added
+
+-   Organization Name support added for Authentication API and token handling ¹
+
+### Changed
+
+-   Guards are now registered with the priority middleware list.
+-   Bumped `auth0-php` dependency version range to `^8.7`.
+-   Updated telemetry to indicate new `laravel` package name (previously `laravel-auth0`.)
+
+### Fixed
+
+-   Addressed issue where placeholder `AUTH0_` dotenv values could erroneously be interpreted as true configuration values.
+
+> **Note**
+> ¹ To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
+
 ## [7.9.1](https://github.com/auth0/laravel-auth0/tree/7.9.1) (2023-06-21)
 
 ### Fixed
