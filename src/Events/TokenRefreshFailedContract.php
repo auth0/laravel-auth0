@@ -9,5 +9,5 @@ namespace Auth0\Laravel\Events;
  */
 interface TokenRefreshFailedContract extends EventContract
 {
-    public function jsonSerialize(): null;
+    public function jsonSerialize(): ?array;
 }
