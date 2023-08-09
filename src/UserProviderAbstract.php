@@ -9,6 +9,7 @@ use Auth0\Laravel\Guards\{AuthorizationGuardContract, GuardContract};
 use Auth0\Laravel\{UserRepository, UserRepositoryContract};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Cache;
 
 use function is_string;
 
@@ -19,6 +20,11 @@ use function is_string;
  */
 abstract class UserProviderAbstract
 {
+    /**
+     * @var string
+     */
+    protected const TELESCOPE = '\Laravel\Telescope\Telescope';
+
     protected ?UserRepositoryContract $repository = null;
 
     protected string $repositoryName = '';
@@ -40,7 +46,59 @@ abstract class UserProviderAbstract
      */
     final public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
-        return $this->getRepository()->fromSession($credentials);
+        if ([] === $credentials) {
+            return null;
+        }
+
+        $hash = hash('sha256', json_encode($credentials, JSON_THROW_ON_ERROR) ?: ''); /** @phpstan-ignore-line */
+        $cached = $this->withoutRecording(static fn (): mixed => Cache::get('auth0_sdk_credential_lookup_' . $hash));
+
+        if ($cached instanceof Authenticatable) {
+            return $cached;
+        }
+
+        static $lastResponse = null;
+        static $lastCredentials = null;
+
+        /**
+         * @var ?Authenticatable $lastResponse
+         * @var array            $lastCredentials
+         */
+        if ($lastCredentials === $credentials) {
+            return $lastResponse;
+        }
+
+        if (class_exists('\Laravel\Telescope\Telescope')) {
+            static $depth = 0;
+            static $lastCalled = null;
+
+            /**
+             * @var int  $depth
+             * @var ?int $lastCalled
+             */
+            if (null === $lastCalled) {
+                $lastCalled = time();
+            }
+
+            if ($lastCredentials !== $credentials || time() - $lastCalled > 10) {
+                $lastResponse = null;
+                $depth = 0;
+            }
+
+            if ($depth >= 1) {
+                return $lastResponse;
+            }
+
+            ++$depth;
+            $lastCalled = time();
+            $lastCredentials = $credentials;
+        }
+
+        $lastResponse = $this->getRepository()->fromSession($credentials);
+
+        $this->withoutRecording(static fn (): bool => Cache::put('auth0_sdk_credential_lookup_' . $hash, $lastResponse, 5));
+
+        return $lastResponse;
     }
 
     /**
@@ -162,5 +220,14 @@ abstract class UserProviderAbstract
     {
         $this->setConfiguration('model', $repositoryName);
         $this->repositoryName = $repositoryName;
+    }
+
+    protected function withoutRecording(callable $callback): mixed
+    {
+        if (class_exists(self::TELESCOPE)) {
+            return self::TELESCOPE::withoutRecording($callback);
+        }
+
+        return $callback();
     }
 }

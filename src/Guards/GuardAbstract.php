@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntity, InstanceEntityContract};
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\Exceptions\{AuthenticationException, GuardException, GuardExceptionContract};
 use Auth0\SDK\Contract\API\ManagementInterface;
@@ -206,20 +207,23 @@ abstract class GuardAbstract implements Guard
     final public function processToken(
         string $token,
     ): ?array {
-        $event = new TokenVerificationAttempting($token);
-        event($event);
-        $token = $event->getToken();
+        Events::dispatch($event = new TokenVerificationAttempting($token));
+        $token = $event->token;
         $decoded = null;
 
         try {
             $decoded = $this->sdk()->decode(token: $token, tokenType: Token::TYPE_ACCESS_TOKEN)->toArray();
         } catch (InvalidTokenException $invalidTokenException) {
-            event(new TokenVerificationFailed($token, $invalidTokenException));
+            Events::dispatch($event = new TokenVerificationFailed($token, $invalidTokenException));
+
+            if ($event->throwException) {
+                throw $invalidTokenException;
+            }
 
             return null;
         }
 
-        event(new TokenVerificationSucceeded($token, $decoded));
+        Events::dispatch(new TokenVerificationSucceeded($token, $decoded));
 
         return $decoded;
     }

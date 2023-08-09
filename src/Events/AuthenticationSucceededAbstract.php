@@ -13,18 +13,23 @@ use Illuminate\Contracts\Auth\Authenticatable;
  */
 abstract class AuthenticationSucceededAbstract extends EventAbstract
 {
-    public function __construct(protected Authenticatable $user)
-    {
+    /**
+     * @param Authenticatable $user The user that successfully authenticated.
+     */
+    public function __construct(
+        public Authenticatable &$user,
+    ) {
     }
 
-    final public function getUser(): Authenticatable
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     *
+     * @return array{user: mixed}
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->user;
-    }
-
-    final public function setUser(Authenticatable $user): void
-    {
-        $this->user = $user;
-        $this->mutated = true;
+        return [
+            'user' => json_decode(json_encode($this->user, JSON_THROW_ON_ERROR), true),
+        ];
     }
 }

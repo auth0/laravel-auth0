@@ -70,10 +70,11 @@ it('impersonates a user against auth0.authenticate', function (): void {
     });
 
     $this->actingAsAuth0User(attributes: $this->user, source: Guard::SOURCE_SESSION)
-        ->getJson($route)
-        ->assertStatus(Response::HTTP_OK)
-        ->assertJson(['status' => $route])
-        ->assertJsonFragment(['sub' => $this->user['sub']]);
+         ->withoutExceptionHandling()
+         ->getJson($route)
+         ->assertStatus(Response::HTTP_OK)
+         ->assertJson(['status' => $route])
+         ->assertJsonFragment(['sub' => $this->user['sub']]);
 
     expect($this->guard)
         ->user()->toBeInstanceOf(UserContract::class);

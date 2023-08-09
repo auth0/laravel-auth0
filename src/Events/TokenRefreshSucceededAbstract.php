@@ -11,4 +11,8 @@ namespace Auth0\Laravel\Events;
  */
 abstract class TokenRefreshSucceededAbstract extends EventAbstract
 {
+    final public function jsonSerialize(): null
+    {
+        return null;
+    }
 }

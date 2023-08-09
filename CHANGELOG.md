@@ -1,5 +1,29 @@
 # Changelog
 
+## [7.11.0](https://github.com/auth0/laravel-auth0/tree/7.10.1) (2023-08-08)
+
+### Added
+
+- Significant performance improvements by eliminating redundant user queries.
+- Compatibility support for [Laravel Telescope](https://laravel.com/docs/telescope). See [docs/Telescope.md](./docs/Telescope.md) for more information.
+- A refactored Events API has been introduced. See [docs/Events.md](./docs/Events.md) for more information.
+- `AUTH0_SESSION_STORAGE` and `AUTH0_TRANSIENT_STORAGE` now support a `cookie` value to enable the native Auth0-PHP SDK cookie session handler. See [docs/Cookies.md](./docs/Cookies.md) for more information.
+
+### Fixed
+
+- Addressed an issue where, under certain circumstances, the first user authentication attempt after a session invalidation could fail.
+
+### Changed
+
+- Session regeneration/invalidation has been refactored.
+- Discarded sessions are now deleted when they are invalidated by the SDK, rather than wait for Laravel to garbage collect.
+- Session storage has been refactored. Session data is now stored as a JSON array in a single `auth0_session` entry in the Laravel session store, rather than in multiple keys.
+
+### Documentation
+
+- A demonstration Eloquent user model and repository implementation has been added to [docs/Eloquent.md](./docs/Eloquent.md).
+- A new [docs/Sessions.md](./docs/Sessions.md) document has been added for guidance on the various session driver options available.
+
 ## [7.10.1](https://github.com/auth0/laravel-auth0/tree/7.10.1) (2023-08-07)
 
 ### Fixed

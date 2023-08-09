@@ -7,7 +7,7 @@
     - [Create a Laravel Application](#create-a-laravel-application)
     - [Install the SDK](#install-the-sdk-1)
 - [Install the CLI](#install-the-cli)
-    - [Authenticate the CLI](#authenticate-the-cli)
+  - [Authenticate the CLI](#authenticate-the-cli)
 - [Configure the SDK](#configure-the-sdk)
   - [Using JSON (Recommended)](#using-json-recommended)
   - [Using Environment Variables](#using-environment-variables)

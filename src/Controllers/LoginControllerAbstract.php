@@ -6,6 +6,7 @@ namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\LoginAttempting;
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Guards\GuardAbstract;
@@ -42,12 +43,11 @@ abstract class LoginControllerAbstract extends ControllerAbstract
             return redirect()->intended('/');
         }
 
-        $event = new LoginAttempting();
-        event($event);
+        session()->regenerate(true);
 
-        $url = $guard->sdk()->login(
-            params: $event->getParameters(),
-        );
+        Events::dispatch($event = new LoginAttempting());
+
+        $url = $guard->sdk()->login(params: $event->parameters);
 
         return redirect()->away($url);
     }

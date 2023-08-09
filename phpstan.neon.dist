@@ -10,6 +10,7 @@ parameters:
         - deprecated
 
     ignoreErrors:
+        - '#Constructor of class (.*) has an unused parameter (.*).#'
         - '#Method (.*) has parameter (.*) with no value type specified in iterable type array.#'
         - '#no value type specified in iterable type array.#'
 

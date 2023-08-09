@@ -39,6 +39,7 @@ abstract class LogoutControllerAbstract extends ControllerAbstract
 
         if ($loggedIn) {
             session()->invalidate();
+
             $guard->logout(); /** @phpstan-ignore-line */
             $route = (string) url('/'); /** @phpstan-ignore-line */
             $url = $guard->sdk()->authentication()->getLogoutLink($route);

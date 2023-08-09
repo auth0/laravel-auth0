@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Events;
 
 /**
- * Raised when a token refresh attempt fails.
+ * Dispatched when a token refresh fails.
  *
  * @api
  */

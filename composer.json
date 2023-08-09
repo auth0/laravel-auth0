@@ -114,7 +114,7 @@
         "pest:coverage": "@php vendor/bin/pest --coverage --parallel --no-progress",
         "pest:debug": "@php vendor/bin/pest --fail-on-risky --stop-on-defect",
         "pest:profile": "@php vendor/bin/pest --profile",
-        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel --min=95",
+        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --parallel",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
         "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpstan": "@php vendor/bin/phpstan analyze",

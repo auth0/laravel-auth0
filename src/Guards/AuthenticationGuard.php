@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Entities\{CredentialEntity, CredentialEntityContract};
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{TokenRefreshFailed, TokenRefreshSucceeded};
 use Auth0\Laravel\Users\StatefulUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
@@ -105,7 +106,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $user = $credential->getUser();
 
             if ($user instanceof Authenticatable) {
-                event(new Login(self::class, $user, true));
+                Events::framework(new Login(self::class, $user, true));
             }
         }
 
@@ -117,7 +118,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         $user = $this->user();
 
         if ($user instanceof Authenticatable) {
-            event(new Logout(self::class, $user));
+            Events::framework(new Logout(self::class, $user));
         }
 
         $this->stopImpersonating();
@@ -272,10 +273,40 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             return $this->getImposter()?->getUser();
         }
 
+        static $lastResponse = null;
+
+        /**
+         * @var ?Authenticatable $lastResponse
+         */
+        if (class_exists('\Laravel\Telescope\Telescope')) {
+            static $depth = 0;
+            static $lastCalled = null;
+
+            /**
+             * @var int  $depth
+             * @var ?int $lastCalled
+             */
+            if (null === $lastCalled) {
+                $lastCalled = time();
+            }
+
+            if (time() - $lastCalled > 10) {
+                $lastResponse = null;
+                $depth = 0;
+            }
+
+            if ($depth >= 1) {
+                return $lastResponse;
+            }
+
+            ++$depth;
+            $lastCalled = time();
+        }
+
         $currentUser = $this->getCredential()?->getUser();
 
         if ($currentUser instanceof Authenticatable) {
-            return $currentUser;
+            return $lastResponse = $currentUser;
         }
 
         $session = $this->find();
@@ -283,10 +314,10 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         if ($session instanceof CredentialEntityContract) {
             $this->login($session);
 
-            return $this->getCredential()?->getUser();
+            return $lastResponse = $this->getCredential()?->getUser();
         }
 
-        return null;
+        return $lastResponse = null;
     }
 
     private function pullState(): ?CredentialEntityContract
@@ -337,12 +368,12 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             $this->sdk()->renew();
             $session = $this->pullState();
         } catch (\Throwable) {
-            event(new TokenRefreshFailed());
+            Events::dispatch(new TokenRefreshFailed());
             $session = null;
         }
 
         if ($session instanceof CredentialEntityContract) {
-            event(new TokenRefreshSucceeded());
+            Events::dispatch(new TokenRefreshSucceeded());
             $user = $session->getUser();
 
             // @codeCoverageIgnoreStart

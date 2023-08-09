@@ -5,6 +5,7 @@ use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,46 @@ uses()->beforeEach(function (): void {
     Event::listen('*', function ($event) {
         $this->events[] = $event;
     });
+
+    Cache::flush();
+
+    config()->set('auth', [
+        'defaults' => [
+            'guard' => 'legacyGuard',
+            'passwords' => 'users',
+        ],
+        'guards' => [
+            'web' => [
+                'driver' => 'session',
+                'provider' => 'users',
+            ],
+            'legacyGuard' => [
+                'driver' => 'auth0.guard',
+                'configuration' => 'web',
+                'provider' => 'auth0-provider',
+            ],
+            'auth0-session' => [
+                'driver' => 'auth0.authenticator',
+                'configuration' => 'web',
+                'provider' => 'auth0-provider',
+            ],
+            'auth0-api' => [
+                'driver' => 'auth0.authorizer',
+                'configuration' => 'api',
+                'provider' => 'auth0-provider',
+            ],
+        ],
+        'providers' => [
+            'users' => [
+                'driver' => 'eloquent',
+                'model' => App\Models\User::class,
+            ],
+            'auth0-provider' => [
+                'driver' => 'auth0.provider',
+                'repository' => 'auth0.repository',
+            ],
+        ],
+    ]);
 })->in(__DIR__);
 
 // uses()->afterEach(function (): void {

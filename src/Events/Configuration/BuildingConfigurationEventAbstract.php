@@ -13,18 +13,23 @@ use Auth0\Laravel\Events\EventAbstract;
  */
 abstract class BuildingConfigurationEventAbstract extends EventAbstract
 {
+    /**
+     * @param array<mixed> $configuration a configuration array for use with the Auth0-PHP SDK
+     */
     public function __construct(
-        protected array $configuration,
+        public array &$configuration,
     ) {
     }
 
-    final public function getConfiguration(): array
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     *
+     * @return array{configuration: mixed}
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->configuration;
-    }
-
-    final public function setConfiguration(array $configuration): void
-    {
-        $this->configuration = $configuration;
+        return [
+            'configuration' => json_decode(json_encode($this->configuration, JSON_THROW_ON_ERROR), true),
+        ];
     }
 }

@@ -12,21 +12,7 @@ use Auth0\Laravel\Events\EventContract;
 interface BuildingConfigurationEventContract extends EventContract
 {
     /**
-     * AuthenticationFailed constructor.
-     *
-     * @param array<mixed> $configuration a configuration array for use with the Auth0-PHP SDK
+     * @return array{configuration: array<array-key, mixed>}
      */
-    public function __construct(array $configuration);
-
-    /**
-     * Returns the exception to be thrown.
-     */
-    public function getConfiguration(): array;
-
-    /**
-     * Determine whether the provided exception will be thrown by the SDK.
-     *
-     * @param array<mixed> $configuration an configuration array for use with the Auth0-PHP SDK
-     */
-    public function setConfiguration(array $configuration): void;
+    public function jsonSerialize(): array;
 }

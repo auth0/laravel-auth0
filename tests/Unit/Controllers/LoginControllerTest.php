@@ -29,11 +29,13 @@ beforeEach(function (): void {
     $this->sdk = $this->laravel->getSdk();
 
     $this->validSession = [
-        'auth0_session_user' => ['sub' => 'hello|world'],
-        'auth0_session_idToken' => (string) Generator::create((createRsaKeys())->private),
-        'auth0_session_accessToken' => (string) Generator::create((createRsaKeys())->private),
-        'auth0_session_accessTokenScope' => [uniqid()],
-        'auth0_session_accessTokenExpiration' => time() + 60,
+        'auth0_session' => json_encode([
+            'user' => ['sub' => 'hello|world'],
+            'idToken' => (string) Generator::create((createRsaKeys())->private),
+            'accessToken' => (string) Generator::create((createRsaKeys())->private),
+            'accessTokenScope' => [uniqid()],
+            'accessTokenExpiration' => time() + 60,
+        ])
     ];
 
     Route::get('/login', LoginController::class);

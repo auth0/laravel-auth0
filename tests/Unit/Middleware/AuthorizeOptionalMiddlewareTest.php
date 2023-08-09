@@ -30,26 +30,6 @@ beforeEach(function (): void {
     $this->sdk = $this->laravel->getSdk();
 });
 
-it('does not assign a user when an incompatible guard is used', function (): void {
-    $route = '/' . uniqid();
-
-    Route::middleware('auth0.authorize.optional')->get($route, function () use ($route): string {
-        return json_encode(['status' => $route]);
-    });
-
-    config([
-        'auth.defaults.guard' => 'web',
-        'auth.guards.legacyGuard' => null
-    ]);
-
-    $this->getJson($route, ['Authorization' => 'Bearer ' . uniqid()])
-        ->assertStatus(Response::HTTP_OK)
-        ->assertJson(['status' => $route]);
-
-    expect($this->guard)
-        ->user()->toBeNull();
-});
-
 it('does not assign a user when an invalid bearer token is provided', function (): void {
     $route = '/' . uniqid();
 
@@ -145,6 +125,26 @@ it('does not assign a user when a configured scope is not matched', function ():
     ]);
 
     $this->getJson($route, ['Authorization' => 'Bearer ' . $token->toString()])
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJson(['status' => $route]);
+
+    expect($this->guard)
+        ->user()->toBeNull();
+});
+
+it('does not assign a user when an incompatible guard is used', function (): void {
+    $route = '/' . uniqid();
+
+    Route::middleware('auth0.authorize.optional')->get($route, function () use ($route): string {
+        return json_encode(['status' => $route]);
+    });
+
+    config([
+        'auth.defaults.guard' => 'web',
+        'auth.guards.legacyGuard' => null
+    ]);
+
+    $this->getJson($route, ['Authorization' => 'Bearer ' . uniqid()])
         ->assertStatus(Response::HTTP_OK)
         ->assertJson(['status' => $route]);
 

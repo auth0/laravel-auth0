@@ -9,8 +9,4 @@ namespace Auth0\Laravel\Events;
  */
 interface Auth0EventContract extends EventContract
 {
-    /**
-     * Returns whether an event payload has been overwritten.
-     */
-    public function wasMutated(): bool;
 }

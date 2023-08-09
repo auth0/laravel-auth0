@@ -130,10 +130,12 @@ it('returns a user and sets up a session', function (): void {
     $client->addResponse('POST', 'https://' . config('auth0.guards.default.domain') . '/oauth/token', $response);
 
     $this->withSession([
-        'auth0_transient_state' => $state,
-        'auth0_transient_pkce' => $pkce,
-        'auth0_transient_nonce' => $nonce,
-        'auth0_transient_code_verifier' => $verifier
+        'auth0_transient' => json_encode([
+            'state' => $state,
+            'pkce' => $pkce,
+            'nonce' => $nonce,
+            'code_verifier' => $verifier
+        ])
     ])->getJson('/auth0/callback?code=code&state=' . $state)
         ->assertFound()
         ->assertLocation('/');

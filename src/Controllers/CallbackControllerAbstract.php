@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntityContract};
+use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
@@ -59,7 +60,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
          */
         try {
             if (null !== $code && null !== $state) {
-                event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
+                Events::framework(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
 
                 $success = $guard->sdk()->exchange(
                     code: $code,
@@ -72,16 +73,13 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             $credentials['state'] = $state;
             $credentials['error'] = ['description' => $throwable->getMessage()];
 
-            event(new Failed($guard::class, $guard->user(), $credentials));
+            Events::framework(new Failed($guard::class, $guard->user(), $credentials));
 
-            $this->clearSession($guard);
+            session()->invalidate();
 
-            // Throw hookable $event to allow custom error handling scenarios.
-            $event = new AuthenticationFailed($throwable, true);
-            event($event);
+            Events::dispatch($event = new AuthenticationFailed($throwable, true));
 
-            // If the event was not hooked by the application, throw an exception:
-            if ($event->getThrowException()) {
+            if ($event->throwException) {
                 throw $throwable;
             }
         }
@@ -93,15 +91,15 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             $error = is_string($error) ? $error : '';
             $errorDescription = is_string($errorDescription) ? $errorDescription : '';
 
-            event(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
+            Events::framework(new Attempting($guard::class, ['code' => $code, 'state' => $state], true));
 
-            event(new Failed($guard::class, $guard->user(), [
+            Events::framework(new Failed($guard::class, $guard->user(), [
                 'code' => $code,
                 'state' => $state,
                 'error' => ['error' => $error, 'description' => $errorDescription],
             ]));
 
-            $this->clearSession($guard);
+            session()->invalidate();
 
             // Create a dynamic exception to report the API error response
             $exception = new CallbackControllerException(sprintf(CallbackControllerException::MSG_API_RESPONSE, $error, $errorDescription));
@@ -109,12 +107,9 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             // Store the API exception in the session as a flash variable, in case the application wants to access it.
             session()->flash('auth0.callback.error', sprintf(CallbackControllerException::MSG_API_RESPONSE, $error, $errorDescription));
 
-            // Throw hookable $event to allow custom error handling scenarios:
-            $event = new AuthenticationFailed($exception, true);
-            event($event);
+            Events::dispatch($event = new AuthenticationFailed($exception, true));
 
-            // If the event was not hooked by the application, throw an exception:
-            if ($event->getThrowException()) {
+            if ($event->throwException) {
                 throw $exception;
             }
         }
@@ -128,50 +123,23 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         $user = $credential?->getUser();
 
         if ($credential instanceof CredentialEntityContract && $user instanceof Authenticatable) {
-            event(new Validated($guard::class, $user));
+            Events::framework(new Validated($guard::class, $user));
 
-            $this->clearSession($guard);
+            session()->regenerate(true);
 
             /**
              * @var Guard $guard
              */
             $guard->login($credential, Guard::SOURCE_SESSION);
 
-            $request->session()->invalidate();
-            $request->session()->regenerate();
-
-            $event = new AuthenticationSucceeded($user);
-            event($event);
-            $user = $event->getUser();
-            $guard->setUser($user);
+            Events::dispatch(new AuthenticationSucceeded($user));
 
             // @phpstan-ignore-next-line
             if ($user instanceof Authenticatable) {
-                event(new Authenticated($guard::class, $user));
+                Events::framework(new Authenticated($guard::class, $user));
             }
         }
 
         return redirect()->intended('/');
-    }
-
-    private function clearSession(
-        GuardAbstract $guard,
-        bool $clearTransientStorage = true,
-        bool $clearPersistentStorage = true,
-        bool $clearSdkStorage = true,
-    ): void {
-        $service = $guard->service() ?? null;
-
-        if ($clearTransientStorage && $service instanceof InstanceEntityContract) {
-            $service->getConfiguration()->getTransientStorage()?->purge();
-        }
-
-        if ($clearPersistentStorage && $service instanceof InstanceEntityContract) {
-            $service->getConfiguration()->getSessionStorage()?->purge();
-        }
-
-        if ($clearSdkStorage) {
-            $guard->sdk()->clear();
-        }
     }
 }

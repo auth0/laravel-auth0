@@ -356,11 +356,18 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 
 - [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
 - [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
-- [Management](./docs/Management.md) — Using the SDK to call the [Management API](https://auth0.com/docs/api/management/v2).
-- [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent).
+- [Sessions](./docs/Sessions.md) — Guidance on deciding which Laravel Session API driver to use.
+- [Cookies](./docs/Cookies.md) — Important notes about using Laravel's Cookie session driver, and alternative options.
+- [Management API](./docs/Management.md) — Using the SDK to work with the [Auth0 Management API](https://auth0.com/docs/api/management/v2).
+- [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent) models.
 - [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
 - [Deployment](./docs/Deployment.md) — Deploying your application to production.
-- [Octane](./docs/Octane.md) — We do not support using the SDK with [Octane](https://laravel.com/docs/octane) at this time.
+
+You may find the following integration guidance useful:
+
+- [Laravel Eloquent](./docs/Eloquent.md) — [Eloquent ORM](https://laravel.com/docs/eloquent) is supported.
+- [Laravel Octane](./docs/Octane.md) — [Octane](https://laravel.com/docs/octane) is not supported at this time.
+- [Laravel Telescope](./docs/Telescope.md) — [Telescope](https://laravel.com/docs/telescope) is compatible as of SDK v7.11.0.
 
 You may also find the following resources helpful:
 

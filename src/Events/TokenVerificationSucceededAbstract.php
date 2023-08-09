@@ -11,19 +11,26 @@ namespace Auth0\Laravel\Events;
  */
 abstract class TokenVerificationSucceededAbstract extends EventAbstract
 {
+    /**
+     * @param string $token   JSON Web Token that was verified.
+     * @param array  $payload The decoded contents of the verified JSON Web Token.
+     */
     public function __construct(
-        protected string $token,
-        protected array $payload,
+        public string $token,
+        public array $payload,
     ) {
     }
 
-    final public function getPayload(): array
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     *
+     * @return array{token: string, payload: mixed[]}
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->payload;
-    }
-
-    final public function getToken(): string
-    {
-        return $this->token;
+        return [
+            'token' => $this->token,
+            'payload' => $this->payload,
+        ];
     }
 }

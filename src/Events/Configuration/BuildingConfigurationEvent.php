@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Events\Configuration;
 
 /**
- * Event fired when the configuration array is being built.
+ * Dispatched immediately before the Auth0 SDK configuration object is built, allowing for modification of the configuration array.
  *
  * @api
  */

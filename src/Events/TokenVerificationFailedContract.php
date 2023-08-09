@@ -4,31 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Events;
 
-use Throwable;
-
 /**
  * @api
  */
 interface TokenVerificationFailedContract extends EventContract
 {
     /**
-     * AuthenticationFailed constructor.
-     *
-     * @param string    $token     an encoded bearer JSON web token
-     * @param Throwable $exception an exception instance in which to throw for the token verification failure
+     * @return array{token: string, exception: array<array-key, mixed>, throwException: bool}
      */
-    public function __construct(
-        string $token,
-        Throwable $exception,
-    );
-
-    /**
-     * Returns the exception to be thrown.
-     */
-    public function getException(): Throwable;
-
-    /**
-     * Return the bearer JSON web token.
-     */
-    public function getToken(): string;
+    public function jsonSerialize(): array;
 }

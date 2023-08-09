@@ -412,7 +412,6 @@ return static function (RectorConfig $rectorConfig): void {
         RemoveJustPropertyFetchForAssignRector::class,
         RemoveJustVariableAssignRector::class,
         RemoveLastReturnRector::class,
-        RemoveNonExistingVarAnnotationRector::class,
         RemoveNullPropertyInitializationRector::class,
         RemoveParentCallWithoutParentRector::class,
         RemoveParentCallWithoutParentRector::class,

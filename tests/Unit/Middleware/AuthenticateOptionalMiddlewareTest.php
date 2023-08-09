@@ -27,31 +27,14 @@ beforeEach(function (): void {
     $this->sdk = $this->laravel->getSdk();
 
     $this->validSession = [
-        'auth0_session_user' => ['sub' => 'hello|world'],
-        'auth0_session_idToken' => (string) Generator::create((createRsaKeys())->private),
-        'auth0_session_accessToken' => (string) Generator::create((createRsaKeys())->private),
-        'auth0_session_accessTokenScope' => [uniqid(), 'read:admin'],
-        'auth0_session_accessTokenExpiration' => time() + 60,
+        'auth0_session' => json_encode([
+            'user' => ['sub' => 'hello|world'],
+            'idToken' => (string) Generator::create((createRsaKeys())->private),
+            'accessToken' => (string) Generator::create((createRsaKeys())->private),
+            'accessTokenScope' => [uniqid(), 'read:admin'],
+            'accessTokenExpiration' => time() + 60,
+        ]),
     ];
-});
-
-it('does not assign a user when an incompatible guard is used', function (): void {
-    $route = '/' . uniqid();
-
-    Route::middleware('auth0.authenticate.optional')->get($route, function () use ($route): string {
-        return $route;
-    });
-
-    config($config = [
-        'auth.defaults.guard' => 'web',
-        'auth.guards.legacyGuard' => null
-    ]);
-
-    $this->get($route)
-         ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
-
-    expect($this->guard)
-         ->user()->toBeNull();
 });
 
 it('continues if a visitor does not have a session', function (): void {
@@ -115,4 +98,23 @@ it('does not assign a user when a configured scope is not matched', function ():
 
     expect($this->guard)
         ->user()->toBeNull();
+});
+
+it('does not assign a user when an incompatible guard is used', function (): void {
+    $route = '/' . uniqid();
+
+    Route::middleware('auth0.authenticate.optional')->get($route, function () use ($route): string {
+        return $route;
+    });
+
+    config($config = [
+        'auth.defaults.guard' => 'web',
+        'auth.guards.legacyGuard' => null
+    ]);
+
+    $this->get($route)
+         ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+    expect($this->guard)
+         ->user()->toBeNull();
 });

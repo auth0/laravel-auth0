@@ -1,9 +1,30 @@
 # Users
 
--   [Retrieving User Information](#retrieving-user-information)
--   [Updating User Information](#updating-user-information)
--   [Custom User Repositories](#custom-user-repositories)
--   [Custom User Models](#custom-user-models)
+- [User Persistenece](#user-persistenece)
+- [Best Practices](#best-practices)
+- [Retrieving User Information](#retrieving-user-information)
+- [Updating User Information](#updating-user-information)
+- [Extending the SDK](#extending-the-sdk)
+  - [User Repositories](#user-repositories)
+  - [Eloquent User Models](#eloquent-user-models)
+
+## User Persistence
+
+By default the SDK does not persist user information to a database.
+
+- When a user authenticates with your application, the SDK retrieves their profile data from Auth0 and stores it within their session.
+- During each subsequent request, the SDK retrieves the stored profile data from the session and constructs a model representing the authenticated user from it.
+- This user model is available to your application via the `Auth` facade or `auth()` helper for the duration of the current request.
+
+Later in this guide we'll demonstrate how you can extend this default behavior to persist that profile data to your application's database, if desired.
+
+## Best Practices
+
+Auth0 provides a number of features that can simplify your application's authentication and authorization workflows. It may be helpful to keep the following best practices in mind as you integrate the SDK into your application:
+
+- Treat Auth0 as the single source of truth about your users.
+- If you must store user information in a database, store as little as possible. Treat any stored data as a cache, and sync it regularly using [the Management API](./Management.md).
+- Always use the [the Management API](./Management.md) to update user information. If you're storing user information in a database, sync those changes to your database as needed, not the other way around.
 
 ## Retrieving User Information
 
@@ -13,7 +34,7 @@ To retrieve information about the currently authenticated user, use the `user()`
 auth()->user();
 ```
 
-You can also retrieve information on any user using [the Management API](./Management.md). This also returns extended information not usually contained in the authentication state such as user metadata.
+You can also retrieve information on any user using [the Management API](./Management.md). This also returns extended information not usually contained in the session state, such as user metadata.
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
@@ -50,18 +71,24 @@ Route::get('/update', function () {
 })->middleware('auth');
 ```
 
-## Custom User Repositories
+## Extending the SDK
 
-The Auth0 Laravel SDK uses the repository pattern to allow the abstraction of potential database operations. This pattern is useful for building completely custom integrations that fit your application's needs.
+### User Repositories
 
-### Creating a User Repository
+By default the SDK does not store user information in your application's database. Instead, it uses the session to store the user's ID token, and retrieves user information from the token when needed. This is a good default behavior, but it may not be suitable for all applications.
 
-Creating a repository is simple: it must implement the `Auth0\Laravel\UserRepositoryContract` interface, and include two methods:
+The SDK uses a repository pattern to allow you to customize how user information is stored and retrieved. This allows you to use your own database to cache user information between authentication requests, or to use a different storage mechanism entirely.
 
--   `fromSession()` to construct a model for an authenticated user.
--   `fromAccessToken` to construct a model representing an access token request.
+#### Creating a User Repository
 
-The default implementation looks like this:
+You can create your own user repository by extending the SDK's `Auth0\Laravel\UserRepositoryAbstract` class implementing the `Auth0\Laravel\UserRepositoryContract` interface. Your repository class need only implement two public methods, both of which should accept a `user` array parameter.
+
+- `fromSession()` to construct a model for an authenticated user. When called, the `user` array will contain the decoded ID token for the authenticated user.
+- `fromAccessToken` to construct a model representing an access token request. When called, the `user` array will contain the decoded access token provided with the request.
+
+When these methods are called by the SDK, the `user` array will include all the information your application needs to construct an `Authenticatable` user model.
+
+The default `UserRepository` implementation looks like this:
 
 ```php
 <?php
@@ -87,7 +114,7 @@ final class UserRepository extends UserRepositoryAbstract implements UserReposit
 }
 ```
 
-The following example repository uses Laravel's [Eloquent ORM](https://laravel.com/docs/eloquent) to store and retrieve users in a `users` table:
+If you're inclined to store user information in an application database, you can expand upon this implementation to retrieve (or create) correlating user records from the database.
 
 ```php
 <?php
@@ -104,27 +131,55 @@ final class UserRepository extends UserRepositoryAbstract implements UserReposit
 {
     public function fromAccessToken(array $user): ?Authenticatable
     {
-        $user = User::firstOrCreate([
-            'auth0_id' => $user['sub'],
-        ], [
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'email_verified' => $user['email_verified'],
-        ]);
+        /*
+            $user = [ // Example of a decoded access token
+                "iss"   => "https://example.auth0.com/",
+                "aud"   => "https://api.example.com/calendar/v1/",
+                "sub"   => "auth0|123456",
+                "exp"   => 1458872196,
+                "iat"   => 1458785796,
+                "scope" => "read write",
+            ];
+        */
 
-        return $user;
+        return User::where('auth0', $user['sub'])->first();
     }
 
     public function fromSession(array $user): ?Authenticatable
     {
-        return User::where('auth0_id', $user['sub'])->first();
+        /*
+            $user = [ // Example of a decoded ID token
+                "iss"         => "http://example.auth0.com",
+                "aud"         => "client_id",
+                "sub"         => "auth0|123456",
+                "exp"         => 1458872196,
+                "iat"         => 1458785796,
+                "name"        => "Jane Doe",
+                "email"       => "janedoe@example.com",
+            ];
+        */
+
+        $user = User::updateOrCreate(
+            attributes: [
+                'auth0' => $user['sub'],
+            ],
+            values: [
+                'name' => $user['name'] ?? '',
+                'email' => $user['email'] ?? '',
+                'email_verified' => $user['email_verified'] ?? false,
+            ]
+        );
+
+        return $user;
     }
 }
 ```
 
-### Registering the Repository
+Note that this example returns a custom user model, `App\Models\User`. You can find an example of this model in the [User Models](#user-models) section below.
 
-The SDK uses it's own repository implementation by default, but you can override this with your own by updating your application's `config/auth.php` file. Simply point the value of the `repository` key to your repository class.
+#### Registering a Repository
+
+You can override the SDK's default user repository by updating your application's `config/auth.php` file. Simply point the value of the `repository` key to your repository class.
 
 ```php
 'providers' => [
@@ -135,43 +190,6 @@ The SDK uses it's own repository implementation by default, but you can override
 ],
 ```
 
-## Custom User Models
+### Eloquent User Models
 
-The repository is responsible for retrieving and storing users, but does not itself define the models representing those users. To customize these, the SDK provides an abstract class that can be extended, `Auth0\Laravel\Users\UserAbstract`.
-
-User models must implement the following interfaces:
-
--   `Illuminate\Contracts\Auth\Authenticatable` required by Laravel's authentication APIs.
--   `Auth0\Laravel\Users\UserContract` required by the SDK.
-
-The abstract model already fulfills the requirements of these interfaces, so you can use it as-is if you do not require any additional functionality.
-
-Here's an example customer user model that extends the SDK's abstract user model class to support Eloquent:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-namespace App\Models;
-
-use Auth0\Laravel\Users\{UserAbstract, UserContract, UserTrait};
-
-final class User extends UserAbstract implements UserContract
-{
-    use UserTrait;
-
-    protected $table = 'users';
-
-    protected $fillable = [
-        'auth0_id',
-        'name',
-        'email',
-        'email_verified',
-    ];
-
-    protected $hidden = [
-        'auth0_id',
-    ];
-}
-```
+Please see [Eloquent.md](./Eloquent.md) for guidance on using Eloquent models with the SDK.

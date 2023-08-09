@@ -6,7 +6,7 @@ namespace Auth0\Laravel\Entities;
 
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
-use Auth0\Laravel\{Configuration, Service};
+use Auth0\Laravel\{Configuration, Events, Service};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
@@ -148,7 +148,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         $sessionStorage = $config['sessionStorage'] ?? null;
         $sessionStorageId = $config['sessionStorageId'] ?? 'auth0_session';
 
-        if (false === $sessionStorage) {
+        if (false === $sessionStorage || 'cookie' === $sessionStorage) {
             unset($config['sessionStorage']);
 
             return $config;
@@ -212,7 +212,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         $transientStorage = $config['transientStorage'] ?? null;
         $transientStorageId = $config['transientStorageId'] ?? 'auth0_transient';
 
-        if (false === $transientStorage) {
+        if (false === $transientStorage || 'cookie' === $transientStorage) {
             unset($config['transientStorage']);
 
             return $config;
@@ -238,10 +238,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     protected function createConfiguration(
         array $configuration,
     ): SdkConfiguration {
-        // Give host application an opportunity to update the configuration before building configuration.
-        $event = new BuildingConfigurationEvent($configuration);
-        event($event);
-        $configuration = $event->getConfiguration();
+        Events::dispatch(new BuildingConfigurationEvent($configuration));
 
         $configuration = $this->bootStrategy($configuration);
         $configuration = $this->bootTokenCache($configuration);
@@ -252,13 +249,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
             $configuration = $this->bootTransientStorage($configuration);
         }
 
-        $configuration = new SdkConfiguration($configuration);
+        $sdkConfiguration = new SdkConfiguration($configuration);
 
-        // Give host application an opportunity to update the configuration before applying it.
-        $event = new BuiltConfigurationEvent($configuration);
-        event($event);
+        Events::dispatch(new BuiltConfigurationEvent($sdkConfiguration));
 
-        return $event->getConfiguration();
+        return $sdkConfiguration;
     }
 
     protected function getManagementTokenCachePool(): CacheItemPoolInterface

@@ -54,13 +54,13 @@ it('supports CRUD operations', function (): void {
         ->get('test')->toBeNull()
         ->set('test', 'value')->toBeNull()
         ->get('test')->toBe('value')
-        ->getAll()->toBe([$prefix . '_test' => 'value'])
+        ->getAll()->toBe(['test' => 'value'])
         ->set('test2', 'value2')->toBeNull()
-        ->getAll()->toBe([$prefix . '_test' => 'value', $prefix . '_test2' => 'value2'])
+        ->getAll()->toBe(['test' => 'value', 'test2' => 'value2'])
         ->delete('test')->toBeNull()
-        ->getAll()->toBe([$prefix . '_test2' => 'value2'])
+        ->getAll()->toBe(['test2' => 'value2'])
         ->set('test3', 'value3')->toBeNull()
-        ->getAll()->toBe([$prefix . '_test2' => 'value2', $prefix . '_test3' => 'value3'])
+        ->getAll()->toBe(['test2' => 'value2', 'test3' => 'value3'])
         ->purge()->toBeNull()
         ->getAll()->toBe([]);
 });

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Middleware;
 
-use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequest;
-use Auth0\Laravel\Guards\GuardContract;
+use Auth0\Laravel\Guards\{AuthenticationGuardContract, GuardContract};
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AuthenticateOptionalMiddlewareAbstract extends MiddlewareAbstract
 {
+    /**
+     * @psalm-suppress UndefinedInterfaceMethod
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @param string  $scope
+     */
     final public function handle(
         Request $request,
         Closure $next,
@@ -30,8 +37,7 @@ abstract class AuthenticateOptionalMiddlewareAbstract extends MiddlewareAbstract
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal Server Error');
         }
 
-        /** @var Guard $guard */
-        event(new StatefulMiddlewareRequest($request, $guard));
+        Events::dispatch(new StatefulMiddlewareRequest($request, $guard));
 
         $credential = $guard->find(GuardContract::SOURCE_SESSION);
 

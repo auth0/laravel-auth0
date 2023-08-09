@@ -10,7 +10,9 @@ namespace Auth0\Laravel\Events;
 interface EventContract
 {
     /**
-     * Returns whether an event payload has been overwritten.
+     * A representation of the event context which can be serialized by json_encode().
+     *
+     * @psalm-suppress LessSpecificImplementedReturnType
      */
-    public function wasMutated(): bool;
+    public function jsonSerialize(): mixed;
 }

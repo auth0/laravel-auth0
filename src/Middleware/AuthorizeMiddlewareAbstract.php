@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Middleware;
 
-use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\CredentialEntityContract;
+use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequest;
-use Auth0\Laravel\Guards\GuardContract;
+use Auth0\Laravel\Guards\{AuthorizationGuardContract, GuardContract};
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AuthorizeMiddlewareAbstract extends MiddlewareAbstract
 {
+    /**
+     * @psalm-suppress UndefinedInterfaceMethod
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @param string  $scope
+     */
     final public function handle(
         Request $request,
         Closure $next,
@@ -30,8 +37,7 @@ abstract class AuthorizeMiddlewareAbstract extends MiddlewareAbstract
             return $next($request);
         }
 
-        /** @var Guard $guard */
-        event(new StatelessMiddlewareRequest($request, $guard));
+        Events::dispatch(new StatelessMiddlewareRequest($request, $guard));
 
         $credential = $guard->find(GuardContract::SOURCE_TOKEN);
 

@@ -11,19 +11,23 @@ namespace Auth0\Laravel\Events;
  */
 abstract class TokenVerificationAttemptingAbstract extends EventAbstract
 {
+    /**
+     * @param string $token Encoded JSON Web Token that will be verification.
+     */
     public function __construct(
-        protected string $token,
+        public string $token,
     ) {
     }
 
-    final public function getToken(): string
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     *
+     * @return array{token: string}
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->token;
-    }
-
-    final public function setToken(string $token): void
-    {
-        $this->token = $token;
-        $this->mutated = true;
+        return [
+            'token' => $this->token,
+        ];
     }
 }

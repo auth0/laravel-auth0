@@ -11,18 +11,23 @@ namespace Auth0\Laravel\Events;
  */
 abstract class LoginAttemptingAbstract extends EventAbstract
 {
+    /**
+     * @param array<string, null|int|string> $parameters Additional API parameters to be sent with the authentication request.
+     */
     public function __construct(
-        protected array $parameters = [],
+        public array $parameters = [],
     ) {
     }
 
-    final public function getParameters(): array
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     *
+     * @return array{parameters: mixed}
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->parameters;
-    }
-
-    final public function setParameters(array $parameters): void
-    {
-        $this->parameters = $parameters;
+        return [
+            'parameters' => json_decode(json_encode($this->parameters, JSON_THROW_ON_ERROR), true),
+        ];
     }
 }

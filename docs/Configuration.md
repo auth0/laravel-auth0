@@ -268,7 +268,7 @@ The following parameters used in this example are of note:
   - For Laravel applications, this should always be set to `regular`.
 - `--auth-method` - This represents the 'Token Endpoint Authentication Method' used for authentication.
   - For Laravel applications, this should always be set to `post`.
-- `--callbacks` - The callback URLs to use for authentication. 
+- `--callbacks` - The callback URLs to use for authentication.
   - In development, this should be set to `http://localhost:8000/callback` or as appropriate.
   - In production, adjust this value to match your application's Internet-accessible URL for its`/callback`` route.
   - This value can be a comma-separated list of URLs.

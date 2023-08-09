@@ -8,6 +8,10 @@ use Auth0\Laravel\Exceptions\SessionException;
 use Illuminate\Session\Store;
 use InvalidArgumentException;
 
+use function array_key_exists;
+use function is_array;
+use function is_string;
+
 /**
  * @api
  */
@@ -37,7 +41,12 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     final public function delete(string $key): void
     {
-        $this->getStore()->forget($this->getPrefixedKey($key));
+        $payload = $this->getPayload() ?? [];
+
+        if (array_key_exists($key, $payload)) {
+            unset($payload[$key]);
+            $this->getStore()->put($this->getPrefix(), json_encode(array_filter($payload), JSON_THROW_ON_ERROR));
+        }
     }
 
     /**
@@ -50,7 +59,9 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     final public function get(string $key, $default = null): mixed
     {
-        return $this->getStore()->get($this->getPrefixedKey($key), $default);
+        $payload = $this->getPayload() ?? [];
+
+        return $payload[$key] ?? $default;
     }
 
     /**
@@ -60,17 +71,7 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     final public function getAll(): array
     {
-        $pairs = $this->getStore()->all();
-        $prefix = $this->prefix . '_';
-        $response = [];
-
-        foreach (array_keys($pairs) as $key) {
-            if (str_starts_with($key, $prefix)) {
-                $response[$key] = $pairs[$key];
-            }
-        }
-
-        return $response;
+        return $this->getPayload() ?? [];
     }
 
     /**
@@ -90,11 +91,7 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     final public function purge(): void
     {
-        $entities = $this->getAll();
-
-        foreach (array_keys($entities) as $entity) {
-            $this->getStore()->forget($entity);
-        }
+        $this->getStore()->forget($this->getPrefix());
     }
 
     /**
@@ -107,7 +104,10 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     final public function set(string $key, $value): void
     {
-        $this->getStore()->put($this->getPrefixedKey($key), $value);
+        $payload = $this->getPayload() ?? [];
+        $payload[$key] = $value;
+
+        $this->getStore()->put($this->getPrefix(), json_encode($payload, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -131,14 +131,19 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
         return $this;
     }
 
-    /**
-     * Prefixes a key with the SDK's configured namespace.
-     *
-     * @param string $key
-     */
-    protected function getPrefixedKey(string $key): string
+    protected function getPayload(): ?array
     {
-        return $this->getPrefix() . '_' . trim($key);
+        $encoded = $this->getStore()->get($this->getPrefix());
+
+        if (is_string($encoded)) {
+            $decoded = json_decode($encoded, true, 512);
+
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return null;
     }
 
     /**

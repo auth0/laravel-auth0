@@ -9,4 +9,5 @@ namespace Auth0\Laravel\Events;
  */
 interface TokenRefreshSucceededContract extends EventContract
 {
+    public function jsonSerialize(): null;
 }

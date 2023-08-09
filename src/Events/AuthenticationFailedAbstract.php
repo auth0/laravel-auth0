@@ -13,30 +13,24 @@ use Throwable;
  */
 abstract class AuthenticationFailedAbstract extends EventAbstract
 {
+    /**
+     * @param Throwable $exception      Exception to be thrown following this event.
+     * @param bool      $throwException Whether or not $exception will be thrown
+     */
     public function __construct(
-        protected Throwable $exception,
-        protected bool $throwException = true,
+        public Throwable &$exception,
+        public bool $throwException = true,
     ) {
     }
 
-    final public function getException(): Throwable
+    /**
+     * @psalm-suppress LessSpecificImplementedReturnType
+     */
+    final public function jsonSerialize(): array
     {
-        return $this->exception;
-    }
-
-    final public function getThrowException(): bool
-    {
-        return $this->throwException;
-    }
-
-    final public function setException(Throwable $exception): void
-    {
-        $this->exception = $exception;
-        $this->mutated = true;
-    }
-
-    final public function setThrowException(bool $throwException): void
-    {
-        $this->throwException = $throwException;
+        return [
+            'exception' => json_decode(json_encode($this->exception, JSON_THROW_ON_ERROR), true),
+            'throwException' => $this->throwException,
+        ];
     }
 }
