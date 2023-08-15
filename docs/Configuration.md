@@ -223,7 +223,7 @@ If you've disabled the automatic registration of routes, you must register the r
 ```php
 use Auth0\Laravel\Controllers\{LoginController, LogoutController, CallbackController};
 
-Route::group(['middleware' => ['guard:auth0-session'], static function (): void {
+Route::group(['middleware' => ['guard:auth0-session']], static function (): void {
   Route::get('/login', LoginController::class)->name('login');
   Route::get('/logout', LogoutController::class)->name('logout');
   Route::get('/callback', CallbackController::class)->name('callback');
