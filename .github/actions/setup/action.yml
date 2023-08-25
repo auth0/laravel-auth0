@@ -12,7 +12,7 @@ inputs:
   extensions:
     description: The PHP extensions to use
     required: false
-    default: 'none, mbstring, curl, simplexml, dom, xmlwriter, xml, tokenizer'
+    default: 'none, mbstring, curl, simplexml, dom, xmlwriter, xml, tokenizer, fileinfo'
   runner:
     description: The runner OS
     required: false
