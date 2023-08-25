@@ -14,6 +14,8 @@ use Auth0\SDK\Utility\HttpResponse;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Contracts\Auth\Authenticatable;
 
+use Throwable;
+
 use function count;
 use function is_array;
 use function is_object;
@@ -367,7 +369,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         try {
             $this->sdk()->renew();
             $session = $this->pullState();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             Events::dispatch(new TokenRefreshFailed());
             $session = null;
         }

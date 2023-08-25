@@ -338,7 +338,7 @@ abstract class GuardAbstract implements Guard
              */
             try {
                 $response = json_encode($user->toArray(), JSON_THROW_ON_ERROR);
-            } catch (\Exception) {
+            } catch (Exception) {
             }
         }
 
@@ -360,7 +360,7 @@ abstract class GuardAbstract implements Guard
                      */
                     return $response;
                 }
-            } catch (\Exception) {
+            } catch (Exception) {
             }
         }
 
