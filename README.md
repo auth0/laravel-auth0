@@ -1,6 +1,6 @@
 ![Auth0 Laravel SDK](https://cdn.auth0.com/website/sdks/banners/laravel-auth0-banner.png)
 
-<div aria-label="Laravel SDK for Auth0 Authentication and Management APIs">
+<div aria-label="Laravel SDK for Auth0 Authentication and Management API's">
     <p aria-hidden="true" align="right">
         <a href="https://github.com/auth0/laravel-auth0/actions/workflows/tests.yml"><img src="https://github.com/auth0/laravel-auth0/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
         <a href="https://codecov.io/gh/auth0/laravel-auth0"><img src="https://codecov.io/gh/auth0/laravel-auth0/branch/main/graph/badge.svg?token=vEwn6TPADf" alt="Code Coverage"></a>
