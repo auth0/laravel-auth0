@@ -22,9 +22,9 @@ define('AUTH0_LARAVEL_RUNNING_TESTS', 1);
 
 uses(TestCase::class)->in(__DIR__);
 
-uses()->beforeAll(function (): void {
-    // ray()->clearAll();
-})->in(__DIR__);
+// uses()->beforeAll(function (): void {
+
+// })->in(__DIR__);
 
 uses()->beforeEach(function (): void {
     $this->events = [];

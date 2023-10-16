@@ -35,7 +35,6 @@ abstract class AuthenticateMiddlewareAbstract extends MiddlewareAbstract
         $scope = trim($scope);
 
         if (! $guard instanceof GuardContract) {
-            ray($guard, config());
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal Server Error');
         }
 

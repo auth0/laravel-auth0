@@ -57,7 +57,6 @@
         "psalm/plugin-laravel": "^2",
         "psr-mock/http": "^1",
         "rector/rector": "0.17.0",
-        "spatie/laravel-ray": "^1",
         "squizlabs/php_codesniffer": "^3",
         "symfony/cache": "^6",
         "vimeo/psalm": "^5",
