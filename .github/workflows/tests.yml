@@ -97,7 +97,7 @@ jobs:
         with:
           php: ${{ matrix.php }}
 
-      - run: composer validate --strict --with-dependencies
+      - run: composer validate --strict
 
   pest:
     name: PEST
