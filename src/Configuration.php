@@ -228,6 +228,36 @@ final class Configuration implements ConfigurationContract
     public const CONFIG_USE_PKCE = 'usePkce';
 
     /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_INDEX = 'routeIndex';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGIN_LANDING = 'routeLoginLanding';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGIN = 'routeLogin';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGOUT_LANDING = 'routeLogoutLanding';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGOUT = 'routeLogout';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_CALLBACK = 'routeCallback';
+
+    /**
      * @var array<string, int>
      */
     public const VERSION_2 = ['AUTH0_CONFIG_VERSION' => 2];
