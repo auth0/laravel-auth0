@@ -115,7 +115,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         }
 
         if (! $success) {
-            return redirect()->intended('/login');
+            return redirect()->intended(config('auth0.routes.login', '/login'));
         }
 
         $credential = ($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find();
@@ -140,6 +140,6 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             }
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(config('auth0.routes.landing', '/'));
     }
 }
