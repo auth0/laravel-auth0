@@ -47,6 +47,6 @@ abstract class LogoutControllerAbstract extends ControllerAbstract
             return redirect()->away($url);
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(config('auth0.routes.index', '/'));
     }
 }
