@@ -40,7 +40,7 @@ abstract class LoginControllerAbstract extends ControllerAbstract
         $loggedIn ??= (($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find()) instanceof CredentialEntityContract;
 
         if ($loggedIn) {
-            return redirect()->intended('/');
+            return redirect()->intended(config('auth0.routes.landing', config('auth0.routes.index', '/')));
         }
 
         session()->regenerate(true);
