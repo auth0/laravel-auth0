@@ -140,6 +140,6 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             }
         }
 
-        return redirect()->intended(config('auth0.routes.landing', '/'));
+        return redirect()->intended(config('auth0.routes.routeLoginLanding', '/'));
     }
 }
