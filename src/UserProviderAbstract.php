@@ -60,6 +60,8 @@ abstract class UserProviderAbstract
         static $lastResponse = null;
         static $lastCredentials = null;
 
+        // @codeCoverageIgnoreStart
+
         /**
          * @var ?Authenticatable $lastResponse
          * @var array            $lastCredentials
@@ -93,6 +95,8 @@ abstract class UserProviderAbstract
             $lastCalled = time();
             $lastCredentials = $credentials;
         }
+
+        // @codeCoverageIgnoreEnd
 
         $lastResponse = $this->getRepository()->fromSession($credentials);
 
@@ -222,6 +226,11 @@ abstract class UserProviderAbstract
         $this->repositoryName = $repositoryName;
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param callable $callback
+     */
     protected function withoutRecording(callable $callback): mixed
     {
         if (class_exists(self::TELESCOPE)) {

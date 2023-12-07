@@ -157,3 +157,10 @@ test('setRepository() with the same repository identifier uses the cached reposi
     expect($provider->getRepository())
         ->toBeInstanceOf($repository::class);
 });
+
+test('retrieveByCredentials() returns `null` when an empty array is provided', function (): void {
+    $provider = new UserProvider(['model' => uniqid()]);
+    $repository = new UserRepository();
+
+    expect($provider->retrieveByCredentials([]))->toBeNull();
+});

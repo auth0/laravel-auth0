@@ -29,6 +29,8 @@ use Auth0\Laravel\Events\{
 
 /**
  * @api
+ *
+ * @codeCoverageIgnore
  */
 final class Events implements EventsContract
 {
