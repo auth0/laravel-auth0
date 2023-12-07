@@ -217,7 +217,9 @@ abstract class GuardAbstract implements Guard
             Events::dispatch($event = new TokenVerificationFailed($token, $invalidTokenException));
 
             if ($event->throwException) {
+                // @codeCoverageIgnoreStart
                 throw $invalidTokenException;
+                // @codeCoverageIgnoreEnd
             }
 
             return null;
@@ -242,6 +244,9 @@ abstract class GuardAbstract implements Guard
         return $this->sdk->getSdk();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     final public function service(): ?InstanceEntityContract
     {
         return $this->sdk;

@@ -280,6 +280,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         /**
          * @var ?Authenticatable $lastResponse
          */
+        // @codeCoverageIgnoreStart
         if (class_exists('\Laravel\Telescope\Telescope')) {
             static $depth = 0;
             static $lastCalled = null;
@@ -304,6 +305,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             ++$depth;
             $lastCalled = time();
         }
+        // @codeCoverageIgnoreEnd
 
         $currentUser = $this->getCredential()?->getUser();
 

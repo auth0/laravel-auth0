@@ -118,7 +118,7 @@ abstract class CacheBridgeAbstract extends BridgeAbstract
             return false;
         }
 
-        $value = serialize($item->get());
+        $value = serialize($item->getRawValue());
         $key = $item->getKey();
         $expires = $item->getExpiration();
 
