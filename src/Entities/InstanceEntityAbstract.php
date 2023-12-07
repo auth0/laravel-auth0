@@ -29,6 +29,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         protected ?CacheItemPoolInterface $tokenCachePool = null,
         protected ?CacheItemPoolInterface $managementTokenCachePool = null,
         protected ?string $guardConfigurationKey = null,
+        protected ?CacheItemPoolInterface $backchannelLogoutCachePool = null,
     ) {
     }
 
@@ -118,6 +119,29 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     abstract public function setConfiguration(
         SdkConfiguration | array | null $configuration = null,
     ): self;
+
+    protected function bootBackchannelLogoutCache(array $config): array
+    {
+        $backchannelLogoutCache = $config['backchannelLogoutCache'] ?? null;
+
+        if (false === $backchannelLogoutCache) {
+            unset($config['backchannelLogoutCache']);
+
+            return $config;
+        }
+
+        if (null === $backchannelLogoutCache) {
+            $backchannelLogoutCache = $this->getBackchannelLogoutCachePool();
+        }
+
+        if (is_string($backchannelLogoutCache)) {
+            $backchannelLogoutCache = app(trim($backchannelLogoutCache));
+        }
+
+        $config['backchannelLogoutCache'] = $backchannelLogoutCache instanceof CacheItemPoolInterface ? $backchannelLogoutCache : null;
+
+        return $config;
+    }
 
     protected function bootManagementTokenCache(array $config): array
     {
@@ -254,6 +278,15 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         Events::dispatch(new BuiltConfigurationEvent($sdkConfiguration));
 
         return $sdkConfiguration;
+    }
+
+    protected function getBackchannelLogoutCachePool(): CacheItemPoolInterface
+    {
+        if (! $this->backchannelLogoutCachePool instanceof CacheItemPoolInterface) {
+            $this->backchannelLogoutCachePool = app(CacheBridge::class);
+        }
+
+        return $this->backchannelLogoutCachePool;
     }
 
     protected function getManagementTokenCachePool(): CacheItemPoolInterface
