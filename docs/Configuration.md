@@ -85,6 +85,8 @@ The following environment variables are supported, but should not be adjusted un
 | `AUTH0_CLIENT_ASSERTION_SIGNING_KEY`       | `String` The key to use for signing client assertions.                                                                                                               |
 | `AUTH0_CLIENT_ASSERTION_SIGNING_ALGORITHM` | `String` The algorithm to use for signing client assertions. Defaults to `RS256`.                                                                                    |
 | `AUTH0_PUSHED_AUTHORIZATION_REQUEST`       | `Boolean` Whether the SDK should use Pushed Authorization Requests during authentication. Note that your tenant must have this feature enabled. Defaults to `false`. |
+| `AUTH0_BACKCHANNEL_LOGOUT_CACHE`           | `String (class name)` A PSR-6 class to use for caching backchannel logout tokens.                                                                                    |
+| `AUTH0_BACKCHANNEL_LOGOUT_EXPIRES`         | `Integer` How long (in seconds) to cache a backchannel logout token. Defaults to `2592000` (30 days).                                                                |
 
 ### Order of Priority
 

@@ -37,7 +37,7 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
-        "auth0/auth0-php": "^8.9",
+        "auth0/auth0-php": "^8.10",
         "illuminate/contracts": "^9 || ^10",
         "illuminate/http": "^9 || ^10",
         "illuminate/support": "^9 || ^10",
@@ -56,7 +56,7 @@
         "phpstan/phpstan-strict-rules": "^1",
         "psalm/plugin-laravel": "^2",
         "psr-mock/http": "^1",
-        "rector/rector": "0.17.6",
+        "rector/rector": "0.17.0",
         "squizlabs/php_codesniffer": "^3",
         "symfony/cache": "^6",
         "vimeo/psalm": "^5",
@@ -112,20 +112,11 @@
         }
     },
     "scripts": {
-        "pest": [
-            "@putenv XDEBUG_MODE=coverage",
-            "@php vendor/bin/pest --colors=always --strict-global-state --fail-on-risky --fail-on-warning --coverage --strict-coverage --compact"
-        ],
-        "pest:ci": [
-            "@pest:fast --order-by=random --no-progress"
-        ],
-        "pest:fast": [
-            "@pest --parallel"
-        ],
-        "phpcs": [
-            "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
-            "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
-        ],
+        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --parallel --no-progress",
+        "pest:coverage": "@php vendor/bin/pest --order-by random --fail-on-risky --coverage --parallel --no-progress",
+        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --display-errors --fail-on-risky --no-progress",
+        "pest:profile": "@php vendor/bin/pest --profile",
+        "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
         "phpstan": "@php vendor/bin/phpstan analyze",
         "psalm": "@php vendor/bin/psalm",
