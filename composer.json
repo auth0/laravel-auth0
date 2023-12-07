@@ -35,9 +35,9 @@
         "source": "https://github.com/auth0/laravel-auth0"
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*",
-        "auth0/auth0-php": "^8.7",
+        "auth0/auth0-php": "^8.10",
         "illuminate/contracts": "^9 || ^10",
         "illuminate/http": "^9 || ^10",
         "illuminate/support": "^9 || ^10",

@@ -50,12 +50,23 @@ final class Configuration implements ConfigurationContract
         self::CONFIG_TOKEN_CACHE_TTL,
         self::CONFIG_HTTP_MAX_RETRIES,
         self::CONFIG_COOKIE_EXPIRES,
+        self::CONFIG_BACKCHANNEL_LOGOUT_EXPIRES,
     ];
 
     /**
      * @var string
      */
     public const CONFIG_AUDIENCE = 'audience';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_BACKCHANNEL_LOGOUT_CACHE = 'backchannelLogoutCache';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_BACKCHANNEL_LOGOUT_EXPIRES = 'backchannelLogoutExpires';
 
     /**
      * @var string

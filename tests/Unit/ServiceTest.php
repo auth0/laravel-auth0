@@ -188,6 +188,29 @@ test('bootTokenCache() behaves as expected', function (): void {
         ->tokenCache->toBeInstanceOf(CacheItemPoolInterface::class);
 });
 
+test('bootBackchannelLogoutCache() behaves as expected', function (): void {
+    $method = new ReflectionMethod(Service::class, 'bootBackchannelLogoutCache');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->laravel, []))
+        ->backchannelLogoutCache->toBeInstanceOf(CacheBridgeContract::class);
+
+    expect($method->invoke($this->laravel, ['backchannelLogoutCache' => null]))
+        ->backchannelLogoutCache->toBeInstanceOf(CacheBridgeContract::class);
+
+    expect($method->invoke($this->laravel, ['backchannelLogoutCache' => CacheBridge::class]))
+        ->backchannelLogoutCache->toBeInstanceOf(CacheBridgeContract::class);
+
+    expect($method->invoke($this->laravel, ['backchannelLogoutCache' => false]))
+        ->backchannelLogoutCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['backchannelLogoutCache' => MemoryStore::class]))
+        ->backchannelLogoutCache->toBeNull();
+
+    expect($method->invoke($this->laravel, ['backchannelLogoutCache' => 'cache.psr6']))
+        ->backchannelLogoutCache->toBeInstanceOf(CacheItemPoolInterface::class);
+});
+
 // test('bootManagementTokenCache() behaves as expected', function (): void {
 //     $method = new ReflectionMethod(Service::class, 'bootManagementTokenCache');
 //     $method->setAccessible(true);
