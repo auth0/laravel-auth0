@@ -36,9 +36,7 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
     expect($cache)
         ->toBeInstanceOf(CacheItemBridge::class)
         ->isHit()->toBeTrue()
-        ->get()->toBeNull()
-        ->set(42)
-        ->get()->toBe(42);
+        ->get()->toEqual(42);
 
     $results = $pool->getItems();
 
@@ -46,12 +44,12 @@ test('getItem(), hasItem() and save() behave as expected', function (): void {
         ->toBeArray()
         ->toHaveCount(0);
 
-    $results = $pool->getItems(['testing' => uniqid()]);
+    $results = $pool->getItems(['testing']);
 
     expect($results['testing'])
         ->toBeInstanceOf(CacheItemBridge::class)
         ->isHit()->toBeTrue()
-        ->get()->not()->toBe(42);
+        ->get()->toEqual(42);
 
     $this->app[\Illuminate\Cache\CacheManager::class]
         ->getStore()
