@@ -58,7 +58,6 @@ return Configuration::VERSION_2 + [
 
     'routes' => [
         Configuration::CONFIG_ROUTE_INDEX => Configuration::get(Configuration::CONFIG_ROUTE_INDEX, '/'),
-        Configuration::CONFIG_ROUTE_BACKCHANNEL => Configuration::get(Configuration::CONFIG_ROUTE_BACKCHANNEL, '/callback'),
         Configuration::CONFIG_ROUTE_CALLBACK => Configuration::get(Configuration::CONFIG_ROUTE_CALLBACK, '/callback'),
         Configuration::CONFIG_ROUTE_LOGIN => Configuration::get(Configuration::CONFIG_ROUTE_LOGIN, '/login'),
         Configuration::CONFIG_ROUTE_AFTER_LOGIN => Configuration::get(Configuration::CONFIG_ROUTE_AFTER_LOGIN, '/'),
