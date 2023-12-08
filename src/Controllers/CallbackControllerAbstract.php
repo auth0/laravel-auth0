@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
@@ -115,7 +116,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         }
 
         if (! $success) {
-            return redirect()->intended(config('auth0.routes.login', '/login'));
+            return redirect()->intended(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_LOGIN, '/login'));
         }
 
         $credential = ($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find();
@@ -140,6 +141,6 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             }
         }
 
-        return redirect()->intended(config('auth0.routes.routeLoginLanding', '/'));
+        return redirect()->intended(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGIN, config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX, '/')));
     }
 }

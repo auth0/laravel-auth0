@@ -56,6 +56,16 @@ final class Configuration implements ConfigurationContract
     /**
      * @var string
      */
+    public const CONFIG_NAMESPACE = 'auth0.';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_NAMESPACE_ROUTES = 'auth0.routes.';
+
+    /**
+     * @var string
+     */
     public const CONFIG_AUDIENCE = 'audience';
 
     /**
@@ -176,32 +186,37 @@ final class Configuration implements ConfigurationContract
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_CALLBACK = 'routeCallback';
+    public const CONFIG_ROUTE_AFTER_LOGIN = 'afterLogin';
 
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_INDEX = 'routeIndex';
+    public const CONFIG_ROUTE_AFTER_LOGOUT = 'afterLogout';
 
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_LOGIN = 'routeLogin';
+    public const CONFIG_ROUTE_BACKCHANNEL = 'backchannel';
 
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_LOGIN_LANDING = 'routeLoginLanding';
+    public const CONFIG_ROUTE_CALLBACK = 'callback';
 
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_LOGOUT = 'routeLogout';
+    public const CONFIG_ROUTE_INDEX = 'index';
 
     /**
      * @var string
      */
-    public const CONFIG_ROUTE_LOGOUT_LANDING = 'routeLogoutLanding';
+    public const CONFIG_ROUTE_LOGIN = 'login';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGOUT = 'logout';
 
     /**
      * @var string

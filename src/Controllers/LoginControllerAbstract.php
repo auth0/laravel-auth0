@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\LoginAttempting;
@@ -40,7 +41,13 @@ abstract class LoginControllerAbstract extends ControllerAbstract
         $loggedIn ??= (($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find()) instanceof CredentialEntityContract;
 
         if ($loggedIn) {
-            return redirect()->intended(config('auth0.routes.landing', config('auth0.routes.index', '/')));
+            return redirect()->intended(
+                config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGIN,
+                    config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX,
+                        '/'
+                    )
+                )
+            );
         }
 
         session()->regenerate(true);

@@ -220,9 +220,9 @@ abstract class ServiceProviderAbstract extends ServiceProvider
     {
         if (true === config('auth0.registerAuthenticationRoutes')) {
             Route::group(['middleware' => 'web'], static function (): void {
-                Route::get('/login', LoginController::class)->name('login');
-                Route::get('/logout', LogoutController::class)->name('logout');
-                Route::get('/callback', CallbackController::class)->name('callback');
+                Route::get(config('auth0.routes.login', '/login'), LoginController::class)->name('login');
+                Route::get(config('auth0.routes.logout', '/logout'), LogoutController::class)->name('logout');
+                Route::get(config('auth0.routes.callback', '/callback'), CallbackController::class)->name('callback');
             });
         }
     }
