@@ -148,3 +148,19 @@ test('get() behaves as expected', function (): void {
         ->toBeInt()
         ->toEqual(123);
 });
+
+test('string() behaves as expected', function (): void {
+    config(['test2' => [
+        'testInteger' => 123,
+        'testString' => '123',
+    ]]);
+
+    define('AUTH0_OVERRIDE_CONFIGURATION_STRING_METHOD', 'test2');
+
+    expect(Configuration::string('test2.testInteger'))
+        ->toBeNull();
+
+    expect(Configuration::string('test2.testString'))
+        ->toBeString()
+        ->toEqual('123');
+});

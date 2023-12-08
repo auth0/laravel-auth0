@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
-use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\CredentialEntityContract;
-use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\LoginAttempting;
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Guards\GuardAbstract;
+use Auth0\Laravel\{Configuration, Events};
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,11 +41,13 @@ abstract class LoginControllerAbstract extends ControllerAbstract
 
         if ($loggedIn) {
             return redirect()->intended(
-                config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGIN,
-                    config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX,
-                        '/'
-                    )
-                )
+                config(
+                    Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGIN,
+                    config(
+                        Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX,
+                        '/',
+                    ),
+                ),
             );
         }
 

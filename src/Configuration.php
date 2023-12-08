@@ -56,16 +56,6 @@ final class Configuration implements ConfigurationContract
     /**
      * @var string
      */
-    public const CONFIG_NAMESPACE = 'auth0.';
-
-    /**
-     * @var string
-     */
-    public const CONFIG_NAMESPACE_ROUTES = 'auth0.routes.';
-
-    /**
-     * @var string
-     */
     public const CONFIG_AUDIENCE = 'audience';
 
     /**
@@ -157,6 +147,16 @@ final class Configuration implements ConfigurationContract
      * @var string
      */
     public const CONFIG_MANAGEMENT_TOKEN_CACHE = 'managementTokenCache';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_NAMESPACE = 'auth0.';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_NAMESPACE_ROUTES = 'auth0.routes.';
 
     /**
      * @var string
@@ -478,6 +478,17 @@ final class Configuration implements ConfigurationContract
         }
 
         return self::$path;
+    }
+
+    public static function string(string $key, ?string $default = null): ?string
+    {
+        $value = config($key, $default);
+
+        if (is_string($value)) {
+            return $value;
+        }
+
+        return null;
     }
 
     public static function stringOrIntToIntOrNull(

@@ -37,7 +37,10 @@ abstract class LogoutControllerAbstract extends ControllerAbstract
 
         $loggedIn = $guard->check() ? true : null;
         $loggedIn ??= (($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find()) instanceof CredentialEntityContract;
-        $landing = config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGOUT, config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX, '/'));
+
+        $landing = Configuration::string(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGOUT);
+        $landing ??= Configuration::string(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX);
+        $landing ??= '/';
 
         if ($loggedIn) {
             session()->invalidate();
