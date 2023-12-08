@@ -55,9 +55,9 @@ abstract class ServiceAbstract extends InstanceEntityAbstract
         string $authenticationGuard = 'auth0-session',
     ): void {
         Route::group(['middleware' => ['web', 'guard:' . $authenticationGuard]], static function (): void {
-            Route::get(config('auth0.routes.login', '/login'), LoginController::class)->name('login');
-            Route::get(config('auth0.routes.logout', '/logout'), LogoutController::class)->name('logout');
-            Route::get(config('auth0.routes.callback', '/callback'), CallbackController::class)->name('callback');
+            Route::get(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_LOGIN, '/login'), LoginController::class)->name('login');
+            Route::get(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_LOGOUT, '/logout'), LogoutController::class)->name('logout');
+            Route::get(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_CALLBACK, '/callback'), CallbackController::class)->name('callback');
         });
     }
 }
