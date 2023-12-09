@@ -10,7 +10,7 @@
 **Fixed**
 - Resolve `CacheBridgeAbstract::save()` not storing values when cache misses [\#434](https://github.com/auth0/laravel-auth0/pull/434) ([seruymt](https://github.com/seruymt))
 
-## [7.11.0](https://github.com/auth0/laravel-auth0/tree/7.10.1) (2023-08-08)
+## [7.11.0](https://github.com/auth0/laravel-auth0/tree/7.11.0) (2023-08-08)
 
 **Added**
 
