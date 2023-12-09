@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\Configuration;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Guards\GuardAbstract;
@@ -37,16 +38,20 @@ abstract class LogoutControllerAbstract extends ControllerAbstract
         $loggedIn = $guard->check() ? true : null;
         $loggedIn ??= (($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find()) instanceof CredentialEntityContract;
 
+        $landing = Configuration::string(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGOUT);
+        $landing ??= Configuration::string(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX);
+        $landing ??= '/';
+
         if ($loggedIn) {
             session()->invalidate();
 
             $guard->logout(); /** @phpstan-ignore-line */
-            $route = (string) url('/'); /** @phpstan-ignore-line */
+            $route = (string) url($landing); /** @phpstan-ignore-line */
             $url = $guard->sdk()->authentication()->getLogoutLink($route);
 
             return redirect()->away($url);
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended($landing);
     }
 }

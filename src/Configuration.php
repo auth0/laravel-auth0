@@ -151,6 +151,16 @@ final class Configuration implements ConfigurationContract
     /**
      * @var string
      */
+    public const CONFIG_NAMESPACE = 'auth0.';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_NAMESPACE_ROUTES = 'auth0.routes.';
+
+    /**
+     * @var string
+     */
     public const CONFIG_ORGANIZATION = 'organization';
 
     /**
@@ -172,6 +182,41 @@ final class Configuration implements ConfigurationContract
      * @var string
      */
     public const CONFIG_RESPONSE_TYPE = 'responseType';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_AFTER_LOGIN = 'afterLogin';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_AFTER_LOGOUT = 'afterLogout';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_BACKCHANNEL = 'backchannel';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_CALLBACK = 'callback';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_INDEX = 'index';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGIN = 'login';
+
+    /**
+     * @var string
+     */
+    public const CONFIG_ROUTE_LOGOUT = 'logout';
 
     /**
      * @var string
@@ -433,6 +478,17 @@ final class Configuration implements ConfigurationContract
         }
 
         return self::$path;
+    }
+
+    public static function string(string $key, ?string $default = null): ?string
+    {
+        $value = config($key, $default);
+
+        if (is_string($value)) {
+            return $value;
+        }
+
+        return null;
     }
 
     public static function stringOrIntToIntOrNull(

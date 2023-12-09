@@ -6,11 +6,11 @@ namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
 use Auth0\Laravel\Entities\CredentialEntityContract;
-use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{AuthenticationFailed, AuthenticationSucceeded};
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Exceptions\Controllers\CallbackControllerException;
 use Auth0\Laravel\Guards\GuardAbstract;
+use Auth0\Laravel\{Configuration, Events};
 use Illuminate\Auth\Events\{Attempting, Authenticated, Failed, Validated};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
@@ -115,7 +115,7 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
         }
 
         if (! $success) {
-            return redirect()->intended('/login');
+            return redirect()->intended(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_LOGIN, '/login'));
         }
 
         $credential = ($guard instanceof Guard) ? $guard->find(Guard::SOURCE_SESSION) : $guard->find();
@@ -140,6 +140,6 @@ abstract class CallbackControllerAbstract extends ControllerAbstract
             }
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_AFTER_LOGIN, config(Configuration::CONFIG_NAMESPACE_ROUTES . Configuration::CONFIG_ROUTE_INDEX, '/')));
     }
 }
