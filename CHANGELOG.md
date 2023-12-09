@@ -1,48 +1,58 @@
 # Changelog
 
+## [7.12.0](https://github.com/auth0/laravel-auth0/tree/7.12.0) (2023-12-07)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.11.0...7.12.0)
+
+**Added**
+- Implement support for Back-Channel Logout [\#435](https://github.com/auth0/laravel-auth0/pull/435) ([evansims](https://github.com/evansims))
+- Restore configurable route paths [\#436](https://github.com/auth0/laravel-auth0/pull/436) ([evansims](https://github.com/evansims))
+
+**Fixed**
+- Resolve `CacheBridgeAbstract::save()` not storing values when cache misses [\#434](https://github.com/auth0/laravel-auth0/pull/434) ([seruymt](https://github.com/seruymt))
+
 ## [7.11.0](https://github.com/auth0/laravel-auth0/tree/7.10.1) (2023-08-08)
 
-### Added
+**Added**
 
 - Significant performance improvements by eliminating redundant user queries.
 - Compatibility support for [Laravel Telescope](https://laravel.com/docs/telescope). See [docs/Telescope.md](./docs/Telescope.md) for more information.
 - A refactored Events API has been introduced. See [docs/Events.md](./docs/Events.md) for more information.
 - `AUTH0_SESSION_STORAGE` and `AUTH0_TRANSIENT_STORAGE` now support a `cookie` value to enable the native Auth0-PHP SDK cookie session handler. See [docs/Cookies.md](./docs/Cookies.md) for more information.
 
-### Fixed
+**Fixed**
 
 - Addressed an issue where, under certain circumstances, the first user authentication attempt after a session invalidation could fail.
 
-### Changed
+**Changed**
 
 - Session regeneration/invalidation has been refactored.
 - Discarded sessions are now deleted when they are invalidated by the SDK, rather than wait for Laravel to garbage collect.
 - Session storage has been refactored. Session data is now stored as a JSON array in a single `auth0_session` entry in the Laravel session store, rather than in multiple keys.
 
-### Documentation
+**Documentation**
 
 - A demonstration Eloquent user model and repository implementation has been added to [docs/Eloquent.md](./docs/Eloquent.md).
 - A new [docs/Sessions.md](./docs/Sessions.md) document has been added for guidance on the various session driver options available.
 
 ## [7.10.1](https://github.com/auth0/laravel-auth0/tree/7.10.1) (2023-08-07)
 
-### Fixed
+**Fixed**
 
 - Addressed an issue where, under certain circumstances, permissions state could be lost after authenticating.
 
 ## [7.10.0](https://github.com/auth0/laravel-auth0/tree/7.10.0) (2023-07-24)
 
-### Added
+**Added**
 
 - Organization Name support added for Authentication API and token handling ¹
 
-### Changed
+**Changed**
 
 - Guards are now registered with the priority middleware list.
 - Bumped `auth0-php` dependency version range to `^8.7`.
 - Updated telemetry to indicate new `laravel` package name (previously `laravel-auth0`.)
 
-### Fixed
+**Fixed**
 
 - Addressed issue where placeholder `AUTH0_` dotenv values could erroneously be interpreted as true configuration values.
 
@@ -51,31 +61,31 @@
 
 ## [7.9.1](https://github.com/auth0/laravel-auth0/tree/7.9.1) (2023-06-21)
 
-### Fixed
+**Fixed**
 
 - Resolved an issue where, under certain circumstances, the AuthenticationGuard middleware could get erroneously added to the `api` middleware group, causing a session to be established in a stateless request. ([\#415](https://github.com/auth0/laravel-auth0/pull/415))
 
 ## [7.9.0](https://github.com/auth0/laravel-auth0/tree/7.9.0) (2023-06-15)
 
-### Added
+**Added**
 
 - SDK configuration (`config/auth0.php`) now supports a `configurationPath` property for specifying a custom search path for `.auth0.*.json` and `.env*` files. ([\#407](https://github.com/auth0/laravel-auth0/pull/407))
 - `Auth0\Laravel\Guards\GuardAbstract` now extends `Illuminate\Contracts\Auth\Guard`. ([\#410](https://github.com/auth0/laravel-auth0/pull/410))
 
-### Fixed
+**Fixed**
 
 - Resolved host environment variables not being loaded as expected when a `.env` file is also used. ([\#408](https://github.com/auth0/laravel-auth0/pull/408))
 - Resolved surrounding quote characters not being trimmed from environment variables and `.env` files during processing. ([\#409](https://github.com/auth0/laravel-auth0/pull/409))
 
 ## [7.8.1](https://github.com/auth0/laravel-auth0/tree/7.8.1) (2023-05-19)
 
-### Fixed
+**Fixed**
 
 - Resolved an issue where parsing `.env` files could sometimes throw an exception when handling non-key-value pair strings. ([\#395](https://github.com/auth0/laravel-auth0/pull/395))
 
 ## [7.8.0](https://github.com/auth0/laravel-auth0/tree/7.8.0) (2023-05-18)
 
-### Added
+**Added**
 
 - This release adds support for authenticating using **[Pushed Authorization Requests](https://www.rfc-editor.org/rfc/rfc6749)**.
 
@@ -98,7 +108,7 @@
 
 - 2 new routing Middleware have been added: `Auth0\Laravel\Http\Middleware\AuthenticatorMiddleware` and `Auth0\Laravel\Http\Middleware\AuthorizerMiddleware`. These are automatically registered with your Laravel application, and ensure the Auth0 Guards are used for authentication for `web` routes and authorization for `api` routes, respectively. This replaces the need for the `guard` middleware or otherwise manual Guard assignment in your routes.
 
-### Improved
+**Changed**
 
 - We've introduced **a new configuration syntax**. This new syntax is more flexible and allows for more complex configuration scenarios, and introduces support for multiple guard instances. Developers using the previous syntax will have their existing configurations applied to all guards uniformly.
 
@@ -108,7 +118,7 @@
 
 ## [7.7.0](https://github.com/auth0/laravel-auth0/tree/7.7.0) (2023-04-26)
 
-### Added
+**Added**
 
 - `Auth0\Laravel\Auth0` now has a `management()` shortcut method for issuing Management API calls. ([\#376](https://github.com/auth0/laravel-auth0/pull/376))
 
@@ -116,33 +126,33 @@
 
 - `Auth0\Laravel\Http\Controller\Stateful\Login` now raises a `LoginAttempting` event, offering an opportunity to customize the authorization parameters before the login redirect is issued. ([\#382](https://github.com/auth0/laravel-auth0/pull/382))
 
-### Improved
+**Changed**
 
 - The `tokenCache`, `managementTokenCache`, `sessionStorage` and `transientStorage` configuration values now support `false` or `string` values pointing to class names (e.g. `\Some\Cache::class`) or class aliases (e.g. `cache.psr6`) registered with Laravel. ([\#381](https://github.com/auth0/laravel-auth0/pull/381))
 
 ## [7.6.0](https://github.com/auth0/laravel-auth0/tree/7.6.0) (2023-04-12)
 
-### Added
+**Added**
 
 - `Auth0\Laravel\Http\Middleware\Guard`, new middleware that forces Laravel to route requests through a group using a specific Guard. ([\#362](https://github.com/auth0/laravel-auth0/pull/362))
 
-### Improved
+**Changed**
 
 - `Auth0\Laravel\Http\Middleware\Stateful\Authenticate` now remembers the intended route (using `redirect()->setIntendedUrl()`) before kicking off the authentication flow redirect. Users will be returned to the memorized intended route after completing their authentication flow. ([\#364](https://github.com/auth0/laravel-auth0/pull/364))
 
-### Fixed
+**Fixed**
 
 - legacyGuardUserMethod behavior should use `$session`, not `$token` ([\#353](https://github.com/auth0/laravel-auth0/pull/365))
 
 ## [7.5.2](https://github.com/auth0/laravel-auth0/tree/7.5.2) (2023-04-10)
 
-### Fixed
+**Fixed**
 
 - Relaxed response types from middleware to use low-level `Symfony\Component\HttpFoundation\Response` class, allowing for broader and custom response types.
 
 ## [7.5.1](https://github.com/auth0/laravel-auth0/tree/7.5.1) (2023-04-04)
 
-### Fixed
+**Fixed**
 
 - Resolved an issue wherein custom user repositories could fail to be instantiated under certain circumstances.
 
@@ -150,13 +160,13 @@
 
 This release includes support for Laravel 10, and major improvements to the internal state handling mechanisms of the SDK.
 
-### Added
+**Added**
 
 - Support for Laravel 10 [#349](https://github.com/auth0/laravel-auth0/pull/349)
 - New `Auth0\Laravel\Traits\Imposter` trait to allow for easier testing. [Example usage](./tests/Unit/Traits/ImpersonateTest.php)
 - New Exception types have been added for more precise error-catching.
 
-### Improved
+**Changed**
 
 The following changes have no effect on the external API of this package but may affect internal usage.
 
@@ -171,7 +181,7 @@ The following changes have no effect on the external API of this package but may
 - Upgraded test suite to use PEST 2.0 framework.
 - Updated test coverage to 100%.
 
-### Fixed
+**Fixed**
 
 - A 'Session store not set on request' error could occur when downstream applications implemented unit testing that uses the Guard. This should be resolved now.
 - `Guard` would not always honor the `provider` configuration value in `config/auth.php`.
@@ -191,39 +201,39 @@ We identified an issue with using identical alias naming for both the Guard and 
 
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
 
-### Added
+**Added**
 
 - feat: Add `Auth0\Laravel\Event\Middleware\...` event hooks [\#340](https://github.com/auth0/laravel-auth0/pull/340)
 - feat: Add `Auth0\Laravel\Event\Configuration\Building` event hook [\#339](https://github.com/auth0/laravel-auth0/pull/339)
 
 ## [7.3.0](https://github.com/auth0/laravel-auth0/tree/7.3.0) (2022-11-07)
 
-### Added
+**Added**
 
 - add: Raise additional Laravel Auth Events [\#331](https://github.com/auth0/laravel-auth0/pull/331)
 
-### Fixed
+**Fixed**
 
 - fix: `env()` incorrectly assigns `cookieExpires` to a `string` value [\#332](https://github.com/auth0/laravel-auth0/pull/332)
 - fix: Auth0\Laravel\Cache\LaravelCachePool::createItem returning a cache miss [\#329](https://github.com/auth0/laravel-auth0/pull/329)
 
 ## [7.2.2](https://github.com/auth0/laravel-auth0/tree/7.2.2) (2022-10-19)
 
-### Fixed
+**Fixed**
 
 - Restore `php artisan vendor:publish` command [\#321](https://github.com/auth0/laravel-auth0/pull/321)
 - Bump minimum `auth0/auth0-php` version to `^8.3.4` [\#322](https://github.com/auth0/laravel-auth0/pull/322)
 
 ## [7.2.1](https://github.com/auth0/laravel-auth0/tree/7.2.1) (2022-10-13)
 
-### Fixed
+**Fixed**
 
 - `Auth0\Laravel\Auth0` no longer requires a session configuration for stateless strategies, restoring previous behavior. [\#317](https://github.com/auth0/laravel-auth0/pull/317)
 - The SDK now requires `^3.0` of the `psr/cache` dependency, to accommodate breaking changes made in the upstream interface (typed parameters and return types) for PHP 8.0+. [\#316](https://github.com/auth0/laravel-auth0/pull/316)
 
 ## [7.2.0](https://github.com/auth0/laravel-auth0/tree/7.2.0) (2022-10-10)
 
-### Improved
+**Changed**
 
 - `Auth0\Laravel\Store\LaravelSession` has been added as the default `sessionStorage` and `transientStorage` interfaces for the underlying [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP/). The SDK now leverages the native [Laravel Session APIs](https://laravel.com/docs/9.x/session) by default. [\#307](https://github.com/auth0/laravel-auth0/pull/307)¹
 - `Auth0\Laravel\Cache\LaravelCachePool` and `Auth0\Laravel\Cache\LaravelCacheItem` have been added as the default `tokenCache` and `managementTokenCache` interfaces for the underlying [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP/). The SDK now leverages the native [Laravel Cache APIs](https://laravel.com/docs/9.x/cache) by default. [\#307](https://github.com/auth0/laravel-auth0/pull/307)
@@ -235,18 +245,18 @@ We identified an issue with using identical alias naming for both the Guard and 
 
 ## [7.1.0](https://github.com/auth0/laravel-auth0/tree/7.1.0) (2022-08-08)
 
-### Improved
+**Changed**
 
 - Return interfaces instead of concrete classes [\#296](https://github.com/auth0/laravel-auth0/pull/296)
 - change: Use class names for `app()` calls [\#291](https://github.com/auth0/laravel-auth0/pull/291)
 
-### Fixed
+**Fixed**
 
 - Fix: `Missing Code` error on Callback Route for Octane Customers [\#297](https://github.com/auth0/laravel-auth0/pull/297)
 
 ## [7.0.1](https://github.com/auth0/laravel-auth0/tree/7.0.1) (2022-06-01)
 
-### Fixed
+**Fixed**
 
 - Fixed an issue in `Auth0\Laravel\Http\Controller\Stateful\Callback` where `$errorDescription`'s value was assigned an incorrect value when an error was encountered. [\#266](https://github.com/auth0/laravel-auth0/pull/288)
 

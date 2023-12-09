@@ -30,11 +30,11 @@ Your application must use a [supported Laravel version](https://laravelversions.
 
 | SDK  | Laravel                                        | PHP                                             | Supported Until |
 | ---- | ---------------------------------------------- | ----------------------------------------------- | --------------- |
-| 7.5+ | [10.x](https://laravel.com/docs/10.x/releases) | [8.2+](https://www.php.net/releases/8.2/en.php) | Feb 2025        |
-|      |                                                | [8.1+](https://www.php.net/releases/8.1/en.php) | Nov 2024        |
-| 7.0+ | [9.x](https://laravel.com/docs/9.x/releases)   | [8.2+](https://www.php.net/releases/8.2/en.php) | Feb 2024        |
-|      |                                                | [8.1+](https://www.php.net/releases/8.1/en.php) | Feb 2024        |
-|      |                                                | [8.0+](https://www.php.net/releases/8.0/en.php) | Nov 2023        |
+| 7.5+ | [10.x](https://laravel.com/docs/10.x/releases) | [8.3](https://www.php.net/releases/8.2/en.php) | Feb 2025        |
+|      |                                                | [8.2](https://www.php.net/releases/8.1/en.php) | Feb 2025        |
+|      |                                                | [8.1](https://www.php.net/releases/8.1/en.php) | Nov 2024        |
+| 7.0+ | [9.x](https://laravel.com/docs/9.x/releases)   | [8.2](https://www.php.net/releases/8.2/en.php) | Feb 2024        |
+|      |                                                | [8.1](https://www.php.net/releases/8.1/en.php) | Feb 2024        |
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
