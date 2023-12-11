@@ -16,13 +16,13 @@
 
 To integrate our SDK, your application must use a [supported Laravel version](https://laravelversions.com/en), and your environment must run a [supported PHP version](https://www.php.net/supported-versions.php). We do not support versions of either that are no longer supported by their maintainers. Please review [our support policy](./Support.md) for more information.
 
-| SDK  | Laravel | PHP  | Supported Until |
-| ---- | ------- | ---- | --------------- |
-| 7.5+ | 10      | 8.2+ | Feb 2025        |
-|      |         | 8.1+ | Nov 2024        |
-| 7.0+ | 9       | 8.2+ | Feb 2024        |
-|      |         | 8.1+ | Feb 2024        |
-|      |         | 8.0+ | Nov 2023        |
+| SDK  | Laravel | PHP | Supported Until |
+| ---- | ------- | --- | --------------- |
+| 7.5+ | 10      | 8.3 | Feb 2025        |
+|      |         | 8.2 | Feb 2025        |
+|      |         | 8.1 | Nov 2024        |
+| 7.0+ | 9       | 8.2 | Feb 2024        |
+|      |         | 8.1 | Feb 2024        |
 
 You will also need [Composer 2.0+](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
