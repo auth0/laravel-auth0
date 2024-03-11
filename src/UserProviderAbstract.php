@@ -46,7 +46,6 @@ abstract class UserProviderAbstract
      */
     final public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
-
     }
 
     /**
