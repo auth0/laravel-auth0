@@ -1,28 +1,27 @@
 # Installation
 
-- [Prerequisites](#prerequisites)
-- [Install the SDK](#install-the-sdk)
-  - [Using Quickstart (Recommended)](#using-quickstart-recommended)
-  - [Installation with Composer](#installation-with-composer)
-    - [Create a Laravel Application](#create-a-laravel-application)
-    - [Install the SDK](#install-the-sdk-1)
-- [Install the CLI](#install-the-cli)
-  - [Authenticate the CLI](#authenticate-the-cli)
-- [Configure the SDK](#configure-the-sdk)
-  - [Using JSON (Recommended)](#using-json-recommended)
-  - [Using Environment Variables](#using-environment-variables)
+-   [Prerequisites](#prerequisites)
+-   [Install the SDK](#install-the-sdk)
+    -   [Using Quickstart (Recommended)](#using-quickstart-recommended)
+    -   [Installation with Composer](#installation-with-composer)
+        -   [Create a Laravel Application](#create-a-laravel-application)
+        -   [Install the SDK](#install-the-sdk-1)
+-   [Install the CLI](#install-the-cli)
+    -   [Authenticate the CLI](#authenticate-the-cli)
+-   [Configure the SDK](#configure-the-sdk)
+    -   [Using JSON (Recommended)](#using-json-recommended)
+    -   [Using Environment Variables](#using-environment-variables)
 
 ## Prerequisites
 
-To integrate our SDK, your application must use a [supported Laravel version](https://laravelversions.com/en), and your environment must run a [supported PHP version](https://www.php.net/supported-versions.php). We do not support versions of either that are no longer supported by their maintainers. Please review [our support policy](./Support.md) for more information.
+Your application must use the [latest supported Laravel version](https://endoflife.date/laravel), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
 
-| SDK  | Laravel | PHP | Supported Until |
-| ---- | ------- | --- | --------------- |
-| 7.5+ | 10      | 8.3 | Feb 2025        |
-|      |         | 8.2 | Feb 2025        |
-|      |         | 8.1 | Nov 2024        |
-| 7.0+ | 9       | 8.2 | Feb 2024        |
-|      |         | 8.1 | Feb 2024        |
+| SDK   | Laravel                                        | PHP                                            | Supported Until |
+| ----- | ---------------------------------------------- | ---------------------------------------------- | --------------- |
+| 7.13+ | [11.x](https://laravel.com/docs/11.x/releases) | [8.3](https://www.php.net/releases/8.3/en.php) | ~Sep 2025       |
+|       |                                                | [8.2](https://www.php.net/releases/8.2/en.php) | ~Sep 2025       |
+
+Due to breaking changes in Laravel 11, SDK 7.12 was the last version to support Laravel 9 and 10.
 
 You will also need [Composer 2.0+](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
@@ -32,7 +31,7 @@ Ensure that your development environment has [supported versions](#prerequisites
 
 ### Using Quickstart (Recommended)
 
-- Create a new Laravel 9 project pre-configured with the SDK:
+-   Create a new Laravel 9 project pre-configured with the SDK:
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app
@@ -42,7 +41,7 @@ Ensure that your development environment has [supported versions](#prerequisites
 
 #### Create a Laravel Application
 
-- If you do not already have one, you can Create a new Laravel 9 application with the following command:
+-   If you do not already have one, you can Create a new Laravel 9 application with the following command:
 
     ```shell
     composer create-project laravel/laravel:^9.0 auth0-laravel-app
@@ -66,20 +65,20 @@ Ensure that your development environment has [supported versions](#prerequisites
 
 Install the [Auth0 CLI](https://github.com/auth0/auth0-cli) to create and manage Auth0 resources from the command line.
 
-- macOS with [Homebrew](https://brew.sh/):
+-   macOS with [Homebrew](https://brew.sh/):
 
     ```shell
     brew tap auth0/auth0-cli && brew install auth0
     ```
 
-- Linux or macOS:
+-   Linux or macOS:
 
     ```shell
     curl -sSfL https://raw.githubusercontent.com/auth0/auth0-cli/main/install.sh | sh -s -- -b .
     sudo mv ./auth0 /usr/local/bin
     ```
 
-- Windows with [Scoop](https://scoop.sh/):
+-   Windows with [Scoop](https://scoop.sh/):
 
     ```cmd
     scoop bucket add auth0 https://github.com/auth0/scoop-auth0-cli.git
@@ -88,7 +87,7 @@ Install the [Auth0 CLI](https://github.com/auth0/auth0-cli) to create and manage
 
 ### Authenticate the CLI
 
-- Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
+-   Authenticate the CLI with your Auth0 account. Choose "as a user," and follow the prompts.
 
     ```shell
     auth0 login
