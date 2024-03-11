@@ -36,7 +36,7 @@ trait InstanceEntityTrait
 
         $this->configuration = $configuration;
 
-        if ($this->configuration instanceof \Auth0\SDK\Configuration\SdkConfiguration && $this->sdk instanceof Auth0Interface) {
+        if ($this->configuration instanceof SdkConfiguration && $this->sdk instanceof Auth0Interface) {
             $this->sdk->setConfiguration($this->configuration);
         }
 

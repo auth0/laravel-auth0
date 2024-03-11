@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
-use Auth0\Laravel\Guards\{AuthorizationGuardContract, GuardContract};
-use Auth0\Laravel\{UserRepository, UserRepositoryContract};
+use Auth0\Laravel\Guards\{GuardContract};
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Cache;

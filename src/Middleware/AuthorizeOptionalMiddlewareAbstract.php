@@ -7,7 +7,7 @@ namespace Auth0\Laravel\Middleware;
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequest;
-use Auth0\Laravel\Guards\{AuthenticationGuardContract, GuardContract};
+use Auth0\Laravel\Guards\{GuardContract};
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
