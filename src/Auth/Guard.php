@@ -171,10 +171,10 @@ final class Guard extends GuardAbstract implements GuardContract
 
     public function setUser(
         Authenticatable $user,
-    ): void {
+    ): self {
         if ($this->isImpersonating()) {
             if ($this->getImposter()?->getUser() === $user) {
-                return;
+                return $this;
             }
 
             $this->stopImpersonating();
@@ -189,6 +189,8 @@ final class Guard extends GuardAbstract implements GuardContract
         if (null === $source || self::SOURCE_SESSION === $source) {
             $this->getAuthenticationGuard()->setUser($user);
         }
+
+        return $this;
     }
 
     public function user(): ?Authenticatable

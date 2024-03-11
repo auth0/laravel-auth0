@@ -96,7 +96,6 @@ use Rector\CodingStyle\Rector\If_\NullableCompareToNullRector;
 use Rector\CodingStyle\Rector\Plus\UseIncrementAssignRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\CodingStyle\Rector\Property\{AddFalseDefaultToBoolPropertyRector, SplitGroupedPropertiesRector};
-use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\CodingStyle\Rector\String_\{SymplifyQuoteEscapeRector, UseClassKeywordForClassNameResolutionRector};
 use Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector;
 use Rector\CodingStyle\Rector\Ternary\TernaryConditionVariableAssignmentRector;
@@ -107,18 +106,14 @@ use Rector\DeadCode\Rector\Assign\{RemoveDoubleAssignRector,
     RemoveUnusedVariableAssignRector};
 use Rector\DeadCode\Rector\BinaryOp\RemoveDuplicatedInstanceOfRector;
 use Rector\DeadCode\Rector\BooleanAnd\RemoveAndTrueRector;
-use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
 use Rector\DeadCode\Rector\ClassConst\RemoveUnusedPrivateClassConstantRector;
 use Rector\DeadCode\Rector\ClassMethod\{RemoveDelegatingParentCallRector,
     RemoveEmptyClassMethodRector,
     RemoveLastReturnRector,
     RemoveUnusedConstructorParamRector,
     RemoveUnusedPrivateMethodParameterRector,
-    RemoveUnusedPrivateMethodRector,
     RemoveUnusedPromotedPropertyRector,
-    RemoveUselessParamTagRector,
     RemoveUselessReturnTagRector};
-use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\DeadCode\Rector\Expression\{RemoveDeadStmtRector,
     SimplifyMirrorAssignRector};
 use Rector\DeadCode\Rector\For_\{RemoveDeadContinueRector,
@@ -127,8 +122,7 @@ use Rector\DeadCode\Rector\For_\{RemoveDeadContinueRector,
 use Rector\DeadCode\Rector\Foreach_\RemoveUnusedForeachKeyRector;
 use Rector\DeadCode\Rector\FunctionLike\{RemoveDeadReturnRector,
     RemoveDuplicatedIfReturnRector};
-use Rector\DeadCode\Rector\If_\{RemoveAlwaysTrueIfConditionRector,
-    RemoveDeadInstanceOfRector,
+use Rector\DeadCode\Rector\If_\{
     RemoveUnusedNonEmptyArrayBeforeForeachRector,
     SimplifyIfElseWithSameContentRector,
     UnwrapFutureCompatibleIfPhpVersionRector};
@@ -148,24 +142,19 @@ use Rector\DeadCode\Rector\Ternary\TernaryToBooleanOrFalseToBooleanAndRector;
 use Rector\DeadCode\Rector\TryCatch\RemoveDeadTryCatchRector;
 use Rector\DependencyInjection\Rector\Class_\ActionInjectionToConstructorInjectionRector;
 use Rector\EarlyReturn\Rector\Foreach_\ChangeNestedForeachIfsToEarlyContinueRector;
-use Rector\EarlyReturn\Rector\If_\{ChangeAndIfToEarlyReturnRector,
+use Rector\EarlyReturn\Rector\If_\{
     ChangeIfElseValueAssignToEarlyReturnRector,
     ChangeNestedIfsToEarlyReturnRector,
     ChangeOrIfContinueToMultiContinueRector,
-    ChangeOrIfReturnToEarlyReturnRector,
     RemoveAlwaysElseRector};
-use Rector\EarlyReturn\Rector\Return_\{PreparedValueToEarlyReturnRector,
+use Rector\EarlyReturn\Rector\Return_\{
     ReturnBinaryAndToEarlyReturnRector,
     ReturnBinaryOrToEarlyReturnRector};
 use Rector\EarlyReturn\Rector\StmtsAwareInterface\ReturnEarlyIfVariableRector;
-use Rector\Naming\Rector\Assign\RenameVariableToMatchMethodCallReturnTypeRector;
-use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
-use Rector\Naming\Rector\ClassMethod\{RenameParamToMatchTypeRector,
-    RenameVariableToMatchNewTypeRector};
+
 use Rector\Naming\Rector\Foreach_\{RenameForeachValueVariableToMatchExprVariableRector,
     RenameForeachValueVariableToMatchMethodCallReturnTypeRector};
 use Rector\Php52\Rector\Property\VarToPublicPropertyRector;
-use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\{ClassPropertyAssignToConstructorPromotionRector,
@@ -177,8 +166,7 @@ use Rector\Php80\Rector\ClassMethod\{AddParamBasedOnParentClassMethodRector,
 use Rector\Php80\Rector\FuncCall\{ClassOnObjectRector,
     Php8ResourceReturnToObjectRector,
     TokenGetAllToObjectRector};
-use Rector\Php80\Rector\FunctionLike\{MixedTypeRector,
-    UnionTypesRector};
+
 use Rector\Php80\Rector\Identical\{StrEndsWithRector,
     StrStartsWithRector};
 use Rector\Php80\Rector\NotIdentical\StrContainsRector;
@@ -189,7 +177,6 @@ use Rector\Privatization\Rector\Class_\{ChangeGlobalVariablesToPropertiesRector,
     ChangeReadOnlyVariableWithDefaultValueToConstantRector,
     FinalizeClassesWithoutChildrenRector};
 use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
-use Rector\Privatization\Rector\MethodCall\PrivatizeLocalGetterToPropertyRector;
 use Rector\Privatization\Rector\Property\{ChangeReadOnlyPropertyWithDefaultValueToConstantRector,
     PrivatizeFinalClassPropertyRector};
 use Rector\PSR4\Rector\FileWithoutNamespace\NormalizeNamespaceByPSR4ComposerAutoloadRector;
@@ -203,7 +190,6 @@ use Rector\TypeDeclaration\Rector\Class_\{PropertyTypeFromStrictSetterGetterRect
     ReturnTypeFromStrictTernaryRector};
 use Rector\TypeDeclaration\Rector\ClassMethod\{AddMethodCallBasedStrictParamTypeRector,
     AddParamTypeBasedOnPHPUnitDataProviderRector,
-    AddParamTypeFromPropertyTypeRector,
     AddReturnTypeDeclarationBasedOnParentClassMethodRector,
     AddVoidReturnTypeWhereNoReturnRector,
     ArrayShapeFromConstantArrayReturnRector,
@@ -240,27 +226,27 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameFunctionRector::class,
         [
-            'chop'         => 'rtrim',
-            'doubleval'    => 'floatval',
-            'fputs'        => 'fwrite',
-            'gzputs'       => 'gzwrites',
-            'ini_alter'    => 'ini_set',
-            'is_double'    => 'is_float',
-            'is_integer'   => 'is_int',
-            'is_long'      => 'is_int',
-            'is_real'      => 'is_float',
+            'chop' => 'rtrim',
+            'doubleval' => 'floatval',
+            'fputs' => 'fwrite',
+            'gzputs' => 'gzwrites',
+            'ini_alter' => 'ini_set',
+            'is_double' => 'is_float',
+            'is_integer' => 'is_int',
+            'is_long' => 'is_int',
+            'is_real' => 'is_float',
             'is_writeable' => 'is_writable',
-            'join'         => 'implode',
-            'key_exists'   => 'array_key_exists',
-            'mbstrcut'     => 'mb_strcut',
-            'mbstrlen'     => 'mb_strlen',
-            'mbstrpos'     => 'mb_strpos',
-            'mbstrrpos'    => 'mb_strrpos',
-            'mbsubstr'     => 'mb_substr',
-            'pos'          => 'current',
-            'sizeof'       => 'count',
-            'split'        => 'explode',
-            'strchr'       => 'strstr',
+            'join' => 'implode',
+            'key_exists' => 'array_key_exists',
+            'mbstrcut' => 'mb_strcut',
+            'mbstrlen' => 'mb_strlen',
+            'mbstrpos' => 'mb_strpos',
+            'mbstrrpos' => 'mb_strrpos',
+            'mbsubstr' => 'mb_substr',
+            'pos' => 'current',
+            'sizeof' => 'count',
+            'split' => 'explode',
+            'strchr' => 'strstr',
         ],
     );
 
@@ -281,30 +267,30 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameFunctionRector::class,
         [
-            'pg_clientencoding'    => 'pg_client_encoding',
-            'pg_cmdtuples'         => 'pg_affected_rows',
-            'pg_errormessage'      => 'pg_last_error',
-            'pg_fieldisnull'       => 'pg_field_is_null',
-            'pg_fieldname'         => 'pg_field_name',
-            'pg_fieldnum'          => 'pg_field_num',
-            'pg_fieldprtlen'       => 'pg_field_prtlen',
-            'pg_fieldsize'         => 'pg_field_size',
-            'pg_fieldtype'         => 'pg_field_type',
-            'pg_freeresult'        => 'pg_free_result',
-            'pg_getlastoid'        => 'pg_last_oid',
-            'pg_loclose'           => 'pg_lo_close',
-            'pg_locreate'          => 'pg_lo_create',
-            'pg_loexport'          => 'pg_lo_export',
-            'pg_loimport'          => 'pg_lo_import',
-            'pg_loopen'            => 'pg_lo_open',
-            'pg_loread'            => 'pg_lo_read',
-            'pg_loreadall'         => 'pg_lo_read_all',
-            'pg_lounlink'          => 'pg_lo_unlink',
-            'pg_lowrite'           => 'pg_lo_write',
-            'pg_numfields'         => 'pg_num_fields',
-            'pg_numrows'           => 'pg_num_rows',
-            'pg_result'            => 'pg_fetch_result',
-            'pg_setclientencoding' => 'pg_set_client_encoding'
+            'pg_clientencoding' => 'pg_client_encoding',
+            'pg_cmdtuples' => 'pg_affected_rows',
+            'pg_errormessage' => 'pg_last_error',
+            'pg_fieldisnull' => 'pg_field_is_null',
+            'pg_fieldname' => 'pg_field_name',
+            'pg_fieldnum' => 'pg_field_num',
+            'pg_fieldprtlen' => 'pg_field_prtlen',
+            'pg_fieldsize' => 'pg_field_size',
+            'pg_fieldtype' => 'pg_field_type',
+            'pg_freeresult' => 'pg_free_result',
+            'pg_getlastoid' => 'pg_last_oid',
+            'pg_loclose' => 'pg_lo_close',
+            'pg_locreate' => 'pg_lo_create',
+            'pg_loexport' => 'pg_lo_export',
+            'pg_loimport' => 'pg_lo_import',
+            'pg_loopen' => 'pg_lo_open',
+            'pg_loread' => 'pg_lo_read',
+            'pg_loreadall' => 'pg_lo_read_all',
+            'pg_lounlink' => 'pg_lo_unlink',
+            'pg_lowrite' => 'pg_lo_write',
+            'pg_numfields' => 'pg_num_fields',
+            'pg_numrows' => 'pg_num_rows',
+            'pg_result' => 'pg_fetch_result',
+            'pg_setclientencoding' => 'pg_set_client_encoding',
         ],
     );
 
@@ -319,7 +305,7 @@ return static function (RectorConfig $rectorConfig): void {
             new ReplaceFuncCallArgumentDefaultValue('version_compare', 2, 'l', 'lt'),
             new ReplaceFuncCallArgumentDefaultValue('version_compare', 2, 'gte', 'ge'),
             new ReplaceFuncCallArgumentDefaultValue('version_compare', 2, 'lte', 'le'),
-            new ReplaceFuncCallArgumentDefaultValue('version_compare', 2, 'n', 'ne')
+            new ReplaceFuncCallArgumentDefaultValue('version_compare', 2, 'n', 'ne'),
         ],
     );
 
@@ -327,16 +313,16 @@ return static function (RectorConfig $rectorConfig): void {
         FuncCallToConstFetchRector::class,
         [
             'php_sapi_name' => 'PHP_SAPI',
-            'pi'            => 'M_PI'
+            'pi' => 'M_PI',
         ],
     );
 
     $rectorConfig->rules([
         AbsolutizeRequireAndIncludePathRector::class,
         // ActionInjectionToConstructorInjectionRector::class,
-        AddArrayDefaultToArrayPropertyRector::class,
+        // AddArrayDefaultToArrayPropertyRector::class,
         AddArrowFunctionReturnTypeRector::class,
-        AddClosureReturnTypeRector::class,
+        // AddClosureReturnTypeRector::class,
         // AddFalseDefaultToBoolPropertyRector::class,
         AddMethodCallBasedStrictParamTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
@@ -351,7 +337,7 @@ return static function (RectorConfig $rectorConfig): void {
         // ArrayKeysAndInArrayToArrayKeyExistsRector::class,
         ArrayMergeOfNonArraysToSimpleArrayRector::class,
         // ArrayShapeFromConstantArrayReturnRector::class,
-        BinarySwitchToIfElseRector::class,
+        // BinarySwitchToIfElseRector::class,
         BooleanNotIdenticalToNotIdenticalRector::class,
         BoolvalToTypeCastRector::class,
         CallableThisArrayToAnonymousFunctionRector::class,
@@ -384,7 +370,7 @@ return static function (RectorConfig $rectorConfig): void {
         EncapsedStringsToSprintfRector::class,
         ExplicitBoolCompareRector::class,
         // ExplicitMethodCallOverMagicGetSetRector::class,
-        FinalizeClassesWithoutChildrenRector::class,
+        // FinalizeClassesWithoutChildrenRector::class,
         FinalPrivateToPrivateVisibilityRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
         FloatvalToTypeCastRector::class,
@@ -415,7 +401,7 @@ return static function (RectorConfig $rectorConfig): void {
         // ParamAnnotationIncorrectNullableRector::class,
         ParamTypeByMethodCallTypeRector::class,
         ParamTypeByParentCallTypeRector::class,
-        ParamTypeFromStrictTypedPropertyRector::class,
+        // ParamTypeFromStrictTypedPropertyRector::class,
         // Php8ResourceReturnToObjectRector::class,
         PostIncDecToPreIncDecRector::class,
         PrivatizeFinalClassMethodRector::class,
@@ -444,7 +430,7 @@ return static function (RectorConfig $rectorConfig): void {
         // RemoveEmptyTestMethodRector::class,
         RemoveExtraParametersRector::class,
         RemoveFinalFromConstRector::class,
-        RemoveJustPropertyFetchForAssignRector::class,
+        // RemoveJustPropertyFetchForAssignRector::class,
         // RemoveJustVariableAssignRector::class,
         // RemoveLastReturnRector::class,
         // RemoveNonExistingVarAnnotationRector::class,
@@ -466,7 +452,7 @@ return static function (RectorConfig $rectorConfig): void {
         RenameForeachValueVariableToMatchExprVariableRector::class,
         RenameForeachValueVariableToMatchMethodCallReturnTypeRector::class,
         ReplaceMultipleBooleanNotRector::class,
-        ReturnAnnotationIncorrectNullableRector::class,
+        // ReturnAnnotationIncorrectNullableRector::class,
         // ReturnBinaryAndToEarlyReturnRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
         ReturnEarlyIfVariableRector::class,
@@ -477,7 +463,7 @@ return static function (RectorConfig $rectorConfig): void {
         ReturnTypeFromStrictConstantReturnRector::class,
         ReturnTypeFromStrictNativeCallRector::class,
         ReturnTypeFromStrictNewArrayRector::class,
-        ReturnTypeFromStrictScalarReturnExprRector::class,
+        // ReturnTypeFromStrictScalarReturnExprRector::class,
         ReturnTypeFromStrictTernaryRector::class,
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromStrictTypedPropertyRector::class,
@@ -532,10 +518,10 @@ return static function (RectorConfig $rectorConfig): void {
         // TokenGetAllToObjectRector::class,
         TypedPropertyFromAssignsRector::class,
         TypedPropertyFromStrictConstructorRector::class,
-        TypedPropertyFromStrictGetterMethodReturnTypeRector::class,
+        // TypedPropertyFromStrictGetterMethodReturnTypeRector::class,
         TypedPropertyFromStrictSetUpRector::class,
         UnnecessaryTernaryExpressionRector::class,
-        UnSpreadOperatorRector::class,
+        // UnSpreadOperatorRector::class,
         UnusedForeachValueToArrayKeysRector::class,
         UnwrapFutureCompatibleIfPhpVersionRector::class,
         UnwrapSprintfOneArgumentRector::class,

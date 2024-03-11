@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
-use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
-use Auth0\Laravel\Guards\{AuthorizationGuardContract, GuardContract};
-use Auth0\Laravel\{UserRepository, UserRepositoryContract};
+use Auth0\Laravel\Guards\GuardContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Cache;
@@ -37,6 +35,18 @@ abstract class UserProviderAbstract
     final public function getRepository(): UserRepositoryContract
     {
         return $this->repository ?? $this->resolveRepository();
+    }
+
+    /**
+     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
+     *
+     * @param Authenticatable $user
+     * @param array           $credentials
+     * @param bool            $force
+     */
+    final public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
+    {
+
     }
 
     /**

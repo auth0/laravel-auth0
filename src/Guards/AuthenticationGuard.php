@@ -253,10 +253,10 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
 
     public function setUser(
         Authenticatable $user,
-    ): void {
+    ): self {
         if ($this->isImpersonating()) {
             if ($this->getImposter()?->getUser() === $user) {
-                return;
+                return $this;
             }
 
             $this->stopImpersonating();
@@ -267,6 +267,8 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
 
         $this->setCredential($credential);
         $this->pushState($credential);
+
+        return $this;
     }
 
     public function user(): ?Authenticatable
