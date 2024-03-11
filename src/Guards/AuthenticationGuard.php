@@ -281,7 +281,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
          * @var ?Authenticatable $lastResponse
          */
         // @codeCoverageIgnoreStart
-        if (class_exists('\Laravel\Telescope\Telescope')) {
+        if (class_exists('\Laravel\Telescope\Telescope') && config('telescope.enabled') === true) {
             static $depth = 0;
             static $lastCalled = null;
 
