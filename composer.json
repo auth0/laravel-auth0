@@ -34,12 +34,6 @@
         "forum": "https://community.auth0.com",
         "source": "https://github.com/auth0/laravel-auth0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/asbiin/psalm-plugin-laravel.git"
-        }
-    ],
     "require": {
         "php": "^8.2",
         "ext-json": "*",
@@ -56,10 +50,10 @@
         "larastan/larastan": "^2",
         "mockery/mockery": "^1",
         "orchestra/testbench": "^9.x-dev",
-        "pestphp/pest-plugin-laravel": "^2",
         "pestphp/pest": "^2",
-        "phpstan/phpstan-strict-rules": "^1",
+        "pestphp/pest-plugin-laravel": "^2",
         "phpstan/phpstan": "^1",
+        "phpstan/phpstan-strict-rules": "^1",
         "psalm/plugin-laravel": "dev-laravel11#b93c8f21c18e3355dcdae797c6af266f7aab93f6",
         "psr-mock/http": "^1",
         "rector/rector": "^1",
@@ -68,6 +62,12 @@
         "vimeo/psalm": "^5",
         "wikimedia/composer-merge-plugin": "^2"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/asbiin/psalm-plugin-laravel.git"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
