@@ -190,10 +190,10 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
 
     public function setUser(
         Authenticatable $user,
-    ): void {
+    ): self {
         if ($this->isImpersonating()) {
             if ($this->getImposter()?->getUser() === $user) {
-                return;
+                return $this;
             }
 
             $this->stopImpersonating();
@@ -203,6 +203,8 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
         $credential->setUser($user);
 
         $this->setCredential($credential);
+
+        return $this;
     }
 
     public function user(): ?Authenticatable

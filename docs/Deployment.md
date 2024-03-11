@@ -2,28 +2,28 @@
 
 When you're preparing to deploy your application to production, there are some basic steps you can take to make sure your application is running as smoothly and securely as possible. In this guide, we'll cover some starting points for making sure your application is deployed properly.
 
-- [Auth0 Configuration](#auth0-configuration)
-- [TLS / HTTPS](#tls--https)
-- [Cookies](#cookies)
-- [Server Configuration](#server-configuration)
-  - [Caddy](#caddy)
-  - [Nginx](#nginx)
-  - [Apache](#apache)
-- [Optimization](#optimization)
-  - [Autoloader](#autoloader)
-  - [Dependencies](#dependencies)
-  - [Caching Configuration](#caching-configuration)
-  - [Caching Events](#caching-events)
-  - [Caching Routes](#caching-routes)
-  - [Caching Views](#caching-views)
-  - [Debug Mode](#debug-mode)
+-   [Auth0 Configuration](#auth0-configuration)
+-   [TLS / HTTPS](#tls--https)
+-   [Cookies](#cookies)
+-   [Server Configuration](#server-configuration)
+    -   [Caddy](#caddy)
+    -   [Nginx](#nginx)
+    -   [Apache](#apache)
+-   [Optimization](#optimization)
+    -   [Autoloader](#autoloader)
+    -   [Dependencies](#dependencies)
+    -   [Caching Configuration](#caching-configuration)
+    -   [Caching Events](#caching-events)
+    -   [Caching Routes](#caching-routes)
+    -   [Caching Views](#caching-views)
+    -   [Debug Mode](#debug-mode)
 
 ## Auth0 Configuration
 
 When migrating your Laravel application from local development to production, you will need to update your Auth0 application's configuration to reflect the new URLs for your application. You can do this by logging into the [Auth0 Dashboard](https://manage.auth0.com/) and updating the following fields:
 
-- **Allowed Callback URLs**: The URL that Auth0 will redirect to after the user authenticates. This should be set to the Internet-accessible URL of your application's `/callback` route.
-- **Allowed Logout URLs**: The URL that Auth0 will redirect to after the user logs out. This should be set to an appropriate Internet-accessible URL of your application.
+-   **Allowed Callback URLs**: The URL that Auth0 will redirect to after the user authenticates. This should be set to the Internet-accessible URL of your application's `/callback` route.
+-   **Allowed Logout URLs**: The URL that Auth0 will redirect to after the user logs out. This should be set to an appropriate Internet-accessible URL of your application.
 
 Note that you can include multiple URLs in these fields by separating them with commas, for example `https://example.com/callback,http://localhost:8000/callback`.
 
@@ -64,7 +64,7 @@ example.com {
     X-Frame-Options "SAMEORIGIN"
   }
 
-  php_fastcgi unix//var/run/php/php8.1-fpm.sock
+  php_fastcgi unix//var/run/php/php8.2-fpm.sock
 }
 ```
 
@@ -76,32 +76,32 @@ server {
   listen [::]:80;
   server_name example.com;
   root /var/www/example.com/public;
- 
+
   add_header X-XSS-Protection "1; mode=block";
   add_header X-Content-Type-Options "nosniff";
   add_header X-Frame-Options "SAMEORIGIN";
 
   large_client_header_buffers 4 32k;
- 
+
   index index.php;
- 
+
   charset utf-8;
- 
+
   location / {
     try_files $uri $uri/ /index.php?$query_string;
   }
- 
+
   location = /favicon.ico { access_log off; log_not_found off; }
   location = /robots.txt  { access_log off; log_not_found off; }
- 
+
   error_page 404 /index.php;
- 
+
   location ~ \.php$ {
-    fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+    fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     include fastcgi_params;
   }
- 
+
   location ~ /\.(?!well-known).* {
     deny all;
   }

@@ -190,7 +190,7 @@ interface GuardContract
      */
     public function setUser(
         Authenticatable $user,
-    ): void;
+    ): self;
 
     /**
      * Stop impersonating a user.

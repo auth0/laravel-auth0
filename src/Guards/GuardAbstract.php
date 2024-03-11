@@ -299,7 +299,7 @@ abstract class GuardAbstract implements Guard
 
     abstract public function setUser(
         Authenticatable $user,
-    ): void;
+    ): self;
 
     abstract public function user(): ?Authenticatable;
 
