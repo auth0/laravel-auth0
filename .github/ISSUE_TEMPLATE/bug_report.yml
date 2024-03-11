@@ -43,6 +43,7 @@ body:
       label: SDK Version
       description: What version of our SDK are you using? (`composer show | grep auth0/login`)
       options:
+        - 7.13
         - 7.12
         - 7.11
         - 7.10
@@ -68,7 +69,6 @@ body:
       options:
         - PHP 8.3
         - PHP 8.2
-        - PHP 8.1
         - Other (specify below)
     validations:
       required: true
