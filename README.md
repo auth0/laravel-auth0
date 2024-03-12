@@ -11,30 +11,29 @@
 
 **The Auth0 Laravel SDK is a PHP package that integrates [Auth0](https://auth0.com) into your Laravel application.** It includes no-code user authentication, extensive Management API support, permissions-based routing access control, and more.
 
-- [Requirements](#requirements)
-- [Getting Started](#getting-started)
-  - [1. Install the SDK](#1-install-the-sdk)
-  - [2. Install the CLI](#2-install-the-cli)
-  - [3. Configure the SDK](#3-configure-the-sdk)
-  - [4. Run the Application](#4-run-the-application)
-- [Documentation](#documentation)
-- [QuickStarts](#quickstarts)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [Security](#security)
-- [License](#license)
+-   [Requirements](#requirements)
+-   [Getting Started](#getting-started)
+    -   [1. Install the SDK](#1-install-the-sdk)
+    -   [2. Install the CLI](#2-install-the-cli)
+    -   [3. Configure the SDK](#3-configure-the-sdk)
+    -   [4. Run the Application](#4-run-the-application)
+-   [Documentation](#documentation)
+-   [QuickStarts](#quickstarts)
+-   [Contributing](#contributing)
+-   [Code of Conduct](#code-of-conduct)
+-   [Security](#security)
+-   [License](#license)
 
 ## Requirements
 
-Your application must use a [supported Laravel version](https://laravelversions.com/en), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
+Your application must use the [latest supported Laravel version](https://endoflife.date/laravel), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
 
-| SDK  | Laravel                                        | PHP                                             | Supported Until |
-| ---- | ---------------------------------------------- | ----------------------------------------------- | --------------- |
-| 7.5+ | [10.x](https://laravel.com/docs/10.x/releases) | [8.3](https://www.php.net/releases/8.2/en.php) | Feb 2025        |
-|      |                                                | [8.2](https://www.php.net/releases/8.1/en.php) | Feb 2025        |
-|      |                                                | [8.1](https://www.php.net/releases/8.1/en.php) | Nov 2024        |
-| 7.0+ | [9.x](https://laravel.com/docs/9.x/releases)   | [8.2](https://www.php.net/releases/8.2/en.php) | Feb 2024        |
-|      |                                                | [8.1](https://www.php.net/releases/8.1/en.php) | Feb 2024        |
+| SDK   | Laravel                                        | PHP                                            | Supported Until |
+| ----- | ---------------------------------------------- | ---------------------------------------------- | --------------- |
+| 7.13+ | [11.x](https://laravel.com/docs/11.x/releases) | [8.3](https://www.php.net/releases/8.3/en.php) | ~Sep 2025       |
+|       |                                                | [8.2](https://www.php.net/releases/8.2/en.php) | ~Sep 2025       |
+
+Due to breaking changes in Laravel 11, SDK 7.12 was the last version to support Laravel 9 and 10.
 
 You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
@@ -44,16 +43,16 @@ The following is our recommended approach to getting started with the SDK. Alter
 
 ### 1. Install the SDK
 
-- For **new applications**, we offer a quickstart template — a version of the default Laravel 9 starter project pre-configured for use with the Auth0 SDK.
+-   For **new applications**, we offer a quickstart template — a version of the default Laravel 9 starter project pre-configured for use with the Auth0 SDK.
 
     ```shell
     composer create-project auth0-samples/laravel auth0-laravel-app && cd auth0-laravel-app
     ```
 
-- For **existing applications**, you can install the SDK using Composer.
+-   For **existing applications**, you can install the SDK using Composer.
 
     ```shell
-    composer require auth0/login:^7.9 --update-with-all-dependencies
+    composer require auth0/login:^7 --update-with-all-dependencies
     ```
 
     In this case, you will also need to generate an SDK configuration file for your application.
@@ -170,11 +169,11 @@ php artisan serve
 
 Direct your browser to [http://localhost:8000](http://localhost:8000) to experiment with the application.
 
-- **Authentication**  
-  Users can log in or out of the application by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
+-   **Authentication**  
+    Users can log in or out of the application by visiting the [`/login`](http://localhost:8000/login) or [`/logout`](http://localhost:8000/logout) routes, respectively.
 
-- **API Authorization**  
-  For simplicity sake, generate a test token using the CLI.
+-   **API Authorization**  
+    For simplicity sake, generate a test token using the CLI.
 
     ```shell
     auth0 test token \
@@ -182,9 +181,9 @@ Direct your browser to [http://localhost:8000](http://localhost:8000) to experim
       --scopes "read:messages"
     ```
 
-  <p><small>✋ <em>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
+    <p><small>✋ <em>Substitute <code>%IDENTIFIER%</code> with the identifier of the API you created in step 3 above.</small></em></p>
 
-  Now you can send requests to the `/api` endpoints of the application, including the token as a header.
+    Now you can send requests to the `/api` endpoints of the application, including the token as a header.
 
     ```shell
     curl --request GET \
@@ -193,18 +192,18 @@ Direct your browser to [http://localhost:8000](http://localhost:8000) to experim
       --header 'Authorization: Bearer %TOKEN%'
     ```
 
-    <p><small>✋ <em>Substitute <code>%TOKEN%</code> with the test token returned in the previous step.</small></em></p>
+      <p><small>✋ <em>Substitute <code>%TOKEN%</code> with the test token returned in the previous step.</small></em></p>
 
-    <details>
-    <summary>Using Windows PowerShell</summary>
-     
+      <details>
+      <summary>Using Windows PowerShell</summary>
+       
 
     ```powershell
     Invoke-WebRequest http://localhost:8000/api/example `
       -Headers @{'Accept' = 'application/json'; 'Authorization' = 'Bearer %TOKEN%'}
     ```
 
-    </details>
+      </details>
 
 When you're ready to deploy your application to production, review [our deployment guide](./docs/Deployment.md) for best practices and advice on securing Laravel.
 
@@ -354,33 +353,33 @@ All the SDK's Management API methods are [documented here](./docs/Management.md)
 
 ## Documentation
 
-- [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
-- [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
-- [Sessions](./docs/Sessions.md) — Guidance on deciding which Laravel Session API driver to use.
-- [Cookies](./docs/Cookies.md) — Important notes about using Laravel's Cookie session driver, and alternative options.
-- [Management API](./docs/Management.md) — Using the SDK to work with the [Auth0 Management API](https://auth0.com/docs/api/management/v2).
-- [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent) models.
-- [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
-- [Deployment](./docs/Deployment.md) — Deploying your application to production.
+-   [Installation](./docs/Installation.md) — Installing the SDK and generating configuration files.
+-   [Configuration](./docs/Configuration.md) — Configuring the SDK using JSON files or environment variables.
+-   [Sessions](./docs/Sessions.md) — Guidance on deciding which Laravel Session API driver to use.
+-   [Cookies](./docs/Cookies.md) — Important notes about using Laravel's Cookie session driver, and alternative options.
+-   [Management API](./docs/Management.md) — Using the SDK to work with the [Auth0 Management API](https://auth0.com/docs/api/management/v2).
+-   [Users](./docs/Users.md) — Extending the SDK to support persistent storage and [Eloquent](https://laravel.com/docs/eloquent) models.
+-   [Events](./docs/Events.md) — Hooking into SDK [events](https://laravel.com/docs/events) to respond to specific actions.
+-   [Deployment](./docs/Deployment.md) — Deploying your application to production.
 
 You may find the following integration guidance useful:
 
-- [Laravel Eloquent](./docs/Eloquent.md) — [Eloquent ORM](https://laravel.com/docs/eloquent) is supported.
-- [Laravel Octane](./docs/Octane.md) — [Octane](https://laravel.com/docs/octane) is not supported at this time.
-- [Laravel Telescope](./docs/Telescope.md) — [Telescope](https://laravel.com/docs/telescope) is compatible as of SDK v7.11.0.
+-   [Laravel Eloquent](./docs/Eloquent.md) — [Eloquent ORM](https://laravel.com/docs/eloquent) is supported.
+-   [Laravel Octane](./docs/Octane.md) — [Octane](https://laravel.com/docs/octane) is not supported at this time.
+-   [Laravel Telescope](./docs/Telescope.md) — [Telescope](https://laravel.com/docs/telescope) is compatible as of SDK v7.11.0.
 
 You may also find the following resources helpful:
 
-- [Auth0 Documentation Hub](https://www.auth0.com/docs)
-- [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
-- [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
+-   [Auth0 Documentation Hub](https://www.auth0.com/docs)
+-   [Auth0 Management API Explorer](https://auth0.com/docs/api/management/v2)
+-   [Auth0 Authentication API Explorer](https://auth0.com/docs/api/authentication)
 
 Contributions to improve our documentation [are welcomed](https://github.com/auth0/laravel-auth0/pull).
 
 ## QuickStarts
 
-- [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
-- [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+-   [Session-based Authentication](https://auth0.com/docs/quickstart/webapp/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
+-   [Token-based Authorization](https://auth0.com/docs/quickstart/backend/laravel) ([GitHub](https://github.com/auth0-samples/laravel))
 
 ## Community
 

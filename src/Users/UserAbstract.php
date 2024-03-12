@@ -50,6 +50,11 @@ abstract class UserAbstract
         return '';
     }
 
+    final public function getAuthPasswordName(): string
+    {
+        return 'password';
+    }
+
     final public function getRememberToken(): string
     {
         return '';

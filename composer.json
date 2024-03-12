@@ -35,33 +35,39 @@
         "source": "https://github.com/auth0/laravel-auth0"
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "auth0/auth0-php": "^8.10",
-        "illuminate/contracts": "^9 || ^10",
-        "illuminate/http": "^9 || ^10",
-        "illuminate/support": "^9 || ^10",
+        "illuminate/contracts": "^11",
+        "illuminate/http": "^11",
+        "illuminate/support": "^11",
         "psr-discovery/all": "^1",
         "psr/cache": "^2 || ^3"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2",
         "friendsofphp/php-cs-fixer": "^3",
+        "larastan/larastan": "^2",
         "mockery/mockery": "^1",
-        "nunomaduro/larastan": "^2",
-        "orchestra/testbench": "^7 || ^8",
+        "orchestra/testbench": "^9.x-dev",
         "pestphp/pest": "^2",
         "pestphp/pest-plugin-laravel": "^2",
         "phpstan/phpstan": "^1",
         "phpstan/phpstan-strict-rules": "^1",
-        "psalm/plugin-laravel": "^2",
+        "psalm/plugin-laravel": "dev-laravel11#b93c8f21c18e3355dcdae797c6af266f7aab93f6",
         "psr-mock/http": "^1",
-        "rector/rector": "0.17.0",
+        "rector/rector": "^1",
         "squizlabs/php_codesniffer": "^3",
-        "symfony/cache": "^6",
+        "symfony/cache": "^6 || ^7",
         "vimeo/psalm": "^5",
         "wikimedia/composer-merge-plugin": "^2"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/asbiin/psalm-plugin-laravel.git"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
