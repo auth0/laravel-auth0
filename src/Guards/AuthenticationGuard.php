@@ -27,6 +27,11 @@ use function is_object;
  */
 final class AuthenticationGuard extends GuardAbstract implements AuthenticationGuardContract
 {
+    /**
+     * @var string
+     */
+    protected const TELESCOPE = '\Laravel\Telescope\Telescope';
+
     public function find(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
@@ -281,7 +286,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
          * @var ?Authenticatable $lastResponse
          */
         // @codeCoverageIgnoreStart
-        if (class_exists('\Laravel\Telescope\Telescope') && true === config('telescope.enabled')) {
+        if (class_exists(self::TELESCOPE) && true === config('telescope.enabled')) {
             static $depth = 0;
             static $lastCalled = null;
 
