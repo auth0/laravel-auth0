@@ -79,7 +79,7 @@ abstract class UserProviderAbstract
             return $lastResponse;
         }
 
-        if (class_exists('\Laravel\Telescope\Telescope')) {
+        if (class_exists(self::TELESCOPE) && true === config('telescope.enabled')) {
             static $depth = 0;
             static $lastCalled = null;
 
