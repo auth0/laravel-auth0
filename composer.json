@@ -49,7 +49,7 @@
         "friendsofphp/php-cs-fixer": "^3",
         "larastan/larastan": "^2",
         "mockery/mockery": "^1",
-        "orchestra/testbench": "^9.x-dev",
+        "orchestra/testbench": "^9",
         "pestphp/pest": "^2",
         "pestphp/pest-plugin-laravel": "^2",
         "phpstan/phpstan": "^1",
@@ -112,9 +112,9 @@
         }
     },
     "scripts": {
-        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --parallel --no-progress",
-        "pest:coverage": "@php vendor/bin/pest --order-by random --fail-on-risky --coverage --parallel --no-progress",
-        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --display-errors --fail-on-risky --no-progress",
+        "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --parallel",
+        "pest:coverage": "@php vendor/bin/pest --order-by random --fail-on-risky --coverage --parallel",
+        "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --display-errors --fail-on-risky",
         "pest:profile": "@php vendor/bin/pest --profile",
         "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
