@@ -70,6 +70,13 @@ it('supports getting the password', function (): void {
         ->toBe('');
 });
 
+it('supports getting the password name', function (): void {
+    $user = new ImposterUser();
+
+    expect($user->getAuthPasswordName())
+        ->toBe('password');
+});
+
 it('supports getting the remember token', function (): void {
     $user = new ImposterUser();
 

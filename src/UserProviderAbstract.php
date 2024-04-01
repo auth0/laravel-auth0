@@ -43,6 +43,8 @@ abstract class UserProviderAbstract
      * @param Authenticatable $user
      * @param array           $credentials
      * @param bool            $force
+     *
+     * @codeCoverageIgnore
      */
     final public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
