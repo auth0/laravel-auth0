@@ -14,16 +14,7 @@
 
 ## Prerequisites
 
-Your application must use the [latest supported Laravel version](https://endoflife.date/laravel), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information.
-
-| SDK   | Laravel                                        | PHP                                            | Supported Until |
-| ----- | ---------------------------------------------- | ---------------------------------------------- | --------------- |
-| 7.13+ | [11.x](https://laravel.com/docs/11.x/releases) | [8.3](https://www.php.net/releases/8.3/en.php) | ~Sep 2025       |
-|       |                                                | [8.2](https://www.php.net/releases/8.2/en.php) | ~Sep 2025       |
-
-Due to breaking changes in Laravel 11, SDK 7.12 was the last version to support Laravel 9 and 10.
-
-You will also need [Composer 2.0+](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
+Your application must use the [latest supported Laravel version](https://endoflife.date/laravel), and your host environment must be running a [supported PHP version](https://www.php.net/supported-versions.php). Please review [our support policy](./docs/Support.md) for more information. You will also need [Composer 2.0+](https://getcomposer.org/) and an [Auth0 account](https://auth0.com/signup).
 
 ## Install the SDK
 
