@@ -92,7 +92,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             return $this->getImposter();
         }
 
-        if ($this->credential instanceof CredentialEntityContract) {
+        if (!$this->credential instanceof CredentialEntityContract) {
             $updated = $this->findSession();
             $this->setCredential($updated);
             $this->pushState($updated);
