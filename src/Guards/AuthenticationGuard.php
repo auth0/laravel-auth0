@@ -32,6 +32,11 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
      */
     protected const TELESCOPE = '\Laravel\Telescope\Telescope';
 
+    /**
+     * @var bool
+     */
+    private bool $didCredRefresh = false;
+
     public function find(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
@@ -92,10 +97,15 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             return $this->getImposter();
         }
 
+        if (!empty($this->didCredRefresh)) {
+            return $this->credential;
+        }
+
         if ($this->credential instanceof CredentialEntityContract) {
             $updated = $this->findSession();
             $this->setCredential($updated);
             $this->pushState($updated);
+            $this->didCredRefresh = true;
         }
 
         return $this->credential;
