@@ -32,9 +32,6 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
      */
     protected const TELESCOPE = '\Laravel\Telescope\Telescope';
 
-    /**
-     * @var bool
-     */
     private bool $didCredRefresh = false;
 
     public function find(): ?CredentialEntityContract
@@ -97,7 +94,7 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
             return $this->getImposter();
         }
 
-        if (!empty($this->didCredRefresh)) {
+        if ($this->didCredRefresh) {
             return $this->credential;
         }
 
