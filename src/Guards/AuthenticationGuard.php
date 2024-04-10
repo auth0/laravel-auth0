@@ -95,12 +95,12 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         }
 
         if ($this->credential instanceof CredentialEntityContract) {
-            $updated = $this->findSession();
-            $updatedCredThumbprint = $this->getCredThumbprint($updated);
-            if ($updatedCredThumbprint !== $this->credThumbprint) {
+            $currThumbprint = $this->getCredThumbprint($this->sdk()->getCredentials());
+            if ($currThumbprint !== $this->credThumbprint) {
+                $updated = $this->findSession();
                 $this->setCredential($updated);
                 $this->pushState($updated);
-                $this->credThumbprint = $updatedCredThumbprint;
+                $this->credThumbprint = $currThumbprint;
             }
         }
 
@@ -246,7 +246,6 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         $this->stopImpersonating();
 
         $this->credential = $credential;
-        $this->credThumbprint = $this->getCredThumbprint($credential);
 
         return $this;
     }
@@ -338,9 +337,9 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         return $lastResponse = null;
     }
 
-    private function getCredThumbprint(?CredentialEntityContract $credential): null | string
+    private function getCredThumbprint(?object $credential): null | string
     {
-        if (! $credential instanceof CredentialEntityContract) {
+        if (null === $credential) {
             return null;
         }
 
