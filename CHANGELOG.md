@@ -1,12 +1,5 @@
 # Change Log
 
-## [7.14.0](https://github.com/auth0/laravel-auth0/tree/7.14.0) (2024-04-01)
-[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.13.0...7.14.0)
-
-**Changed**
-- refactor: add additional Telescope state check [\#447](https://github.com/auth0/laravel-auth0/pull/447) ([samuelhgf](https://github.com/samuelhgf))
-- chore(deps): replace temporary `psalm-laravel-plugin` fork with official [\#448](https://github.com/auth0/laravel-auth0/pull/448) ([alies-dev](https://github.com/alies-dev))
-
 ## [7.15.0](https://github.com/auth0/laravel-auth0/tree/7.15.0) (2024-06-03)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.14.0...7.15.0)
@@ -21,8 +14,8 @@
 
 **Changed**
 
--   refactor: add additional Telescope state check #447 (samuelhgf)
--   chore(deps): replace temporary psalm-laravel-plugin fork with official #448 (alies-dev)
+-   refactor: add additional Telescope state check [\#447](https://github.com/auth0/laravel-auth0/pull/447) ([samuelhgf](https://github.com/samuelhgf))
+-   chore(deps): replace temporary `psalm-laravel-plugin` fork with official [\#448](https://github.com/auth0/laravel-auth0/pull/448) ([alies-dev](https://github.com/alies-dev))
 
 ## [7.13.0](https://github.com/auth0/laravel-auth0/tree/7.13.0) (2024-03-11)
 
