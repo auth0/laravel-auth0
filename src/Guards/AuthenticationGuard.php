@@ -32,6 +32,8 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
      */
     protected const TELESCOPE = '\Laravel\Telescope\Telescope';
 
+    private ?string $credThumbprint = null;
+
     public function find(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
@@ -93,9 +95,13 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         }
 
         if ($this->credential instanceof CredentialEntityContract) {
-            $updated = $this->findSession();
-            $this->setCredential($updated);
-            $this->pushState($updated);
+            $currThumbprint = $this->getCredThumbprint($this->sdk()->getCredentials());
+            if ($currThumbprint !== $this->credThumbprint) {
+                $updated = $this->findSession();
+                $this->setCredential($updated);
+                $this->pushState($updated);
+                $this->credThumbprint = $currThumbprint;
+            }
         }
 
         return $this->credential;
@@ -329,6 +335,15 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         }
 
         return $lastResponse = null;
+    }
+
+    private function getCredThumbprint(?object $credential): null | string
+    {
+        if (null === $credential) {
+            return null;
+        }
+
+        return md5(serialize($credential));
     }
 
     private function pullState(): ?CredentialEntityContract
