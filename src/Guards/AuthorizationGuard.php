@@ -8,6 +8,7 @@ use Auth0\Laravel\Entities\{CredentialEntity, CredentialEntityContract};
 use Auth0\Laravel\UserProviderContract;
 use Auth0\SDK\Utility\HttpResponse;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Traits\Macroable;
 
 use function is_array;
 use function is_string;
@@ -19,6 +20,8 @@ use function is_string;
  */
 final class AuthorizationGuard extends GuardAbstract implements AuthorizationGuardContract
 {
+    use Macroable;
+
     public function find(): ?CredentialEntityContract
     {
         if ($this->isImpersonating()) {
