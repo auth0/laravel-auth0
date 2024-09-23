@@ -13,6 +13,8 @@ use Auth0\Laravel\{Configuration, Events};
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use function sprintf;
+
 /**
  * Controller for handling a login request.
  *
