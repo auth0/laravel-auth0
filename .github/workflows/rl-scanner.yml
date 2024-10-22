@@ -31,7 +31,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
-          php-version: 8.1
+          php-version: 8.2
 
       - name: Install dependencies
         shell: bash
