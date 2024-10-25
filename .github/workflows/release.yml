@@ -27,6 +27,7 @@ jobs:
 
   release:
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
+    needs: rl-scanner
     runs-on: ubuntu-latest
 
     steps:
