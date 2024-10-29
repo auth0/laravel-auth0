@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 use function is_string;
+use function sprintf;
 
 /**
  * @api
