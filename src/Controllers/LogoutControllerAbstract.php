@@ -12,6 +12,8 @@ use Auth0\Laravel\Guards\GuardAbstract;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use function sprintf;
+
 /**
  * Controller for handling a logout request.
  *
