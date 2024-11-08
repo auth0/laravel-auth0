@@ -10,6 +10,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Cache;
 
 use function is_string;
+use function sprintf;
 
 /**
  * User provider for the Auth0 user repository.
