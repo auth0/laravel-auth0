@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Bridges;
 
 use Auth0\Laravel\Exceptions\SessionException;
+use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use InvalidArgumentException;
 
@@ -155,7 +156,13 @@ abstract class SessionBridgeAbstract extends BridgeAbstract
      */
     protected function getStore(): Store
     {
+        /**
+         * @var Store $store
+         */
         $store = app('session.store');
+        /**
+         * @var Request $request
+         */
         $request = app('request');
 
         if (! $request->hasSession(true)) {
