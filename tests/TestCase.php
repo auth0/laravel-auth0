@@ -7,6 +7,7 @@ namespace Auth0\Laravel\Tests;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Auth0\Laravel\ServiceProvider;
 use Orchestra\Testbench\Concerns\CreatesApplication;
+use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -18,6 +19,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
+            RayServiceProvider::class,
             ServiceProvider::class,
         ];
     }
