@@ -34,67 +34,67 @@ use Auth0\Laravel\Events\{
 interface EventsContract
 {
     /**
-     * @var class-string<\Auth0\Laravel\Events\AuthenticationFailed>
+     * @var class-string<AuthenticationFailed>
      */
     public const AUTHENTICATION_FAILED = AuthenticationFailed::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\AuthenticationSucceeded>
+     * @var class-string<AuthenticationSucceeded>
      */
     public const AUTHENTICATION_SUCCEEDED = AuthenticationSucceeded::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\Configuration\BuildingConfigurationEvent>
+     * @var class-string<BuildingConfigurationEvent>
      */
     public const CONFIGURATION_BUILDING = BuildingConfigurationEvent::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\Configuration\BuiltConfigurationEvent>
+     * @var class-string<BuiltConfigurationEvent>
      */
     public const CONFIGURATION_BUILT = BuiltConfigurationEvent::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\LoginAttempting>
+     * @var class-string<LoginAttempting>
      */
     public const LOGIN_ATTEMPTING = LoginAttempting::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\Middleware\StatefulMiddlewareRequest>
+     * @var class-string<StatefulMiddlewareRequest>
      */
     public const MIDDLEWARE_STATEFUL_REQUEST = StatefulMiddlewareRequest::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\Middleware\StatelessMiddlewareRequest>
+     * @var class-string<StatelessMiddlewareRequest>
      */
     public const MIDDLEWARE_STATELESS_REQUEST = StatelessMiddlewareRequest::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenExpired>
+     * @var class-string<TokenExpired>
      */
     public const TOKEN_EXPIRED = TokenExpired::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenRefreshFailed>
+     * @var class-string<TokenRefreshFailed>
      */
     public const TOKEN_REFRESH_FAILED = TokenRefreshFailed::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenRefreshSucceeded>
+     * @var class-string<TokenRefreshSucceeded>
      */
     public const TOKEN_REFRESH_SUCCEEDED = TokenRefreshSucceeded::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenVerificationAttempting>
+     * @var class-string<TokenVerificationAttempting>
      */
     public const TOKEN_VERIFICATION_ATTEMPTING = TokenVerificationAttempting::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenVerificationFailed>
+     * @var class-string<TokenVerificationFailed>
      */
     public const TOKEN_VERIFICATION_FAILED = TokenVerificationFailed::class;
 
     /**
-     * @var class-string<\Auth0\Laravel\Events\TokenVerificationSucceeded>
+     * @var class-string<TokenVerificationSucceeded>
      */
     public const TOKEN_VERIFICATION_SUCCEEDED = TokenVerificationSucceeded::class;
 
