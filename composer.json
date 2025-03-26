@@ -38,9 +38,9 @@
         "php": "^8.2",
         "ext-json": "*",
         "auth0/auth0-php": "^8.10",
-        "illuminate/contracts": "^11",
-        "illuminate/http": "^11",
-        "illuminate/support": "^11",
+        "illuminate/contracts": "^11 || ^12",
+        "illuminate/http": "^11 || ^12",
+        "illuminate/support": "^11 || ^12",
         "psr-discovery/all": "^1",
         "psr/cache": "^2 || ^3"
     },
