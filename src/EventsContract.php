@@ -28,7 +28,6 @@ use Auth0\Laravel\Events\Middleware\{
     StatelessMiddlewareRequest,
 };
 
-
 /**
  * @api
  */
