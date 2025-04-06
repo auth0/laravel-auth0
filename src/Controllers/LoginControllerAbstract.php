@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Controllers;
 
 use Auth0\Laravel\Auth\Guard;
+use Auth0\Laravel\{Configuration, Events};
 use Auth0\Laravel\Entities\CredentialEntityContract;
 use Auth0\Laravel\Events\LoginAttempting;
 use Auth0\Laravel\Exceptions\ControllerException;
 use Auth0\Laravel\Guards\GuardAbstract;
-use Auth0\Laravel\{Configuration, Events};
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -4,6 +4,18 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel;
 
+use Auth0\Laravel\Events\{
+    AuthenticationFailed,
+    AuthenticationSucceeded,
+    LoginAttempting,
+    TokenExpired,
+    TokenRefreshFailed,
+    TokenRefreshSucceeded,
+    TokenVerificationAttempting,
+    TokenVerificationFailed,
+    TokenVerificationSucceeded,
+};
+
 use Auth0\Laravel\Events\Configuration\{
     BuildingConfigurationEvent,
     BuiltConfigurationEvent,
@@ -16,17 +28,6 @@ use Auth0\Laravel\Events\Middleware\{
     StatelessMiddlewareRequest,
 };
 
-use Auth0\Laravel\Events\{
-    AuthenticationFailed,
-    AuthenticationSucceeded,
-    LoginAttempting,
-    TokenExpired,
-    TokenRefreshFailed,
-    TokenRefreshSucceeded,
-    TokenVerificationAttempting,
-    TokenVerificationFailed,
-    TokenVerificationSucceeded,
-};
 
 /**
  * @api
