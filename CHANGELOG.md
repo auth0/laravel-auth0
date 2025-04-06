@@ -1,5 +1,17 @@
 # Change Log
 
+## [7.16.0](https://github.com/auth0/laravel-auth0/tree/7.16.0) (2025-04-06)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.15.0...7.16.0)
+
+**Added**
+
+-   Laravel 12 Support [\#470](https://github.com/auth0/laravel-auth0/pull/470) ([lee-to](https://github.com/lee-to))
+
+**Fixed**
+
+-   refactor: fix failing tests  [\#471](https://github.com/auth0/laravel-auth0/pull/471) ([noevidenz](https://github.com/noevidenz))
+
 ## [7.15.0](https://github.com/auth0/laravel-auth0/tree/7.15.0) (2024-06-03)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.14.0...7.15.0)
