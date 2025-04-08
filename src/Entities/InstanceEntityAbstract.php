@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Entities;
 
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
-use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
 use Auth0\Laravel\{Configuration, Events, Service};
+use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\ManagementInterface;
