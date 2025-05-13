@@ -1,5 +1,13 @@
 # Change Log
 
+## [7.17.0](https://github.com/auth0/laravel-auth0/tree/7.17.0) (2025-05-13)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.15.0...7.16.0)
+
+**Changed**
+
+-   refactor: Bumped `auth0/auth0-php` dependancy version
+
 ## [7.16.0](https://github.com/auth0/laravel-auth0/tree/7.16.0) (2025-04-06)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.15.0...7.16.0)
