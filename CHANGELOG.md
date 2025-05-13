@@ -1,12 +1,12 @@
 # Change Log
 
-## [7.17.0](https://github.com/auth0/laravel-auth0/tree/7.17.0) (2025-05-13)
+## [7.16.1](https://github.com/auth0/laravel-auth0/tree/7.16.1) (2025-05-13)
 
-[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.15.0...7.16.0)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.16.0...7.16.1)
 
-**Changed**
+**Documentation**
 
--   refactor: Bumped `auth0/auth0-php` dependancy version
+-   Remove extra `` so formatting would come through appropriately. ([nickescobedo](https://github.com/nickescobedo))
 
 ## [7.16.0](https://github.com/auth0/laravel-auth0/tree/7.16.0) (2025-04-06)
 
