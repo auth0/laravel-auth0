@@ -92,7 +92,12 @@ abstract class GuardAbstract implements Guard
         }
 
         $providerName = trim($providerName);
-        $provider = app('auth')->createUserProvider($providerName);
+
+        /**
+         * @var \Illuminate\Auth\AuthManager $auth
+         */
+        $auth = app('auth');
+        $provider = $auth->createUserProvider($providerName);
 
         if ($provider instanceof UserProvider) {
             $this->provider = $provider;
@@ -115,7 +120,13 @@ abstract class GuardAbstract implements Guard
     final public function getSession(): Session
     {
         if (! $this->session instanceof Session) {
+            /**
+             * @var \Illuminate\Session\Store $store
+             */
             $store = app('session.store');
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
             $request = app('request');
 
             if (! $request->hasSession(true)) {
