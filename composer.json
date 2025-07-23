@@ -37,10 +37,10 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "auth0/auth0-php": "^8.10",
-        "illuminate/contracts": "^11",
-        "illuminate/http": "^11",
-        "illuminate/support": "^11",
+        "auth0/auth0-php": "^8.14",
+        "illuminate/contracts": "^11 || ^12",
+        "illuminate/http": "^11 || ^12",
+        "illuminate/support": "^11 || ^12",
         "psr-discovery/all": "^1",
         "psr/cache": "^2 || ^3"
     },
@@ -57,6 +57,7 @@
         "psalm/plugin-laravel": "^2.10",
         "psr-mock/http": "^1",
         "rector/rector": "^1",
+        "spatie/laravel-ray": "^1.40",
         "squizlabs/php_codesniffer": "^3",
         "symfony/cache": "^6 || ^7",
         "vimeo/psalm": "^5",

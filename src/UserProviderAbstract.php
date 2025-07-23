@@ -222,7 +222,12 @@ abstract class UserProviderAbstract
 
         $this->setRepositoryName($model);
 
-        return $this->repository = app($model);
+        /**
+         * @var UserRepositoryContract $repository
+         */
+        $repository = app($model);
+
+        return $this->repository = $repository;
     }
 
     protected function setConfiguration(

@@ -37,7 +37,12 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
             return $this->getImposter();
         }
 
-        $token = trim(app('request')->bearerToken() ?? '');
+        /**
+         * @var \Illuminate\Http\Request $request
+         */
+        $request = app('request');
+
+        $token = trim($request->bearerToken() ?? '');
 
         if ('' === $token) {
             return null;
