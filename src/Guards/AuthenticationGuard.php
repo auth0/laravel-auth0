@@ -27,7 +27,7 @@ use function is_object;
  * @api
  */
 final class AuthenticationGuard extends GuardAbstract implements AuthenticationGuardContract
-{   
+{
     use Macroable;
 
     /**
