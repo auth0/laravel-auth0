@@ -249,7 +249,7 @@ A new property has been added to the `config/auth0.php` configuration file: `beh
 
 #### Changes to Guard and Provider driver aliases
 
-We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver and `auth0.provider`` for the Provider driver. This is a regrettable change but was necessary for adequate Laravel 10 support.
+We identified an issue with using identical alias naming for both the Guard and Provider singletons under Laravel 10, which has required us to rename these aliases. As previous guidance had been to instantiate these using their class names, this should not be a breaking change in most cases. However, if you had used `auth0` as the name for either the Guard or the Provider drivers, kindly note that these have changed. Please use `auth0.guard` for the Guard driver and `auth0.provider` for the Provider driver. This is a regrettable change but was necessary for adequate Laravel 10 support.
 
 ## [7.4.0](https://github.com/auth0/laravel-auth0/tree/7.4.0) (2022-12-12)
 

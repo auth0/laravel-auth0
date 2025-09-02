@@ -13,6 +13,7 @@ use Auth0\SDK\Token\Parser;
 use Auth0\SDK\Utility\HttpResponse;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Traits\Macroable;
 
 use Throwable;
 
@@ -26,7 +27,9 @@ use function is_object;
  * @api
  */
 final class AuthenticationGuard extends GuardAbstract implements AuthenticationGuardContract
-{
+{   
+    use Macroable;
+
     /**
      * @var string
      */
