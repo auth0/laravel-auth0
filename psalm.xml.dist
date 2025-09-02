@@ -12,6 +12,9 @@
     <projectFiles>
         <directory name="src"/>
         <directory name="deprecated"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>
