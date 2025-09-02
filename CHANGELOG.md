@@ -1,5 +1,11 @@
 # Change Log
 
+## [7.18.0](https://github.com/auth0/laravel-auth0/tree/7.18.0) (2025-09-02)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.17.0...7.18.0)
+
+**Added**
+- Mixed changes: feature, fixes, and docs from community [\#477](https://github.com/auth0/laravel-auth0/pull/477) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [7.17.0](https://github.com/auth0/laravel-auth0/tree/7.17.0) (2025-05-16)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.16.0...7.17.0)
