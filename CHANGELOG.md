@@ -1,12 +1,12 @@
 # Change Log
 
-## [7.19.0](https://github.com/auth0/laravel-auth0/tree/7.19.0) (2025-09-03)
+## [7.19.0](https://github.com/auth0/laravel-auth0/tree/7.19.0) (2025-10-01)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.18.0...7.19.0)
 
 **Fixed**
 
--   Security fix: Resolve 
+-   Security fix: Resolve CVE-2025-58769
 
 ## [7.18.0](https://github.com/auth0/laravel-auth0/tree/7.18.0) (2025-09-02)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.17.0...7.18.0)
