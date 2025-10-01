@@ -37,7 +37,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "auth0/auth0-php": "^8.14",
+        "auth0/auth0-php": "^8.17",
         "illuminate/contracts": "^11 || ^12",
         "illuminate/http": "^11 || ^12",
         "illuminate/support": "^11 || ^12",
