@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/laravel-auth0)
+
 ![Auth0 Laravel SDK](https://cdn.auth0.com/website/sdks/banners/laravel-auth0-banner.png)
 
 <div aria-label="Laravel SDK for Auth0 Authentication and Management APIs">
