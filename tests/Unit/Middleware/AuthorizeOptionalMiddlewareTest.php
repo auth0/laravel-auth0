@@ -13,16 +13,28 @@ uses()->group('stateful', 'middleware', 'middleware.stateless', 'middleware.stat
 
 beforeEach(function (): void {
     $this->secret = uniqid();
+    $this->domain = uniqid() . '.auth0.com';
+    $this->clientId = uniqid();
+    $this->audience = [uniqid()];
+    $this->cookieSecret = uniqid();
 
     config([
         'auth0.AUTH0_CONFIG_VERSION' => 2,
         'auth0.guards.default.strategy' => SdkConfiguration::STRATEGY_API,
-        'auth0.guards.default.domain' => uniqid() . '.auth0.com',
-        'auth0.guards.default.clientId' => uniqid(),
-        'auth0.guards.default.audience' => [uniqid()],
+        'auth0.guards.default.domain' => $this->domain,
+        'auth0.guards.default.clientId' => $this->clientId,
+        'auth0.guards.default.audience' => $this->audience,
         'auth0.guards.default.clientSecret' => $this->secret,
-        'auth0.guards.default.cookieSecret' => uniqid(),
+        'auth0.guards.default.cookieSecret' => $this->cookieSecret,
         'auth0.guards.default.tokenAlgorithm' => Token::ALGO_HS256,
+        // Also configure 'web' since legacyGuard uses configuration => 'web'
+        'auth0.guards.web.strategy' => SdkConfiguration::STRATEGY_API,
+        'auth0.guards.web.domain' => $this->domain,
+        'auth0.guards.web.clientId' => $this->clientId,
+        'auth0.guards.web.audience' => $this->audience,
+        'auth0.guards.web.clientSecret' => $this->secret,
+        'auth0.guards.web.cookieSecret' => $this->cookieSecret,
+        'auth0.guards.web.tokenAlgorithm' => Token::ALGO_HS256,
     ]);
 
     $this->laravel = app('auth0');
