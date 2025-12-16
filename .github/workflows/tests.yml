@@ -110,10 +110,10 @@ jobs:
           php: ${{ matrix.php }}
           coverage: pcov
 
-      - if: matrix.php == '8.2'
+      - if: matrix.php == '8.3'
         run: composer pest:coverage
 
-      - if: matrix.php == '8.2'
+      - if: matrix.php == '8.3'
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
           directory: ./coverage/
