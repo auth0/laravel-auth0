@@ -67,11 +67,10 @@ it('assigns a user', function (): void {
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
         "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         "sub" => "auth0|123456",
-        "aud" => [
-          "https://example.com/health-api",
-          "https://my-domain.auth0.com/userinfo",
-          config('auth0.guards.default.clientId')
-        ],
+        "aud" => array_merge(
+          $this->audience,
+          [config('auth0.guards.default.clientId')]
+        ),
         "azp" => config('auth0.guards.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
@@ -96,11 +95,10 @@ it('assigns a user when using a configured scope matches', function (): void {
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
         "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         "sub" => "auth0|123456",
-        "aud" => [
-          "https://example.com/health-api",
-          "https://my-domain.auth0.com/userinfo",
-          config('auth0.guards.default.clientId')
-        ],
+        "aud" => array_merge(
+          $this->audience,
+          [config('auth0.guards.default.clientId')]
+        ),
         "azp" => config('auth0.guards.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
@@ -125,11 +123,10 @@ it('does not assign a user when a configured scope is not matched', function ():
     $token = Generator::create($this->secret, Token::ALGO_HS256, [
         "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
         "sub" => "auth0|123456",
-        "aud" => [
-          "https://example.com/health-api",
-          "https://my-domain.auth0.com/userinfo",
-          config('auth0.guards.default.clientId')
-        ],
+        "aud" => array_merge(
+          $this->audience,
+          [config('auth0.guards.default.clientId')]
+        ),
         "azp" => config('auth0.guards.default.clientId'),
         "exp" => time() + 60,
         "iat" => time(),
