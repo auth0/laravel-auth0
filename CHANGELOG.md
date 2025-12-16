@@ -1,6 +1,6 @@
 # Change Log
 
-## [7.20.0](https://github.com/auth0/laravel-auth0/tree/8.18.0) (2025-12-16)
+## [7.20.0](https://github.com/auth0/laravel-auth0/tree/7.20.0) (2025-12-16)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.19.0...7.20.0)
 
 **Fixed**
