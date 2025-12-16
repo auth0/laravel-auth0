@@ -38,7 +38,6 @@ beforeEach(function (): void {
     ]);
 
     $this->laravel = app('auth0');
-    $this->laravel->reset(); 
     $this->guard = auth('legacyGuard');
     $this->sdk = $this->laravel->getSdk();
 });
