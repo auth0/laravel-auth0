@@ -110,6 +110,20 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         return $this->credential;
     }
 
+    /**
+     * Create a HMAC of the password hash for storage in cookies.
+     *
+     * @param string $passwordHash
+     */
+    public function hashPasswordForCookie($passwordHash): string
+    {
+        return hash_hmac(
+            'sha256',
+            $passwordHash,
+            config('app.key') ?? 'base-key-for-password-hash-mac',
+        );
+    }
+
     public function login(
         ?CredentialEntityContract $credential,
     ): self {
