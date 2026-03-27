@@ -8,8 +8,7 @@ You will also need [Composer](https://getcomposer.org/) and an [Auth0 account](h
 
 | Laravel                                        | SDK    | PHP                                            | Supported Until                                                                                  |
 | ---------------------------------------------- | ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [13.x](https://laravel.com/docs/13.x/releases) | 7.21+  | [8.3](https://www.php.net/releases/8.3/en.php) | Approx. [Feb 2028](https://laravel.com/docs/13.x/releases#support-policy) (EOL for Laravel 13)   |
-|                                                |        | [8.2](https://www.php.net/releases/8.2/en.php) | Approx. [Dec 2026](https://www.php.net/supported-versions.php) (EOL for PHP 8.2)                 |
+| [13.x](https://laravel.com/docs/13.x/releases) | 7.21+  | [8.3](https://www.php.net/releases/8.3/en.php) | Approx. [March 2028](https://laravel.com/docs/13.x/releases#support-policy) (EOL for Laravel 13)   |
 | [12.x](https://laravel.com/docs/12.x/releases) | 7.16+  | [8.3](https://www.php.net/releases/8.3/en.php) | Approx. [Feb 2027](https://laravel.com/docs/12.x/releases#support-policy) (EOL for Laravel 12)   |
 |                                                |        | [8.2](https://www.php.net/releases/8.2/en.php) | Approx. [Dec 2026](https://www.php.net/supported-versions.php) (EOL for PHP 8.2)                 |
 | [11.x](https://laravel.com/docs/11.x/releases) | 7.13+  | [8.3](https://www.php.net/releases/8.3/en.php) | Approx. [March 2026](https://laravel.com/docs/11.x/releases#support-policy) (EOL for Laravel 11) |
