@@ -34,8 +34,8 @@ abstract class ServiceProviderAbstract extends ServiceProvider
         $this->mergeConfigFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']), 'auth0');
         $this->publishes([implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'config', 'auth0.php']) => config_path('auth0.php')], 'auth0');
 
-        $auth->extend('auth0.authenticator', static fn (Application $app, string $name, array $config): AuthenticationGuard => new AuthenticationGuard($name, $config));
-        $auth->extend('auth0.authorizer', static fn (Application $app, string $name, array $config): AuthorizationGuard => new AuthorizationGuard($name, $config));
+        $auth->extend('auth0.authenticator', fn (Application $app, string $name, array $config): AuthenticationGuard => new AuthenticationGuard($name, $config));
+        $auth->extend('auth0.authorizer', fn (Application $app, string $name, array $config): AuthorizationGuard => new AuthorizationGuard($name, $config));
         $auth->provider('auth0.provider', static fn (Application $app, array $config): UserProvider => new UserProvider($config));
 
         $router->aliasMiddleware('guard', GuardMiddleware::class);
@@ -149,7 +149,7 @@ abstract class ServiceProviderAbstract extends ServiceProvider
         Router $router,
         AuthManager $auth,
     ): void {
-        $auth->extend('auth0.guard', static fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
+        $auth->extend('auth0.guard', fn (Application $app, string $name, array $config): Guard => new Guard($name, $config));
 
         $router->aliasMiddleware('auth0.authenticate.optional', AuthenticateOptionalMiddleware::class);
         $router->aliasMiddleware('auth0.authenticate', AuthenticateMiddleware::class);
