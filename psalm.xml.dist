@@ -24,6 +24,7 @@
         <MixedReturnStatement errorLevel="suppress"/>
         <DeprecatedClass errorLevel="suppress"/>
         <DeprecatedInterface errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>
