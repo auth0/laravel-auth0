@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// @php-cs-fixer-ignore static_lambda
+
 namespace Auth0\Laravel;
 
 use Auth0\Laravel\Auth\Guard;
