@@ -60,7 +60,7 @@
         "spatie/laravel-ray": "^1.40",
         "squizlabs/php_codesniffer": "^3",
         "symfony/cache": "^6 || ^7",
-        "vimeo/psalm": "^5",
+        "vimeo/psalm": "^5 || ^6",
         "wikimedia/composer-merge-plugin": "^2"
     },
     "minimum-stability": "dev",
