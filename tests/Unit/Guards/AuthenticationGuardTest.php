@@ -430,3 +430,42 @@ it('successfully continues a session when an access token succeeds is renewed', 
     expect($this->session)
         ->get('user')->not()->toBeNull();
 });
+
+it('returns a consistent HMAC from hashPasswordForCookie()', function (): void {
+    config(['app.key' => 'test-app-key']);
+
+    $hash = $this->guard->hashPasswordForCookie('password-hash');
+
+    expect($hash)
+        ->toBeString()
+        ->toBe(hash_hmac('sha256', 'password-hash', 'test-app-key'));
+});
+
+it('returns different HMACs for different passwords from hashPasswordForCookie()', function (): void {
+    config(['app.key' => 'test-app-key']);
+
+    $hash1 = $this->guard->hashPasswordForCookie('password-one');
+    $hash2 = $this->guard->hashPasswordForCookie('password-two');
+
+    expect($hash1)->not()->toBe($hash2);
+});
+
+it('returns different HMACs for different app keys from hashPasswordForCookie()', function (): void {
+    config(['app.key' => 'key-one']);
+    $hash1 = $this->guard->hashPasswordForCookie('password-hash');
+
+    config(['app.key' => 'key-two']);
+    $hash2 = $this->guard->hashPasswordForCookie('password-hash');
+
+    expect($hash1)->not()->toBe($hash2);
+});
+
+it('uses fallback key when app.key is null in hashPasswordForCookie()', function (): void {
+    config(['app.key' => null]);
+
+    $hash = $this->guard->hashPasswordForCookie('password-hash');
+
+    expect($hash)
+        ->toBeString()
+        ->toBe(hash_hmac('sha256', 'password-hash', 'base-key-for-password-hash-mac'));
+});

@@ -110,6 +110,18 @@ final class AuthenticationGuard extends GuardAbstract implements AuthenticationG
         return $this->credential;
     }
 
+    public function hashPasswordForCookie(string $passwordHash): string
+    {
+        /** @var string $key */
+        $key = config('app.key') ?? 'base-key-for-password-hash-mac';
+
+        return hash_hmac(
+            'sha256',
+            $passwordHash,
+            $key,
+        );
+    }
+
     public function login(
         ?CredentialEntityContract $credential,
     ): self {
