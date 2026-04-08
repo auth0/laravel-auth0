@@ -1,5 +1,21 @@
 # Change Log
 
+## [7.22.0](https://github.com/auth0/laravel-auth0/tree/7.22.0) (2026-04-08)
+
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.21.0...7.22.0)
+
+**Added**
+
+- Laravel 13 support [\#491](https://github.com/auth0/laravel-auth0/pull/491) ([cosmastech](https://github.com/cosmastech))
+
+**Fixed**
+
+- Add missing hashPasswordForCookie to AuthenticationGuard [\#492](https://github.com/auth0/laravel-auth0/pull/492) ([steffjenl](https://github.com/steffjenl))
+
+**Changed**
+
+- Add PHP 8.4 to CI test matrix, cap Psalm <6.5, disable static_lambda CS rule for PHP 8.5+ compat [\#491](https://github.com/auth0/laravel-auth0/pull/491) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [7.21.0](https://github.com/auth0/laravel-auth0/tree/7.21.0) (2026-04-01)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.20.0...7.21.0)
 
