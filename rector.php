@@ -223,6 +223,17 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/src',
     ]);
 
+    // Laravel AuthManager::extend() resolves callbacks in a way that breaks with
+    // static arrow functions on Laravel 13; keep non-static `fn` here.
+    $rectorConfig->skip([
+        StaticArrowFunctionRector::class => [
+            __DIR__ . '/src/ServiceProviderAbstract.php',
+        ],
+        StaticClosureRector::class => [
+            __DIR__ . '/src/ServiceProviderAbstract.php',
+        ],
+    ]);
+
     $rectorConfig->ruleWithConfiguration(
         RenameFunctionRector::class,
         [

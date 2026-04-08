@@ -203,7 +203,7 @@ return (new PhpCsFixer\Config())
         'standardize_increment' => true,
         'standardize_not_equals' => true,
         'statement_indentation' => true,
-        'static_lambda' => true,
+        'static_lambda' => false,
         'strict_comparison' => true,
         'strict_param' => true,
         'string_length_to_empty' => true,

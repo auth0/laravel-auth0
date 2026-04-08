@@ -21,10 +21,10 @@
         <MixedArgument errorLevel="suppress"/>
         <MixedArgumentTypeCoercion errorLevel="suppress"/>
         <MixedAssignment errorLevel="suppress"/>
-        <MixedInferredReturnType errorLevel="suppress"/>
         <MixedReturnStatement errorLevel="suppress"/>
         <DeprecatedClass errorLevel="suppress"/>
         <DeprecatedInterface errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
     </issueHandlers>
 
     <plugins>
