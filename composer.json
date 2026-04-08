@@ -38,9 +38,9 @@
         "php": "^8.2",
         "ext-json": "*",
         "auth0/auth0-php": "^8.19",
-        "illuminate/contracts": "^11 || ^12",
-        "illuminate/http": "^11 || ^12",
-        "illuminate/support": "^11 || ^12",
+        "illuminate/contracts": "^11 || ^12 || ^13",
+        "illuminate/http": "^11 || ^12 || ^13",
+        "illuminate/support": "^11 || ^12 || ^13",
         "psr-discovery/all": "^1",
         "psr/cache": "^2 || ^3"
     },
@@ -60,7 +60,7 @@
         "spatie/laravel-ray": "^1.40",
         "squizlabs/php_codesniffer": "^3",
         "symfony/cache": "^6 || ^7",
-        "vimeo/psalm": "^5",
+        "vimeo/psalm": "^5 || ^6 <6.5",
         "wikimedia/composer-merge-plugin": "^2"
     },
     "minimum-stability": "dev",
