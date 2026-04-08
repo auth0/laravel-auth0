@@ -1,5 +1,12 @@
 # Change Log
 
+## [7.21.0](https://github.com/auth0/laravel-auth0/tree/7.21.0) (2026-04-01)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.20.0...7.21.0)
+
+**Fixed**
+
+- Security fix: Resolve CVE-2026-34236
+
 ## [7.20.0](https://github.com/auth0/laravel-auth0/tree/7.20.0) (2025-12-16)
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.19.0...7.20.0)
 
