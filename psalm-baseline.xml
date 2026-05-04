@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="src/Configuration.php">
+    <NoEnvOutsideConfig>
+      <code><![CDATA[env]]></code>
+      <code><![CDATA[env]]></code>
+    </NoEnvOutsideConfig>
+  </file>
+  <file src="src/Controllers/CallbackControllerAbstract.php">
+    <RedundantCondition>
+      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Controllers/LoginControllerAbstract.php">
+    <RedundantCondition>
+      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Controllers/LogoutControllerAbstract.php">
+    <RedundantCondition>
+      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
+    </RedundantCondition>
+  </file>
+</files>
