@@ -26,6 +26,7 @@
         <DeprecatedClass errorLevel="suppress"/>
         <DeprecatedInterface errorLevel="suppress"/>
         <MissingOverrideAttribute errorLevel="suppress"/>
+        <RedundantCondition errorLevel="info"/>
     </issueHandlers>
 
     <plugins>

@@ -6,19 +6,4 @@
       <code><![CDATA[env]]></code>
     </NoEnvOutsideConfig>
   </file>
-  <file src="src/Controllers/CallbackControllerAbstract.php">
-    <RedundantCondition>
-      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="src/Controllers/LoginControllerAbstract.php">
-    <RedundantCondition>
-      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="src/Controllers/LogoutControllerAbstract.php">
-    <RedundantCondition>
-      <code><![CDATA[$guard instanceof GuardAbstract]]></code>
-    </RedundantCondition>
-  </file>
 </files>
