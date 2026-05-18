@@ -11,6 +11,7 @@ jobs:
     uses: auth0/devsecops-tooling/.github/workflows/sca-scan.yml@main
     with:
       php-version: "8.2"
+      additional-arguments: "--exclude=vendor"
       pre-scan-commands: |
         composer install --no-interaction --prefer-dist
     secrets: inherit
