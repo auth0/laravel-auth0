@@ -352,6 +352,7 @@ final class Configuration implements ConfigurationContract
      * @codeCoverageIgnore
      *
      * @psalm-suppress DocblockTypeContradiction
+     * @psalm-suppress NoEnvOutsideConfig
      */
     public static function getEnvironment(): array
     {
@@ -431,6 +432,8 @@ final class Configuration implements ConfigurationContract
 
     /**
      * @codeCoverageIgnore
+     *
+     * @psalm-suppress NoEnvOutsideConfig
      */
     public static function getJson(): array
     {
