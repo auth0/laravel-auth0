@@ -61,6 +61,10 @@ abstract class ServiceProviderAbstract extends ServiceProvider
         });
 
         $gate->before(static function (?Authenticatable $user, ?string $ability) {
+            if (true === config('auth0.disableAccessControl')) {
+                return;
+            }
+
             $guard = auth()->guard();
 
             if (! $guard instanceof GuardContract || ! $user instanceof Authenticatable || ! is_string($ability)) {
