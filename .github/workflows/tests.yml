@@ -10,12 +10,13 @@ on:
   push:
     branches:
       - main
+      - v8
 
 permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/v8' }}
 
 jobs:
   configure:

@@ -1,5 +1,118 @@
 # Upgrade Guide
 
+## v8 Migration Guide
+
+Auth0 Laravel SDK v8 updates the underlying `auth0/auth0-php` dependency to **v9**, whose Management API has been regenerated with [Fern](https://buildwithfern.com/). This is the only significant change in v8.
+
+> **v8 is currently released as a beta** (`8.0.0-beta.x`) while `auth0/auth0-php` v9 is in beta. Install it with `composer require auth0/login:^8.0@beta`.
+
+### What does NOT change
+
+Authentication is untouched. If your application only uses Auth0 for login, logout, callback handling, session management, token validation, guards (`auth0-session`, `auth0-api`), middleware, events, and configuration (`config/auth0.php`), **no code changes are required** — update your dependency and you're done.
+
+### Breaking Changes Summary
+
+- The `auth0/auth0-php` dependency is now **v9 only** (`^9.0`). v8 of auth0-php is no longer supported.
+- The Management API surface changed (details below). This affects you only if you call `Auth0::management()` or `$guard->management()`.
+- The `deprecated/` compatibility shims (the `Auth0\Login`-era classes retained since the v6→v7 migration) have been **removed**. If you still reference any class under the old `deprecated/` path, migrate to its current equivalent first.
+
+### Requirements
+
+- PHP ≥ 8.2
+- Laravel 11, 12, or 13
+
+### Migration Guidance: Management API
+
+The Management API is the one area requiring code changes. The patterns below summarize the move from the handwritten v8 API to the Fern-generated v9 API. For the full per-endpoint reference, see [docs/Management.md](docs/Management.md).
+
+#### 1. Sub-client access: method calls → property access
+
+```php
+// BEFORE (v7 / auth0-php v8)
+$management = Auth0::management();
+$users = $management->users();      // method call
+
+// AFTER (v8 / auth0-php v9)
+$management = Auth0::management();
+$users = $management->users;        // property access
+```
+
+#### 2. List methods: `getAll()` → `list()`, returning an auto-paginating Pager
+
+```php
+// BEFORE (v7)
+use Auth0\SDK\Utility\HttpResponse;
+
+$response = $management->users()->getAll(['per_page' => 10, 'include_totals' => true]);
+$users = HttpResponse::decodeContent($response);
+foreach ($users as $user) {
+    echo $user['email'];
+}
+
+// AFTER (v8)
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+
+$params = new ListUsersRequestParameters([
+    'perPage' => 10,
+    'page' => 0,
+    'includeTotals' => true,
+]);
+foreach ($management->users->list($params) as $user) {
+    echo $user->getEmail();
+}
+```
+
+#### 3. Request parameters: arrays → typed objects (camelCase)
+
+Parameter names change from `snake_case` to `camelCase`, and are passed as typed request objects rather than associative arrays.
+
+> **Known issue:** always pass explicit pagination values, and note that some endpoints are cursor-based rather than offset-based. See the pagination note in [docs/Management.md](docs/Management.md#2-list-endpoints-return-an-auto-paginating-iterator) for details.
+
+#### 4. Responses: raw arrays → typed objects with getters
+
+```php
+// BEFORE (v7)
+$user['email'];
+$user['user_id'];
+
+// AFTER (v8)
+$user->getEmail();
+$user->getUserId();
+```
+
+#### 5. Method and sub-client renames
+
+- `$management->grants()` → `$management->userGrants`
+- `$management->usersByEmail()` → `$management->users->listUsersByEmail(...)`
+- `$management->blacklists()` → **removed** (the endpoint was deprecated by Auth0)
+- Single-resource fetches use `->get('id')` as before, but return typed objects.
+
+v9 also adds many new sub-clients (flows, forms, prompts, network ACLs, keys, sessions, and more). See [docs/Management.md](docs/Management.md) for the complete list.
+
+#### 6. Management API token acquisition is now automatic
+
+You no longer need to configure a separate management token. With `client_id` and `client_secret` configured, the SDK acquires and caches a Management API token automatically via client credentials.
+
+#### 7. `management()` returns the base ManagementClient and accepts options
+
+`Auth0::management()` (and `$guard->management()`) now returns the auth0-php v9 `ManagementClient` directly, giving you its full surface. It also accepts an optional array of overrides — `timeout`, `maxRetries`, `additionalHeaders`, `audience`, `token`, `httpClient`, `tokenCache` — forwarded to the base SDK's `ManagementClientOptions`. These can also be set as defaults under a `management` key in `config/auth0.php`.
+
+```php
+// No arguments needed for the common case.
+Auth0::management()->users->list($params);
+
+// Per-call overrides.
+Auth0::management([
+    'timeout' => 5.0,
+    'maxRetries' => 3,
+    'additionalHeaders' => ['X-Request-Id' => $id],
+])->clients->list($params);
+```
+
+See [docs/Management.md](docs/Management.md) for the full list of options and config defaults.
+
+---
+
 ## v7 Migration Guide
 
 Auth0 Laravel SDK v7 includes many significant changes over previous versions:

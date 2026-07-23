@@ -7,9 +7,9 @@ namespace Auth0\Laravel\Entities;
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
 use Auth0\Laravel\{Configuration, Events, Service};
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
+use Auth0\SDK\API\Management\Wrapper\{ManagementClient, ManagementClientOptions};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\{Auth0Interface, StoreInterface};
 use Auth0\SDK\Utility\HttpTelemetry;
 use Psr\Cache\CacheItemPoolInterface;
@@ -88,9 +88,42 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         return $this->sdk;
     }
 
-    final public function management(): ManagementInterface
+    /**
+     * Return a v9 Management API client built from this instance's configuration.
+     *
+     * Returns the base Auth0-PHP `ManagementClient`, so the full SDK surface is
+     * available: sub-clients by property (e.g. `->users`, `->clients`), the raw
+     * generated client via `getManagement()`, and so on. The token is resolved
+     * automatically — a configured `managementToken` if present, otherwise a
+     * client-credentials token fetched and cached via the management token cache.
+     *
+     * @param array<string, mixed> $options Overrides passed to ManagementClientOptions.
+     *                                      Recognized keys: token, audience, httpClient,
+     *                                      timeout, maxRetries, additionalHeaders, tokenCache.
+     *                                      Merged over defaults from config and this
+     *                                      instance's SdkConfiguration.
+     */
+    final public function management(array $options = []): ManagementClient
     {
-        return $this->getSdk()->management();
+        $configuration = $this->getConfiguration();
+
+        // Defaults from config/auth0.php ('management' block), overridden per-call.
+        $configured = config('auth0.management');
+        $defaults = is_array($configured) ? $configured : [];
+        $options = array_merge($defaults, $options);
+
+        return new ManagementClient(new ManagementClientOptions(
+            domain: (string) $configuration->getDomain(),
+            token: $options['token'] ?? $configuration->getManagementToken(),
+            clientId: $configuration->getClientId(),
+            clientSecret: $configuration->getClientSecret(),
+            audience: $options['audience'] ?? null,
+            httpClient: $options['httpClient'] ?? null,
+            timeout: $options['timeout'] ?? null,
+            maxRetries: $options['maxRetries'] ?? null,
+            additionalHeaders: $options['additionalHeaders'] ?? null,
+            tokenCache: $options['tokenCache'] ?? $configuration->getManagementTokenCache(),
+        ));
     }
 
     final public function setGuardConfigurationKey(

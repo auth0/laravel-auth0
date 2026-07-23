@@ -2,9 +2,9 @@ name: SCA
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "v8"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "v8"]
 
 jobs:
   snyk-cli:

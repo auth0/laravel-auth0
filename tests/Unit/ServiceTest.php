@@ -7,7 +7,7 @@ use Auth0\Laravel\Bridges\{CacheBridge, CacheBridgeContract, SessionBridgeContra
 use Auth0\SDK\Contract\Auth0Interface as SdkContract;
 use Auth0\SDK\Auth0 as SDKAuth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Token\Generator;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +36,7 @@ beforeEach(function (): void {
 });
 
 it('returns a Management API class', function (): void {
-    expect($this->laravel->management())->toBeInstanceOf(ManagementInterface::class);
+    expect($this->laravel->management())->toBeInstanceOf(ManagementClient::class);
 });
 
 it('can get/set the configuration', function (): void {

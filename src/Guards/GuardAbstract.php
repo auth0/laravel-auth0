@@ -8,7 +8,7 @@ use Auth0\Laravel\Entities\{CredentialEntityContract, InstanceEntity, InstanceEn
 use Auth0\Laravel\Events;
 use Auth0\Laravel\Events\{TokenVerificationAttempting, TokenVerificationFailed, TokenVerificationSucceeded};
 use Auth0\Laravel\Exceptions\{AuthenticationException, GuardException, GuardExceptionContract};
-use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
@@ -211,9 +211,21 @@ abstract class GuardAbstract implements Guard
         return $this->impersonating instanceof CredentialEntityContract;
     }
 
-    final public function management(): ManagementInterface
+    /**
+     * Return a v9 Management API client (base Auth0-PHP ManagementClient).
+     *
+     * @param array<string, mixed> $options Overrides passed to ManagementClientOptions.
+     */
+    final public function management(array $options = []): ManagementClient
     {
-        return $this->sdk()->management();
+        // sdk() initializes this guard's InstanceEntity; delegate to it so the
+        // ManagementClient is built from the guard's own configuration.
+        $this->sdk();
+        $instance = $this->service() ?? InstanceEntity::create(
+            guardConfigurationName: $this->config['configuration'] ?? $this->name,
+        );
+
+        return $instance->management($options);
     }
 
     final public function processToken(
