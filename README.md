@@ -375,7 +375,7 @@ Route::get('/colors', function () {
 })->middleware('auth');
 ```
 
-See [docs/Management.md](./docs/Management.md) for usage patterns, configuration options, and a link to the full auth0-php endpoint reference.
+See [docs/Management.md](./docs/Management.md) for usage patterns, configuration options, and a link to the full auth0-php API reference.
 
 </details>
 

@@ -23,7 +23,7 @@ Authentication is untouched. If your application only uses Auth0 for login, logo
 
 ### Migration Guidance: Management API
 
-The Management API is the one area requiring code changes. The patterns below summarize the move from the handwritten v8 API to the Fern-generated v9 API. For the full per-endpoint reference, see [docs/Management.md](docs/Management.md).
+The Management API is the one area requiring code changes. The patterns below summarize the move from the handwritten v8 API to the Fern-generated v9 API. For the full auth0-php API reference, see [docs/Management.md](docs/Management.md).
 
 #### 1. Sub-client access: method calls → property access
 
