@@ -8,6 +8,9 @@
 CHANGELOG.ARCHIVE.md   export-ignore
 CHANGELOG.md           export-ignore
 docs/                  export-ignore
+FERN_RELEASE_PLAN.md   export-ignore
+FERN_SDK_MIGRATION.md  export-ignore
+GA_REVERT_CHECKLIST.md export-ignore
 EXAMPLES.md            export-ignore
 examples/              export-ignore
 opslevel.yml           export-ignore
