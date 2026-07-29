@@ -65,6 +65,20 @@ return Configuration::VERSION_2 + [
 
 If you omit the `management` block entirely, nothing changes and the defaults are simply empty.
 
+For a specific guard, add a `management` block under that guard's configuration (`auth0.guards.<name>.management`). It is merged over the global block, so a guard can override or extend the shared defaults.
+
+```php
+// config/auth0.php
+'guards' => [
+    'my-guard' => [
+        // ... strategy, domain, clientId, clientSecret ...
+        'management' => [
+            'timeout' => 10.0,
+        ],
+    ],
+],
+```
+
 ## Usage patterns
 
 The four patterns below cover almost everything. For the exact method and class names of a given endpoint, consult the [full API reference](#finding-the-full-api-reference).
