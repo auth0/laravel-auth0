@@ -23,6 +23,8 @@ use function is_string;
  */
 abstract class InstanceEntityAbstract extends EntityAbstract
 {
+    private ?ManagementClient $management = null;
+
     public function __construct(
         protected ?Auth0Interface $sdk = null,
         protected ?SdkConfiguration $configuration = null,
@@ -105,14 +107,16 @@ abstract class InstanceEntityAbstract extends EntityAbstract
      */
     final public function management(array $options = []): ManagementClient
     {
+        // Cache the no-options client so repeated management() calls in a request
+        // reuse one instance (and its token cache) instead of rebuilding.
+        if ([] === $options && $this->management instanceof ManagementClient) {
+            return $this->management;
+        }
+
         $configuration = $this->getConfiguration();
+        $options = array_merge($this->getManagementDefaults(), $options);
 
-        // Defaults from config/auth0.php ('management' block), overridden per-call.
-        $configured = config('auth0.management');
-        $defaults = is_array($configured) ? $configured : [];
-        $options = array_merge($defaults, $options);
-
-        return new ManagementClient(new ManagementClientOptions(
+        $management = new ManagementClient(new ManagementClientOptions(
             domain: (string) $configuration->getDomain(),
             token: $options['token'] ?? $configuration->getManagementToken(),
             clientId: $configuration->getClientId(),
@@ -124,6 +128,12 @@ abstract class InstanceEntityAbstract extends EntityAbstract
             additionalHeaders: $options['additionalHeaders'] ?? null,
             tokenCache: $options['tokenCache'] ?? $configuration->getManagementTokenCache(),
         ));
+
+        if ([] === $options) {
+            $this->management = $management;
+        }
+
+        return $management;
     }
 
     final public function setGuardConfigurationKey(
@@ -138,10 +148,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     {
         $this->configuration = $sdk->configuration();
         $this->sdk = $sdk;
+        $this->resetManagementClient();
 
         $this->setSdkTelemetry();
 
-        return $this->sdk;
+        return $sdk;
     }
 
     abstract public function reset(): self;
@@ -152,6 +163,28 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     abstract public function setConfiguration(
         SdkConfiguration | array | null $configuration = null,
     ): self;
+
+    /**
+     * Resolve default management options: the global `auth0.management` block,
+     * with a per-guard `auth0.guards.<key>.management` block merged on top.
+     */
+    private function getManagementDefaults(): array
+    {
+        $global = config('auth0.management');
+        $defaults = is_array($global) ? $global : [];
+
+        $key = $this->guardConfigurationKey;
+
+        if (null !== $key && '' !== $key && 'default' !== $key) {
+            $guard = config('auth0.guards.' . $key . '.management');
+
+            if (is_array($guard)) {
+                $defaults = array_merge($defaults, $guard);
+            }
+        }
+
+        return $defaults;
+    }
 
     protected function bootBackchannelLogoutCache(array $config): array
     {
@@ -338,6 +371,15 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         }
 
         return $this->tokenCachePool;
+    }
+
+    /**
+     * Clear the cached Management client so the next management() call rebuilds
+     * it from current configuration.
+     */
+    final protected function resetManagementClient(): void
+    {
+        $this->management = null;
     }
 
     /**
