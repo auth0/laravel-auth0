@@ -40,11 +40,10 @@ You can also retrieve information on any user using [the Management API](./Manag
 use Auth0\Laravel\Facade\Auth0;
 
 Route::get('/profile', function () {
-  $profile = Auth0::management()->users()->get(auth()->id());
-  $profile = Auth0::json($profile);
+  $profile = Auth0::management()->users->get(auth()->id());
 
-  $name = $profile['name'] ?? 'Unknown';
-  $email = $profile['email'] ?? 'Unknown';
+  $name = $profile?->getName() ?? 'Unknown';
+  $email = $profile?->getEmail() ?? 'Unknown';
 
   return response("Hello {$name}! Your email address is {$email}.");
 })->middleware('auth');
@@ -56,18 +55,17 @@ To update a user's information, use [the Management API](./Management.md).
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
+use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 
 Route::get('/update', function () {
-  Auth0::management()
-    ->users()
-    ->update(
-        id: auth()->id(),
-        body: [
-            'user_metadata' => [
-                'last_visited' => time()
-            ]
-        ]
-    );
+  Auth0::management()->users->update(
+      id: auth()->id(),
+      request: new UpdateUserRequestContent([
+          'userMetadata' => [
+              'last_visited' => time(),
+          ],
+      ]),
+  );
 })->middleware('auth');
 ```
 
