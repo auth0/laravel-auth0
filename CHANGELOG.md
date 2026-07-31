@@ -1,5 +1,23 @@
 # Change Log
 
+## [8.0.0-beta.0](https://github.com/auth0/laravel-auth0/tree/8.0.0-beta.0) (2026-07-31)
+[Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.22.0...8.0.0-beta.0)
+
+**Breaking Changes**
+
+- Bumped the `auth0/auth0-php` dependency from `^8.19` to `^9.0`, which rewrites the Management API
+- `management()` now returns the base `ManagementClient` instead of `ManagementInterface`; sub-clients are accessed as properties (`$management->users`) and responses are typed objects
+- Removed the `deprecated/` v6 to v7 compatibility shims
+
+**Added**
+
+- `management()` accepts an options array (`timeout`, `maxRetries`, `additionalHeaders`, `audience`, `token`, `httpClient`, `tokenCache`), with defaults settable under a `management` key in `config/auth0.php` [\#497](https://github.com/auth0/laravel-auth0/pull/497) ([kishore7snehil](https://github.com/kishore7snehil))
+- `UPGRADE.md` v7 to v8 migration guide
+
+**Unchanged**
+
+- Authentication surface (login, logout, callback, token handling) — the guards, middleware, user providers, session store, and events behave exactly as in v7
+
 ## [7.22.0](https://github.com/auth0/laravel-auth0/tree/7.22.0) (2026-04-08)
 
 [Full Changelog](https://github.com/auth0/laravel-auth0/compare/7.21.0...7.22.0)
