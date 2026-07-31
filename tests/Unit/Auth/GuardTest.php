@@ -7,7 +7,7 @@ use Auth0\Laravel\Exceptions\AuthenticationException;
 use Auth0\Laravel\Entities\CredentialEntity;
 use Auth0\Laravel\Users\StatefulUser;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Token;
 use Illuminate\Support\Facades\Route;
@@ -367,7 +367,7 @@ test('management() returns a Management API class', function (): void {
     $this->guard->setCredential($credential, Guard::SOURCE_TOKEN);
 
     expect($this->guard->management())
-        ->toBeInstanceOf(ManagementInterface::class);
+        ->toBeInstanceOf(ManagementClient::class);
 });
 
 test('sdk() uses the guard name to optionally merge configuration data', function (): void {

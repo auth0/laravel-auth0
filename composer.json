@@ -37,7 +37,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "auth0/auth0-php": "^8.19",
+        "auth0/auth0-php": "^9.0@beta",
         "illuminate/contracts": "^11 || ^12 || ^13",
         "illuminate/http": "^11 || ^12 || ^13",
         "illuminate/support": "^11 || ^12 || ^13",
@@ -68,8 +68,7 @@
     "autoload": {
         "psr-4": {
             "Auth0\\Laravel\\": [
-                "src/",
-                "deprecated/"
+                "src/"
             ]
         }
     },

@@ -7,7 +7,6 @@ parameters:
 
     paths:
         - src
-        - deprecated
 
     ignoreErrors:
         - '#Constructor of class (.*) has an unused parameter (.*).#'

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Laravel\Entities;
 
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
 
 /**
@@ -24,9 +24,11 @@ interface InstanceEntityContract extends EntityContract
     public function getSdk(): Auth0Interface;
 
     /**
-     * Returns an instance of the Management API class.
+     * Returns a v9 Management API client (base Auth0-PHP ManagementClient).
+     *
+     * @param array<string, mixed> $options Overrides passed to ManagementClientOptions.
      */
-    public function management(): ManagementInterface;
+    public function management(array $options = []): ManagementClient;
 
     /**
      * Resets and cleans up the internal state of the SDK.
