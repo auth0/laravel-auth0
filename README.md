@@ -343,41 +343,39 @@ Route::get('/', function () {
 
 Once you've [authorized your application to make Management API calls](./docs/Management.md#api-application-authorization), you'll be able to engage nearly any of the [Auth0 Management API endpoints](https://auth0.com/docs/api/management/v2) through the SDK.
 
-Each API endpoint has its own SDK class which can be accessed through the Facade's `management()` factory method. For interoperability, network responses from the API are returned as [PSR-7 messages](https://www.php-fig.org/psr/psr-7/). These can be converted into native arrays using the SDK's `json()` method.
+Each API endpoint has its own SDK class which can be accessed through the Facade's `management()` factory method. API sub-clients are accessed as properties, and all responses return strongly-typed objects with getter methods.
 
-For example, to update a user's metadata, you can call the `management()->users()->update()` method.
+For example, to update a user's metadata, you can access the `users` property and call its `update()` method.
 
 ```php
 use Auth0\Laravel\Facade\Auth0;
+use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 
 Route::get('/colors', function () {
   $colors = ['red', 'blue', 'green', 'black', 'white', 'yellow', 'purple', 'orange', 'pink', 'brown'];
 
   // Update the authenticated user with a randomly assigned favorite color.
-  Auth0::management()->users()->update(
+  Auth0::management()->users->update(
     id: auth()->id(),
-    body: [
-      'user_metadata' => [
+    request: new UpdateUserRequestContent([
+      'userMetadata' => [
         'color' => $colors[random_int(0, count($colors) - 1)]
       ]
-    ]
+    ])
   );
 
   // Retrieve the user's updated profile.
-  $profile = Auth0::management()->users()->get(auth()->id());
+  $profile = Auth0::management()->users->get(auth()->id());
 
-  // Convert the PSR-7 response into a native array.
-  $profile = Auth0::json($profile);
-
-  // Extract some values from the user's profile.
-  $color = $profile['user_metadata']['color'] ?? 'unknown';
+  // Access user properties via typed getters.
+  $color = $profile?->getUserMetadata()['color'] ?? 'unknown';
   $name = auth()->user()->name;
 
   return response("Hello {$name}! Your favorite color is {$color}.");
 })->middleware('auth');
 ```
 
-All the SDK's Management API methods are [documented here](./docs/Management.md).
+See [docs/Management.md](./docs/Management.md) for usage patterns, configuration options, and a link to the full auth0-php API reference.
 
 </details>
 

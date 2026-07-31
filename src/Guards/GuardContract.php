@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Laravel\Guards;
 
 use Auth0\Laravel\Entities\CredentialEntityContract;
-use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Contract\Auth0Interface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\{Authenticatable, UserProvider};
@@ -132,9 +132,11 @@ interface GuardContract
     public function logout(): self;
 
     /**
-     * Get an Auth0 Management API instance.
+     * Get a v9 Management API client (base Auth0-PHP ManagementClient).
+     *
+     * @param array<string, mixed> $options Overrides passed to ManagementClientOptions.
      */
-    public function management(): ManagementInterface;
+    public function management(array $options = []): ManagementClient;
 
     /**
      * Processes a JWT token and returns the decoded token, or null if the token is invalid.

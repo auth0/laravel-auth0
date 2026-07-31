@@ -15,22 +15,26 @@ permissions:
 ### TODO: Also remove `get-prerelease`, `get-version`, `release-create`, `tag-create` and `tag-exists` actions from this repo's .github/actions folder once the repo is public.
 
 jobs:
-  rl-scanner:
-    uses: ./.github/workflows/rl-scanner.yml
-    with:
-      php-version: 8.2
-      artifact-name: 'laravel-auth0.zip'
-    secrets:
-      RLSECURE_LICENSE: ${{ secrets.RLSECURE_LICENSE }}
-      RLSECURE_SITE_KEY: ${{ secrets.RLSECURE_SITE_KEY }}
-      SIGNAL_HANDLER_TOKEN: ${{ secrets.SIGNAL_HANDLER_TOKEN }}
-      PRODSEC_TOOLS_USER: ${{ secrets.PRODSEC_TOOLS_USER }}
-      PRODSEC_TOOLS_TOKEN: ${{ secrets.PRODSEC_TOOLS_TOKEN }}
-      PRODSEC_TOOLS_ARN: ${{ secrets.PRODSEC_TOOLS_ARN }}
+  # NOTE: The rl-scanner job is temporarily disabled for the v8 line. The RL scanner
+  # trust policy currently only covers the main/master branches, so it cannot run
+  # against the v8 branch. Once v8 goes GA and is merged into main, uncomment the
+  # rl-scanner job below and restore `needs: rl-scanner` on the release job.
+  # rl-scanner:
+  #   uses: ./.github/workflows/rl-scanner.yml
+  #   with:
+  #     php-version: 8.2
+  #     artifact-name: 'laravel-auth0.zip'
+  #   secrets:
+  #     RLSECURE_LICENSE: ${{ secrets.RLSECURE_LICENSE }}
+  #     RLSECURE_SITE_KEY: ${{ secrets.RLSECURE_SITE_KEY }}
+  #     SIGNAL_HANDLER_TOKEN: ${{ secrets.SIGNAL_HANDLER_TOKEN }}
+  #     PRODSEC_TOOLS_USER: ${{ secrets.PRODSEC_TOOLS_USER }}
+  #     PRODSEC_TOOLS_TOKEN: ${{ secrets.PRODSEC_TOOLS_TOKEN }}
+  #     PRODSEC_TOOLS_ARN: ${{ secrets.PRODSEC_TOOLS_ARN }}
 
   release:
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
-    needs: rl-scanner
+    # needs: rl-scanner
     runs-on: ubuntu-latest
 
     steps:

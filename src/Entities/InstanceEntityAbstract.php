@@ -7,9 +7,9 @@ namespace Auth0\Laravel\Entities;
 use Auth0\Laravel\Bridges\{CacheBridge, SessionBridge};
 use Auth0\Laravel\{Configuration, Events, Service};
 use Auth0\Laravel\Events\Configuration\{BuildingConfigurationEvent, BuiltConfigurationEvent};
+use Auth0\SDK\API\Management\Wrapper\{ManagementClient, ManagementClientOptions};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\{Auth0Interface, StoreInterface};
 use Auth0\SDK\Utility\HttpTelemetry;
 use Psr\Cache\CacheItemPoolInterface;
@@ -23,6 +23,8 @@ use function is_string;
  */
 abstract class InstanceEntityAbstract extends EntityAbstract
 {
+    private ?ManagementClient $management = null;
+
     public function __construct(
         protected ?Auth0Interface $sdk = null,
         protected ?SdkConfiguration $configuration = null,
@@ -88,9 +90,52 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         return $this->sdk;
     }
 
-    final public function management(): ManagementInterface
+    /**
+     * Return a v9 Management API client built from this instance's configuration.
+     *
+     * Returns the base Auth0-PHP `ManagementClient`, so the full SDK surface is
+     * available: sub-clients by property (e.g. `->users`, `->clients`), the raw
+     * generated client via `getManagement()`, and so on. The token is resolved
+     * automatically — a configured `managementToken` if present, otherwise a
+     * client-credentials token fetched and cached via the management token cache.
+     *
+     * @param array<string, mixed> $options Overrides passed to ManagementClientOptions.
+     *                                      Recognized keys: token, audience, httpClient,
+     *                                      timeout, maxRetries, additionalHeaders, tokenCache.
+     *                                      Merged over defaults from config and this
+     *                                      instance's SdkConfiguration.
+     */
+    final public function management(array $options = []): ManagementClient
     {
-        return $this->getSdk()->management();
+        // Cache is keyed on the caller passing no options. Capture this before
+        // merging config defaults below, which would otherwise fill $options.
+        $cacheable = [] === $options;
+
+        if ($cacheable && $this->management instanceof ManagementClient) {
+            return $this->management;
+        }
+
+        $configuration = $this->getConfiguration();
+        $options = array_merge($this->getManagementDefaults(), $options);
+
+        $management = new ManagementClient(new ManagementClientOptions(
+            domain: (string) $configuration->getDomain(),
+            token: $options['token'] ?? $configuration->getManagementToken(),
+            clientId: $configuration->getClientId(),
+            clientSecret: $configuration->getClientSecret(),
+            audience: $options['audience'] ?? null,
+            httpClient: $options['httpClient'] ?? null,
+            timeout: $options['timeout'] ?? null,
+            maxRetries: $options['maxRetries'] ?? null,
+            additionalHeaders: $options['additionalHeaders'] ?? null,
+            tokenCache: $options['tokenCache'] ?? $configuration->getManagementTokenCache(),
+        ));
+
+        if ($cacheable) {
+            $this->management = $management;
+        }
+
+        return $management;
     }
 
     final public function setGuardConfigurationKey(
@@ -105,10 +150,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     {
         $this->configuration = $sdk->configuration();
         $this->sdk = $sdk;
+        $this->resetManagementClient();
 
         $this->setSdkTelemetry();
 
-        return $this->sdk;
+        return $sdk;
     }
 
     abstract public function reset(): self;
@@ -119,6 +165,28 @@ abstract class InstanceEntityAbstract extends EntityAbstract
     abstract public function setConfiguration(
         SdkConfiguration | array | null $configuration = null,
     ): self;
+
+    /**
+     * Resolve default management options: the global `auth0.management` block,
+     * with a per-guard `auth0.guards.<key>.management` block merged on top.
+     */
+    private function getManagementDefaults(): array
+    {
+        $global = config('auth0.management');
+        $defaults = is_array($global) ? $global : [];
+
+        $key = $this->guardConfigurationKey;
+
+        if (null !== $key && '' !== $key && 'default' !== $key) {
+            $guard = config('auth0.guards.' . $key . '.management');
+
+            if (is_array($guard)) {
+                $defaults = array_merge($defaults, $guard);
+            }
+        }
+
+        return $defaults;
+    }
 
     protected function bootBackchannelLogoutCache(array $config): array
     {
@@ -305,6 +373,15 @@ abstract class InstanceEntityAbstract extends EntityAbstract
         }
 
         return $this->tokenCachePool;
+    }
+
+    /**
+     * Clear the cached Management client so the next management() call rebuilds
+     * it from current configuration.
+     */
+    final protected function resetManagementClient(): void
+    {
+        $this->management = null;
     }
 
     /**

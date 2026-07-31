@@ -20,6 +20,7 @@ trait InstanceEntityTrait
 
         $this->sdk = null;
         $this->configuration = null;
+        $this->resetManagementClient();
 
         return $this;
     }
@@ -35,6 +36,7 @@ trait InstanceEntityTrait
         }
 
         $this->configuration = $configuration;
+        $this->resetManagementClient();
 
         if ($this->configuration instanceof SdkConfiguration && $this->sdk instanceof Auth0Interface) {
             $this->sdk->setConfiguration($this->configuration);

@@ -7,7 +7,7 @@ use Auth0\Laravel\Bridges\{CacheBridge, CacheBridgeContract, SessionBridgeContra
 use Auth0\SDK\Contract\Auth0Interface as SdkContract;
 use Auth0\SDK\Auth0 as SDKAuth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
 use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Token\Generator;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +36,55 @@ beforeEach(function (): void {
 });
 
 it('returns a Management API class', function (): void {
-    expect($this->laravel->management())->toBeInstanceOf(ManagementInterface::class);
+    expect($this->laravel->management())->toBeInstanceOf(ManagementClient::class);
+});
+
+it('caches the Management client for no-options calls', function (): void {
+    $first = $this->laravel->management();
+    $second = $this->laravel->management();
+
+    expect($second)->toBe($first);
+});
+
+it('does not cache the Management client when options are passed', function (): void {
+    $cached = $this->laravel->management();
+    $withOptions = $this->laravel->management(['timeout' => 5.0]);
+
+    expect($withOptions)
+        ->toBeInstanceOf(ManagementClient::class)
+        ->not->toBe($cached);
+});
+
+it('rebuilds the Management client after reset', function (): void {
+    $first = $this->laravel->management();
+    $this->laravel->reset();
+
+    expect($this->laravel->management())
+        ->toBeInstanceOf(ManagementClient::class)
+        ->not->toBe($first);
+});
+
+it('caches the no-options client even when config defaults are present', function (): void {
+    config(['auth0.management' => ['timeout' => 7.5, 'maxRetries' => 2]]);
+
+    $first = $this->laravel->management();
+    $second = $this->laravel->management();
+
+    expect($second)->toBe($first);
+});
+
+it('accepts management option defaults from config', function (): void {
+    config(['auth0.management' => ['timeout' => 7.5, 'maxRetries' => 2]]);
+
+    expect($this->laravel->management())->toBeInstanceOf(ManagementClient::class);
+});
+
+it('accepts per-call management options', function (): void {
+    expect($this->laravel->management([
+        'timeout' => 3.0,
+        'maxRetries' => 1,
+        'additionalHeaders' => ['X-Request-Id' => 'test'],
+    ]))->toBeInstanceOf(ManagementClient::class);
 });
 
 it('can get/set the configuration', function (): void {
