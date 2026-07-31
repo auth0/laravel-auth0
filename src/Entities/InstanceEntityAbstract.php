@@ -107,9 +107,11 @@ abstract class InstanceEntityAbstract extends EntityAbstract
      */
     final public function management(array $options = []): ManagementClient
     {
-        // Cache the no-options client so repeated management() calls in a request
-        // reuse one instance (and its token cache) instead of rebuilding.
-        if ([] === $options && $this->management instanceof ManagementClient) {
+        // Cache is keyed on the caller passing no options. Capture this before
+        // merging config defaults below, which would otherwise fill $options.
+        $cacheable = [] === $options;
+
+        if ($cacheable && $this->management instanceof ManagementClient) {
             return $this->management;
         }
 
@@ -129,7 +131,7 @@ abstract class InstanceEntityAbstract extends EntityAbstract
             tokenCache: $options['tokenCache'] ?? $configuration->getManagementTokenCache(),
         ));
 
-        if ([] === $options) {
+        if ($cacheable) {
             $this->management = $management;
         }
 

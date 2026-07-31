@@ -64,6 +64,15 @@ it('rebuilds the Management client after reset', function (): void {
         ->not->toBe($first);
 });
 
+it('caches the no-options client even when config defaults are present', function (): void {
+    config(['auth0.management' => ['timeout' => 7.5, 'maxRetries' => 2]]);
+
+    $first = $this->laravel->management();
+    $second = $this->laravel->management();
+
+    expect($second)->toBe($first);
+});
+
 it('accepts management option defaults from config', function (): void {
     config(['auth0.management' => ['timeout' => 7.5, 'maxRetries' => 2]]);
 
