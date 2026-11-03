@@ -158,15 +158,18 @@ final class AuthorizationGuard extends GuardAbstract implements AuthorizationGua
 
                 $user = $this->getProvider()->retrieveByCredentials($response);
                 $scope = $credential->getAccessTokenScope();
+                $decoded = $credential->getAccessTokenDecoded();
 
                 /**
                  * @var array<string> $scope
+                 * @var array<string> $decoded
                  */
                 $this->setCredential(CredentialEntity::create(
                     user: $user,
                     idToken: $credential->getIdToken(),
                     accessToken: $credential->getAccessToken(),
                     accessTokenScope: $scope,
+                    accessTokenDecoded: $decoded,
                     accessTokenExpiration: $credential->getAccessTokenExpiration(),
                     refreshToken: $credential->getRefreshToken(),
                 ));

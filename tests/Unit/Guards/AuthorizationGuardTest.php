@@ -216,3 +216,48 @@ it('queries the /userinfo endpoint for refreshUser()', function (): void {
             'email' => '...',
         ]);
 });
+
+it('preserves the decoded access token claims after refreshUser()', function (): void {
+    $token = Generator::create($this->secret, Token::ALGO_HS256, [
+        "iss" => 'https://' . config('auth0.guards.default.domain') . '/',
+        "sub" => $this->identifier,
+        "aud" => config('auth0.guards.default.audience')[0],
+        "azp" => config('auth0.guards.default.clientId'),
+        "exp" => time() + 60,
+        "iat" => time(),
+        "scope" => "openid profile",
+        "permissions" => ["read:patients"],
+    ]);
+
+    getJson($this->route2, ['Authorization' => 'Bearer ' . $token->toString()])
+        ->assertStatus(Response::HTTP_OK);
+
+    expect($this->guard)
+        ->hasPermission('read:patients')->toBeTrue();
+
+    $response = (new MockResponseFactory)->createResponse();
+
+    $this->guard
+        ->sdk()
+        ->configuration()
+        ->getHttpClient()
+        ->addResponseWildcard($response->withBody(
+            (new MockStreamFactory)->createStream(
+                json_encode(
+                    value: [
+                        'sub' => $this->identifier,
+                        'name' => 'John Doe',
+                    ],
+                    flags: JSON_PRETTY_PRINT
+                )
+            )
+        )
+    );
+
+    $this->guard->refreshUser();
+
+    expect($this->guard)
+        ->user()->getAttributes()->toMatchArray(['name' => 'John Doe'])
+        ->getCredential()->getAccessTokenDecoded()->toMatchArray(['permissions' => ['read:patients']])
+        ->hasPermission('read:patients')->toBeTrue();
+});
